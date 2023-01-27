@@ -125,6 +125,11 @@
                                 <i class="fa fa-th-large"></i> <span>Nests</span>
                             </a>
                         </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.extensions') ?: 'active' }}">
+                            <a href="{{ route('admin.extensions') }}">
+                                <i class="fa fa-th-large"></i> <span>Extensions</span>
+                            </a>
+                        </li>
                     </ul>
                 </section>
             </aside>
