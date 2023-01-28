@@ -5,9 +5,9 @@
 @endsection
 
 @section('content-header')
-    <h1>Administrative Overview<small>A quick glance at your system.</small></h1>
+    <h1>Extensions<small>Manage all your installed extensions.</small></h1>
     <ol class="breadcrumb">
         <li><a href="{{ route('admin.index') }}">Admin</a></li>
-        <li class="active">Index</li>
+        <li class="active">Extensions</li>
     </ol>
 @endsection
