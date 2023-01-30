@@ -5,7 +5,6 @@ use Pterodactyl\Http\Controllers\Admin;
 use Pterodactyl\Http\Middleware\Admin\Servers\ServerInstalled;
 
 Route::get('/', [Admin\BaseController::class, 'index'])->name('admin.index');
-Route::get('/extensions', [Admin\ExtensionsController::class, 'index'])->name('admin.extensions');
 
 /*
 |--------------------------------------------------------------------------
@@ -226,4 +225,17 @@ Route::group(['prefix' => 'nests'], function () {
     Route::delete('/view/{nest:id}', [Admin\Nests\NestController::class, 'destroy']);
     Route::delete('/egg/{egg:id}', [Admin\Nests\EggController::class, 'destroy']);
     Route::delete('/egg/{egg:id}/variables/{variable:id}', [Admin\Nests\EggVariableController::class, 'destroy']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Blueprint Extensions
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/extensions
+|
+*/
+Route::group(['prefix' => 'extensions'], function () {
+    Route::get('/', [Admin\ExtensionsController::class, 'index'])->name('admin.extensions');
+    Route::get('/blueprint', [Admin\Extensions\Blueprint\BlueprintExtensionController::class, 'index'])->name('admin.extensions.blueprint');
 });
