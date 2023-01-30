@@ -14,7 +14,7 @@
 
 @section('content')
     <div class="col-xs-6 col-sm-3 text-center">
-        <a href=""><button class="btn btn-primary" style="width:100%;margin-top:25px;"><i class='bx bx-code' ></i> Blueprint <small>indev</small></button></a>
+        <a href="{{ route('admin.extensions.blueprint') }}"><button class="btn btn-primary" style="width:100%;margin-top:25px;"><i class='bx bx-code' ></i> Blueprint <small>indev</small></button></a>
     </div>
     <!-- blueprint.replace -->
 @endsection
