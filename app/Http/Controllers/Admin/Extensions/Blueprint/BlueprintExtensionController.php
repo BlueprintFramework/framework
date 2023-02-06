@@ -21,6 +21,6 @@ class BlueprintExtensionController extends Controller
      */
     public function index(): View
     {
-        return $this->view->make('admin.extensions.blueprint', ['version' => $this->version]);
+        return $this->view->make('admin.extensions.blueprint.index', ['version' => $this->version]);
     }
 }

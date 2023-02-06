@@ -237,5 +237,5 @@ Route::group(['prefix' => 'nests'], function () {
 */
 Route::group(['prefix' => 'extensions'], function () {
     Route::get('/', [Admin\ExtensionsController::class, 'index'])->name('admin.extensions');
-    Route::get('/blueprint', [Admin\Extensions\Blueprint\BlueprintExtensionController::class, 'index'])->name('admin.extensions.blueprint');
+    Route::get('/blueprint', [Admin\Extensions\Blueprint\BlueprintExtensionController::class, 'index'])->name('admin.extensions.blueprint.index');
 });
