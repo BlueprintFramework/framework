@@ -1,0 +1,19 @@
+/*
+ *      Blueprint Framework.
+ *      All Rights Reserved.
+ */
+
+tag {
+  display:inline-block;
+  padding:3px;
+  background-color:#505050;
+  border-radius:5px;
+  font-size:12px;
+  color:white;
+}
+tag[mg-left] {margin-left:5px;}
+tag[mg-right] {margin-right:5px;}
+tag[red] {background-color:#ff4040;}
+tag[green] {background-color:#32fb62;}
+tag[blue] {background-color:#288afb;}
+[ext-title]{display:flex; flex-direction:row; align-items:center;}
