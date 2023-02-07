@@ -1,5 +1,3 @@
-/themes/pterodactyl/css/pterodactyl.css
-```diff
 /**
  * Pterodactyl - Panel
  * Copyright (c) 2015 - 2017 Dane Everitt <dane@daneeveritt.com>
@@ -25,4 +23,3 @@
  @import 'checkbox.css';
 +@import url(/assets/extensions/blueprint/blueprint.style.css);
 ...
-```
