@@ -17,3 +17,8 @@ tag[red] {background-color:#ff4040;}
 tag[green] {background-color:#32fb62;}
 tag[blue] {background-color:#288afb;}
 [ext-title]{display:flex; flex-direction:row; align-items:center;}
+
+.btn-transparent {
+  background-color: #00000000;
+  border-color: #00000000;
+}
