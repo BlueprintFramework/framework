@@ -18,14 +18,5 @@ tag[green] {background-color:#32fb62;}
 tag[blue] {background-color:#288afb;}
 [ext-title]{display:flex; flex-direction:row; align-items:center;}
 
-.btn-gray {
-  background-color: #33404d;
-  color: #cad1d8;
-  border-color: #606d7b;
-}
-
-.btn-gray:hover {
-  background-color: #29343e;
-  color: #cad1d8;
-  border-color: #606d7b;
-}
+.btn-gray {background-color:#33404d;color:#cad1d8;border-color:#606d7b;}
+.btn-gray:hover {background-color:#29343e;color:#cad1d8;border-color:#606d7b;}
