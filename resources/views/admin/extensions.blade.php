@@ -14,7 +14,7 @@
 
 @section('content')
     <div class="col-xs-6 col-sm-3 text-center">
-        <a href="{{ route('admin.extensions.blueprint.index') }}"><button class="btn btn-primary" style="width:100%;margin-bottom:25px;"><img src="/assets/extensions/blueprint/logo.jpg" alt="logo" style="width:25px;height:25px;border-radius:3px;margin-right:2px;"> Blueprint <small>indev</small></button></a>
+        <a href="{{ route('admin.extensions.blueprint.index') }}"><button class="btn btn-gray" style="width:100%;margin-bottom:25px;"><img src="/assets/extensions/blueprint/logo.jpg" alt="logo" style="width:25px;height:25px;border-radius:3px;margin-right:2px;"> Blueprint <small>indev</small></button></a>
     </div>
     <!-- blueprint.replace -->
 @endsection
