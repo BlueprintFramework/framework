@@ -6,13 +6,15 @@ use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
+use Pterodactyl\Services\Helpers\BlueprintVariableService;
 
 class BlueprintExtensionController extends Controller
 {
+
     /**
-     * ExtensionsController constructor.
+     * BlueprintExtensionController constructor.
      */
-    public function __construct(private SoftwareVersionService $version, private ViewFactory $view)
+    public function __construct(private SoftwareVersionService $version, private ViewFactory $view, private BlueprintVariableService $bp)
     {
     }
 
@@ -21,6 +23,7 @@ class BlueprintExtensionController extends Controller
      */
     public function index(): View
     {
-        return $this->view->make('admin.extensions.blueprint.index', ['version' => $this->version]);
+        $rootPath = "/admin/extensions/blueprint";
+        return $this->view->make('admin.extensions.blueprint.index', ['version' => $this->version, 'bp' => $this->bp, 'root' => $rootPath]);
     }
 }

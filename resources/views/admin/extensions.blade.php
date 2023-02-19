@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title')
-    Administration
+    Extensions
 @endsection
 
 @section('content-header')

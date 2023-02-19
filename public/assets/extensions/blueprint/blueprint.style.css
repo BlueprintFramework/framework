@@ -20,3 +20,6 @@ tag[blue] {background-color:#288afb;}
 
 .btn-gray {background-color:#33404d;color:#cad1d8;border-color:#606d7b;}
 .btn-gray:hover {background-color:#29343e;color:#cad1d8;border-color:#606d7b;}
+
+.btn-gray-alt {background-color:#4d5b69;color:#cad1d8;border-color:#4d5b69;}
+.btn-gray-alt:hover {background-color:#3f4d5a;color:#cad1d8;border-color:#4d5b69;}
