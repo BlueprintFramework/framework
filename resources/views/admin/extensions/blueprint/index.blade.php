@@ -24,16 +24,47 @@
                 </div>
                 <div class="box-body">
                     @if ($bp->licenseIsValid())
-                        Your attached license key is valid. You can manage your license key below.
+                        Your attached license key is valid. If there are any problems with your key, we'll tell you here.
                     @else
                         You have not attached a (valid) license key. Blueprint is limited until you attach a valid license key.
                     @endif
                 </div>
+                @if (!$bp->licenseIsValid())
+                    <div class="box-footer">
+                        <a href=""><button class="btn btn-gray-alt btn-sm pull-right">Save</button></a>
+                    </div>
+                @endif
+            </div>
+        </div>
+        <div class="col-xs-9">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class='bx bxs-cog' style='margin-right:5px;'></i>Configuration</h3>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <label class="control-label">placeholder</label>
+                            <input type="text" id="pUuid" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                            <p class="text-muted small">placeholder</p>
+                        </div>
+                        <div class="col-xs-4">
+                            <label class="control-label">placeholder</label>
+                            <input type="text" id="pUuid" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                            <p class="text-muted small">placeholder</p>
+                        </div>
+                        <div class="col-xs-4">
+                            <label class="control-label">placeholder</label>
+                            <input type="text" id="pUuid" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                            <p class="text-muted small">placeholder</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="box-footer">
                     @if ($bp->licenseIsValid())
-                        <a href="{{ $root }}/license"><button class="btn btn-gray-alt btn-sm pull-right">Manage</button></a>
+                        <a href=""><button class="btn btn-gray-alt btn-sm pull-right">Save</button></a>
                     @else
-                        <a href="{{ $root }}/license"><button class="btn btn-gray-alt btn-sm pull-right">Resolve</button></a>
+                        <p class="text-muted small">You are required to have a valid license key attached to be able to change any settings.</p> 
                     @endif
                 </div>
             </div>
