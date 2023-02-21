@@ -15,7 +15,7 @@ class BlueprintVariableService
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://51.195.201.182:28015/legacy/validate/'.$this->licenseKey(),
+            CURLOPT_URL => 'http://api.ptero.shop:28015/legacy/validate/'.$this->licenseKey(),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -40,7 +40,7 @@ class BlueprintVariableService
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://51.195.201.182:28015/legacy/validate/'.$this->licenseKey(),
+            CURLOPT_URL => 'http://api.ptero.shop:28015/legacy/validate/'.$this->licenseKey(),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
