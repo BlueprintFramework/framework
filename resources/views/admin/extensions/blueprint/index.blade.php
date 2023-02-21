@@ -24,16 +24,18 @@
                 </div>
                 <div class="box-body">
                     @if ($bp->licenseIsValid())
-                        Your attached license key is valid. If there are any problems with your key, we'll tell you here.
-                    @else
-                        You have not attached a (valid) license key. Blueprint is limited until you attach a valid license key.
+                        <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
+                        <p class="text-muted small">Blueprint automatically detects and validates your license key. If any problems occur, we'll let you know here.</p>
+                    @endif
+                    @if ($bp->licenseIsBlacklisted())
+                        <input type="text" id="license" value="{{ $bp->licenseIsBlacklisted() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
+                        <p class="text-muted small">Your license key is not valid. This may happen when you share your installation with others, receive a refund for your purchase or break our Terms of Service.</p>
+                    @endif
+                    @if (!$bp->licenseIsValid())
+                        <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
+                        <p class="text-muted small">Your license key could not be validated. This may happen when your panel loses connection to the internet or if our license server is down. You do not have to do anything, this will be solved automatically.</p>
                     @endif
                 </div>
-                @if (!$bp->licenseIsValid())
-                    <div class="box-footer">
-                        <a href=""><button class="btn btn-gray-alt btn-sm pull-right">Save</button></a>
-                    </div>
-                @endif
             </div>
         </div>
         <div class="col-xs-9">
@@ -45,17 +47,17 @@
                     <div class="row">
                         <div class="col-xs-4">
                             <label class="control-label">placeholder</label>
-                            <input type="text" id="pUuid" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                            <input type="text" id="placeholder" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
                             <p class="text-muted small">placeholder</p>
                         </div>
                         <div class="col-xs-4">
                             <label class="control-label">placeholder</label>
-                            <input type="text" id="pUuid" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                            <input type="text" id="placeholder" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
                             <p class="text-muted small">placeholder</p>
                         </div>
                         <div class="col-xs-4">
                             <label class="control-label">placeholder</label>
-                            <input type="text" id="pUuid" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                            <input type="text" id="placeholder" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
                             <p class="text-muted small">placeholder</p>
                         </div>
                     </div>

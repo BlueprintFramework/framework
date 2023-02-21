@@ -5,9 +5,68 @@ namespace Pterodactyl\Services\Helpers;
 class BlueprintVariableService
 {
     // Construct BlueprintVariableService
-    public function __construct(){}
+    public function __construct()
+    {
+    }
 
-    
+
     // $bp->licenseIsValid()
-    public function licenseIsValid(): bool{return true;}
+    public function licenseIsValid(): bool{
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://51.195.201.182:28015/legacy/validate/'.$this->licenseKey(),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 3000,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        if($response === "true") {
+            return true;
+        };
+        return false;
+    }
+
+    // $bp->licenseIsBlacklisted()
+    public function licenseIsBlacklisted(): bool{
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://51.195.201.182:28015/legacy/validate/'.$this->licenseKey(),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 3000,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        if($response === "1") {
+            return true;
+        };
+        return false;
+    }
+
+    // $bp->licenseKey()
+    public function licenseKey(): string{
+        return "00000000000000001";
+    }
+
+    // $bp->licenseKeyCensored()
+    public function licenseKeyCensored(): string{
+        return substr($this->licenseKey(), 0, 5) . "••••••••••••";
+    }
 }
