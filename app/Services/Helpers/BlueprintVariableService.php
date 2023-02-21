@@ -62,7 +62,7 @@ class BlueprintVariableService
 
     // $bp->licenseKey()
     public function licenseKey(): string{
-        return "00000000000000001";
+        return "([(pterodactylmarket_transactionid)])";
     }
 
     // $bp->licenseKeyCensored()
