@@ -6,7 +6,7 @@
 
 @section('content-header')
     <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" style="float:left;width:30px;height:30px;border-radius:3px;margin-right:5px;">
-    <h1 ext-title>Blueprint<tag mg-left blue>indev</tag></h1>
+    <h1 ext-title>Blueprint<tag mg-left blue>{{ $bp->version() }}</tag></h1>
     <ol class="breadcrumb">
         <li><a href="{{ route('admin.index') }}">Admin</a></li>
         <li><a href="{{ route('admin.extensions') }}">Extensions</a></li>
@@ -18,6 +18,14 @@
     <p>Blueprint is the framework that drives all Blueprint-compatible extensions and allows multiple extensions to be installed at the same time.</p>
     <div class="row">
         <div class="col-xs-3">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class='bx bxs-shapes' style='margin-right:5px;'></i></i>Overview</h3>
+                </div>
+                <div class="box-body">
+                    <p>You are currently using version <code>{{ $bp->version() }}</code>.</p>
+                </div>
+            </div>
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class='bx bxs-pen' style='margin-right:5px;'></i>License</h3>
@@ -35,7 +43,7 @@
                         <p class="text-muted small">Your license key is not valid. This may happen when you share your installation with others, receive a refund for your purchase or break our Terms of Service.</p>
                     @endif
                 </div>
-            </div>
+            </div>  
         </div>
         <div class="col-xs-9">
             <div class="box">

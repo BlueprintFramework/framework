@@ -69,4 +69,9 @@ class BlueprintVariableService
     public function licenseKeyCensored(): string{
         return substr($this->licenseKey(), 0, 5) . "••••••••••••";
     }
+
+    // $bp->version()
+    public function version(): string{
+        return "indev";
+    }
 }
