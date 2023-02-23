@@ -19,7 +19,7 @@ class BlueprintVariableService
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 3000,
+            CURLOPT_TIMEOUT => 1000,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
@@ -44,7 +44,7 @@ class BlueprintVariableService
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 3000,
+            CURLOPT_TIMEOUT => 1000,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
@@ -62,7 +62,7 @@ class BlueprintVariableService
 
     // $bp->licenseKey()
     public function licenseKey(): string{
-        return "([(pterodactylmarket_transactionid)])";
+        return "J4E40M60A1906DQCE";
     }
 
     // $bp->licenseKeyCensored()
