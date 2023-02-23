@@ -14,7 +14,7 @@
 
 @section('content')
     <div class="col-xs-6 col-sm-3 text-center">
-        <a href="{{ route('admin.extensions.blueprint.index') }}"><button class="btn btn-gray btn-row"><img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="img-btn"> Blueprint <small>{{ $bp->version() }}</small></button></a>
+        <a href="{{ route('admin.extensions.blueprint.index') }}"><button class="btn btn-gray btn-row" style="width:100%;"><img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="img-btn"> Blueprint <small>{{ $bp->version() }}</small></button></a>
     </div>
     <!-- blueprint.replace -->
 @endsection
