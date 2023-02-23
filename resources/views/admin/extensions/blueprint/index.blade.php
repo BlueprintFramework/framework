@@ -33,14 +33,10 @@
                 <div class="box-body">
                     @if ($license)
                         <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Blueprint automatically detects and validates your license key. If any problems occur, we'll let you know here.</p>
+                        <p class="text-muted small">Your license key is valid. Learn more.</p>
                     @else
                         <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Your license key could not be validated. This may happen when your panel loses connection to the internet or if our license server is down. You do not have to do anything, this will be solved automatically.</p>
-                    @endif
-                    @if ($bp->licenseIsBlacklisted())
-                        <input type="text" id="license" value="{{ $bp->licenseIsBlacklisted() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Your license key is not valid. This may happen when you share your installation with others, receive a refund for your purchase or break our Terms of Service.</p>
+                        <p class="text-muted small">Your license key could not be validated. Learn more.</p>
                     @endif
                 </div>
             </div>  
