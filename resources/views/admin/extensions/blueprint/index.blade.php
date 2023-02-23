@@ -33,10 +33,10 @@
                 <div class="box-body">
                     @if ($license)
                         <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Your license key is valid. Learn more.</p>
+                        <p class="text-muted small">Your license key is valid. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more.</a></p>
                     @else
                         <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Your license key could not be validated. Learn more.</p>
+                        <p class="text-muted small">Your license key could not be validated. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more.</a></p>
                     @endif
                 </div>
             </div>  
@@ -71,6 +71,28 @@
                     @else
                         <p class="text-muted small">You are required to have a valid license key attached to be able to change any settings.</p> 
                     @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="licenseMoreInfo" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class='bx bxs-pen' style='margin-right:6px;float:left;font-size:23px;'></i><h4 class="modal-title" style="font-size:19px;">License</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Every purchase comes with a unique license key preinstalled into your Blueprint files and allows our license system to work without any user input.
+                        Most of the time this system does not hinder the user experience, but in rare cases our validation server may be offline and is unable to validate any licenses.
+                        If this happens, it should automatically resolve itself within 2 hours.
+                        <br><br>
+                        The Blueprint development team is also able to blacklist licenses and ips remotely.
+                        A license may be blacklisted if the buyer chargeback their purchase or violate our terms and conditions.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-gray-alt btn-sm pull-right" data-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </div>
         </div>
