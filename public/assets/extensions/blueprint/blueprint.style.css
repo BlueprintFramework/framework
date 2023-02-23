@@ -23,3 +23,16 @@ tag[blue] {background-color:#288afb;}
 
 .btn-gray-alt {background-color:#4d5b69;color:#cad1d8;border-color:#4d5b69;}
 .btn-gray-alt:hover {background-color:#3f4d5a;color:#cad1d8;border-color:#4d5b69;}
+
+
+.img-btn {
+  width:25px;
+  height:25px;
+  border-radius:3px;
+  margin-right:2px;
+};
+
+.btn-row {
+  width:100%;
+  margin-bottom:25px;
+};
