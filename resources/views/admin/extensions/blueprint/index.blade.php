@@ -88,7 +88,7 @@
                         If this happens, it should automatically resolve itself within 2 hours.
                         <br><br>
                         The Blueprint development team is also able to blacklist licenses and ips remotely.
-                        A license may be blacklisted if the buyer chargeback their purchase or violate our terms and conditions.
+                        A license may be blacklisted if the buyer chargebacks their purchase or violates our terms and conditions.
                     </p>
                 </div>
                 <div class="modal-footer">
