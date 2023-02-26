@@ -42,37 +42,40 @@
             </div>  
         </div>
         <div class="col-xs-9">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class='bx bxs-cog' style='margin-right:5px;'></i>Configuration</h3>
-                </div>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <label class="control-label">placeholder</label>
-                            <input type="text" id="placeholder" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
-                            <p class="text-muted small">placeholder</p>
-                        </div>
-                        <div class="col-xs-4">
-                            <label class="control-label">placeholder</label>
-                            <input type="text" id="placeholder" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
-                            <p class="text-muted small">placeholder</p>
-                        </div>
-                        <div class="col-xs-4">
-                            <label class="control-label">placeholder</label>
-                            <input type="text" id="placeholder" value="placeholder" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
-                            <p class="text-muted small">placeholder</p>
+            <form action="" method="POST">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class='bx bxs-cog' style='margin-right:5px;'></i>Configuration</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <label class="control-label">placeholder</label>
+                                <input type="text" required name="placeholder:1" id="placeholder" value="{{ $bp->dbGet('placeholder:1') }}" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                                <p class="text-muted small">placeholder</p>
+                            </div>
+                            <div class="col-xs-4">
+                                <label class="control-label">placeholder</label>
+                                <input type="text" required name="placeholder:2" id="placeholder" value="{{ $bp->dbGet('placeholder:2') }}" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                                <p class="text-muted small">placeholder</p>
+                            </div>
+                            <div class="col-xs-4">
+                                <label class="control-label">placeholder</label>
+                                <input type="text" required name="placeholder:3" id="placeholder" value="{{ $bp->dbGet('placeholder:3') }}" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                                <p class="text-muted small">placeholder</p>
+                            </div>
                         </div>
                     </div>
+                    <div class="box-footer">
+                        @if ($license)
+                            {{ csrf_field() }}
+                            <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right">Save</button>
+                        @else
+                            <p class="text-muted small">You are required to have a valid license key attached to be able to change any settings.</p> 
+                        @endif
+                    </div>
                 </div>
-                <div class="box-footer">
-                    @if ($license)
-                        <a href=""><button class="btn btn-gray-alt btn-sm pull-right">Save</button></a>
-                    @else
-                        <p class="text-muted small">You are required to have a valid license key attached to be able to change any settings.</p> 
-                    @endif
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <div class="modal fade" id="licenseMoreInfo" tabindex="-1" role="dialog">
