@@ -1,12 +1,14 @@
 <?php
 
 namespace Pterodactyl\Services\Helpers;
+use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 
 class BlueprintVariableService
 {
     // Construct BlueprintVariableService
-    public function __construct()
-    {
+    public function __construct(
+        private SettingsRepositoryInterface $settings,
+    ) {
     }
 
 
@@ -73,5 +75,23 @@ class BlueprintVariableService
     // $bp->version()
     public function version(): string{
         return "indev";
+    }
+
+    // $bp->dbGet('db:record')
+    public function dbGet($key): string
+    {
+        $a = $this->settings->get('blueprint::' . $key);
+        if(!$a) {
+            return "";
+        } else {
+            return $a;
+        };
+    }
+
+    // $bp->dbSet('db:record', 'value')
+    public function dbSet($key, $value): void
+    {
+        $this->settings->set('blueprint::' . $key, $value);
+        return;
     }
 }
