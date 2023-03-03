@@ -26,11 +26,13 @@ chmod u+x /usr/local/bin/blueprint > /dev/null;
 if [[ "$@" != *"-bash"* ]]; then
     if dbValidate "blueprint.setupFinished"; then
         echo -e $info"\033[0;34mThis command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.\033[0m";
+        dbRemove "blueprint.setupFinished";
     else
         echo -e $task"\033[0;33mMaking .blueprint files.\033[0m";
 
         # CREATE DATABASE FILE
         touch .blueprint/db.md > /dev/null;
         echo -e "# Internal database for the bash side of Blueprint.\n+ db.addnewrecord;" > .blueprint/db.md;
+        dbAdd "blueprint.setupFinished";
     fi;
 fi;
