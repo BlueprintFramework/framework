@@ -21,9 +21,9 @@ class BlueprintSettingsFormRequest extends AdminFormRequest
     public function attributes(): array
     {
         return [
-            'placeholder:1' => 'placeholder one',
-            'placeholder:2' => 'placeholder two',
-            'placeholder:3' => 'placeholder three',
+            'placeholder:1' => 'placeholder',
+            'placeholder:2' => 'placeholder',
+            'placeholder:3' => 'placeholder',
         ];
     }
 }
