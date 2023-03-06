@@ -38,13 +38,17 @@ class BlueprintExtensionController extends Controller
     public function index(): View
     {
         $rootPath = "/admin/extensions/blueprint";
-        $license = $this->bp->licenseIsValid();
+        $a = $this->bp->a();
+        $b = $this->bp->b();
+        $c = $this->bp->c();
         return $this->view->make(
             'admin.extensions.blueprint.index', [
                 'version' => $this->version,
                 'bp' => $this->bp,
                 'root' => $rootPath,
-                'license' => $license
+                'a' => $a,
+                'b' => $b,
+                'c' => $c,
             ]
         );
     }

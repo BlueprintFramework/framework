@@ -15,6 +15,7 @@
 @endsection
 
 @section('content')
+    {{ $bp->rlKey() }}
     <p>Blueprint is the framework that drives all Blueprint-compatible extensions and allows multiple extensions to be installed at the same time.</p>
     <div class="row">
         <div class="col-xs-3">
@@ -31,7 +32,7 @@
                     <h3 class="box-title"><i class='bx bxs-pen' style='margin-right:5px;'></i>License</h3>
                 </div>
                 <div class="box-body">
-                    @if ($license)
+                    @if ($b)
                         <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
                         <p class="text-muted small">Your license key is valid. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more.</a></p>
                     @else
@@ -51,23 +52,23 @@
                         <div class="row">
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
-                                <input type="text" required name="placeholder:1" id="placeholder" value="{{ $bp->dbGet('placeholder:1') }}" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                                <input type="text" required name="placeholder:1" id="placeholder" value="{{ $bp->dbGet('placeholder:1') }}" class="form-control" @if(!$bp->b())readonly @endif/>
                                 <p class="text-muted small">placeholder</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
-                                <input type="text" required name="placeholder:2" id="placeholder" value="{{ $bp->dbGet('placeholder:2') }}" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                                <input type="text" required name="placeholder:2" id="placeholder" value="{{ $bp->dbGet('placeholder:2') }}" class="form-control" @if(!$bp->a())readonly @endif/>
                                 <p class="text-muted small">placeholder</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
-                                <input type="text" required name="placeholder:3" id="placeholder" value="{{ $bp->dbGet('placeholder:3') }}" class="form-control" @if(!$bp->licenseIsValid())readonly @endif/>
+                                <input type="text" required name="placeholder:3" id="placeholder" value="{{ $bp->dbGet('placeholder:3') }}" class="form-control" @if(!$bp->c())readonly @endif/>
                                 <p class="text-muted small">placeholder</p>
                             </div>
                         </div>
                     </div>
                     <div class="box-footer">
-                        @if ($license)
+                        @if ($a)
                             {{ csrf_field() }}
                             <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right">Save</button>
                         @else
