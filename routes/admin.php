@@ -237,6 +237,8 @@ Route::group(['prefix' => 'nests'], function () {
 */
 Route::group(['prefix' => 'extensions'], function () {
     Route::get('/', [Admin\ExtensionsController::class, 'index'])->name('admin.extensions');
-    Route::get('/blueprint', [Admin\Extensions\Blueprint\BlueprintExtensionController::class, 'index'])->name('admin.extensions.blueprint.index');
-    Route::patch('/blueprint', [Admin\Extensions\Blueprint\BlueprintExtensionController::class, 'update']);
+});
+Route::group(['prefix' => 'extensions/blueprint'], function () {
+    Route::get('/', [Admin\Extensions\Blueprint\BlueprintExtensionController::class, 'index'])->name('admin.extensions.blueprint.index');
+    Route::patch('/', [Admin\Extensions\Blueprint\BlueprintExtensionController::class, 'update']);
 });
