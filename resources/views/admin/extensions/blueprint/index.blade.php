@@ -89,10 +89,9 @@
                     <p>
                         Every purchase comes with a unique license key preinstalled into your Blueprint files and allows our license system to work without any user input.
                         Most of the time this system does not hinder the user experience, but in rare cases our validation server may be offline and is unable to validate any licenses.
-                        If this happens, it should automatically resolve itself within 2 hours.
+                        If this happens, it should automatically resolve itself within 24 hours.
                         <br><br>
-                        The Blueprint development team is also able to blacklist licenses and ips remotely.
-                        A license may be blacklisted if the buyer chargebacks their purchase or violates our terms and conditions.
+                        Some data, such as IPs and licenses may be shared with the Blueprint team to allow our license system to work. This allows us to revoke licenses remotely in case of abuse or piracy.
                     </p>
                 </div>
                 <div class="modal-footer">
