@@ -33,20 +33,24 @@ if [[ "$@" != *"-bash"* ]]; then
         echo -e $info"\033[0;34mThis command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.\033[0m";
         dbRemove "blueprint.setupFinished";
     else
-        echo -e $task"\033[0;33mMaking .blueprint files.\033[0m";
+        echo -e $info"\033[0;34m/var/www/pterodactyl/.blueprint/db.md\033[0m";
         touch .blueprint/db.md > /dev/null;
         echo -e "# Internal database for the bash side of Blueprint.\n+ db.addnewrecord;" > .blueprint/db.md;
 
 
-        echo -e $task"\033[0;33mInjecting custom css.\033[0m";
+        echo -e $info"\033[0;34m/var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css\033[0m";
         sed -i "s/@import 'checkbox.css';/@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);/g" /var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css;
 
 
-        echo -e $task"\033[0;33mClearing views.\033[0m";
+        echo -e $info"\033[0;34mphp artisan view:clear\033[0m";
         php artisan view:clear > /dev/null;
+
+
+        echo -e $info"\033[0;34mphp artisan config:clear\033[0m";
         php artisan config:clear > /dev/null;
 
-        echo -e $task"\033[0;33mUpdating permissions.\033[0m";
+
+        echo -e $info"\033[0;34mchown -R www-data:www-data /var/www/pterodactyl/*\033[0m";
         chown -R www-data:www-data /var/www/pterodactyl/* > /dev/null;
 
         dbAdd "blueprint.setupFinished";
