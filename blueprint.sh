@@ -6,6 +6,10 @@ info="\033[0;96m INFO \033[0m";
 task="\033[0;93m TASK \033[0m";
 
 cd /var/www/pterodactyl;
+if [[ "$@" != *"-php"* ]]; then
+    exit 1;
+fi;
+
 mkdir -p .blueprint > /dev/null;
 
 dbAdd() {
