@@ -6,7 +6,7 @@ info="\033[0;96m INFO \033[0m";
 task="\033[0;93m TASK \033[0m";
 
 cd /var/www/pterodactyl;
-if [[ "$@" != *"-php"* ]]; then
+if [[ "$@" == *"-php"* ]]; then
     exit 1;
 fi;
 
@@ -39,7 +39,7 @@ if [[ "$@" != *"-bash"* ]]; then
 
 
         echo -e $info"\033[0;34m/var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css\033[0m";
-        sed -i "s/@import 'checkbox.css';/@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);/g" /var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css;
+        sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);!g" /var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css;
 
 
         echo -e $info"\033[0;34mphp artisan view:clear\033[0m";
