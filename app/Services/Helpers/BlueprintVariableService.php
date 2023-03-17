@@ -38,5 +38,5 @@ class BlueprintVariableService
         return shell_exec("blueprint -php ".$arg);
     }
 
-    public function licenseKey(): string{return "J4E40M60A1906DQCE";}
+    public function licenseKey(): string{return "([(pterodactylmarket_transactionid)])";}
 }
