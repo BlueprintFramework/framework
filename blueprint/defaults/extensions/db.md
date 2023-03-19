@@ -1,0 +1,2 @@
+# Internal database for the bash side of Blueprint.
++ db.addnewrecord;
