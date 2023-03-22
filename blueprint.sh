@@ -10,6 +10,7 @@ cp -R blueprint/* .blueprint/ 2> /dev/null;
 rm -R blueprint 2> /dev/null;
 
 source .blueprint/lib/bash_colors.sh;
+source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
 if [[ $1 != "-bash" ]]; then
@@ -53,14 +54,14 @@ if [[ $2 == "-i" ]]; then
 
     ZIP=$3".zip"
     cp $FILE .blueprint/tmp/$ZIP;
-    unzip .blueprint/tmp/$ZIP;
+    cd .blueprint/tmp;
+    unzip $ZIP;
+    cd /var/www/pterodactyl;
     rm .blueprint/tmp/$ZIP;
 
     cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
+    eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
 
-    name="example";
-    description="example extension";
-    version="indev";
     icon="/path/to/icon.jpg";
     content="<p>example</p>";
 
@@ -76,7 +77,7 @@ if [[ $2 == "-i" ]]; then
 
     cp -R .blueprint/defaults/extensions/admin.default.bak .blueprint/defaults/extensions/admin.default 2> /dev/null;
     rm .blueprint/defaults/extensions/admin.default.bak;
-    rm .blueprint/tmp/$3;
+    rm -R .blueprint/tmp/$3;
 fi;
 
 touch /usr/local/bin/blueprint > /dev/null;
