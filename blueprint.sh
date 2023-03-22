@@ -10,7 +10,7 @@ cp -R blueprint/* .blueprint/ 2> /dev/null;
 rm -R blueprint 2> /dev/null;
 
 source .blueprint/lib/bash_colors.sh;
-source .blueprint/lib/db.sh
+source .blueprint/lib/db.sh;
 
 if [[ $1 != "-bash" ]]; then
     if dbValidate "blueprint.setupFinished"; then
