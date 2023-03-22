@@ -15,5 +15,6 @@
 @endsection
 
 @section('content')
+    <p>␀description␀</p>
     ␀content␀
 @endsection
