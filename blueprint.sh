@@ -70,7 +70,7 @@ if [ $2 == "-i" ]; then
     fi;
 
     ICON="/path/to/icon.jpg";
-    CONTENT="<p>example</p>";
+    CONTENT=$(cat .blueprint/tmp/$3/admin/index.blade.php);
 
     sed -i "s!␀title␀!$name!g" .blueprint/defaults/extensions/admin.default > /dev/null;
     sed -i "s!␀name␀!$name!g" .blueprint/defaults/extensions/admin.default > /dev/null;
