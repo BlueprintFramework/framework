@@ -64,7 +64,7 @@ if [[ $2 == "-i" ]]; then
     cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
     eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
     if [[ $target != $VERSION ]]; then
-        clr_yellow "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";
+        clr_redb "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";
         rm -R .blueprint/tmp/$3;
         exit 1;
     fi;
