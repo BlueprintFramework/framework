@@ -68,6 +68,11 @@ if [[ $2 == "-i" ]]; then
         rm -R .blueprint/tmp/$3;
         exit 1;
     fi;
+    if [[ $id == "blueprint" ]]; then
+        clr_redb "The operation could not be completed since the extension is attempting to overwrite internal files.";
+        rm -R .blueprint/tmp/$3;
+        exit 1;
+    fi;
 
     ICON="/path/to/icon.jpg";
     CONTENT=$(cat .blueprint/tmp/$3/admin/index.blade.php);
