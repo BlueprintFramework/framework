@@ -98,10 +98,15 @@ if [[ $2 == "-i" ]]; then
 
     ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default);
     ADMINCONTROLLER_RESULT=$(cat .blueprint/defaults/extensions/controller.default);
+    ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
     mkdir resources/views/admin/extensions/$identifier;
     touch resources/views/admin/extensions/$identifier/index.blade.php;
     echo $ADMINVIEW_RESULT > resources/views/admin/extensions/$identifier/index.blade.php;
+
+    mkdir app/Http/Controllers/Admin/Extensions/$identifier;
+    touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+    echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
 
     cp -R .blueprint/defaults/extensions/admin.default.bak .blueprint/defaults/extensions/admin.default 2> /dev/null;
     cp -R .blueprint/defaults/extensions/controller.default.bak .blueprint/defaults/extensions/controller.default 2> /dev/null;
