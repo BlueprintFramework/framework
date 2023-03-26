@@ -52,7 +52,7 @@ if [[ $2 == "-i" ]]; then
     if [[ ! -f "$FILE" ]]; then
         echo "$FILE could not be found.";
         exit 1;
-    fi
+    fi;
 
     ZIP=$3".zip"
     cp $FILE .blueprint/tmp/$ZIP;
@@ -78,8 +78,14 @@ if [[ $2 == "-i" ]]; then
         exit 1;
     fi;
 
+    if [[ $migrations == "yes" ]]; then
+        cp -R .blueprint/tmp/$3/migrations/* database/migrations/ 2> /dev/null;
+    fi;
+
     cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
-    cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
+    if [[ $controller != "custom" ]]; then
+        cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
+    fi;
     cp -R .blueprint/defaults/extensions/route.default .blueprint/defaults/extensions/route.default.bak 2> /dev/null;
     cp -R .blueprint/defaults/extensions/button.default .blueprint/defaults/extensions/button.default.bak 2> /dev/null;
 
@@ -102,14 +108,18 @@ if [[ $2 == "-i" ]]; then
 
     sed -i "s!␀content␀!$CONTENT!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
 
-    sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/controller.default.bak > /dev/null;
+    if [[ $controller != "custom" ]]; then
+        sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/controller.default.bak > /dev/null;
+    fi;
     sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/route.default.bak > /dev/null;
     sed -i "s?␀id␀?$identifier?g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
 
     ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default.bak);
     ADMINROUTE_RESULT=$(cat .blueprint/defaults/extensions/route.default.bak);
     ADMINBUTTON_RESULT=$(cat .blueprint/defaults/extensions/button.default.bak);
-    ADMINCONTROLLER_RESULT=$(cat .blueprint/defaults/extensions/controller.default.bak);
+    if [[ $controller != "custom" ]]; then
+        ADMINCONTROLLER_RESULT=$(cat .blueprint/defaults/extensions/controller.default.bak);
+    fi;
     ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
     mkdir resources/views/admin/extensions/$identifier;
@@ -118,14 +128,21 @@ if [[ $2 == "-i" ]]; then
 
     mkdir app/Http/Controllers/Admin/Extensions/$identifier;
     touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
-    echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+    if [[ $controller != "custom" ]]; then
+        echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+    fi;
+    if [[ $controller == "custom" ]]; then
+        echo $(cat .blueprint/tmp/$3/admin/indexController.php) > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+    fi;
 
     echo $ADMINROUTE_RESULT >> routes/admin.php;
 
     sed -i "s?<!--␀replace␀-->?$ADMINBUTTON_RESULT\n<!--␀replace␀-->?g" resources/views/admin/extensions.blade.php > /dev/null;
 
     rm .blueprint/defaults/extensions/admin.default.bak;
-    rm .blueprint/defaults/extensions/controller.default.bak;
+    if [[ $controller != "custom" ]]; then
+        rm .blueprint/defaults/extensions/controller.default.bak;
+    fi;
     rm .blueprint/defaults/extensions/route.default.bak;
     rm .blueprint/defaults/extensions/button.default.bak;
     rm -R .blueprint/tmp/$3;
