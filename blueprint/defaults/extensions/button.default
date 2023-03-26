@@ -1,0 +1,1 @@
+<div class="col-xs-6 col-sm-3 text-center"><a href="{{ route('admin.extensions.␀id␀.index') }}"><button class="btn btn-gray" style="width:100%;margin-bottom:17px;"><img src="/assets/extensions/␀id␀/icon.jpg" alt="logo" class="img-btn"> ␀name␀ <small>␀version␀</small></button></a></div>
