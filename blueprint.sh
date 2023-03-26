@@ -61,7 +61,6 @@ if [[ $2 == "-i" ]]; then
     cd /var/www/pterodactyl;
     rm .blueprint/tmp/$ZIP;
 
-    cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
     eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
     if [[ $target != $VERSION ]]; then
         clr_red "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";
@@ -79,6 +78,9 @@ if [[ $2 == "-i" ]]; then
         exit 1;
     fi;
 
+    cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
+    cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
+
     mkdir public/assets/extensions/$identifier;
     cp .blueprint/tmp/$3/icon.jpg public/assets/extensions/$identifier/icon.jpg;
     ICON="public/assets/extensions/$identifier/icon.jpg";
@@ -92,14 +94,19 @@ if [[ $2 == "-i" ]]; then
     sed -i "s!␀icon␀!$ICON!g" .blueprint/defaults/extensions/admin.default > /dev/null;
     sed -i "s!␀content␀!$CONTENT!g" .blueprint/defaults/extensions/admin.default > /dev/null;
 
+    sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/controller.default > /dev/null;
+
     ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default);
+    ADMINCONTROLLER_RESULT=$(cat .blueprint/defaults/extensions/controller.default);
 
     mkdir resources/views/admin/extensions/$identifier;
     touch resources/views/admin/extensions/$identifier/index.blade.php;
     echo $ADMINVIEW_RESULT > resources/views/admin/extensions/$identifier/index.blade.php;
 
     cp -R .blueprint/defaults/extensions/admin.default.bak .blueprint/defaults/extensions/admin.default 2> /dev/null;
+    cp -R .blueprint/defaults/extensions/controller.default.bak .blueprint/defaults/extensions/controller.default 2> /dev/null;
     rm .blueprint/defaults/extensions/admin.default.bak;
+    rm .blueprint/defaults/extensions/controller.default.bak;
     rm -R .blueprint/tmp/$3;
 fi;
 
