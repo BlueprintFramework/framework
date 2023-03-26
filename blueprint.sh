@@ -68,7 +68,7 @@ if [[ $2 == "-i" ]]; then
         rm -R .blueprint/tmp/$3;
         exit 1;
     fi;
-    if [[ $id == "blueprint" ]]; then
+    if [[ $identifier == "blueprint" ]]; then
         clr_redb "The operation could not be completed since the extension is attempting to overwrite internal files.";
         rm -R .blueprint/tmp/$3;
         exit 1;
