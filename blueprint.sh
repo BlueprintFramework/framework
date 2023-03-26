@@ -80,24 +80,27 @@ if [[ $2 == "-i" ]]; then
 
     cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
     cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
+    cp -R .blueprint/defaults/extensions/route.default .blueprint/defaults/extensions/route.default.bak 2> /dev/null;
 
     mkdir public/assets/extensions/$identifier;
     cp .blueprint/tmp/$3/icon.jpg public/assets/extensions/$identifier/icon.jpg;
     ICON="public/assets/extensions/$identifier/icon.jpg";
     CONTENT=$(cat .blueprint/tmp/$3/admin/index.blade.php);
 
-    sed -i "s!␀title␀!$name!g" .blueprint/defaults/extensions/admin.default > /dev/null;
-    sed -i "s!␀name␀!$name!g" .blueprint/defaults/extensions/admin.default > /dev/null;
-    sed -i "s!␀breadcrumb␀!$name!g" .blueprint/defaults/extensions/admin.default > /dev/null;
-    sed -i "s!␀description␀!$description!g" .blueprint/defaults/extensions/admin.default > /dev/null;
-    sed -i "s!␀version␀!$version!g" .blueprint/defaults/extensions/admin.default > /dev/null;
-    sed -i "s!␀icon␀!$ICON!g" .blueprint/defaults/extensions/admin.default > /dev/null;
-    sed -i "s!␀content␀!$CONTENT!g" .blueprint/defaults/extensions/admin.default > /dev/null;
+    sed -i "s!␀title␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s!␀name␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s!␀breadcrumb␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s!␀description␀!$description!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s!␀version␀!$version!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s!␀icon␀!$ICON!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s!␀content␀!$CONTENT!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
 
-    sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/controller.default > /dev/null;
+    sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/controller.default.bak > /dev/null;
+    sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/route.default.bak > /dev/null;
 
-    ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default);
-    ADMINCONTROLLER_RESULT=$(cat .blueprint/defaults/extensions/controller.default);
+    ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default.bak);
+    ADMINROUTE_RESULT=$(cat .blueprint/defaults/extensions/route.default.bak);
+    ADMINCONTROLLER_RESULT=$(cat .blueprint/defaults/extensions/controller.default.bak);
     ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
     mkdir resources/views/admin/extensions/$identifier;
@@ -108,10 +111,11 @@ if [[ $2 == "-i" ]]; then
     touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
 
-    cp -R .blueprint/defaults/extensions/admin.default.bak .blueprint/defaults/extensions/admin.default 2> /dev/null;
-    cp -R .blueprint/defaults/extensions/controller.default.bak .blueprint/defaults/extensions/controller.default 2> /dev/null;
+    sed -i "s!/*␀**␀*/!$ADMINROUTE_RESULT!g" routes/admin.php > /dev/null;
+
     rm .blueprint/defaults/extensions/admin.default.bak;
     rm .blueprint/defaults/extensions/controller.default.bak;
+    rm .blueprint/defaults/extensions/route.default.bak;
     rm -R .blueprint/tmp/$3;
 fi;
 
