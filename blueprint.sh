@@ -79,7 +79,9 @@ if [[ $2 == "-i" ]]; then
         exit 1;
     fi;
 
-    ICON="/path/to/icon.jpg";
+    mkdir public/assets/extensions/$identifier;
+    cp .blueprint/tmp/$3/icon.jpg public/assets/extensions/$identifier/icon.jpg;
+    ICON="public/assets/extensions/$identifier/icon.jpg";
     CONTENT=$(cat .blueprint/tmp/$3/admin/index.blade.php);
 
     sed -i "s!␀title␀!$name!g" .blueprint/defaults/extensions/admin.default > /dev/null;
@@ -90,7 +92,11 @@ if [[ $2 == "-i" ]]; then
     sed -i "s!␀icon␀!$ICON!g" .blueprint/defaults/extensions/admin.default > /dev/null;
     sed -i "s!␀content␀!$CONTENT!g" .blueprint/defaults/extensions/admin.default > /dev/null;
 
-    cat .blueprint/defaults/extensions/admin.default
+    ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default);
+
+    mkdir resources/views/admin/extensions/$identifier;
+    touch resources/views/admin/extensions/$identifier/index.blade.php;
+    echo $ADMINVIEW_RESULT > resources/views/admin/extensions/$identifier/index.blade.php;
 
     cp -R .blueprint/defaults/extensions/admin.default.bak .blueprint/defaults/extensions/admin.default 2> /dev/null;
     rm .blueprint/defaults/extensions/admin.default.bak;
