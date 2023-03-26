@@ -7,12 +7,15 @@ use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
 
+use Pterodactyl\Services\Helpers\BlueprintExtensionLibrary;
+
 class ␀id␀ExtensionController extends Controller
 {
     /**
      * ␀id␀ExtensionController constructor.
      */
     public function __construct(
+        private BlueprintExtensionLibrary $blueprint,
         private SoftwareVersionService $version,
         private ViewFactory $view
     ){}
@@ -24,6 +27,7 @@ class ␀id␀ExtensionController extends Controller
     {
         $rootPath = "/admin/extensions/␀id␀";
         return $this->view->make('admin.extensions.␀id␀.index', [
+            'blueprint' => $this->blueprint,
             'version' => $this->version,
             'root' => $rootPath
         ]);
