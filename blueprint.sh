@@ -61,7 +61,7 @@ if [[ $2 == "-i" ]]; then
     cd /var/www/pterodactyl;
     rm .blueprint/tmp/$ZIP;
 
-    eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
+    eval $(parse_yaml .blueprint/tmp/$3/conf.yml) #documentation.ptero.shop/documentation/conf.yml
     if [[ $target != $VERSION ]]; then
         clr_red "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";
         rm -R .blueprint/tmp/$3;
@@ -78,8 +78,16 @@ if [[ $2 == "-i" ]]; then
         exit 1;
     fi;
 
-    if [[ $migrations == "yes" ]]; then
-        cp -R .blueprint/tmp/$3/migrations/* database/migrations/ 2> /dev/null;
+    if [[ $migrations != "" ]]; then
+        # HAS NOT BEEN FULLY TESTED YET
+        if [[ $migrations == "yes" ]]; then
+            cp -R .blueprint/tmp/$3/migrations/* database/migrations/ 2> /dev/null;
+        elif [[ $migrations == "no" ]]; then
+            echo "ok" > /dev/null;
+        else
+            clr_red "If defined, migrations should only be 'yes' or 'no'.";
+            exit 1;
+        fi;
     fi;
 
     cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
