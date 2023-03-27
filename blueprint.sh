@@ -45,14 +45,9 @@ if [[ $1 != "-bash" ]]; then
 fi;
 
 if [[ $2 == "-i" ]]; then
-    if [[ $3 == "" ]]; then
-        clr_bright "Expected 1 argument but got 0.";
-    fi;
+    if [[ $3 == "" ]]; then clr_bright "Expected 1 argument but got 0.";fi;
     FILE=$3".blueprint"
-    if [[ ! -f "$FILE" ]]; then
-        echo "$FILE could not be found.";
-        exit 1;
-    fi;
+    if [[ ! -f "$FILE" ]]; then clr_red "$FILE could not be found.";exit 1;fi;
 
     ZIP=$3".zip"
     cp $FILE .blueprint/tmp/$ZIP;
@@ -61,22 +56,27 @@ if [[ $2 == "-i" ]]; then
     cd /var/www/pterodactyl;
     rm .blueprint/tmp/$ZIP;
 
+    VERSION______BACKUP=$VERSION;
+    ZIP______BACKUP=$VERSION;
+    FILE______BACKUP=$VERSION;
     eval $(parse_yaml .blueprint/tmp/$3/conf.yml) #documentation.ptero.shop/documentation/conf.yml
-    if [[ $target != $VERSION ]]; then
-        clr_red "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";
-        rm -R .blueprint/tmp/$3;
-        exit 1;
-    fi;
-    if [[ $identifier != $3 ]]; then
-        clr_red "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";
-        rm -R .blueprint/tmp/$3;
-        exit 1;
-    fi;
-    if [[ $identifier == "blueprint" ]]; then
-        clr_red "The operation could not be completed since the extension is attempting to overwrite internal files.";
-        rm -R .blueprint/tmp/$3;
-        exit 1;
-    fi;
+    if [[ $VERSION______BACKUP != $VERSION ]]; then clr_red "Tampering with local variables detected.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $ZIP______BACKUP != $ZIP ]]; then clr_red "Tampering with local variables detected.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $FILE______BACKUP != $FILE ]]; then clr_red "Tampering with local variables detected.";rm -R .blueprint/tmp/$3;exit 1;fi;
+
+    if [[ $name == "" ]]; then clr_red "'name' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $identifier == "" ]]; then clr_red "'identifier' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $description == "" ]]; then clr_red "'description' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $version == "" ]]; then clr_red "'version' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $target == "" ]]; then clr_red "'target' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
+
+    if [[ ! -f ".blueprint/tmp/$3/icon.jpg" ]]; then clr_red "This extension is currently missing an icon.";fi;
+
+    if [[ $target != $VERSION ]]; then clr_red "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $identifier != $3 ]]; then clr_red "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $identifier == "blueprint" ]]; then clr_red "The operation could not be completed since the extension is attempting to overwrite internal files.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    # HAS NOT BEEN FULLY TESTED YET
+    if [[ "$identifier" != [a-z] ]]; then clr_red "The extension identifier should be lowercase and only contain characters a-z.";rm -R .blueprint/tmp/$3;exit 1;fi;
 
     if [[ $migrations != "" ]]; then
         # HAS NOT BEEN FULLY TESTED YET
@@ -86,6 +86,7 @@ if [[ $2 == "-i" ]]; then
             echo "ok" > /dev/null;
         else
             clr_red "If defined, migrations should only be 'yes' or 'no'.";
+            rm -R .blueprint/tmp/$3;
             exit 1;
         fi;
     fi;
@@ -99,6 +100,7 @@ if [[ $2 == "-i" ]]; then
             echo "ok" > /dev/null;
         else
             clr_red "If defined, controller should only be 'default' or 'custom'.";
+            rm -R .blueprint/tmp/$3;
             exit 1;
         fi;
     fi;
@@ -162,6 +164,9 @@ if [[ $2 == "-i" ]]; then
     rm .blueprint/defaults/extensions/route.default.bak;
     rm .blueprint/defaults/extensions/button.default.bak;
     rm -R .blueprint/tmp/$3;
+
+    if [[ $author == "blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
+    if [[ $author == "Blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
 fi;
 
 touch /usr/local/bin/blueprint > /dev/null;
@@ -170,5 +175,9 @@ chmod u+x /var/www/pterodactyl/blueprint.sh > /dev/null;
 chmod u+x /usr/local/bin/blueprint > /dev/null;
 
 if [[ $2 == "help" ]]; then
-    echo -e "";
+    echo -e "placeholder";
+fi;
+
+if [[ $2 == "-v" ]]; then
+    echo -e $VERSION;
 fi;
