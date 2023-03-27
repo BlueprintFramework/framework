@@ -83,8 +83,16 @@ if [[ $2 == "-i" ]]; then
     fi;
 
     cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
-    if [[ $controller != "custom" ]]; then
-        cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
+    if [[ $controller != "" ]]; then
+        # HAS NOT BEEN FULLY TESTED YET
+        if [[ $controller == "default" ]]; then
+            cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
+        elif [[ $controller == "custom" ]]; then
+            echo "ok" > /dev/null;
+        else
+            clr_red "If defined, controller should only be 'default' or 'custom'.";
+            exit 1;
+        fi;
     fi;
     cp -R .blueprint/defaults/extensions/route.default .blueprint/defaults/extensions/route.default.bak 2> /dev/null;
     cp -R .blueprint/defaults/extensions/button.default .blueprint/defaults/extensions/button.default.bak 2> /dev/null;
