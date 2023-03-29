@@ -37,7 +37,6 @@ class BlueprintExtensionController extends Controller
      */
     public function index(): View
     {
-        $rootPath = "/admin/extensions/blueprint";
         $a = $this->bp->a();
         $b = $this->bp->b();
         $c = $this->bp->c();
@@ -45,7 +44,7 @@ class BlueprintExtensionController extends Controller
             'admin.extensions.blueprint.index', [
                 'version' => $this->version,
                 'bp' => $this->bp,
-                'root' => $rootPath,
+                'root' => "/admin/extensions/blueprint",
                 'a' => $a,
                 'b' => $b,
                 'c' => $c,

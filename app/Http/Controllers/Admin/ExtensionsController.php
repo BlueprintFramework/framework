@@ -22,7 +22,6 @@ class ExtensionsController extends Controller
      */
     public function index(): View
     {
-        $rootPath = "/admin/extensions";
-        return $this->view->make('admin.extensions', ['version' => $this->version, 'bp' => $this->bp, 'root' => $rootPath]);
+        return $this->view->make('admin.extensions', ['version' => $this->version, 'bp' => $this->bp, 'root' => "/admin/extensions"]);
     }
 }
