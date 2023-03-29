@@ -59,9 +59,6 @@ class BlueprintExtensionController extends Controller
             $this->settings->set('blueprint::' . $key, $value);
         }
 
-        //$this->kernel->call('queue:restart');
-        //$this->alert->success('Blueprint settings have updated successfully.')->flash();
-
         return redirect()->route('admin.extensions.blueprint.index');
     }
 }
