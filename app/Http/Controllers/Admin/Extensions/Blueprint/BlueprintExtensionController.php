@@ -37,17 +37,14 @@ class BlueprintExtensionController extends Controller
      */
     public function index(): View
     {
-        $a = $this->bp->a();
-        $b = $this->bp->b();
-        $c = $this->bp->c();
         return $this->view->make(
             'admin.extensions.blueprint.index', [
                 'version' => $this->version,
                 'bp' => $this->bp,
                 'root' => "/admin/extensions/blueprint",
-                'a' => $a,
-                'b' => $b,
-                'c' => $c,
+                'a' => $this->bp->a(),
+                'b' => $this->bp->b(),
+                'c' => $this->bp->c(),
             ]
         );
     }
