@@ -87,11 +87,11 @@
                 </div>
                 <div class="modal-body">
                     <p>
-                        Every purchase comes with a unique license key preinstalled into your Blueprint files and allows our license system to work without any user input.
-                        Most of the time this system does not hinder the user experience, but in rare cases our validation server may be offline and is unable to validate any licenses.
-                        If this happens, it should automatically resolve itself within 24 hours.
+                        Every purchase comes with a unique license key pre-installed into your Blueprint files, which allows our license system to function without requiring any user input. 
+                        Most of the time, this system does not affect the user experience. However, in rare cases, our validation server may be offline and unable to validate licenses. 
+                        If this occurs, it should automatically resolve itself within 24 hours.
                         <br><br>
-                        Some data, such as IPs and licenses may be shared with the Blueprint team to allow our license system to work. This allows us to revoke licenses remotely in case of abuse or piracy.
+                        Some data, such as IP addresses and licenses, may be shared with the Blueprint team to enable our license system to function properly. This also allows us to revoke licenses remotely in case of abuse or piracy.
                     </p>
                 </div>
                 <div class="modal-footer">
