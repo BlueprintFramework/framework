@@ -16,7 +16,7 @@
 
 @section('content')
     {{ $bp->rlKey() }}
-    <p>Blueprint is the framework that drives all Blueprint-compatible extensions and allows multiple extensions to be installed at the same time.</p>
+    <p>Blueprint is the framework that powers all Blueprint-compatible extensions, enabling multiple extensions to be installed and used simultaneously.</p>
     <div class="row">
         <div class="col-xs-3">
             <div class="box">
@@ -53,17 +53,17 @@
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
                                 <input type="text" required name="placeholder:1" id="placeholder" value="{{ $bp->dbGet('placeholder:1') }}" class="form-control" @if(!$bp->b())readonly @endif/>
-                                <p class="text-muted small">placeholder</p>
+                                <p class="text-muted small">placeholder 1</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
                                 <input type="text" required name="placeholder:2" id="placeholder" value="{{ $bp->dbGet('placeholder:2') }}" class="form-control" @if(!$bp->a())readonly @endif/>
-                                <p class="text-muted small">placeholder</p>
+                                <p class="text-muted small">placeholder 2</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
                                 <input type="text" required name="placeholder:3" id="placeholder" value="{{ $bp->dbGet('placeholder:3') }}" class="form-control" @if(!$bp->c())readonly @endif/>
-                                <p class="text-muted small">placeholder</p>
+                                <p class="text-muted small">placeholder 3</p>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                             {{ csrf_field() }}
                             <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right">Save</button>
                         @else
-                            <p class="text-muted small">You are required to have a valid license key attached to be able to change any settings.</p> 
+                            <p class="text-muted small">You are required to have a valid license key attached in order to change any settings.</p> 
                         @endif
                     </div>
                 </div>
