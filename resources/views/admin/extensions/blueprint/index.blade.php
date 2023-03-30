@@ -34,7 +34,7 @@
                 <div class="box-body">
                     @if ($b)
                         <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Your license key is valid. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more.</a></p>
+                        <p class="text-muted small">Your license key is valid <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more.</a></p>
                     @else
                         <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
                         <p class="text-muted small">Your license key could not be validated. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more.</a></p>
