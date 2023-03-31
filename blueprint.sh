@@ -81,7 +81,7 @@ if [[ $2 == "-i" ]]; then
     if [[ $migrations != "" ]]; then
         # HAS NOT BEEN FULLY TESTED YET
         if [[ $migrations == "yes" ]]; then
-            cp -R .blueprint/tmp/$3/migrations/* database/migrations/ 2> /dev/null;
+            cp -R .blueprint/tmp/$3/$migrations_path/* database/migrations/ 2> /dev/null;
         elif [[ $migrations == "no" ]]; then
             echo "ok" > /dev/null;
         else
@@ -110,7 +110,7 @@ if [[ $2 == "-i" ]]; then
     mkdir public/assets/extensions/$identifier;
     cp .blueprint/tmp/$3/icon.jpg public/assets/extensions/$identifier/icon.jpg;
     ICON="/assets/extensions/$identifier/icon.jpg";
-    CONTENT=$(cat .blueprint/tmp/$3/admin/index.blade.php);
+    CONTENT=$(cat .blueprint/tmp/$3/$view_path);
 
     sed -i "s!␀title␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
     sed -i "s!␀name␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
