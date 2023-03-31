@@ -150,7 +150,7 @@ if [[ $2 == "-i" ]]; then
         echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     fi;
     if [[ $controller == "custom" ]]; then
-        echo $(cat .blueprint/tmp/$3/admin/indexController.php) > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+        echo $(cat .blueprint/tmp/$3/$controller_path) > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     fi;
 
     echo $ADMINROUTE_RESULT >> routes/admin.php;
