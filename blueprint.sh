@@ -91,6 +91,20 @@ if [[ $2 == "-i" ]]; then
         fi;
     fi;
 
+    if [[ $publicfiles != "" ]]; then
+        # HAS NOT BEEN FULLY TESTED YET
+        if [[ $publicfiles == "yes" ]]; then
+            mkdir public/extensions/$identifier
+            cp -R .blueprint/tmp/$3/$publicfiles_path/* public/extensions/$identifier/* 2> /dev/null;
+        elif [[ $controller == "no" ]]; then
+            echo "ok" > /dev/null;
+        else
+            clr_red "If defined, publicfiles should only be 'yes' or 'no'.";
+            rm -R .blueprint/tmp/$3;
+            exit 1;
+        fi;
+    fi;
+
     cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
     if [[ $controller != "" ]]; then
         # HAS NOT BEEN FULLY TESTED YET
