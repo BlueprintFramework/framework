@@ -63,18 +63,18 @@ if [[ $2 == "-i" ]]; then
     if [[ $description == "" ]]; then clr_red "'description' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
     if [[ $version == "" ]]; then clr_red "'version' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
     if [[ $target == "" ]]; then clr_red "'target' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $icon == "" ]]; then clr_red "'icon' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
 
-    if [[ ! -f ".blueprint/tmp/$3/icon.jpg" ]]; then clr_red "This extension is currently missing an icon.";fi;
+    if [[ ! -f ".blueprint/tmp/$3/$icon" ]]; then clr_red "Extensions are required to have valid icons.";rm -R .blueprint/tmp/$3;exit 1;fi;
 
     if [[ $target != $VERSION ]]; then clr_red "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";rm -R .blueprint/tmp/$3;exit 1;fi;
     if [[ $identifier != $3 ]]; then clr_red "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";rm -R .blueprint/tmp/$3;exit 1;fi;
     if [[ $identifier == "blueprint" ]]; then clr_red "The operation could not be completed since the extension is attempting to overwrite internal files.";rm -R .blueprint/tmp/$3;exit 1;fi;
-    # HAS NOT BEEN FULLY TESTED YET
+
     if [[ $identifier =~ [a-z] ]]; then echo "ok" > /dev/null;
     else clr_red "The extension identifier should be lowercase and only contain characters a-z.";rm -R .blueprint/tmp/$3;exit 1;fi;
 
     if [[ $migrations_enabled != "" ]]; then
-        # HAS NOT BEEN FULLY TESTED YET
         if [[ $migrations_enabled == "yes" ]]; then
             cp -R .blueprint/tmp/$3/$migrations_directory/* database/migrations/ 2> /dev/null;
         elif [[ $migrations_enabled == "no" ]]; then
@@ -87,7 +87,6 @@ if [[ $2 == "-i" ]]; then
     fi;
 
     if [[ $publicfiles_directory != "" ]]; then
-        # HAS NOT BEEN FULLY TESTED YET
         if [[ $publicfiles_enabled == "yes" ]]; then
             mkdir public/extensions/$identifier
             cp -R .blueprint/tmp/$3/$publicfiles_directory/* public/extensions/$identifier/* 2> /dev/null;
@@ -102,7 +101,6 @@ if [[ $2 == "-i" ]]; then
 
     cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
     if [[ $controller_type != "" ]]; then
-        # HAS NOT BEEN FULLY TESTED YET
         if [[ $controller_type == "default" ]]; then
             cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
         elif [[ $controller_type == "custom" ]]; then
