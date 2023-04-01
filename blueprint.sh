@@ -89,7 +89,7 @@ if [[ $2 == "-i" ]]; then
     if [[ $publicfiles_directory != "" ]]; then
         if [[ $publicfiles_enabled == "yes" ]]; then
             mkdir public/extensions/$identifier
-            cp -R .blueprint/tmp/$3/$publicfiles_directory/* public/extensions/$identifier/* 2> /dev/null;
+            cp -R .blueprint/tmp/$3/$publicfiles_directory/* public/extensions/$identifier/ 2> /dev/null;
         elif [[ $publicfiles_enabled == "no" ]]; then
             echo "ok" > /dev/null;
         else
