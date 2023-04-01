@@ -91,12 +91,12 @@ if [[ $2 == "-i" ]]; then
         fi;
     fi;
 
-    if [[ $publicfiles != "" ]]; then
+    if [[ $publicfiles_directory != "" ]]; then
         # HAS NOT BEEN FULLY TESTED YET
-        if [[ $publicfiles == "yes" ]]; then
+        if [[ $publicfiles_enabled == "yes" ]]; then
             mkdir public/extensions/$identifier
-            cp -R .blueprint/tmp/$3/$publicfiles_path/* public/extensions/$identifier/* 2> /dev/null;
-        elif [[ $controller == "no" ]]; then
+            cp -R .blueprint/tmp/$3/$publicfiles_directory/* public/extensions/$identifier/* 2> /dev/null;
+        elif [[ $publicfiles_enabled == "no" ]]; then
             echo "ok" > /dev/null;
         else
             clr_red "If defined, publicfiles should only be 'yes' or 'no'.";
@@ -106,11 +106,11 @@ if [[ $2 == "-i" ]]; then
     fi;
 
     cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
-    if [[ $controller != "" ]]; then
+    if [[ $controller_type != "" ]]; then
         # HAS NOT BEEN FULLY TESTED YET
-        if [[ $controller == "default" ]]; then
+        if [[ $controller_type == "default" ]]; then
             cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
-        elif [[ $controller == "custom" ]]; then
+        elif [[ $controller_type == "custom" ]]; then
             echo "ok" > /dev/null;
         else
             clr_red "If defined, controller should only be 'default' or 'custom'.";
@@ -124,7 +124,7 @@ if [[ $2 == "-i" ]]; then
     mkdir public/assets/extensions/$identifier;
     cp .blueprint/tmp/$3/icon.jpg public/assets/extensions/$identifier/icon.jpg;
     ICON="/assets/extensions/$identifier/icon.jpg";
-    CONTENT=$(cat .blueprint/tmp/$3/$view_path);
+    CONTENT=$(cat .blueprint/tmp/$3/$view_location);
 
     sed -i "s!␀title␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
     sed -i "s!␀name␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
@@ -140,7 +140,7 @@ if [[ $2 == "-i" ]]; then
 
     sed -i "s!␀content␀!$CONTENT!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
 
-    if [[ $controller != "custom" ]]; then
+    if [[ $controller_type != "custom" ]]; then
         sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/controller.default.bak > /dev/null;
     fi;
     sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/route.default.bak > /dev/null;
@@ -149,7 +149,7 @@ if [[ $2 == "-i" ]]; then
     ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default.bak);
     ADMINROUTE_RESULT=$(cat .blueprint/defaults/extensions/route.default.bak);
     ADMINBUTTON_RESULT=$(cat .blueprint/defaults/extensions/button.default.bak);
-    if [[ $controller != "custom" ]]; then
+    if [[ $controller_type != "custom" ]]; then
         ADMINCONTROLLER_RESULT=$(cat .blueprint/defaults/extensions/controller.default.bak);
     fi;
     ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
@@ -160,11 +160,11 @@ if [[ $2 == "-i" ]]; then
 
     mkdir app/Http/Controllers/Admin/Extensions/$identifier;
     touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
-    if [[ $controller != "custom" ]]; then
+
+    if [[ $controller_type != "custom" ]]; then
         echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
-    fi;
-    if [[ $controller == "custom" ]]; then
-        echo $(cat .blueprint/tmp/$3/$controller_path) > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+    else
+        echo $(cat .blueprint/tmp/$3/$controller_location) > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     fi;
 
     echo $ADMINROUTE_RESULT >> routes/admin.php;
@@ -172,7 +172,7 @@ if [[ $2 == "-i" ]]; then
     sed -i "s?<!--␀replace␀-->?$ADMINBUTTON_RESULT\n<!--␀replace␀-->?g" resources/views/admin/extensions.blade.php > /dev/null;
 
     rm .blueprint/defaults/extensions/admin.default.bak;
-    if [[ $controller != "custom" ]]; then
+    if [[ $controller_type != "custom" ]]; then
         rm .blueprint/defaults/extensions/controller.default.bak;
     fi;
     rm .blueprint/defaults/extensions/route.default.bak;
