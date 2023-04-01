@@ -34,10 +34,10 @@
                 <div class="box-body">
                     @if ($b)
                         <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Your license key is valid <a data-toggle="modal" data-target="#licenseMoreInfo">learn more.</a></p>
+                        <p class="text-muted small">Your license key is valid. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more</a></p>
                     @else
                         <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Your license key could not be validated. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more.</a></p>
+                        <p class="text-muted small">Your license key could not be validated. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more</a></p>
                     @endif
                 </div>
             </div>  
@@ -53,17 +53,17 @@
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
                                 <input type="text" required name="placeholder:1" id="placeholder" value="{{ $bp->dbGet('placeholder:1') }}" class="form-control" @if(!$bp->b())readonly @endif/>
-                                <p class="text-muted small">placeholder 1</p>
+                                <p class="text-muted small">placeholder</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
                                 <input type="text" required name="placeholder:2" id="placeholder" value="{{ $bp->dbGet('placeholder:2') }}" class="form-control" @if(!$bp->a())readonly @endif/>
-                                <p class="text-muted small">placeholder 2</p>
+                                <p class="text-muted small">placeholder</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
                                 <input type="text" required name="placeholder:3" id="placeholder" value="{{ $bp->dbGet('placeholder:3') }}" class="form-control" @if(!$bp->c())readonly @endif/>
-                                <p class="text-muted small">placeholder 3</p>
+                                <p class="text-muted small">placeholder</p>
                             </div>
                         </div>
                     </div>
