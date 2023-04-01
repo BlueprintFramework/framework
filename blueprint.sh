@@ -56,13 +56,7 @@ if [[ $2 == "-i" ]]; then
     cd /var/www/pterodactyl;
     rm .blueprint/tmp/$ZIP;
 
-    VERSION______BACKUP=$VERSION;
-    ZIP______BACKUP=$VERSION;
-    FILE______BACKUP=$VERSION;
-    eval $(parse_yaml .blueprint/tmp/$3/conf.yml) #documentation.ptero.shop/documentation/conf.yml
-    if [[ $VERSION______BACKUP != $VERSION ]]; then clr_red "Tampering with local variables detected.";rm -R .blueprint/tmp/$3;exit 1;fi;
-    if [[ $ZIP______BACKUP != $ZIP ]]; then clr_red "Tampering with local variables detected.";rm -R .blueprint/tmp/$3;exit 1;fi;
-    if [[ $FILE______BACKUP != $FILE ]]; then clr_red "Tampering with local variables detected.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
 
     if [[ $name == "" ]]; then clr_red "'name' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
     if [[ $identifier == "" ]]; then clr_red "'identifier' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
@@ -76,13 +70,14 @@ if [[ $2 == "-i" ]]; then
     if [[ $identifier != $3 ]]; then clr_red "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";rm -R .blueprint/tmp/$3;exit 1;fi;
     if [[ $identifier == "blueprint" ]]; then clr_red "The operation could not be completed since the extension is attempting to overwrite internal files.";rm -R .blueprint/tmp/$3;exit 1;fi;
     # HAS NOT BEEN FULLY TESTED YET
-    if [[ "$identifier" != [a-z] ]]; then clr_red "The extension identifier should be lowercase and only contain characters a-z.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $identifier =~ [a-z] ]]; then echo "ok" > /dev/null;
+    else clr_red "The extension identifier should be lowercase and only contain characters a-z.";rm -R .blueprint/tmp/$3;exit 1;fi;
 
-    if [[ $migrations != "" ]]; then
+    if [[ $migrations_enabled != "" ]]; then
         # HAS NOT BEEN FULLY TESTED YET
-        if [[ $migrations == "yes" ]]; then
-            cp -R .blueprint/tmp/$3/$migrations_path/* database/migrations/ 2> /dev/null;
-        elif [[ $migrations == "no" ]]; then
+        if [[ $migrations_enabled == "yes" ]]; then
+            cp -R .blueprint/tmp/$3/$migrations_directory/* database/migrations/ 2> /dev/null;
+        elif [[ $migrations_enabled == "no" ]]; then
             echo "ok" > /dev/null;
         else
             clr_red "If defined, migrations should only be 'yes' or 'no'.";
