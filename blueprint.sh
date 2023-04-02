@@ -49,7 +49,7 @@ if [[ $1 != "-bash" ]]; then
     fi;
 fi;
 
-if [[ $2 == "-i" ]]; then
+if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $3 == "" ]]; then clr_bright "Expected 1 argument but got 0.";fi;
     FILE=$3".blueprint"
     if [[ ! -f "$FILE" ]]; then clr_red "$FILE could not be found.";exit 1;fi;
@@ -185,6 +185,6 @@ if [[ $2 == "help" ]]; then
     echo -e "placeholder";
 fi;
 
-if [[ $2 == "-v" ]]; then
+if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
     echo -e $VERSION;
 fi;
