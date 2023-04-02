@@ -124,25 +124,25 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     ICON="/assets/extensions/$identifier/icon.jpg";
     CONTENT=$(cat .blueprint/tmp/$3/$view_location);
 
-    sed -i "s!␀title␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s!␀name␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s!␀breadcrumb␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s?␀name␀?$name?g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
+    sed -i "s¥␀title␀¥$name¥g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¥␀name␀¥$name¥g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¥␀breadcrumb␀¥$name¥g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¥␀name␀¥$name¥g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
 
-    sed -i "s!␀description␀!$description!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¥␀description␀¥$description¥g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
 
-    sed -i "s!␀version␀!$version!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s?␀version␀?$version?g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
+    sed -i "s¥␀version␀¥$version¥g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¥␀version␀¥$version¥g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
 
-    sed -i "s!␀icon␀!$ICON!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¥␀icon␀¥$ICON¥g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
 
-    sed -i "s!␀content␀!$CONTENT!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¥␀content␀¥$CONTENT¥g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
 
     if [[ $controller_type != "custom" ]]; then
-        sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/controller.default.bak > /dev/null;
+        sed -i "s¥␀id␀¥$identifier¥g" .blueprint/defaults/extensions/controller.default.bak > /dev/null;
     fi;
-    sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/route.default.bak > /dev/null;
-    sed -i "s?␀id␀?$identifier?g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
+    sed -i "s¥␀id␀¥$identifier¥g" .blueprint/defaults/extensions/route.default.bak > /dev/null;
+    sed -i "s¥␀id␀¥$identifier¥g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
 
     ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default.bak);
     ADMINROUTE_RESULT=$(cat .blueprint/defaults/extensions/route.default.bak);
