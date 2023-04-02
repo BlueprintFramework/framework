@@ -15,6 +15,11 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
+touch /usr/local/bin/blueprint > /dev/null;
+echo -e "#!/bin/bash\nbash /var/www/pterodactyl/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
+chmod u+x /var/www/pterodactyl/blueprint.sh > /dev/null;
+chmod u+x /usr/local/bin/blueprint > /dev/null;
+
 if [[ $1 != "-bash" ]]; then
     if dbValidate "blueprint.setupFinished"; then
         clr_blue "This command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.";
@@ -175,11 +180,6 @@ if [ $2 == "-i"] || [ $2 == "-install" ]; then
     if [[ $author == "blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
     if [[ $author == "Blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
 fi;
-
-touch /usr/local/bin/blueprint > /dev/null;
-echo -e "#!/bin/bash\nbash /var/www/pterodactyl/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
-chmod u+x /var/www/pterodactyl/blueprint.sh > /dev/null;
-chmod u+x /usr/local/bin/blueprint > /dev/null;
 
 if [[ $2 == "help" ]]; then
     echo -e "placeholder";
