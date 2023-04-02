@@ -49,7 +49,7 @@ if [[ $1 != "-bash" ]]; then
     fi;
 fi;
 
-if [[ $2 == "-i"]]; then
+if [[ $2 == "-i" ]]; then
     if [[ $3 == "" ]]; then clr_bright "Expected 1 argument but got 0.";fi;
     FILE=$3".blueprint"
     if [[ ! -f "$FILE" ]]; then clr_red "$FILE could not be found.";exit 1;fi;
