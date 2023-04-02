@@ -167,7 +167,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     echo $ADMINROUTE_RESULT >> routes/admin.php;
 
-    sed -i "s?<!--␀replace␀-->?$ADMINBUTTON_RESULT\n<!--␀replace␀-->?g" resources/views/admin/extensions.blade.php > /dev/null;
+    sed -i "s¥<!--␀replace␀-->¥$ADMINBUTTON_RESULT\n<!--␀replace␀-->¥g" resources/views/admin/extensions.blade.php > /dev/null;
 
     rm .blueprint/defaults/extensions/admin.default.bak;
     if [[ $controller_type != "custom" ]]; then
