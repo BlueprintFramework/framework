@@ -15,6 +15,11 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
+touch /usr/local/bin/blueprint > /dev/null;
+echo -e "#!/bin/bash\nbash /var/www/pterodactyl/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
+chmod u+x /var/www/pterodactyl/blueprint.sh > /dev/null;
+chmod u+x /usr/local/bin/blueprint > /dev/null;
+
 if [[ $1 != "-bash" ]]; then
     if dbValidate "blueprint.setupFinished"; then
         clr_blue "This command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.";
@@ -44,7 +49,7 @@ if [[ $1 != "-bash" ]]; then
     fi;
 fi;
 
-if [ $2 == "-i"] || [ $2 == "-install" ]; then
+if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $3 == "" ]]; then clr_bright "Expected 1 argument but got 0.";fi;
     FILE=$3".blueprint"
     if [[ ! -f "$FILE" ]]; then clr_red "$FILE could not be found.";exit 1;fi;
@@ -119,25 +124,25 @@ if [ $2 == "-i"] || [ $2 == "-install" ]; then
     ICON="/assets/extensions/$identifier/icon.jpg";
     CONTENT=$(cat .blueprint/tmp/$3/$view_location);
 
-    sed -i "s!␀title␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s!␀name␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s!␀breadcrumb␀!$name!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s?␀name␀?$name?g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
+    sed -i "s¿␀title␀¿$name¿g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¿␀name␀¿$name¿g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¿␀breadcrumb␀¿$name¿g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¿␀name␀¿$name¿g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
 
-    sed -i "s!␀description␀!$description!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¿␀description␀¿$description¿g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
 
-    sed -i "s!␀version␀!$version!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s?␀version␀?$version?g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
+    sed -i "s¿␀version␀¿$version¿g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¿␀version␀¿$version¿g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
 
-    sed -i "s!␀icon␀!$ICON!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¿␀icon␀¿$ICON¿g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
 
-    sed -i "s!␀content␀!$CONTENT!g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s¿␀content␀¿$CONTENT¿g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
 
     if [[ $controller_type != "custom" ]]; then
-        sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/controller.default.bak > /dev/null;
+        sed -i "s¿␀id␀¿$identifier¿g" .blueprint/defaults/extensions/controller.default.bak > /dev/null;
     fi;
-    sed -i "s!␀id␀!$identifier!g" .blueprint/defaults/extensions/route.default.bak > /dev/null;
-    sed -i "s?␀id␀?$identifier?g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
+    sed -i "s¿␀id␀¿$identifier¿g" .blueprint/defaults/extensions/route.default.bak > /dev/null;
+    sed -i "s¿␀id␀¿$identifier¿g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
 
     ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default.bak);
     ADMINROUTE_RESULT=$(cat .blueprint/defaults/extensions/route.default.bak);
@@ -162,7 +167,7 @@ if [ $2 == "-i"] || [ $2 == "-install" ]; then
 
     echo $ADMINROUTE_RESULT >> routes/admin.php;
 
-    sed -i "s?<!--␀replace␀-->?$ADMINBUTTON_RESULT\n<!--␀replace␀-->?g" resources/views/admin/extensions.blade.php > /dev/null;
+    sed -i "s¿<!--␀replace␀-->¿$ADMINBUTTON_RESULT\n<!--␀replace␀-->¿g" resources/views/admin/extensions.blade.php > /dev/null;
 
     rm .blueprint/defaults/extensions/admin.default.bak;
     if [[ $controller_type != "custom" ]]; then
@@ -176,15 +181,10 @@ if [ $2 == "-i"] || [ $2 == "-install" ]; then
     if [[ $author == "Blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
 fi;
 
-touch /usr/local/bin/blueprint > /dev/null;
-echo -e "#!/bin/bash\nbash /var/www/pterodactyl/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
-chmod u+x /var/www/pterodactyl/blueprint.sh > /dev/null;
-chmod u+x /usr/local/bin/blueprint > /dev/null;
-
 if [[ $2 == "help" ]]; then
     echo -e "placeholder";
 fi;
 
-if [ $2 == "-v" ] || [ $2 == "-version" ]; then
+if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
     echo -e $VERSION;
 fi;
