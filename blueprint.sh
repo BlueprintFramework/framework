@@ -15,6 +15,22 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
+export NEWT_COLORS='
+    root=,black
+    window=black,blue
+    title=white,blue
+    border=blue,blue
+    textbox=white,blue
+    listbox=white,black
+    button=white,blue
+';
+
+error() {
+    whiptail --title " ◆ " --ok-button "ok" --msgbox "Sorry, this operation could not be completed. For troubleshooting, please go to ptero.shop/error.\n\n\"${1}\"" 15 60;
+    clr_red "${1}";
+    exit 1;
+};
+
 touch /usr/local/bin/blueprint > /dev/null;
 echo -e "#!/bin/bash\nbash /var/www/pterodactyl/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
 chmod u+x /var/www/pterodactyl/blueprint.sh > /dev/null;
@@ -50,9 +66,9 @@ if [[ $1 != "-bash" ]]; then
 fi;
 
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
-    if [[ $3 == "" ]]; then clr_bright "Expected 1 argument but got 0.";fi;
+    if [[ $3 == "" ]]; then error "Expected 1 argument but got 0.";fi;
     FILE=$3".blueprint"
-    if [[ ! -f "$FILE" ]]; then clr_red "$FILE could not be found.";exit 1;fi;
+    if [[ ! -f "$FILE" ]]; then error "$FILE could not be found.";fi;
 
     ZIP=$3".zip"
     cp $FILE .blueprint/tmp/$ZIP;
@@ -63,21 +79,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
 
-    if [[ $name == "" ]]; then clr_red "'name' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
-    if [[ $identifier == "" ]]; then clr_red "'identifier' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
-    if [[ $description == "" ]]; then clr_red "'description' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
-    if [[ $version == "" ]]; then clr_red "'version' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
-    if [[ $target == "" ]]; then clr_red "'target' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
-    if [[ $icon == "" ]]; then clr_red "'icon' is a required option.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $name == "" ]]; then rm -R .blueprint/tmp/$3; error "'name' is a required option.";fi;
+    if [[ $identifier == "" ]]; then rm -R .blueprint/tmp/$3; error "'identifier' is a required option.";fi;
+    if [[ $description == "" ]]; then rm -R .blueprint/tmp/$3; error "'description' is a required option.";fi;
+    if [[ $version == "" ]]; then rm -R .blueprint/tmp/$3; error "'version' is a required option.";fi;
+    if [[ $target == "" ]]; then rm -R .blueprint/tmp/$3; error "'target' is a required option.";fi;
+    if [[ $icon == "" ]]; then rm -R .blueprint/tmp/$3; error "'icon' is a required option.";fi;
 
-    if [[ ! -f ".blueprint/tmp/$3/$icon" ]]; then clr_red "Extensions are required to have valid icons.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ ! -f ".blueprint/tmp/$3/$icon" ]]; then rm -R .blueprint/tmp/$3; error "Extensions are required to have valid icons.";fi;
 
-    if [[ $target != $VERSION ]]; then clr_red "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";rm -R .blueprint/tmp/$3;exit 1;fi;
-    if [[ $identifier != $3 ]]; then clr_red "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";rm -R .blueprint/tmp/$3;exit 1;fi;
-    if [[ $identifier == "blueprint" ]]; then clr_red "The operation could not be completed since the extension is attempting to overwrite internal files.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    if [[ $target != $VERSION ]]; then rm -R .blueprint/tmp/$3; error "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";fi;
+    if [[ $identifier != $3 ]]; then rm -R .blueprint/tmp/$3; error "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";fi;
+    if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/tmp/$3; error "The operation could not be completed since the extension is attempting to overwrite internal files.";fi;
 
     if [[ $identifier =~ [a-z] ]]; then echo "ok" > /dev/null;
-    else clr_red "The extension identifier should be lowercase and only contain characters a-z.";rm -R .blueprint/tmp/$3;exit 1;fi;
+    else rm -R .blueprint/tmp/$3; error "The extension identifier should be lowercase and only contain characters a-z.";fi;
 
     if [[ $migrations_enabled != "" ]]; then
         if [[ $migrations_enabled == "yes" ]]; then
@@ -85,9 +101,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         elif [[ $migrations_enabled == "no" ]]; then
             echo "ok" > /dev/null;
         else
-            clr_red "If defined, migrations should only be 'yes' or 'no'.";
             rm -R .blueprint/tmp/$3;
-            exit 1;
+            error "If defined, migrations should only be 'yes' or 'no'.";
         fi;
     fi;
 
@@ -98,9 +113,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         elif [[ $publicfiles_enabled == "no" ]]; then
             echo "ok" > /dev/null;
         else
-            clr_red "If defined, publicfiles should only be 'yes' or 'no'.";
             rm -R .blueprint/tmp/$3;
-            exit 1;
+            error "If defined, publicfiles should only be 'yes' or 'no'.";
         fi;
     fi;
 
@@ -111,9 +125,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         elif [[ $controller_type == "custom" ]]; then
             echo "ok" > /dev/null;
         else
-            clr_red "If defined, controller should only be 'default' or 'custom'.";
             rm -R .blueprint/tmp/$3;
-            exit 1;
+            error "If defined, controller should only be 'default' or 'custom'.";
         fi;
     fi;
     cp -R .blueprint/defaults/extensions/route.default .blueprint/defaults/extensions/route.default.bak 2> /dev/null;
