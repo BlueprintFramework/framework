@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# fix for microsoft newline characters.
-
 VERSION="indev";
 
 cd /var/www/pterodactyl;
