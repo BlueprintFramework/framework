@@ -61,9 +61,9 @@
                                 <p class="text-muted small">placeholder</p>
                             </div>
                             <div class="col-xs-4">
-                                <label class="control-label">placeholder</label>
-                                <input type="text" required name="placeholder:3" id="placeholder" value="{{ $bp->dbGet('placeholder:3') }}" class="form-control" @if(!$bp->c())readonly @endif/>
-                                <p class="text-muted small">placeholder</p>
+                                <label class="control-label">Developer Mode</label>
+                                <input type="text" required name="developer" id="placeholder" value="{{ $bp->dbGet('developer') }}" class="form-control" @if(!$bp->c())readonly @endif/>
+                                <p class="text-muted small">Can be true or false.</p>
                             </div>
                         </div>
                     </div>
