@@ -52,12 +52,12 @@
                         <div class="row">
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
-                                <input type="text" required name="placeholder:1" id="placeholder" value="{{ $bp->dbGet('placeholder:1') }}" class="form-control" @if(!$bp->b())readonly @endif/>
+                                <input type="text" required name="placeholder" id="placeholder" value="{{ $bp->dbGet('placeholder') }}" class="form-control" @if(!$bp->b())readonly @endif/>
                                 <p class="text-muted small">placeholder</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
-                                <input type="text" required name="placeholder:2" id="placeholder" value="{{ $bp->dbGet('placeholder:2') }}" class="form-control" @if(!$bp->a())readonly @endif/>
+                                <input type="text" required name="placeholder" id="placeholder" value="{{ $bp->dbGet('placeholder') }}" class="form-control" @if(!$bp->a())readonly @endif/>
                                 <p class="text-muted small">placeholder</p>
                             </div>
                             <div class="col-xs-4">
