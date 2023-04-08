@@ -12,18 +12,16 @@ class BlueprintSettingsFormRequest extends AdminFormRequest
     public function rules(): array
     {
         return [
-            'placeholder:1' => 'string',
-            'placeholder:2' => 'string',
-            'placeholder:3' => 'string',
+            'placeholder' => 'string',
+            'developer' => 'boolean',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'placeholder:1' => 'placeholder',
-            'placeholder:2' => 'placeholder',
-            'placeholder:3' => 'placeholder',
+            'placeholder' => 'placeholder',
+            'developer' => 'developer',
         ];
     }
 }
