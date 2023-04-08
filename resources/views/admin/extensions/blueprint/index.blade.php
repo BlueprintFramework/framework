@@ -19,6 +19,8 @@
     <p>Blueprint is the framework that powers all Blueprint-compatible extensions, enabling multiple extensions to be installed and used simultaneously.</p>
     <div class="row">
         <div class="col-xs-3">
+
+            <!-- Overview -->
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class='bx bxs-shapes' style='margin-right:5px;'></i></i>Overview</h3>
@@ -27,6 +29,31 @@
                     <p>You are currently using version <code>{{ $bp->version() }}</code>.</p>
                 </div>
             </div>
+
+            <!-- Terminal
+            NOT FINISHED YET
+            -->
+            @if ($c)
+                @if($bp->dbGet('developer') == "true")
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><i class='bx bxs-terminal' style='margin-right:5px;'></i>Terminal</h3>
+                        </div>
+                        <div class="box-body">
+                            <form action="" method="POST">
+                                <div class="col-xs-9">
+                                    <input type="text" required name="cmd" id="cmd" value="" class="form-control"/>
+                                </div>
+                                <div class="col-xs-3">
+                                    <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right" style="padding-top:30%;padding-bottom:30%;">Send</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                @endif
+            @endif
+
+            <!-- License -->
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class='bx bxs-pen' style='margin-right:5px;'></i>License</h3>
@@ -40,7 +67,8 @@
                         <p class="text-muted small">Your license key could not be validated. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more</a></p>
                     @endif
                 </div>
-            </div>  
+            </div> 
+
         </div>
         <div class="col-xs-9">
             <form action="" method="POST">
@@ -82,6 +110,7 @@
             </form>
         </div>
     </div>
+
     <div class="modal fade" id="licenseMoreInfo" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
