@@ -62,8 +62,11 @@
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">Developer Mode</label>
-                                <input type="text" required name="developer" id="placeholder" value="{{ $bp->dbGet('developer') }}" class="form-control" @if(!$bp->c())readonly @endif/>
-                                <p class="text-muted small">Can be true or false.</p>
+                                <select class="form-control" name="developer">
+                                    <option value="false">Disabled</option>
+                                    <option value="true" @if($bp->dbGet('developer')) @endif>Enabled</option>
+                                </select>
+                                <p class="text-muted small">Enable or disable developer-oriented features.</p>
                             </div>
                         </div>
                     </div>

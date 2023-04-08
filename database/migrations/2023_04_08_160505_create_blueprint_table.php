@@ -13,13 +13,15 @@ class CreateBlueprintTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('blueprint');
         Schema::create('blueprint', function (Blueprint $table) {
             $table->id();
             $table->string('placeholder')->nullable(); // Used for work-in-progress options.
-            $table->boolean('developer')->nullable();
+            $table->string('developer')->nullable(); // Somehow I can't make it work with a boolean.
             $table->timestamp('timestamp')->useCurrent()->onUpdate(null);
         });
 
+        Schema::dropIfExists('bpkey');
         Schema::create('bpkey', function (Blueprint $table) {$table->id();$table->string('k')->nullable();$table->boolean('v')->nullable();$table->timestamp('timestamp')->useCurrent()->onUpdate(null);});
     }
 
