@@ -1,5 +1,10 @@
 <?php
 
+// Should not be included in database migrations.
+// If these files are still here when you downloaded this
+// and got included in the database migrations, please let
+// us know.
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
