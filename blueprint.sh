@@ -54,6 +54,10 @@ if [[ $1 != "-bash" ]]; then
         php artisan config:clear > /dev/null;
 
 
+        #clr_bright "php artisan migrate";
+        #php artisan migrate;
+
+
         clr_bright "chown -R www-data:www-data /var/www/pterodactyl/*";
         chown -R www-data:www-data /var/www/pterodactyl/* > /dev/null;
 
