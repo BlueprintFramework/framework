@@ -89,7 +89,7 @@
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">Endpoint</label>
-                                <input type="text" required name="placeholder" id="placeholder" value="{{ $bp->dbGet('placeholder') }}" class="form-control" @if(!$bp->a())readonly @endif/>
+                                <input type="text" required name="placeholder" id="placeholder" value="default" class="form-control" @if(!$bp->a())readonly @endif/>
                                 <p class="text-muted small">Select your preferred API endpoint.</p>
                             </div>
                             <div class="col-xs-4">
