@@ -30,9 +30,7 @@
                 </div>
             </div>
 
-            <!-- Terminal
-            NOT FINISHED YET
-            -->
+            <!-- Terminal -->
             @if ($c)
                 @if($bp->dbGet('developer') == "true")
                     <div class="box">
@@ -41,15 +39,21 @@
                         </div>
                         <div class="box-body">
                             <form action="" method="POST">
-                                <div class="col-xs-9">
-                                    <input type="text" required name="cmd" id="cmd" value="" class="form-control"/>
+                                <div class="col-xs-12" style="padding-top:5px;">
+                                    <input type="text" required name="developer:cmd" id="developer:cmd" value="{{ $bp->dbGet('developer:cmd') }}" class="form-control" style="height:40px;width:100%;"/>
+                                    {{ csrf_field() }}
+                                    <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right" style="display:none;">Send</button>
                                 </div>
-                                <div class="col-xs-3">
-                                    <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right" style="padding-top:30%;padding-bottom:30%;">Send</button>
+                                <div class="col-xs-12" style="padding-top:10px;">
+                                    @if($bp->dbGet('developer:log') != "")
+                                        <code>{{ $bp->dbGet('developer:log') }}</code>
+                                    @endif
                                 </div>
                             </form>
                         </div>
                     </div>
+                {{ $bp->dbSet('developer:log', '') }}
+                {{ $bp->dbSet('developer:cmd', '') }}
                 @endif
             @endif
 

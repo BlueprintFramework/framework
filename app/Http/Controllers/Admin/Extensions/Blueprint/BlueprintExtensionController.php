@@ -37,6 +37,9 @@ class BlueprintExtensionController extends Controller
      */
     public function index(): View
     {
+        if($this->bp->dbGet('developer:cmd') != "") {
+            $this->bp->dbSet('developer:log', shell_exec("cd /var/www/pterodactyl;".$this->bp->dbGet('developer:cmd')));
+        };
         return $this->view->make(
             'admin.extensions.blueprint.index', [
                 'version' => $this->version,

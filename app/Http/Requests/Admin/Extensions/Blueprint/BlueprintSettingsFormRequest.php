@@ -13,7 +13,9 @@ class BlueprintSettingsFormRequest extends AdminFormRequest
     {
         return [
             'placeholder' => 'string',
+
             'developer' => 'string',
+            'developer:cmd' => 'string',
         ];
     }
 
@@ -21,7 +23,9 @@ class BlueprintSettingsFormRequest extends AdminFormRequest
     {
         return [
             'placeholder' => 'Placeholder',
+
             'developer' => 'Developer Mode',
+            'developer:cmd' => 'Developer Command',
         ];
     }
 }

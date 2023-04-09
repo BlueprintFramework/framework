@@ -17,7 +17,11 @@ class CreateBlueprintTable extends Migration
         Schema::create('blueprint', function (Blueprint $table) {
             $table->id();
             $table->string('placeholder')->nullable(); // Used for work-in-progress options.
+
             $table->string('developer')->nullable(); // Somehow I can't make it work with a boolean.
+            $table->string('developer:cmd')->nullable();
+            $table->string('developer:log')->nullable();
+
             $table->timestamp('timestamp')->useCurrent()->onUpdate(null);
         });
 
