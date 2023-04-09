@@ -88,9 +88,9 @@
                                 <p class="text-muted small">placeholder</p>
                             </div>
                             <div class="col-xs-4">
-                                <label class="control-label">placeholder</label>
+                                <label class="control-label">Endpoint</label>
                                 <input type="text" required name="placeholder" id="placeholder" value="{{ $bp->dbGet('placeholder') }}" class="form-control" @if(!$bp->a())readonly @endif/>
-                                <p class="text-muted small">placeholder</p>
+                                <p class="text-muted small">Select your preferred API endpoint.</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">Developer Mode</label>
