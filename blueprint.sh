@@ -208,7 +208,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 fi;
 
 if [[ $2 == "help" ]]; then
-    echo -e "placeholder";
+    echo -e "-i [name] | install a blueprint extension\n-v | get the current blueprint version\n-reinstall | rerun the blueprint installation script";
 fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
