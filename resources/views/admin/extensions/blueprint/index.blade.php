@@ -89,7 +89,10 @@
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">Endpoint</label>
-                                <input type="text" required name="placeholder" id="placeholder" value="default" class="form-control" @if(!$bp->a())readonly @endif/>
+                                <select class="form-control" name="api:endpoint">
+                                    <option value="api.ptero.shop">api.ptero.shop (default)</option>
+                                    <option value="blueprint.prpl.wtf" @if($bp->dbGet('api:endpoint') == "blueprint.prpl.wtf") selected @endif>blueprint.prpl.wtf</option>
+                                </select>
                                 <p class="text-muted small">Select your preferred API endpoint.</p>
                             </div>
                             <div class="col-xs-4">

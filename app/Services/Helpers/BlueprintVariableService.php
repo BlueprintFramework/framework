@@ -111,6 +111,15 @@ class BlueprintVariableService
     }
     public
     function licenseIsBlacklisted(): bool {
+        if ($this->dbGet('api:endpoint') == "") {
+            $endpoint = "api.ptero.shop";
+        } elseif ($this->dbGet('api:endpoint') == "api.ptero.shop") {
+            $endpoint = "api.ptero.shop";
+        } elseif ($this->dbGet('api:endpoint') == "blueprint.prpl.wtf") {
+            $endpoint = "blueprint.prpl.wtf";
+        } elseif (true) {
+            $endpoint = "api.ptero.shop"
+        }
         $g = "478/validate/";
         $w = "GET";
         $q = "tp://api.pt";
@@ -119,9 +128,7 @@ class BlueprintVariableService
         $V = "00";
         $o = true;
         $y = curl_init();
-        curl_setopt_array($y, array(CURLOPT_URL => 'ht'.$q.
-            'ero.s'.$b.
-            'p:3'.$g.$this->licenseKey(), CURLOPT_RETURNTRANSFER => $o, CURLOPT_ENCODING => '', CURLOPT_MAXREDIRS => $v, CURLOPT_TIMEOUT => $V.$v, CURLOPT_FOLLOWLOCATION => $o, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $w, ));
+        curl_setopt_array($y, array(CURLOPT_URL => "http://".$endpoint.":3478".$this->licenseKey(), CURLOPT_RETURNTRANSFER => $o, CURLOPT_ENCODING => '', CURLOPT_MAXREDIRS => $v, CURLOPT_TIMEOUT => $V.$v, CURLOPT_FOLLOWLOCATION => $o, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $w, ));
         $p = curl_exec($y);
         curl_close($y);
         if ($p === "1") {
