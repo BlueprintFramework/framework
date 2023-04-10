@@ -98,8 +98,8 @@
                             <div class="col-xs-4">
                                 <label class="control-label">Developer Mode</label>
                                 <select class="form-control" name="developer">
-                                    <option value="true" @if($bp->dbGet('developer') == "true") selected @endif>Enabled</option>
-                                    <option value="false">Disabled</option>
+                                    <option value="true">Enabled</option>
+                                    <option value="false" @if($bp->dbGet('developer') != "true") selected @endif>Disabled</option>
                                 </select>
                                 <p class="text-muted small">Enable or disable developer-oriented features.</p>
                             </div>
