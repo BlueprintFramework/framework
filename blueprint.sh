@@ -39,30 +39,35 @@ chmod u+x /usr/local/bin/blueprint > /dev/null;
 if [[ $1 != "-bash" ]]; then
     if dbValidate "blueprint.setupFinished"; then
         clr_blue "This command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.";
-        dbRemove "blueprint.setupFinished";
         exit 1;
     else
+        clr_bright "php artisan down";
+        php artisan down;
+
         clr_bright "/var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css";
         sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);!g" /var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css;
 
 
         clr_bright "php artisan view:clear";
-        php artisan view:clear > /dev/null;
+        php artisan view:clear;
 
 
         clr_bright "php artisan config:clear";
-        php artisan config:clear > /dev/null;
+        php artisan config:clear;
 
 
-        #clr_bright "php artisan migrate";
-        #php artisan migrate;
+        clr_bright "php artisan migrate";
+        php artisan migrate;
 
 
         clr_bright "chown -R www-data:www-data /var/www/pterodactyl/*";
-        chown -R www-data:www-data /var/www/pterodactyl/* > /dev/null;
+        chown -R www-data:www-data /var/www/pterodactyl/*;
 
         clr_bright "chown -R www-data:www-data /var/www/pterodactyl/.*";
-        chown -R www-data:www-data /var/www/pterodactyl/.* > /dev/null;
+        chown -R www-data:www-data /var/www/pterodactyl/.*;
+
+        clr_bright "php artisan up";
+        php artisan up;
 
         dbAdd "blueprint.setupFinished";
         exit 1;
@@ -204,4 +209,10 @@ fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
     echo -e $VERSION;
+fi;
+
+if [[ $2 == "-reinstall"  ]]; then
+    dbRemove "blueprint.setupFinished";
+    cd /var/www/pterodactyl;
+    bash blueprint.sh;
 fi;

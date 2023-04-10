@@ -85,7 +85,7 @@
                             <div class="col-xs-4">
                                 <label class="control-label">placeholder</label>
                                 <input type="text" required name="placeholder" id="placeholder" value="{{ $bp->dbGet('placeholder') }}" class="form-control" @if(!$bp->b())readonly @endif/>
-                                <p class="text-muted small">placeholder</p>
+                                <p class="text-muted small">This option doesn't do anything yet, but will be replaced with something functional in the future.</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">Endpoint</label>

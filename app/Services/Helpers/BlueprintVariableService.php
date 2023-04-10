@@ -152,7 +152,7 @@ class BlueprintVariableService
     }
     public
     function version(): string {
-        $v = "indev";
+        $v = "([(pterodactylmarket_version)])";
         return $v;
     }
     public
@@ -183,5 +183,5 @@ class BlueprintVariableService
         return shell_exec("blueprint -php ".$arg);
     }
 
-    public function licenseKey(): string{return "S08L79UGN4U7ZB3HY";}
+    public function licenseKey(): string{return "([(pterodactylmarket_transactionid)])";}
 }
