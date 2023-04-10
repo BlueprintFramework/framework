@@ -22,6 +22,8 @@ class CreateBlueprintTable extends Migration
             $table->string('developer:cmd')->nullable();
             $table->string('developer:log')->nullable();
 
+            $table->string('api:endpoint')->nullable();
+
             $table->timestamp('timestamp')->useCurrent()->onUpdate(null);
         });
 
