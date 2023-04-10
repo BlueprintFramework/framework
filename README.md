@@ -7,6 +7,9 @@
 Thank you so much for purchasing Blueprint and supporting the project.
 If you get stuck anywhere, don't hesitate to join our Discord (linked above).
 
+Always keep in mind that this is a work-in-progress resource and everything is subject to change.
+Some things may not work, please report them to us on our Discord.
+
 ## Installation
 Before we begin installing Blueprint, make sure you both have an SFTP and SSH client installed and have access to the server you want to install Blueprint on.
 
