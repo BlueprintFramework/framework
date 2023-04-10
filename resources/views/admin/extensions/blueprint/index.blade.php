@@ -83,9 +83,12 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="col-xs-4">
-                                <label class="control-label">placeholder</label>
-                                <input type="text" required name="placeholder" id="placeholder" value="{{ $bp->dbGet('placeholder') }}" class="form-control" @if(!$bp->b())readonly @endif/>
-                                <p class="text-muted small">This option doesn't do anything yet, but will be replaced with something functional in the future.</p>
+                                <label class="control-label">Telemetry</label>
+                                <select class="form-control" name="telemetry">
+                                    <option value="true">Enabled</option>
+                                    <option value="false" @if($bp->dbGet('telemetry') == "false") selected @endif>Disabled</option>
+                                </select>
+                                <p class="text-muted small">Automatically share anonymous usage data with Blueprint.</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">Endpoint</label>
