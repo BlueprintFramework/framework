@@ -110,7 +110,7 @@
                             {{ csrf_field() }}
                             <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right">Save</button>
                         @else
-                            <p class="text-muted small">You are required to have a valid license key attached in order to change any settings.</p> 
+                            <p class="text-muted small">You are required to have a valid license key attached in order to save any settings.</p> 
                         @endif
                     </div>
                 </div>
