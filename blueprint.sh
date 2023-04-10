@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="([(pterodactylmarket_transactionid)])";
+VERSION="([(pterodactylmarket_version)])";
 
 cd /var/www/pterodactyl;
 if [[ "$@" == *"-php"* ]]; then
@@ -74,6 +74,23 @@ if [[ $1 != "-bash" ]]; then
         dbAdd "blueprint.setupFinished";
         exit 1;
     fi;
+fi;
+
+if [[ $2 == "-placeholder" ]]; then
+    if [[ $3 == "" ]]; then
+        echo -e "Expected 2 arguments but got 0. (-placeholder transactionid versionid)";
+        exit 1;
+    fi;
+    if [[ $4 == "" ]]; then
+        echo -e "Expected 2 arguments but got 1. (-placeholder transactionid versionid)";
+        exit 1;
+    fi;
+
+    sed -E -i "s*\(\[\(pterodactylmarket_version\)\]\)*$4*g" app/Services/Helpers/BlueprintPlaceholderService.php;
+    sed -E -i "s*\(\[\(pterodactylmarket_transactionid\)\]\)*$3*g" app/Services/Helpers/BlueprintPlaceholderService.php;
+
+    sed -E -i "s*\(\[\(pterodactylmarket_version\)\]\)*$4*g" blueprint.sh;
+    sed -E -i "s*\(\[\(pterodactylmarket_transactionid\)\]\)*$3*g" blueprint.sh;
 fi;
 
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
