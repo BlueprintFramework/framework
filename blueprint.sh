@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="indev";
+VERSION="([(pterodactylmarket_transactionid)])";
 
 cd /var/www/pterodactyl;
 if [[ "$@" == *"-php"* ]]; then
