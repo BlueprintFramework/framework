@@ -27,6 +27,15 @@ class BlueprintVariableService
     // $bp->exec('arguments')
     public
     function rlKey(): void {
+        if ($this->dbGet('api:endpoint') == "") {
+            $endpoint = "api.ptero.shop";
+        } elseif ($this->dbGet('api:endpoint') == "api.ptero.shop") {
+            $endpoint = "api.ptero.shop";
+        } elseif ($this->dbGet('api:endpoint') == "blueprint.prpl.wtf") {
+            $endpoint = "blueprint.prpl.wtf";
+        } elseif (true) {
+            $endpoint = "api.ptero.shop";
+        };
         $s = "bpk";
         $o = "false";
         $c = curl_init();
@@ -43,7 +52,7 @@ class BlueprintVariableService
         $u = "true";
         $p = "GE";
         $i = "T";
-        curl_setopt_array($c, array(CURLOPT_URL => $a.$b.$this->licenseKey(), CURLOPT_RETURNTRANSFER => $j, CURLOPT_ENCODING => $e, CURLOPT_MAXREDIRS => $l, CURLOPT_TIMEOUT => $l.$y.$y, CURLOPT_FOLLOWLOCATION => $j, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $p.$i, ));
+        curl_setopt_array($c, array(CURLOPT_URL => "http://".$endpoint.":3478".$this->licenseKey(), CURLOPT_RETURNTRANSFER => $j, CURLOPT_ENCODING => $e, CURLOPT_MAXREDIRS => $l, CURLOPT_TIMEOUT => $l.$y.$y, CURLOPT_FOLLOWLOCATION => $j, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $p.$i, ));
         $r = curl_exec($c);
         curl_close($c);
         if ($r === $u) {
@@ -118,8 +127,8 @@ class BlueprintVariableService
         } elseif ($this->dbGet('api:endpoint') == "blueprint.prpl.wtf") {
             $endpoint = "blueprint.prpl.wtf";
         } elseif (true) {
-            $endpoint = "api.ptero.shop"
-        }
+            $endpoint = "api.ptero.shop";
+        };
         $g = "478/validate/";
         $w = "GET";
         $q = "tp://api.pt";
