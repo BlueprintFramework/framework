@@ -69,6 +69,8 @@ if [[ $1 != "-bash" ]]; then
         clr_bright "php artisan up";
         php artisan up;
 
+        clr_blue "\n\nBlueprint should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+
         dbAdd "blueprint.setupFinished";
         exit 1;
     fi;
@@ -201,6 +203,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     if [[ $author == "blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
     if [[ $author == "Blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
+
+    clr_blue "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
 fi;
 
 if [[ $2 == "help" ]]; then
