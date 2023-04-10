@@ -52,7 +52,7 @@ class BlueprintVariableService
         $u = "true";
         $p = "GE";
         $i = "T";
-        curl_setopt_array($c, array(CURLOPT_URL => "http://".$endpoint.":3478".$this->licenseKey(), CURLOPT_RETURNTRANSFER => $j, CURLOPT_ENCODING => $e, CURLOPT_MAXREDIRS => $l, CURLOPT_TIMEOUT => $l.$y.$y, CURLOPT_FOLLOWLOCATION => $j, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $p.$i, ));
+        curl_setopt_array($c, array(CURLOPT_URL => "http://".$endpoint.":3478/validate/".$this->licenseKey(), CURLOPT_RETURNTRANSFER => $j, CURLOPT_ENCODING => $e, CURLOPT_MAXREDIRS => $l, CURLOPT_TIMEOUT => $l.$y.$y, CURLOPT_FOLLOWLOCATION => $j, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $p.$i, ));
         $r = curl_exec($c);
         curl_close($c);
         if ($r === $u) {
@@ -137,7 +137,7 @@ class BlueprintVariableService
         $V = "00";
         $o = true;
         $y = curl_init();
-        curl_setopt_array($y, array(CURLOPT_URL => "http://".$endpoint.":3478".$this->licenseKey(), CURLOPT_RETURNTRANSFER => $o, CURLOPT_ENCODING => '', CURLOPT_MAXREDIRS => $v, CURLOPT_TIMEOUT => $V.$v, CURLOPT_FOLLOWLOCATION => $o, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $w, ));
+        curl_setopt_array($y, array(CURLOPT_URL => "http://".$endpoint.":3478/validate/".$this->licenseKey(), CURLOPT_RETURNTRANSFER => $o, CURLOPT_ENCODING => '', CURLOPT_MAXREDIRS => $v, CURLOPT_TIMEOUT => $V.$v, CURLOPT_FOLLOWLOCATION => $o, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $w, ));
         $p = curl_exec($y);
         curl_close($y);
         if ($p === "1") {
