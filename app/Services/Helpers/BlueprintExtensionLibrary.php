@@ -8,19 +8,12 @@
 */
 
 namespace Pterodactyl\Services\Helpers;
-use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Pterodactyl\Services\Helpers\BlueprintVariableService;
-use Pterodactyl\Services\Helpers\BlueprintTelemetryService;
-use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
 
 class BlueprintExtensionLibrary
 {
     // Construct BlueprintExtensionLibrary
     public function __construct(
         private SettingsRepositoryInterface $settings,
-        private BlueprintVariableService $bp,
-        private BlueprintTelemetryService $telemetry,
-        private BlueprintPlaceholderService $placeholder,
     ) {
     }
 

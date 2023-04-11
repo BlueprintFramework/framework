@@ -16,6 +16,7 @@
 
 @section('content')
     {{ $bp->rlKey() }}
+    {{ $telemetry->send("SERVE_BLUEPRINT_ADMIN") }}
     <p>Blueprint is the framework that powers all Blueprint-compatible extensions, enabling multiple extensions to be installed and used simultaneously.</p>
     <div class="row">
         <div class="col-xs-3">
