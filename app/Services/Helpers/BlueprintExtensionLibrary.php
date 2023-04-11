@@ -3,19 +3,24 @@
 /*
 | Welcome to the Blueprint Extension Library.
 |
-| This allows you and developers to interact with
-| Blueprint easely and without hassle.
+| This allows developers to interact with
+| Pterodactyl easely and without hassle.
 */
 
 namespace Pterodactyl\Services\Helpers;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Illuminate\Http\RedirectResponse;
+use Pterodactyl\Services\Helpers\BlueprintVariableService;
+use Pterodactyl\Services\Helpers\BlueprintTelemetryService;
+use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
 
 class BlueprintExtensionLibrary
 {
     // Construct BlueprintExtensionLibrary
     public function __construct(
         private SettingsRepositoryInterface $settings,
+        private BlueprintVariableService $bp,
+        private BlueprintTelemetryService $telemetry,
+        private BlueprintPlaceholderService $placeholder,
     ) {
     }
 
