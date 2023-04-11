@@ -24,6 +24,9 @@ class CreateBlueprintTable extends Migration
 
             $table->string('api:endpoint')->nullable();
 
+            $table->string('telemetry')->nullable();
+            $table->string('telemetry:id')->nullable();
+
             $table->timestamp('timestamp')->useCurrent()->onUpdate(null);
         });
 
