@@ -114,6 +114,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $target == "" ]]; then rm -R .blueprint/tmp/$3; error "'target' is a required option.";fi;
     if [[ $icon == "" ]]; then rm -R .blueprint/tmp/$3; error "'icon' is a required option.";fi;
 
+    if [[ $controller_location == "" ]]; then rm -R .blueprint/tmp/$3; error "'controller_location' is a required option.";fi;
+    if [[ $view_location == "" ]]; then rm -R .blueprint/tmp/$3; error "'view_location' is a required option.";fi;
+
     if [[ ! -f ".blueprint/tmp/$3/$icon" ]]; then rm -R .blueprint/tmp/$3; error "Extensions are required to have valid icons.";fi;
 
     if [[ $target != $VERSION ]]; then rm -R .blueprint/tmp/$3; error "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";fi;
@@ -123,7 +126,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $identifier =~ [a-z] ]]; then echo "ok" > /dev/null;
     else rm -R .blueprint/tmp/$3; error "The extension identifier should be lowercase and only contain characters a-z.";fi;
 
-    if [[ $migrations_enabled != "" ]]; then
+    if [[ $migrations_directory != "" ]]; then
         if [[ $migrations_enabled == "yes" ]]; then
             cp -R .blueprint/tmp/$3/$migrations_directory/* database/migrations/ 2> /dev/null;
         elif [[ $migrations_enabled == "no" ]]; then
@@ -134,9 +137,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         fi;
     fi;
 
+    if [[ $adminrequests_directory != "" ]]; then
+        if [[ $adminrequests_enabled == "yes" ]]; then
+            mkdir app/Http/Requests/Admin/Extensions/$identifier;
+            cp -R .blueprint/tmp/$3/$adminrequests_directory/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
+        elif [[ $adminrequests_enabled == "no" ]]; then
+            echo "ok" > /dev/null;
+        else
+            rm -R .blueprint/tmp/$3;
+            error "If defined, adminrequests should only be 'yes' or 'no'.";
+        fi;
+    fi;
+
     if [[ $publicfiles_directory != "" ]]; then
         if [[ $publicfiles_enabled == "yes" ]]; then
-            mkdir public/extensions/$identifier
+            mkdir public/extensions/$identifier;
             cp -R .blueprint/tmp/$3/$publicfiles_directory/* public/extensions/$identifier/ 2> /dev/null;
         elif [[ $publicfiles_enabled == "no" ]]; then
             echo "ok" > /dev/null;
