@@ -102,6 +102,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp $FILE .blueprint/tmp/$ZIP;
     cd .blueprint/tmp;
     unzip $ZIP;
+    if [[ ! -f "conf.yml" ]]; then echo ok > /dev/null; else 
+        mkdir $3;
+        cp -R ./* $3/;
+    fi;
     cd /var/www/pterodactyl;
     rm .blueprint/tmp/$ZIP;
 
@@ -219,6 +223,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     else
         echo $(cat .blueprint/tmp/$3/$controller_location) > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+    fi;
+
+    if [[ $controller_type == "custom" ]]; then
+        cp .blueprint/tmp/$3/$controller_location app/Http/Controllers/Admin/Extensions/$identifier/${identifier}ExtensionController.php;
     fi;
 
     echo $ADMINROUTE_RESULT >> routes/admin.php;
