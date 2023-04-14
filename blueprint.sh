@@ -94,7 +94,7 @@ if [[ $2 == "-placeholder" ]]; then
 fi;
 
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
-    if [[ $3 == "" ]]; then error "Expected 1 argument but got 0.";fi;
+    if [[ $(expr $# - 2) != 1 ]]; then error "Expected 1 argument but got $(expr $# - 2).";fi;
     FILE=$3".blueprint"
     if [[ ! -f "$FILE" ]]; then error "$FILE could not be found.";fi;
 
@@ -102,12 +102,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp $FILE .blueprint/tmp/$ZIP;
     cd .blueprint/tmp;
     unzip $ZIP;
-    if [[ ! -f "conf.yml" ]]; then echo ok > /dev/null; else 
-        mkdir $3;
-        cp -R ./* $3/;
+    rm $ZIP;
+    if [[ ! -f "$3/*" ]]; then
+        cd ..;
+        rm -R tmp;
+        mkdir tmp;
+        cd tmp;
+
+        mkdir ./$3;
+        cp ../../$FILE ./$3/$ZIP;
+        cd $3;
+        unzip $ZIP;
+        rm $ZIP;
+        cd ..;
     fi;
     cd /var/www/pterodactyl;
-    rm .blueprint/tmp/$ZIP;
 
     eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
 
@@ -121,14 +130,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $controller_location == "" ]]; then rm -R .blueprint/tmp/$3; error "'controller_location' is a required option.";fi;
     if [[ $view_location == "" ]]; then rm -R .blueprint/tmp/$3; error "'view_location' is a required option.";fi;
 
-    if [[ ! -f ".blueprint/tmp/$3/$icon" ]]; then rm -R .blueprint/tmp/$3; error "Extensions are required to have valid icons.";fi;
-
-    if [[ $target != $VERSION ]]; then rm -R .blueprint/tmp/$3; error "The operation could not be completed since the target version of the extension ($target) does not match your Blueprint version ($VERSION).";fi;
+    if [[ $target != $VERSION ]]; then clr_red "This extension is built for version $target, but your version is $VERSION.";fi;
     if [[ $identifier != $3 ]]; then rm -R .blueprint/tmp/$3; error "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";fi;
     if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/tmp/$3; error "The operation could not be completed since the extension is attempting to overwrite internal files.";fi;
 
     if [[ $identifier =~ [a-z] ]]; then echo "ok" > /dev/null;
     else rm -R .blueprint/tmp/$3; error "The extension identifier should be lowercase and only contain characters a-z.";fi;
+
+    if [[ ! -f ".blueprint/tmp/$3/$icon" ]]; then rm -R .blueprint/tmp/$3;error "The 'icon' path points to a nonexisting file.";fi;
 
     if [[ $migrations_directory != "" ]]; then
         if [[ $migrations_enabled == "yes" ]]; then
@@ -170,7 +179,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         if [[ $controller_type == "default" ]]; then
             cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
         elif [[ $controller_type == "custom" ]]; then
-            echo "ok" > /dev/null;
+            echo "ok";
         else
             rm -R .blueprint/tmp/$3;
             error "If defined, controller should only be 'default' or 'custom'.";
@@ -180,29 +189,36 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp -R .blueprint/defaults/extensions/button.default .blueprint/defaults/extensions/button.default.bak 2> /dev/null;
 
     mkdir public/assets/extensions/$identifier;
-    cp .blueprint/tmp/$3/icon.jpg public/assets/extensions/$identifier/icon.jpg;
+    cp .blueprint/tmp/$3/$icon public/assets/extensions/$identifier/icon.jpg;
     ICON="/assets/extensions/$identifier/icon.jpg";
     CONTENT=$(cat .blueprint/tmp/$3/$view_location);
 
-    sed -i "s~␀title␀~$name~g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s~␀name␀~$name~g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s~␀breadcrumb␀~$name~g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s~␀name␀~$name~g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
+    if [[ $name == *"~"* ]]; then clr_red "'name' contains '~' and may result in an error.";fi;
+    if [[ $description == *"~"* ]]; then clr_red "'description' contains '~' and may result in an error.";fi;
+    if [[ $version == *"~"* ]]; then clr_red "'version' contains '~' and may result in an error.";fi;
+    if [[ $CONTENT == *"~"* ]]; then clr_red "'CONTENT' contains '~' and may result in an error.";fi;
+    if [[ $ICON == *"~"* ]]; then clr_red "'ICON' contains '~' and may result in an error.";fi;
+    if [[ $identifier == *"~"* ]]; then clr_red "'identifier' contains '~' and may result in an error.";fi;
 
-    sed -i "s~␀description␀~$description~g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s~␀title␀~$name~g" .blueprint/defaults/extensions/admin.default.bak;
+    sed -i "s~␀name␀~$name~g" .blueprint/defaults/extensions/admin.default.bak;
+    sed -i "s~␀breadcrumb␀~$name~g" .blueprint/defaults/extensions/admin.default.bak;
+    sed -i "s~␀name␀~$name~g" .blueprint/defaults/extensions/button.default.bak;
 
-    sed -i "s~␀version␀~$version~g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
-    sed -i "s~␀version␀~$version~g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
+    sed -i "s~␀description␀~$description~g" .blueprint/defaults/extensions/admin.default.bak;
 
-    sed -i "s~␀icon␀~$ICON~g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s~␀version␀~$version~g" .blueprint/defaults/extensions/admin.default.bak;
+    sed -i "s~␀version␀~$version~g" .blueprint/defaults/extensions/button.default.bak;
 
-    sed -i "s~␀content␀~$CONTENT~g" .blueprint/defaults/extensions/admin.default.bak > /dev/null;
+    sed -i "s~␀icon␀~$ICON~g" .blueprint/defaults/extensions/admin.default.bak;
+
+    sed -i "s~␀content␀~$CONTENT~g" .blueprint/defaults/extensions/admin.default.bak;
 
     if [[ $controller_type != "custom" ]]; then
-        sed -i "s~␀id␀~$identifier~g" .blueprint/defaults/extensions/controller.default.bak > /dev/null;
+        sed -i "s~␀id␀~$identifier~g" .blueprint/defaults/extensions/controller.default.bak;
     fi;
-    sed -i "s~␀id␀~$identifier~g" .blueprint/defaults/extensions/route.default.bak > /dev/null;
-    sed -i "s~␀id␀~$identifier~g" .blueprint/defaults/extensions/button.default.bak > /dev/null;
+    sed -i "s~␀id␀~$identifier~g" .blueprint/defaults/extensions/route.default.bak;
+    sed -i "s~␀id␀~$identifier~g" .blueprint/defaults/extensions/button.default.bak;
 
     ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default.bak);
     ADMINROUTE_RESULT=$(cat .blueprint/defaults/extensions/route.default.bak);
@@ -222,7 +238,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $controller_type != "custom" ]]; then
         echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     else
-        echo $(cat .blueprint/tmp/$3/$controller_location) > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+        cp .blueprint/tmp/$3/$controller_location app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     fi;
 
     if [[ $controller_type == "custom" ]]; then
@@ -231,7 +247,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     echo $ADMINROUTE_RESULT >> routes/admin.php;
 
-    sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php > /dev/null;
+    sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
 
     rm .blueprint/defaults/extensions/admin.default.bak;
     if [[ $controller_type != "custom" ]]; then
