@@ -9,6 +9,8 @@
 
 namespace Pterodactyl\Services\Helpers;
 
+use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
+
 class BlueprintExtensionLibrary
 {
     // Construct BlueprintExtensionLibrary
@@ -17,12 +19,12 @@ class BlueprintExtensionLibrary
     ) {
     }
 
-    public function db($type, $table, $key, $value) {
+    public function db($type, $one, $two) {
         if ($type === "get") {
-            return $this->settings->get($table."::".$key);
+            return $this->settings->get($one."::".$two);
         };
         if ($type === "set") {
-            return $this->settings->set($table."::".$key, $value);
+            return $this->settings->set($one, $two);
         };
         return true;
     }
