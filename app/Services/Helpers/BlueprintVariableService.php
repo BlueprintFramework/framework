@@ -11,7 +11,7 @@ class BlueprintVariableService
         private SettingsRepositoryInterface $settings,
         private BlueprintPlaceholderService $blueprintplaceholderservice,
     ) {
-    };
+    }
 
 
     // $bp->server()
@@ -21,11 +21,11 @@ class BlueprintVariableService
     // $bp->exec('arguments')
     public function serve(): void {
         return;
-    };
+    }
 
     public function version(): string {
         return $this->blueprintplaceholderservice->version();
-    };
+    }
 
     public function dbGet($key): string {
         $a = $this->settings->get("blueprint::".$key);
