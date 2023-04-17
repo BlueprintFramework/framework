@@ -29,9 +29,6 @@ class CreateBlueprintTable extends Migration
 
             $table->timestamp('timestamp')->useCurrent()->onUpdate(null);
         });
-
-        Schema::dropIfExists('bpkey');
-        Schema::create('bpkey', function (Blueprint $table) {$table->id();$table->string('k')->nullable();$table->boolean('v')->nullable();$table->timestamp('timestamp')->useCurrent()->onUpdate(null);});
     }
 
     /**
@@ -42,6 +39,5 @@ class CreateBlueprintTable extends Migration
     public function down()
     {
         Schema::dropIfExists('blueprint');
-        Schema::dropIfExists('bpkey');
     }
 }

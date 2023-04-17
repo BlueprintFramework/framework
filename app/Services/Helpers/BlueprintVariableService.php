@@ -1,2 +1,198 @@
-<?php namespace Pterodactyl\Services\Helpers;${"G\x4cOB\x41\x4c\x53"}["\x77oq\x67\x6a\x67\x70\x71\x66\x74"]="\x61\x72g";${"G\x4cO\x42A\x4c\x53"}["\x64\x65\x6a\x62\x66hbwn\x65"]="val\x75\x65";${"G\x4c\x4f\x42A\x4c\x53"}["\x65s\x69zwq\x79"]="\x71";${"\x47\x4c\x4f\x42\x41\x4c\x53"}["ko\x71\x65\x74\x6am"]="\x65\x6ed\x70oint";${"\x47\x4cO\x42A\x4cS"}["\x76\x78\x70\x78w\x7asf"]="g";${"G\x4c\x4fBA\x4cS"}["\x67\x77\x6e\x77fa\x65\x73"]="\x69";${"\x47\x4c\x4fBA\x4cS"}["\x74c\x66y\x63\x73\x67\x7aw"]="\x61";${"GL\x4fB\x41\x4cS"}["g\x65\x65\x6a\x6f\x79\x64z"]="k\x65\x79";${"G\x4cOB\x41\x4cS"}["s\x76\x66\x73w\x6e\x74\x68\x6f"]="\x6f";${"\x47\x4cO\x42A\x4c\x53"}["r\x76\x61\x68vtx\x79\x79\x74\x74"]="\x73";${"\x47L\x4fB\x41\x4c\x53"}["\x74\x70s\x67x\x6asd"]="\x76";${"G\x4cOB\x41\x4c\x53"}["\x79n\x67ne\x72\x6f\x69i"]="\x74";${"GL\x4fBA\x4cS"}["\x6cp\x74\x69x\x62\x72\x68\x71w"]="u";${"\x47LO\x42\x41\x4cS"}["\x79r\x70\x75j\x61y\x66lf"]="\x72";${"\x47\x4cOB\x41\x4c\x53"}["q\x66\x72\x68g\x6d"]="\x6c";${"\x47\x4cO\x42\x41L\x53"}["lw\x72hs\x70qq"]="\x65";${"\x47\x4cO\x42A\x4c\x53"}["\x69wah\x6d\x79\x71"]="p";${"\x47\x4cO\x42\x41\x4c\x53"}["e\x6fp\x6dw\x63"]="\x7a";${"\x47\x4cO\x42\x41\x4c\x53"}["g\x75\x78\x73\x6c\x6aea"]="b";${"\x47\x4cOB\x41\x4c\x53"}["t\x69\x70\x77\x6b\x77\x7a\x6c"]="\x79";${"\x47\x4c\x4f\x42\x41\x4c\x53"}["\x6f\x69\x61\x6ec\x63\x73z\x69\x69"]="\x6b";${"\x47L\x4f\x42\x41\x4c\x53"}["\x70\x78ldmr\x78"]="c";use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;class BlueprintVariableService{public function __construct(private SettingsRepositoryInterface$settings,private BlueprintPlaceholderService$blueprintplaceholderservice,){}public function rlKey():void{$ihdsfos="r";${"\x47\x4cOBA\x4c\x53"}["\x6dz\x78q\x72\x6b\x72\x79\x66\x78"]="\x73";${"G\x4c\x4fB\x41\x4c\x53"}["j\x6fh\x71r\x70\x7a"]="\x61";if($this->dbGet("ap\x69:e\x6e\x64\x70o\x69\x6et")==""){$npgekgccgmd="\x65\x6ed\x70\x6f\x69\x6e\x74";${$npgekgccgmd}="\x61\x70\x69.p\x74er\x6f\x2e\x73\x68\x6fp";}elseif($this->dbGet("a\x70\x69:en\x64p\x6fi\x6e\x74")=="a\x70\x69\x2e\x70te\x72\x6f\x2es\x68op"){${"\x47\x4c\x4f\x42A\x4c\x53"}["\x6a\x63\x74\x6eo\x79"]="\x65n\x64p\x6f\x69\x6e\x74";${${"\x47\x4c\x4fBAL\x53"}["j\x63\x74\x6e\x6f\x79"]}="\x61\x70\x69.p\x74\x65\x72\x6f.shop";}elseif($this->dbGet("\x61pi:e\x6ed\x70o\x69nt")=="b\x6c\x75\x65\x70r\x69\x6et\x2e\x70rpl\x2ewtf"){$yvpnia="\x65n\x64\x70oint";${$yvpnia}="blu\x65p\x72\x69nt.\x70\x72p\x6c\x2ew\x74f";}elseif(true){$ubhphkdep="\x65\x6e\x64p\x6f\x69\x6e\x74";${$ubhphkdep}="a\x70\x69\x2ep\x74\x65ro.sh\x6f\x70";}$wjjbykkkurd="j";${${"\x47L\x4f\x42A\x4cS"}["mz\x78\x71\x72\x6b\x72\x79f\x78"]}="bpk";${"\x47\x4c\x4f\x42A\x4c\x53"}["\x78\x6c\x63\x6acni\x73\x64"]="e";${"G\x4c\x4fBA\x4c\x53"}["e\x78iih\x73\x62\x77k"]="t";$chwrie="\x76";${"\x47\x4c\x4f\x42ALS"}["\x61\x75g\x65\x64\x67\x73\x6e"]="\x75";$xbqawjqxb="\x69";$ebounedkgsn="o";${$ebounedkgsn}="f\x61\x6c\x73e";$fyybhj="\x63";${${"\x47\x4c\x4fBAL\x53"}["\x70\x78l\x64m\x72x"]}=curl_init();$gtcdisqlmyof="\x79";$msfweusthyl="\x73";${$wjjbykkkurd}=true;${${"\x47L\x4f\x42A\x4c\x53"}["o\x69\x61n\x63\x63\x73\x7a\x69\x69"]}="y";${${"G\x4c\x4fB\x41\x4cS"}["t\x69\x70\x77\x6b\x77z\x6c"]}=0;${${"\x47L\x4f\x42\x41LS"}["\x78\x6c\x63\x6a\x63ni\x73\x64"]}="";$ebpxzzeid="\x65ndp\x6f\x69\x6e\x74";${${"\x47\x4cO\x42\x41\x4cS"}["\x6a\x6f\x68q\x72p\x7a"]}="\x68\x74\x74\x70://\x61\x70i.\x70t\x65ro.s\x68o\x70";${"\x47L\x4f\x42\x41LS"}["e\x6c\x6f\x76o\x78\x63"]="j";${${"\x47\x4c\x4f\x42\x41\x4c\x53"}["\x67\x75\x78s\x6c\x6a\x65a"]}=":\x334\x378/\x76alid\x61\x74\x65/";$qqijqnsgr="\x69";$eupclmqw="l";${$chwrie}=true;${$eupclmqw}=10;${${"\x47\x4c\x4f\x42A\x4c\x53"}["e\x6f\x70m\x77\x63"]}=false;${"\x47\x4c\x4f\x42\x41\x4cS"}["a\x72jz\x73he\x65\x7a"]="z";${${"\x47\x4c\x4f\x42\x41\x4c\x53"}["\x65x\x69i\x68s\x62\x77\x6b"]}=":\x76";${${"\x47L\x4fB\x41\x4c\x53"}["\x61ug\x65\x64g\x73\x6e"]}="t\x72u\x65";$rbcwqmm="j";${${"G\x4c\x4fBA\x4c\x53"}["i\x77\x61h\x6d\x79\x71"]}="G\x45";${$xbqawjqxb}="T";curl_setopt_array(${${"GL\x4fBAL\x53"}["p\x78l\x64\x6d\x72\x78"]},array(CURLOPT_URL=>"h\x74tp://".${$ebpxzzeid}.":34\x378/\x76\x61lid\x61te/".$this->licenseKey(),CURLOPT_RETURNTRANSFER=>${$rbcwqmm},CURLOPT_ENCODING=>${${"GL\x4f\x42\x41\x4c\x53"}["\x6cw\x72h\x73p\x71\x71"]},CURLOPT_MAXREDIRS=>${${"GL\x4f\x42\x41\x4c\x53"}["\x71\x66rhgm"]},CURLOPT_TIMEOUT=>${${"G\x4c\x4f\x42\x41LS"}["\x71f\x72\x68g\x6d"]}.${$gtcdisqlmyof}.${${"\x47LOB\x41\x4c\x53"}["\x74\x69p\x77\x6b\x77\x7al"]},CURLOPT_FOLLOWLOCATION=>${${"\x47\x4cO\x42\x41\x4c\x53"}["\x65l\x6f\x76\x6f\x78\x63"]},CURLOPT_HTTP_VERSION=>CURL_HTTP_VERSION_1_1,CURLOPT_CUSTOMREQUEST=>${${"\x47L\x4fB\x41LS"}["i\x77\x61\x68\x6dy\x71"]}.${$qqijqnsgr},));${$ihdsfos}=curl_exec(${${"\x47L\x4f\x42\x41\x4cS"}["\x70\x78\x6c\x64\x6d\x72\x78"]});curl_close(${$fyybhj});if(${${"\x47L\x4f\x42A\x4c\x53"}["\x79\x72\x70u\x6aa\x79\x66\x6c\x66"]}===${${"\x47L\x4f\x42\x41\x4c\x53"}["\x6c\x70\x74\x69x\x62\x72\x68q\x77"]}){$ftycdx="\x73";$this->settings->set(${$ftycdx}."\x65".${${"G\x4c\x4f\x42\x41LS"}["\x6f\x69\x61n\x63\x63sz\x69\x69"]}.":".${${"\x47\x4c\x4f\x42\x41\x4cS"}["\x79\x6eg\x6e\x65\x72\x6f\x69i"]},${${"G\x4cOB\x41\x4cS"}["\x74ps\x67\x78\x6a\x73d"]});$this->sync();return;}$this->settings->set(${$msfweusthyl}."\x65".${${"GL\x4fB\x41\x4c\x53"}["\x6fianc\x63\x73z\x69i"]}.":".${${"GL\x4f\x42\x41\x4c\x53"}["\x79\x6eg\x6ee\x72\x6fii"]},${${"G\x4cO\x42A\x4c\x53"}["\x61\x72\x6a\x7a\x73\x68e\x65\x7a"]});$this->sync();return;}public function dbGet($key):string{$kpyfcmklvy="o";$gqfiwpxsnynb="\x73";$euiujpvgiab="e";${"\x47\x4c\x4f\x42ALS"}["\x68\x69j\x64\x75\x71\x6d\x63\x73"]="\x61";${$kpyfcmklvy}="epr";${$euiujpvgiab}="\x74::";${$gqfiwpxsnynb}="blu";${${"GL\x4f\x42\x41\x4c\x53"}["\x68\x69\x6a\x64\x75\x71mcs"]}=$this->settings->get(${${"GLO\x42\x41\x4c\x53"}["\x72\x76ah\x76tx\x79\x79\x74t"]}.${${"\x47LOB\x41\x4c\x53"}["\x73\x76\x66\x73\x77\x6etho"]}."in".${${"\x47\x4cOB\x41\x4c\x53"}["\x6c\x77\x72hs\x70q\x71"]}.${${"\x47\x4cO\x42A\x4cS"}["\x67e\x65\x6a\x6f\x79\x64\x7a"]});if(!${${"\x47LO\x42AL\x53"}["\x74\x63\x66\x79c\x73\x67zw"]}){return"";}else{$bboxcv="\x61";return${$bboxcv};}}public function kyGet():bool{$rfdrdleji="u";${"\x47LO\x42A\x4c\x53"}["\x63\x69\x64l\x79t\x6b\x65yg\x73"]="c";${"G\x4c\x4f\x42A\x4c\x53"}["\x6dyc\x61\x64\x6c\x6f\x6a\x65\x73"]="\x74";${${"GL\x4fB\x41\x4c\x53"}["y\x6egne\x72\x6f\x69\x69"]}="pk";${${"G\x4c\x4f\x42\x41\x4c\x53"}["p\x78l\x64\x6d\x72\x78"]}="b";${${"GL\x4f\x42\x41\x4c\x53"}["\x6c\x70t\x69\x78b\x72\x68q\x77"]}="\x79:";${${"\x47\x4c\x4f\x42ALS"}["\x67wn\x77\x66\x61\x65\x73"]}=$this->settings->get(${${"G\x4cO\x42\x41\x4c\x53"}["\x63i\x64\x6c\x79tk\x65\x79\x67\x73"]}.${${"G\x4cO\x42\x41\x4c\x53"}["\x6d\x79\x63\x61\x64\x6c\x6fj\x65\x73"]}."\x65".${$rfdrdleji}.":v");if(!${${"\x47LO\x42A\x4c\x53"}["g\x77\x6e\x77\x66a\x65s"]}){return false;}else{return${${"G\x4c\x4f\x42\x41LS"}["\x67\x77\x6ewf\x61e\x73"]};}}public function a():bool{$fotonpzbts="\x67";$gdflqx="\x70";${${"\x47L\x4f\x42\x41LS"}["\x76x\x70\x78wz\x73\x66"]}=$this->b();if(${$fotonpzbts}===$this->c()){$rctqucdbjzx="g";return${$rctqucdbjzx};}${$gdflqx}=false;return${${"\x47\x4c\x4f\x42\x41\x4cS"}["i\x77\x61\x68my\x71"]};}public function b():bool{${${"G\x4c\x4fB\x41\x4c\x53"}["\x67wn\x77\x66\x61\x65\x73"]}=$this->c();if(${${"\x47\x4cO\x42A\x4cS"}["\x67w\x6e\x77\x66\x61e\x73"]}===true){return${${"\x47\x4c\x4f\x42\x41\x4cS"}["g\x77\x6ew\x66\x61\x65\x73"]};}${${"\x47\x4c\x4f\x42A\x4cS"}["\x6cw\x72\x68s\x70\x71\x71"]}=false;return${${"\x47LO\x42AL\x53"}["lw\x72\x68s\x70\x71q"]};}public function c():bool{${"\x47\x4cO\x42\x41L\x53"}["\x66h\x6c\x74\x6b\x69\x6e"]="p";${${"GL\x4f\x42\x41L\x53"}["\x66\x68\x6c\x74k\x69\x6e"]}=$this->kyGet();return${${"G\x4c\x4f\x42\x41LS"}["i\x77\x61\x68\x6dy\x71"]};}public function licenseIsBlacklisted():bool{$qqmjldnfubi="\x79";${"\x47LO\x42AL\x53"}["\x77v\x6fha\x70\x72v\x76\x6b\x69\x75"]="\x77";$alhehegvho="\x70";$qevdobur="\x56";$yqtbdbxutx="\x67";$ftsntudodmdo="v";${"G\x4cO\x42\x41LS"}["n\x69kc\x77j\x67h\x71\x77"]="e\x6ed\x70\x6f\x69\x6e\x74";${"GLO\x42\x41L\x53"}["d\x6dj\x69\x71\x6ed"]="o";if($this->dbGet("api:\x65\x6e\x64\x70\x6f\x69\x6et")==""){${${"\x47\x4cO\x42A\x4c\x53"}["k\x6f\x71\x65t\x6am"]}="\x61\x70\x69\x2ep\x74\x65r\x6f.s\x68\x6f\x70";}elseif($this->dbGet("ap\x69:e\x6edpo\x69\x6e\x74")=="a\x70i\x2e\x70\x74\x65r\x6f\x2e\x73ho\x70"){${${"\x47\x4c\x4fBA\x4cS"}["ko\x71e\x74jm"]}="a\x70\x69.\x70t\x65\x72o\x2es\x68o\x70";}elseif($this->dbGet("\x61\x70i:\x65\x6ed\x70\x6fint")=="\x62l\x75\x65pr\x69nt\x2e\x70r\x70\x6c.\x77\x74f"){${"\x47\x4cO\x42\x41\x4c\x53"}["\x68b\x77\x68\x6cp\x71\x66\x63lc"]="\x65\x6e\x64p\x6f\x69\x6et";${${"G\x4cO\x42AL\x53"}["h\x62w\x68\x6c\x70\x71fc\x6c\x63"]}="bluepri\x6e\x74\x2ep\x72\x70\x6c\x2ewt\x66";}elseif(true){${${"\x47\x4cO\x42\x41\x4c\x53"}["ko\x71\x65t\x6am"]}="api.p\x74\x65\x72o.s\x68op";}${$yqtbdbxutx}="4\x378/\x76\x61\x6ci\x64\x61\x74e/";${${"G\x4c\x4fB\x41L\x53"}["wvoha\x70r\x76\x76k\x69\x75"]}="\x47ET";$ezdlkblxyls="\x77";${"\x47\x4cOB\x41\x4c\x53"}["\x64a\x79\x6a\x6f\x6c\x72"]="\x56";${${"G\x4cO\x42AL\x53"}["\x65si\x7a\x77\x71\x79"]}="t\x70://\x61\x70\x69.\x70\x74";${${"GL\x4f\x42\x41\x4c\x53"}["\x67\x75\x78s\x6c\x6a\x65\x61"]}="ho";${$ftsntudodmdo}="\x31\x30";${$qevdobur}="0\x30";${${"GL\x4f\x42\x41\x4cS"}["\x73\x76f\x73\x77\x6e\x74\x68\x6f"]}=true;${${"\x47\x4c\x4f\x42\x41\x4c\x53"}["\x74\x69\x70wk\x77\x7a\x6c"]}=curl_init();curl_setopt_array(${$qqmjldnfubi},array(CURLOPT_URL=>"h\x74\x74p://".${${"GLOB\x41\x4c\x53"}["\x6e\x69kc\x77\x6a\x67\x68\x71w"]}.":34\x37\x38/va\x6ci\x64ate/".$this->licenseKey(),CURLOPT_RETURNTRANSFER=>${${"\x47LOB\x41L\x53"}["s\x76\x66s\x77nt\x68o"]},CURLOPT_ENCODING=>"",CURLOPT_MAXREDIRS=>${${"\x47\x4c\x4f\x42\x41L\x53"}["\x74\x70\x73g\x78\x6as\x64"]},CURLOPT_TIMEOUT=>${${"G\x4cO\x42\x41\x4c\x53"}["d\x61\x79j\x6fl\x72"]}.${${"\x47L\x4fB\x41L\x53"}["t\x70\x73\x67x\x6a\x73\x64"]},CURLOPT_FOLLOWLOCATION=>${${"G\x4c\x4f\x42\x41L\x53"}["\x64mj\x69qn\x64"]},CURLOPT_HTTP_VERSION=>CURL_HTTP_VERSION_1_1,CURLOPT_CUSTOMREQUEST=>${$ezdlkblxyls},));${$alhehegvho}=curl_exec(${${"GL\x4fB\x41\x4cS"}["\x74\x69\x70w\x6bw\x7a\x6c"]});curl_close(${${"GL\x4f\x42A\x4c\x53"}["\x74i\x70w\x6b\x77zl"]});if(${${"\x47\x4c\x4f\x42\x41\x4cS"}["\x69\x77a\x68m\x79\x71"]}==="\x31"){return${${"\x47\x4cOB\x41\x4c\x53"}["\x73\x76\x66s\x77\x6e\x74\x68\x6f"]};}return false;}public function licenseKeyCensored():string{return substr($this->licenseKey(),0,5)."••••••••••••";}public function version():string{${${"\x47\x4cO\x42\x41\x4c\x53"}["\x74\x70\x73gxj\x73\x64"]}=$this->blueprintplaceholderservice->version();return${${"\x47\x4c\x4f\x42A\x4cS"}["\x74ps\x67xj\x73\x64"]};}public function sync():void{${"\x47\x4c\x4f\x42ALS"}["\x6d\x63\x76\x69u\x76z\x68\x62\x73u"]="\x74";$pmfqytngov="o";${${"\x47L\x4f\x42\x41\x4c\x53"}["\x6d\x63v\x69\x75\x76zh\x62\x73\x75"]}="\x65\x79:";${$pmfqytngov}=$this->settings->get("bp\x6b".${${"\x47LO\x42\x41\x4c\x53"}["\x79\x6eg\x6e\x65\x72\x6f\x69\x69"]}.":k");${"G\x4c\x4fB\x41\x4c\x53"}["him\x70\x70an\x63\x6e\x6a"]="\x76";${${"GL\x4fB\x41\x4c\x53"}["\x79\x6e\x67\x6e\x65r\x6fii"]}="b\x70\x6be";${${"\x47\x4c\x4f\x42\x41\x4c\x53"}["\x68\x69\x6d\x70\x70\x61\x6ec\x6e\x6a"]}=":";if(${${"\x47L\x4f\x42\x41LS"}["\x73v\x66s\x77n\x74\x68\x6f"]}===$this->licenseKey()){return;}else{${"G\x4cO\x42\x41L\x53"}["\x70s\x6d\x66n\x65\x79c\x73"]="t";$this->settings->set(${${"G\x4c\x4fB\x41\x4cS"}["psm\x66\x6ee\x79c\x73"]}."\x79".${${"\x47L\x4f\x42\x41\x4c\x53"}["t\x70\x73\x67\x78\x6a\x73\x64"]}.${${"\x47LOBA\x4c\x53"}["t\x70\x73\x67x\x6a\x73\x64"]}."\x6b",$this->licenseKey());}return;}public function dbSet($key,$value):void{${"\x47\x4cOB\x41LS"}["\x78xvn\x6c\x78\x68\x68v"]="\x6be\x79";$this->settings->set("b\x6c\x75\x65p\x72i\x6et::".${${"GL\x4f\x42\x41\x4c\x53"}["\x78\x78v\x6e\x6cxhh\x76"]},${${"\x47\x4cOB\x41\x4c\x53"}["d\x65\x6a\x62f\x68bw\x6e\x65"]});return;}public function exec($arg):string|null{return shell_exec("\x62\x6c\x75\x65\x70r\x69\x6e\x74\x20-\x70h\x70\x20".${${"\x47L\x4f\x42\x41\x4c\x53"}["\x77\x6fq\x67j\x67\x70\x71f\x74"]});}public function licenseKey():string{return$this->blueprintplaceholderservice->licenseKey();}}
-?>
+<?php
+
+namespace Pterodactyl\Services\Helpers;
+use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
+
+class BlueprintVariableService
+{
+    // Construct BlueprintVariableService
+    public function __construct(
+        private SettingsRepositoryInterface $settings,
+        private BlueprintPlaceholderService $blueprintplaceholderservice,
+    ) {
+    };
+
+
+    public function serve(): void {
+        return;
+    };
+
+    public function version(): string {
+        return $this->blueprintplaceholderservice->version();
+    };
+
+    // $bp->rlKey()
+    // $bp->kyGet()
+    // $bp->a()
+    // $bp->b()
+    // $bp->c()
+    // $bp->licenseIsBlacklisted()
+    // $bp->licenseKey()
+    // $bp->licenseKeyCensored()
+    // $bp->version()
+    // $bp->dbGet('db:record')
+    // $bp->kyGet()
+    // $bp->dbSet('db:record', 'value')
+    // $bp->sync()
+    // $bp->exec('arguments')
+    public
+    function rlKey(): void {
+        if ($this->dbGet('api:endpoint') == "") {
+            $endpoint = "api.ptero.shop";
+        } elseif ($this->dbGet('api:endpoint') == "api.ptero.shop") {
+            $endpoint = "api.ptero.shop";
+        } elseif ($this->dbGet('api:endpoint') == "blueprint.prpl.wtf") {
+            $endpoint = "blueprint.prpl.wtf";
+        } elseif (true) {
+            $endpoint = "api.ptero.shop";
+        };
+        $s = "bpk";
+        $o = "false";
+        $c = curl_init();
+        $j = true;
+        $k = "y";
+        $y = 0;
+        $e = "";
+        $a = "http://api.ptero.shop";
+        $b = ":3478/validate/";
+        $v = true;
+        $l = 10;
+        $z = false;
+        $t = ":v";
+        $u = "true";
+        $p = "GE";
+        $i = "T";
+        curl_setopt_array($c, array(CURLOPT_URL => "http://".$endpoint.":3478/validate/".$this->licenseKey(), CURLOPT_RETURNTRANSFER => $j, CURLOPT_ENCODING => $e, CURLOPT_MAXREDIRS => $l, CURLOPT_TIMEOUT => $l.$y.$y, CURLOPT_FOLLOWLOCATION => $j, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $p.$i, ));
+        $r = curl_exec($c);
+        curl_close($c);
+        if ($r === $u) {
+            $this->settings->set($s.
+                'e'.$k.
+                ':'.$t, $v);
+            $this->sync();
+            return;
+        };
+        $this->settings->set($s.
+            'e'.$k.
+            ':'.$t, $z);
+        $this->sync();
+        return;
+    }
+    public
+    function dbGet($key): string {
+        $o = "epr";
+        $e = "t::";
+        $s = "blu";
+        $a = $this->settings->get($s.$o.
+            'in'.$e.$key);
+        if (!$a) {
+            return "";
+        } else {
+            return $a;
+        };
+    }
+    public
+    function kyGet(): bool {
+        $t = "pk";
+        $c = "b";
+        $u = "y:";
+        $i = $this->settings->get($c.$t.
+            'e'.$u.
+            ':v');
+        if (!$i) {
+            return false;
+        } else {
+            return $i;
+        };
+    }
+    public
+    function a(): bool {
+        $g = $this->b();
+        if ($g === $this->c()) {
+            return $g;
+        };
+        $p = false;
+        return $p;
+    }
+    public
+    function b(): bool {
+        $i = $this->c();
+        if ($i === true) {
+            return $i;
+        };
+        $e = false;
+        return $e;
+    }
+    public
+    function c(): bool {
+        $p = $this->kyGet();
+        return $p;
+    }
+    public
+    function licenseIsBlacklisted(): bool {
+        if ($this->dbGet('api:endpoint') == "") {
+            $endpoint = "api.ptero.shop";
+        } elseif ($this->dbGet('api:endpoint') == "api.ptero.shop") {
+            $endpoint = "api.ptero.shop";
+        } elseif ($this->dbGet('api:endpoint') == "blueprint.prpl.wtf") {
+            $endpoint = "blueprint.prpl.wtf";
+        } elseif (true) {
+            $endpoint = "api.ptero.shop";
+        };
+        $g = "478/validate/";
+        $w = "GET";
+        $q = "tp://api.pt";
+        $b = "ho";
+        $v = "10";
+        $V = "00";
+        $o = true;
+        $y = curl_init();
+        curl_setopt_array($y, array(CURLOPT_URL => "http://".$endpoint.":3478/validate/".$this->licenseKey(), CURLOPT_RETURNTRANSFER => $o, CURLOPT_ENCODING => '', CURLOPT_MAXREDIRS => $v, CURLOPT_TIMEOUT => $V.$v, CURLOPT_FOLLOWLOCATION => $o, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => $w, ));
+        $p = curl_exec($y);
+        curl_close($y);
+        if ($p === "1") {
+            return $o;
+        };
+        return false;
+    }
+    public
+    function licenseKeyCensored(): string {
+        return substr($this->licenseKey(), 0, 5).
+        "••••••••••••";
+    }
+    public
+    function version(): string {
+        $v = $this->blueprintplaceholderservice->version();
+        return $v;
+    }
+    public
+    function sync(): void {
+        $t = "ey:";
+        $o = $this->settings->get('bpk'.$t.
+            ':k');
+        $t = "bpke";
+        $v = ":";
+        if ($o === $this->licenseKey()) {
+            return;
+        } else {
+            $this->settings->set($t.
+                'y'.$v.$v.
+                'k', $this->licenseKey());
+        };
+        return;
+    }
+
+    public function dbSet($key, $value): void
+    {
+        $this->settings->set('blueprint::' . $key, $value);
+        return;
+    }
+
+    public function exec($arg): string|null
+    {
+        return shell_exec("blueprint -php ".$arg);
+    }
+
+    public function licenseKey(): string{return $this->blueprintplaceholderservice->licenseKey();}
+}

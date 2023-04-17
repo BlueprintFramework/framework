@@ -4,7 +4,7 @@
 * Documentation: ptero.shop/docs
 
 ## Introduction
-Thank you so much for purchasing Blueprint and supporting the project.
+Thank you so much for downloading Blueprint.
 If you get stuck anywhere, don't hesitate to join our Discord (linked above).
 
 Always keep in mind that this is a work-in-progress resource and everything is subject to change.
