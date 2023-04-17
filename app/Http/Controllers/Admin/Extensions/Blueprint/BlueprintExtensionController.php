@@ -48,9 +48,6 @@ class BlueprintExtensionController extends Controller
                 'bp' => $this->bp,
                 'telemetry' => $this->telemetry,
                 'root' => "/admin/extensions/blueprint",
-                'a' => $this->bp->a(),
-                'b' => $this->bp->b(),
-                'c' => $this->bp->c(),
             ]
         );
     }

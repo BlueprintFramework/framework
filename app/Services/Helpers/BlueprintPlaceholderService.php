@@ -11,13 +11,10 @@ class BlueprintPlaceholderService
     ) {
     }
 
-    // $bp->licenseKey()
     // $bp->version()
     public
     function version(): string {
         $v = "([(pterodactylmarket_version)])";
         return $v;
     }
-    
-    public function licenseKey(): string{return "([(pterodactylmarket_transactionid)])";}
 }

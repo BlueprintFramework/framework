@@ -14,6 +14,11 @@ class BlueprintVariableService
     };
 
 
+    // $bp->server()
+    // $bp->version()
+    // $bp->dbGet('db:record')
+    // $bp->dbSet('db:record', 'value')
+    // $bp->exec('arguments')
     public function serve(): void {
         return;
     };
@@ -22,20 +27,27 @@ class BlueprintVariableService
         return $this->blueprintplaceholderservice->version();
     };
 
-    // $bp->rlKey()
-    // $bp->kyGet()
-    // $bp->a()
-    // $bp->b()
-    // $bp->c()
-    // $bp->licenseIsBlacklisted()
-    // $bp->licenseKey()
-    // $bp->licenseKeyCensored()
-    // $bp->version()
-    // $bp->dbGet('db:record')
-    // $bp->kyGet()
-    // $bp->dbSet('db:record', 'value')
-    // $bp->sync()
-    // $bp->exec('arguments')
+    public function dbGet($key): string {
+        $a = $this->settings->get("blueprint::".$key);
+        if (!$a) {
+            return "";
+        } else {
+            return $a;
+        };
+    }
+
+    public function dbSet($key, $value): void
+    {
+        $this->settings->set('blueprint::' . $key, $value);
+        return;
+    }
+
+    public function exec($arg): string|null
+    {
+        return shell_exec("blueprint -php ".$arg);
+    }
+
+    /*
     public
     function rlKey(): void {
         if ($this->dbGet('api:endpoint') == "") {
@@ -194,5 +206,5 @@ class BlueprintVariableService
         return shell_exec("blueprint -php ".$arg);
     }
 
-    public function licenseKey(): string{return $this->blueprintplaceholderservice->licenseKey();}
+    public function licenseKey(): string{return $this->blueprintplaceholderservice->licenseKey();}*/
 }

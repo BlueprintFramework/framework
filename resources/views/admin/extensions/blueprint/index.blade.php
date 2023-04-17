@@ -56,22 +56,6 @@
                 {{ $bp->dbSet('developer:cmd', '') }}
             @endif
 
-            <!-- License -->
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class='bx bxs-pen' style='margin-right:5px;'></i>License</h3>
-                </div>
-                <div class="box-body">
-                    @if ($b)
-                        <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Your license key is valid. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more</a></p>
-                    @else
-                        <input type="text" id="license" value="{{ $bp->licenseKeyCensored() }}" class="form-control" style="letter-spacing: 3px;" readonly/>
-                        <p class="text-muted small">Your license key could not be validated. <a data-toggle="modal" data-target="#licenseMoreInfo">Learn more</a></p>
-                    @endif
-                </div>
-            </div> 
-
         </div>
         <div class="col-xs-9">
             <form action="" method="POST">
@@ -108,37 +92,11 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        @if ($a)
-                            {{ csrf_field() }}
-                            <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right">Save</button>
-                        @else
-                            <p class="text-muted small">You are required to have a valid license key attached in order to save any settings.</p> 
-                        @endif
+                        {{ csrf_field() }}
+                        <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right">Save</button>
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <div class="modal fade" id="licenseMoreInfo" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <i class='bx bxs-pen' style='margin-right:6px;float:left;font-size:23px;'></i><h4 class="modal-title" style="font-size:19px;">License</h4>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        Every purchase comes with a unique license key pre-installed into your Blueprint files, which allows our license system to function without requiring any user input. 
-                        Most of the time, this system does not affect the user experience. However, in rare cases, our validation server may be offline and unable to validate licenses. 
-                        If this occurs, it should automatically resolve itself within 24 hours.
-                        <br><br>
-                        Some data, such as IP addresses and licenses, may be shared with the Blueprint team to enable our license system to function properly. This also allows us to revoke licenses remotely in case of abuse or piracy.
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-gray-alt btn-sm pull-right" data-dismiss="modal" aria-label="Close">Close</button>
-                </div>
-            </div>
         </div>
     </div>
 @endsection
