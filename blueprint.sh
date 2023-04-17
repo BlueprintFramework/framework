@@ -45,7 +45,7 @@ if [[ $1 != "-bash" ]]; then
         php artisan down;
 
         clr_bright "/var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css";
-        sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);!g" /var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css;
+        sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* blueprint reserved line */!g" /var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css;
 
 
         clr_bright "php artisan view:clear";

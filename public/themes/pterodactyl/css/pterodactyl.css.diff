@@ -22,4 +22,5 @@
  */
  @import 'checkbox.css';
 +@import url(/assets/extensions/blueprint/blueprint.style.css);
++/* blueprint reserved line */
 ...
