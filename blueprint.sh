@@ -78,19 +78,12 @@ fi;
 
 if [[ $2 == "-placeholder" ]]; then
     if [[ $3 == "" ]]; then
-        echo -e "Expected 2 arguments but got 0. (-placeholder transactionid versionid)";
-        exit 1;
-    fi;
-    if [[ $4 == "" ]]; then
-        echo -e "Expected 2 arguments but got 1. (-placeholder transactionid versionid)";
+        echo -e "Expected 1 argument but got $(expr $# - 2). (-placeholder versionid)";
         exit 1;
     fi;
 
-    sed -E -i "s*\(\[\(pterodactylmarket_version\)\]\)*$4*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-    sed -E -i "s*\(\[\(pterodactylmarket_transactionid\)\]\)*$3*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-
-    sed -E -i "s*\(\[\(pterodactylmarket_version\)\]\)*$4*g" blueprint.sh;
-    sed -E -i "s*\(\[\(pterodactylmarket_transactionid\)\]\)*$3*g" blueprint.sh;
+    sed -E -i "s*\(\[\(pterodactylmarket_version\)\]\)*$3*g" app/Services/Helpers/BlueprintPlaceholderService.php;
+    sed -E -i "s*\(\[\(pterodactylmarket_version\)\]\)*$3*g" blueprint.sh;
 fi;
 
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
@@ -146,7 +139,18 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             echo "ok" > /dev/null;
         else
             rm -R .blueprint/tmp/$3;
-            error "If defined, migrations should only be 'yes' or 'no'.";
+            error "If defined, migrations_enabled should only be 'yes' or 'no'.";
+        fi;
+    fi;
+
+    if [[ $css_location != "" ]]; then
+        if [[ $css_enabled == "yes" ]]; then
+            INJECTCSS=true;
+        elif [[ $css_enabled == "no" ]]; then
+            echo "ok" > /dev/null;
+        else
+            rm -R .blueprint/tmp/$3;
+            error "If defined, css_enabled should only be 'yes' or 'no'.";
         fi;
     fi;
 
@@ -158,7 +162,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             echo "ok" > /dev/null;
         else
             rm -R .blueprint/tmp/$3;
-            error "If defined, adminrequests should only be 'yes' or 'no'.";
+            error "If defined, adminrequests_enabled should only be 'yes' or 'no'.";
         fi;
     fi;
 
@@ -170,7 +174,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             echo "ok" > /dev/null;
         else
             rm -R .blueprint/tmp/$3;
-            error "If defined, publicfiles should only be 'yes' or 'no'.";
+            error "If defined, publicfiles_enabled should only be 'yes' or 'no'.";
         fi;
     fi;
 
@@ -182,7 +186,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             echo "ok";
         else
             rm -R .blueprint/tmp/$3;
-            error "If defined, controller should only be 'default' or 'custom'.";
+            error "If defined, controller_type should only be 'default' or 'custom'.";
         fi;
     fi;
     cp -R .blueprint/defaults/extensions/route.default .blueprint/defaults/extensions/route.default.bak 2> /dev/null;
@@ -192,6 +196,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp .blueprint/tmp/$3/$icon public/assets/extensions/$identifier/icon.jpg;
     ICON="/assets/extensions/$identifier/icon.jpg";
     CONTENT=$(cat .blueprint/tmp/$3/$view_location);
+
+    if [[ $INJECTCSS == true ]]; then
+        sed -i "s!/* blueprint reserved line */!/* blueprint reserved line */\n@import url(/assets/extensions/$identifier/$identifier.style.css);!g" public/themes/pterodactyl/css/pterodactyl.css;
+        cp -R .blueprint/tmp/$3/$css_location/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
+    fi;
 
     if [[ $name == *"~"* ]]; then clr_red "'name' contains '~' and may result in an error.";fi;
     if [[ $description == *"~"* ]]; then clr_red "'description' contains '~' and may result in an error.";fi;
