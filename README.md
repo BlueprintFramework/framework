@@ -1,7 +1,6 @@
-* ◆ Blueprint powered.
-* 
-* Discord: discord.gg/CUwHwv6xRe
-* Documentation: ptero.shop/docs
+## ◆ teamblueprint/blueprint
+- Discord: discord.gg/CUwHwv6xRe
+- Documentation: ptero.shop/docs
 
 ## Introduction
 Thank you so much for downloading Blueprint.
