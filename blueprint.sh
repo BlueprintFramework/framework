@@ -109,9 +109,23 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         rm $ZIP;
         cd ..;
     fi;
+
+
     cd /var/www/pterodactyl;
 
     eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
+
+    if [[ $flags == *"-placeholders.skip;"* ]]; then
+        DIR=.blueprint/tmp/$3/*;
+
+        # ^#version#^ = version
+        # ^#author#^ = author
+
+        for f in $DIR; do
+            sed -i "s~^#version#^~$version~g" $f;
+            sed -i "s~^#author#^~$author~g" $f;
+        done;
+    fi;
 
     if [[ $name == "" ]]; then rm -R .blueprint/tmp/$3; error "'name' is a required option.";fi;
     if [[ $identifier == "" ]]; then rm -R .blueprint/tmp/$3; error "'identifier' is a required option.";fi;
