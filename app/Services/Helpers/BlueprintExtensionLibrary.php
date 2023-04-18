@@ -19,13 +19,11 @@ class BlueprintExtensionLibrary
     ) {
     }
 
-    public function db($type, $one, $two) {
-        if ($type === "get") {
-            return $this->settings->get($one."::".$two);
-        };
-        if ($type === "set") {
-            return $this->settings->set($one, $two);
-        };
-        return true;
+    public function dbGet($table, $record) {
+        return $this->settings->get($table."::".$record);
+    }
+
+    public function dbSet($table, $record, $value) {
+        return $this->settings->set($table."::".$record, $value);
     }
 }
