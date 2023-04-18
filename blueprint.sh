@@ -115,7 +115,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
 
-    if [[ $flags == *"-placeholders.skip;"* ]]; then
+    if [[ $flags != *"-placeholders.skip;"* ]]; then
         DIR=.blueprint/tmp/$3/*;
 
         # ^#version#^ = version
@@ -124,8 +124,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         for f in $DIR; do
             sed -i "s~^#version#^~$version~g" $f;
             sed -i "s~^#author#^~$author~g" $f;
+            echo "Done placeholders in '$f'.";
         done;
-    fi;
+    else echo "-placeholders.skip;"; fi;
 
     if [[ $name == "" ]]; then rm -R .blueprint/tmp/$3; error "'name' is a required option.";fi;
     if [[ $identifier == "" ]]; then rm -R .blueprint/tmp/$3; error "'identifier' is a required option.";fi;
@@ -150,7 +151,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         if [[ $migrations_enabled == "yes" ]]; then
             cp -R .blueprint/tmp/$3/$migrations_directory/* database/migrations/ 2> /dev/null;
         elif [[ $migrations_enabled == "no" ]]; then
-            echo "ok" > /dev/null;
+            echo "ok";
         else
             rm -R .blueprint/tmp/$3;
             error "If defined, migrations_enabled should only be 'yes' or 'no'.";
@@ -161,7 +162,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         if [[ $css_enabled == "yes" ]]; then
             INJECTCSS=true;
         elif [[ $css_enabled == "no" ]]; then
-            echo "ok" > /dev/null;
+            echo "ok";
         else
             rm -R .blueprint/tmp/$3;
             error "If defined, css_enabled should only be 'yes' or 'no'.";
@@ -173,7 +174,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             mkdir app/Http/Requests/Admin/Extensions/$identifier;
             cp -R .blueprint/tmp/$3/$adminrequests_directory/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
         elif [[ $adminrequests_enabled == "no" ]]; then
-            echo "ok" > /dev/null;
+            echo "ok";
         else
             rm -R .blueprint/tmp/$3;
             error "If defined, adminrequests_enabled should only be 'yes' or 'no'.";
@@ -185,7 +186,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             mkdir public/extensions/$identifier;
             cp -R .blueprint/tmp/$3/$publicfiles_directory/* public/extensions/$identifier/ 2> /dev/null;
         elif [[ $publicfiles_enabled == "no" ]]; then
-            echo "ok" > /dev/null;
+            echo "ok";
         else
             rm -R .blueprint/tmp/$3;
             error "If defined, publicfiles_enabled should only be 'yes' or 'no'.";
