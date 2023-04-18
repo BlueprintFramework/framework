@@ -142,7 +142,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $identifier != $3 ]]; then rm -R .blueprint/tmp/$3; error "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";fi;
     if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/tmp/$3; error "The operation could not be completed since the extension is attempting to overwrite internal files.";fi;
 
-    if [[ $identifier =~ [a-z] ]]; then echo "ok" > /dev/null;
+    if [[ $identifier =~ [a-z] ]]; then echo "ok";
     else rm -R .blueprint/tmp/$3; error "The extension identifier should be lowercase and only contain characters a-z.";fi;
 
     if [[ ! -f ".blueprint/tmp/$3/$icon" ]]; then rm -R .blueprint/tmp/$3;error "The 'icon' path points to a nonexisting file.";fi;
