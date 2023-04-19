@@ -19,6 +19,12 @@ class BlueprintExtensionLibrary
     ) {
     }
 
+    /*
+    | Databasing
+    |
+    | dbGet("table", "record");
+    | dbSet("table", "record", "value");
+    */
     public function dbGet($table, $record) {
         return $this->settings->get($table."::".$record);
     }
