@@ -41,6 +41,7 @@
                         <form action="" method="POST">
                             <div class="col-xs-12" style="padding-top:5px;">
                                 <input type="text" required name="developer:cmd" id="developer:cmd" value="{{ $bp->dbGet('developer:cmd') }}" class="form-control" style="height:40px;width:100%;"/>
+                                <p class="text-muted small">Be careful with what you run, some commands may end up breaking this page.</p>
                                 {{ csrf_field() }}
                                 <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right" style="display:none;">Send</button>
                             </div>
