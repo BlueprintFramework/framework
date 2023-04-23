@@ -66,6 +66,9 @@ if [[ $1 != "-bash" ]]; then
         clr_bright "chown -R www-data:www-data /var/www/pterodactyl/.*";
         chown -R www-data:www-data /var/www/pterodactyl/.*;
 
+        echo "Blueprint has now been installed, click the extension icon to take a look." > .blueprint/.storage/notification.txt;
+        touch ".blueprint/.flags/flashicon.md";
+
         clr_bright "php artisan up";
         php artisan up;
 

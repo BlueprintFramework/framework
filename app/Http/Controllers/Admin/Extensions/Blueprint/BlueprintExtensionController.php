@@ -62,6 +62,7 @@ class BlueprintExtensionController extends Controller
             $this->settings->set('blueprint::' . $key, $value);
         }
 
+        shell_exec("cd /var/www/pterodactyl;echo \"Your changes have been saved.\" > .blueprint/.storage/notification.txt;");
         return redirect()->route('admin.extensions.blueprint.index');
     }
 }

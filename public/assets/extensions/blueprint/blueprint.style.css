@@ -3,6 +3,29 @@
  *      All Rights Reserved.
  */
 
+@keyframes notification {
+  0%   {right:-300px;opacity:0;background-color: #2a3743;}
+  10%  {right:12px;opacity:1;background-color: #1f2933;}
+  90%   {right:12px;opacity:1;background-color: #1f2933;}
+  100%  {right:-300px;opacity:0;background-color: #2a3743;}
+}
+
+.notification {
+  opacity:0;
+  position:fixed;
+  right:12px;
+  top:62px;
+  height:auto;
+  width:300px;
+  z-index:99999;
+  background-color:#1f2933;
+  color:#9aa5b1;
+  padding:10px;
+  border-radius:10px;
+  animation-name: notification;
+  animation-duration: 10s;
+}
+
 tag {
   display:inline-block;
   padding:3px;
@@ -30,4 +53,4 @@ tag[blue] {background-color:#288afb;}
   height:25px;
   border-radius:3px;
   margin-right:2px;
-};
+}

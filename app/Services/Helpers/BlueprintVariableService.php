@@ -16,8 +16,8 @@ class BlueprintVariableService
 
     // $bp->server()
     // $bp->version()
-    // $bp->dbGet('db:record')
-    // $bp->dbSet('db:record', 'value')
+    // $bp->dbGet('db::record')
+    // $bp->dbSet('db::record', 'value')
     // $bp->exec('arguments')
     public function serve(): void {
         return;
