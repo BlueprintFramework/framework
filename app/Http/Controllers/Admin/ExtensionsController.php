@@ -23,7 +23,7 @@ class ExtensionsController extends Controller
     public function index(): View
     {
         // Onboarding check.
-        if(shell_exec("cd /var/www/pterodactyl; cat .blueprint/.flags/onboarding.md" == "*blueprint*")) {
+        if(shell_exec("cd /var/www/pterodactyl; cat .blueprint/.flags/onboarding.md") == "*blueprint*") {
             $onboarding = true;
         }
         return $this->view->make('admin.extensions', [
