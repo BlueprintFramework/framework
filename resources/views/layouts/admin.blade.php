@@ -58,8 +58,7 @@
                                 </a>
                             </li>
                             <li>
-                                <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if(shell_exec("cd /var/www/pterodactyl;cat .blueprint/.flags/flashicon.md") == "*blueprint*"){ echo "bx-flashing"; } ?>'></i></a></li>
-                                {{ `cd /var/www/pterodactyl;rm .blueprit/.flags/flashicon.md;` }}
+                                <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if(shell_exec("cd /var/www/pterodactyl;cat .blueprint/.flags/onboarding.md") == "*blueprint*"){ echo "bx-flashing"; } ?>'></i></a></li>
                             </li>
                             <li>
                                 <li><a href="{{ route('index') }}" data-toggle="tooltip" data-placement="bottom" title="Exit Admin Control"><i class="fa fa-server"></i></a></li>
@@ -157,12 +156,15 @@
                         </div>
                     </div>
                     @yield('content')
-                    @if(shell_exec("cd /var/www/pterodactyl;cat .blueprint/.storage/notification.txt;") != "")
-                        <div class="notification">
-                            <p>{{ `cd /var/www/pterodactyl;cat .blueprint/.storage/notification.txt` }}</p>
-                        </div>
-                        {{ `cd /var/www/pterodactyl;echo "" > .blueprint/.storage/notification.txt` }}
-                    @endif
+                    <?php
+                    if(shell_exec("cd /var/www/pterodactyl;cat .blueprint/.flags/onboarding.md") == "*blueprint*") {
+                        echo "
+                        <div class=\"notification\">
+                            <p>Blueprint has now been installed, click the extension icon to take a look.</p>
+                        </div>";
+                        `cd /var/www/pterodactyl;rm .blueprint/.flags/onboarding.md;`;
+                    }
+                    ?>
                 </section>
             </div>
             <footer class="main-footer">

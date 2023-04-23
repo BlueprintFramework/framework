@@ -2,18 +2,19 @@
 
 VERSION="([(pterodactylmarket_version)])";
 
-cd /var/www/pterodactyl;
-if [[ "$@" == *"-php"* ]]; then
-    exit 1;
-fi;
-
 mkdir .blueprint 2> /dev/null;
 cp -R blueprint/* .blueprint/ 2> /dev/null;
+cp -R blueprint/.* .blueprint/ 2> /dev/null;
 rm -R blueprint 2> /dev/null;
 
 source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
+
+cd /var/www/pterodactyl;
+if [[ "$@" == *"-php"* ]]; then
+    exit 1;
+fi;
 
 export NEWT_COLORS='
     root=,black
@@ -65,9 +66,6 @@ if [[ $1 != "-bash" ]]; then
 
         clr_bright "chown -R www-data:www-data /var/www/pterodactyl/.*";
         chown -R www-data:www-data /var/www/pterodactyl/.*;
-
-        echo "Blueprint has now been installed, click the extension icon to take a look." > .blueprint/.storage/notification.txt;
-        touch ".blueprint/.flags/flashicon.md";
 
         clr_bright "php artisan up";
         php artisan up;
