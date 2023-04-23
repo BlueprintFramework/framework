@@ -91,7 +91,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     FILE=$3".blueprint"
     if [[ ! -f "$FILE" ]]; then error "$FILE could not be found.";fi;
 
-    ZIP=$3".zip"
+    ZIP=$3".zip";
     cp $FILE .blueprint/tmp/$ZIP;
     cd .blueprint/tmp;
     unzip $ZIP;
@@ -283,6 +283,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     if [[ $author == "blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
     if [[ $author == "Blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
+
+    if [[ -f ".blueprint/.flags/onboarding.md" ]]; then
+        clr_green "Congratulations on installing your first extension! We'll now automatically disable onboarding for you.";
+        rm .blueprint/.flags/onboarding.md;
+    fi;
 
     clr_blue "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
 fi;
