@@ -22,6 +22,16 @@ class ExtensionsController extends Controller
      */
     public function index(): View
     {
-        return $this->view->make('admin.extensions', ['version' => $this->version, 'bp' => $this->bp, 'root' => "/admin/extensions"]);
+        // Onboarding check.
+        if(shell_exec("cd /var/www/pterodactyl; cat .blueprint/.flags/onboarding.md" == "*blueprint*")) {
+            $onboarding = true;
+        }
+        return $this->view->make('admin.extensions', [
+            'version' => $this->version,
+            'bp' => $this->bp,
+            'root' => "/admin/extensions",
+
+            'onboarding' => $onboarding
+        ]);
     }
 }
