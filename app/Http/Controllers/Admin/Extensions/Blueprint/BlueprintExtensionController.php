@@ -10,6 +10,7 @@ use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
 use Pterodactyl\Services\Helpers\BlueprintVariableService;
 use Pterodactyl\Services\Helpers\BlueprintTelemetryService;
+use Pterodactyl\Services\Helpers\BlueprintExtensionLibrary;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Pterodactyl\Http\Requests\Admin\Extensions\Blueprint\BlueprintSettingsFormRequest;
@@ -24,6 +25,7 @@ class BlueprintExtensionController extends Controller
     public function __construct(
         private BlueprintVariableService $bp,
         private BlueprintTelemetryService $telemetry,
+        private BlueprintExtensionLibrary $bplib,
 
         private SoftwareVersionService $version,
         private ViewFactory $view,
@@ -45,8 +47,11 @@ class BlueprintExtensionController extends Controller
         return $this->view->make(
             'admin.extensions.blueprint.index', [
                 'version' => $this->version,
+
                 'bp' => $this->bp,
+                'bplib' => $this->bplib,
                 'telemetry' => $this->telemetry,
+
                 'root' => "/admin/extensions/blueprint",
             ]
         );

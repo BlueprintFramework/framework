@@ -157,13 +157,24 @@
                     </div>
                     @yield('content')
                     <?php
-                    if(shell_exec("cd /var/www/pterodactyl;cat .blueprint/.flags/onboarding.md") == "*blueprint*") {
-                        echo "
-                        <div class=\"notification\">
+
+                        if(shell_exec("cd /var/www/pterodactyl;cat .blueprint/.flags/onboarding.md") == "*blueprint*") {
+                            echo "
+                            <div class=\"notification\">
                             <p>Blueprint has now been installed, click the extension icon to take a look.</p>
-                        </div>";
-                        `cd /var/www/pterodactyl;rm .blueprint/.flags/onboarding.md;`;
-                    }
+                            </div>";
+                            `cd /var/www/pterodactyl;rm .blueprint/.flags/onboarding.md;`;
+                        }
+    
+                        $notification = shell_exec("cd /var/www/pterodactyl;cat .blueprint/.storage/notification");
+                        if($notification != null) {
+                            echo "<div class=\"notification\">
+                            <p>".$notification."</p>
+                            </div>
+                            ";
+    
+                            shell_exec("cd /var/www/pterodactyl;rm .blueprint/.storage/notification;touch .blueprint/.storage/notification;");
+                        }
                     ?>
                 </section>
             </div>

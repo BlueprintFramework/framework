@@ -27,6 +27,8 @@ class CreateBlueprintTable extends Migration
             $table->string('telemetry')->nullable();
             $table->string('telemetry:id')->nullable();
 
+            $table->string('notification:text')->nullable();
+
             $table->timestamp('timestamp')->useCurrent()->onUpdate(null);
         });
     }

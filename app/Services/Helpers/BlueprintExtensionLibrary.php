@@ -32,4 +32,15 @@ class BlueprintExtensionLibrary
     public function dbSet($table, $record, $value) {
         return $this->settings->set($table."::".$record, $value);
     }
+
+    /*
+    | Notifications
+    |
+    | notify("text");
+    */
+    public function notify($text) {
+        $this->dbSet("blueprint", "notification:text", $text);
+        shell_exec("cd /var/www/pterodactyl;echo \"$text\" > .blueprint/.storage/notification;");
+        return;
+    }
 }
