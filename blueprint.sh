@@ -109,8 +109,8 @@ if [[ $2 == "-placeholder" ]]; then
         exit 1;
     fi;
 
-    sed -E -i "s*\(\[\(pterodactylmarket_version\)\]\)*$3*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-    sed -E -i "s*\(\[\(pterodactylmarket_version\)\]\)*$3*g" blueprint.sh;
+    sed -E -i "s*&version&*$3*g" app/Services/Helpers/BlueprintPlaceholderService.php;
+    sed -E -i "s*&version&*$3*g" blueprint.sh;
 fi;
 
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
