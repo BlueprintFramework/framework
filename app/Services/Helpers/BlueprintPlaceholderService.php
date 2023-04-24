@@ -14,7 +14,7 @@ class BlueprintPlaceholderService
     // $bp->version()
     public
     function version(): string {
-        $v = "([(pterodactylmarket_version)])";
+        $v = "&bp.version&";
         return $v;
     }
 }

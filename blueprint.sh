@@ -1,6 +1,32 @@
 #!/bin/bash
 
-VERSION="([(pterodactylmarket_version)])";
+# If the fallback version below does not match your downloaded version, please let us know.
+  VER_FALLBACK="indev-4N3";
+
+# This will be automatically replaced by some marketplaces, if not, $VERSION will be used as fallback.
+  PM_VERSION="([(pterodactylmarket_version)])";
+
+
+if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
+    # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
+    # or Blueprint being installed from other sources.
+    if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix" ]]; then
+        sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/Services/Helpers/BlueprintPlaceholderService.php;
+        touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix;
+    fi;
+    
+    VERSION=$VER_FALLBACK;
+elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
+    # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
+    # fallback version.
+    if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix" ]]; then
+        sed -E -i "s*&bp.version&*$PM_VERSION*g" app/Services/Helpers/BlueprintPlaceholderService.php;
+        touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix;
+    fi;
+
+    VERSION=$PM_VERSION;
+fi;
+
 
 mkdir .blueprint 2> /dev/null;
 cp -R blueprint/* .blueprint/ 2> /dev/null;
