@@ -6,32 +6,33 @@
 # This will be automatically replaced by some marketplaces, if not, $VERSION will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
 
+if [[ -f "/var/www/pterodactyl/blueprint/" ]]; then
+    mkdir .blueprint 2> /dev/null;
+    cp -R blueprint/* .blueprint/ 2> /dev/null;
+    cp -R blueprint/.* .blueprint/ 2> /dev/null;
+    rm -R blueprint 2> /dev/null;
+fi;
+
 
 if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
     # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
     # or Blueprint being installed from other sources.
-    if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix" ]]; then
+    if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag" ]]; then
         sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-        touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix;
+        touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag;
     fi;
     
     VERSION=$VER_FALLBACK;
 elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
     # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
     # fallback version.
-    if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix" ]]; then
+    if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag" ]]; then
         sed -E -i "s*&bp.version&*$PM_VERSION*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-        touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix;
+        touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag;
     fi;
 
     VERSION=$PM_VERSION;
 fi;
-
-
-mkdir .blueprint 2> /dev/null;
-cp -R blueprint/* .blueprint/ 2> /dev/null;
-cp -R blueprint/.* .blueprint/ 2> /dev/null;
-rm -R blueprint 2> /dev/null;
 
 source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
