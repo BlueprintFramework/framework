@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="indev-4N3";
+  VER_FALLBACK="indev-TC2";
 
 # This will be automatically replaced by some marketplaces, if not, $VERSION will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
