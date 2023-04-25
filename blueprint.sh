@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="indev-TC2";
+  VER_FALLBACK="indev-WI9";
 
 # This will be automatically replaced by some marketplaces, if not, $VERSION will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
@@ -311,11 +311,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     if [[ $author == "blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
     if [[ $author == "Blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
-
-    if [[ -f ".blueprint/.flags/onboarding.md" ]]; then
-        clr_green "Congratulations on installing your first extension! We'll now automatically disable onboarding for you.";
-        rm .blueprint/.flags/onboarding.md;
-    fi;
 
     clr_blue "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
 fi;
