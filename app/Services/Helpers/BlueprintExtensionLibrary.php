@@ -39,10 +39,18 @@ class BlueprintExtensionLibrary
     | Notifications
     |
     | notify("text");
+    | notifyAfter("text");
     */
     public function notify($text) {
         $this->dbSet("blueprint", "notification:text", $text);
         shell_exec("cd /var/www/pterodactyl;echo \"$text\" > .blueprint/.storage/notification;");
+        return;
+    }
+
+    public function notifyAfter($delay, $text) {
+        $this->dbSet("blueprint", "notification:text", $text);
+        shell_exec("cd /var/www/pterodactyl;echo \"$text\" > .blueprint/.storage/notification;");
+        header("Refresh:$delay");
         return;
     }
 }
