@@ -19,6 +19,7 @@ class BlueprintExtensionLibrary
     ) {
     }
 
+
     /*
     | Databasing
     |
@@ -32,6 +33,7 @@ class BlueprintExtensionLibrary
     public function dbSet($table, $record, $value) {
         return $this->settings->set($table."::".$record, $value);
     }
+
 
     /*
     | Notifications
