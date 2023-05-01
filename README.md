@@ -1,5 +1,5 @@
 ## ◆ teamblueprint/blueprint
-:: Discord: discord.gg/CUwHwv6xRe
+:: Discord: discord.gg/CUwHwv6xRe    \
 :: Documentation: ptero.shop/docs
 
 ## Introduction
