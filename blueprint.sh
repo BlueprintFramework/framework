@@ -13,8 +13,9 @@ if [[ -f "/var/www/pterodactyl/blueprint/" ]]; then
     rm -R blueprint 2> /dev/null;
 fi;
 
-
-if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
+# BUILT_FROM_SOURCE="y"; # If you downloaded Blueprint from a release instead of building it, this should be "n".
+if [[ $BUILT_FROM_SOURCE == "y" ]]; then if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag" ]]; thensed -E -i "s*&bp.version&*source*g" app/Services/Helpers/BlueprintPlaceholderService.php;touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag;fi;VERSION="source";
+elif [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
     # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
     # or Blueprint being installed from other sources.
     if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag" ]]; then
@@ -315,12 +316,19 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     clr_blue "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
 fi;
 
-if [[ $2 == "help" ]]; then
-    echo -e "-i [name] | install a blueprint extension\n-v | get the current blueprint version\n-reinstall | rerun the blueprint installation script";
+if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
+    echo -e "-i [name]            install a blueprint extension""
+"           "-v                   get the current blueprint version""
+"           "-init                initialize extension development files""
+"           "-reinstall           rerun the blueprint installation script";
 fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
     echo -e $VERSION;
+fi;
+
+if [[ $2 == "-init" ]]; then
+    error "-init is currently not available";
 fi;
 
 if [[ $2 == "-reinstall"  ]]; then
