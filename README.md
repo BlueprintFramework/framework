@@ -1,6 +1,6 @@
 ## ◆ teamblueprint/main
-[Discord ➚](discord.gg/CUwHwv6xRe)\
-[Documentation ➚](ptero.shop/docs)
+[Discord ➚](https://discord.gg/CUwHwv6xRe)\
+[Documentation ➚](https://ptero.shop/docs)
 
 ### Installation
 **What you need:**
