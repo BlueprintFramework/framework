@@ -19,3 +19,4 @@ cd /var/www/pterodactyl
 chmod +x blueprint.sh
 bash blueprint.sh
 ```
+3. After waiting for the installation script to finish, open up your Pterodactyl admin panel and click on the puzzle icon in the top right of the website.
