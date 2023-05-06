@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# This should allow Blueprint to run in docker.
+# This should allow Blueprint to run in docker. Please note that changing the $FOLDER variable after running
+# the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="pterodactyl"
 
 if [[ -f ".dockerenv" ]]; then
@@ -83,6 +84,7 @@ if [[ $1 != "-bash" ]]; then
         fi;
 
         sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Http/Services/Helpers/BlueprintPlaceholderService;
+        sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
 
         clr_bright "php artisan down";
         php artisan down;
@@ -332,7 +334,7 @@ if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
 fi;
 
 if [[ $2 == "-init" ]]; then
-    error "-init is currently not available";
+    error "-init is currently not available";exit 1;
 fi;
 
 if [[ $2 == "-reinstall"  ]]; then
