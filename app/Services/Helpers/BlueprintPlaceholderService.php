@@ -17,4 +17,11 @@ class BlueprintPlaceholderService
         $v = "&bp.version&";
         return $v;
     }
+
+    // $bp->folder()
+    public
+    function folder(): string {
+        $v = "&bp.folder&";
+        return $v;
+    }
 }

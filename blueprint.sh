@@ -1,12 +1,20 @@
 #!/bin/bash
 
+# This should allow Blueprint to run in docker.
+  FOLDER="pterodactyl"
+
+if [[ -f ".dockerenv" ]]; then
+    DOCKER="y";
+    FOLDER="html"
+fi;
+
 # If the fallback version below does not match your downloaded version, please let us know.
   VER_FALLBACK="indev-QNH";
 
-# This will be automatically replaced by some marketplaces, if not, $VERSION will be used as fallback.
+# This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
 
-if [[ -f "/var/www/pterodactyl/blueprint/" ]]; then
+if [[ -f "/var/www/$FOLDER/blueprint/" ]]; then
     mkdir .blueprint 2> /dev/null;
     cp -R blueprint/* .blueprint/ 2> /dev/null;
     cp -R blueprint/.* .blueprint/ 2> /dev/null;
@@ -14,22 +22,22 @@ if [[ -f "/var/www/pterodactyl/blueprint/" ]]; then
 fi;
 
 # BUILT_FROM_SOURCE="y"; # If you downloaded Blueprint from a release instead of building it, this should be "n".
-if [[ $BUILT_FROM_SOURCE == "y" ]]; then if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag" ]]; thensed -E -i "s*&bp.version&*source*g" app/Services/Helpers/BlueprintPlaceholderService.php;touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag;fi;VERSION="source";
+if [[ $BUILT_FROM_SOURCE == "y" ]]; then if [[ ! -f "/var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag" ]]; thensed -E -i "s*&bp.version&*source*g" app/Services/Helpers/BlueprintPlaceholderService.php;touch /var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag;fi;VERSION="source";
 elif [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
     # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
     # or Blueprint being installed from other sources.
-    if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag" ]]; then
+    if [[ ! -f "/var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag" ]]; then
         sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-        touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag;
+        touch /var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag;
     fi;
     
     VERSION=$VER_FALLBACK;
 elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
     # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
     # fallback version.
-    if [[ ! -f "/var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag" ]]; then
+    if [[ ! -f "/var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag" ]]; then
         sed -E -i "s*&bp.version&*$PM_VERSION*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-        touch /var/www/pterodactyl/.blueprint/.flags/versionschemefix.flag;
+        touch /var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag;
     fi;
 
     VERSION=$PM_VERSION;
@@ -39,7 +47,7 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
-cd /var/www/pterodactyl;
+cd /var/www/$FOLDER;
 if [[ "$@" == *"-php"* ]]; then
     exit 1;
 fi;
@@ -61,8 +69,8 @@ error() {
 };
 
 touch /usr/local/bin/blueprint > /dev/null;
-echo -e "#!/bin/bash\nbash /var/www/pterodactyl/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
-chmod u+x /var/www/pterodactyl/blueprint.sh > /dev/null;
+echo -e "#!/bin/bash\nbash /var/www/$FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
+chmod u+x /var/www/$FOLDER/blueprint.sh > /dev/null;
 chmod u+x /usr/local/bin/blueprint > /dev/null;
 
 if [[ $1 != "-bash" ]]; then
@@ -70,11 +78,17 @@ if [[ $1 != "-bash" ]]; then
         clr_blue "This command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.";
         exit 1;
     else
+        if [[ $DOCKER == "y" ]]; then
+            clr_red "Running Blueprint with Docker may result in issues.";
+        fi;
+
+        sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Http/Services/Helpers/BlueprintPlaceholderService;
+
         clr_bright "php artisan down";
         php artisan down;
 
-        clr_bright "/var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css";
-        sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* blueprint reserved line */!g" /var/www/pterodactyl/public/themes/pterodactyl/css/pterodactyl.css;
+        clr_bright "/var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css";
+        sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* blueprint reserved line */!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
 
 
         clr_bright "php artisan view:clear";
@@ -89,11 +103,11 @@ if [[ $1 != "-bash" ]]; then
         php artisan migrate;
 
 
-        clr_bright "chown -R www-data:www-data /var/www/pterodactyl/*";
-        chown -R www-data:www-data /var/www/pterodactyl/*;
+        clr_bright "chown -R www-data:www-data /var/www/$FOLDER/*";
+        chown -R www-data:www-data /var/www/$FOLDER/*;
 
-        clr_bright "chown -R www-data:www-data /var/www/pterodactyl/.*";
-        chown -R www-data:www-data /var/www/pterodactyl/.*;
+        clr_bright "chown -R www-data:www-data /var/www/$FOLDER/.*";
+        chown -R www-data:www-data /var/www/$FOLDER/.*;
 
         clr_bright "php artisan up";
         php artisan up;
@@ -103,16 +117,6 @@ if [[ $1 != "-bash" ]]; then
         dbAdd "blueprint.setupFinished";
         exit 1;
     fi;
-fi;
-
-if [[ $2 == "-placeholder" ]]; then
-    if [[ $3 == "" ]]; then
-        echo -e "Expected 1 argument but got $(expr $# - 2). (-placeholder versionid)";
-        exit 1;
-    fi;
-
-    sed -E -i "s*&version&*$3*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-    sed -E -i "s*&version&*$3*g" blueprint.sh;
 fi;
 
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
@@ -140,7 +144,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     fi;
 
 
-    cd /var/www/pterodactyl;
+    cd /var/www/$FOLDER;
 
     eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
 
@@ -333,6 +337,6 @@ fi;
 
 if [[ $2 == "-reinstall"  ]]; then
     dbRemove "blueprint.setupFinished";
-    cd /var/www/pterodactyl;
+    cd /var/www/$FOLDER;
     bash blueprint.sh;
 fi;

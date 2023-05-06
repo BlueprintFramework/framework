@@ -11,6 +11,7 @@ use Pterodactyl\Services\Helpers\SoftwareVersionService;
 use Pterodactyl\Services\Helpers\BlueprintVariableService;
 use Pterodactyl\Services\Helpers\BlueprintTelemetryService;
 use Pterodactyl\Services\Helpers\BlueprintExtensionLibrary;
+use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Pterodactyl\Http\Requests\Admin\Extensions\Blueprint\BlueprintSettingsFormRequest;
@@ -26,6 +27,7 @@ class BlueprintExtensionController extends Controller
         private BlueprintVariableService $bp,
         private BlueprintTelemetryService $telemetry,
         private BlueprintExtensionLibrary $bplib,
+        private BlueprintPlaceholderService $placeholderservice,
 
         private SoftwareVersionService $version,
         private ViewFactory $view,
@@ -42,7 +44,7 @@ class BlueprintExtensionController extends Controller
     public function index(): View
     {
         if($this->bp->dbGet('developer:cmd') != "") {
-            $this->bp->dbSet('developer:log', shell_exec("cd /var/www/pterodactyl;".$this->bp->dbGet('developer:cmd')));
+            $this->bp->dbSet('developer:log', shell_exec("cd /var/www/".$this->placeholderservice->folder().";".$this->bp->dbGet('developer:cmd')));
         };
         return $this->view->make(
             'admin.extensions.blueprint.index', [
@@ -67,7 +69,7 @@ class BlueprintExtensionController extends Controller
             $this->settings->set('blueprint::' . $key, $value);
         }
 
-        shell_exec("cd /var/www/pterodactyl;echo \"Your changes have been saved.\" > .blueprint/.storage/notification.txt;");
+        shell_exec("cd /var/www/".$this->placeholderservice->folder().";echo \"Your changes have been saved.\" > .blueprint/.storage/notification.txt;");
         return redirect()->route('admin.extensions.blueprint.index');
     }
 }

@@ -10,12 +10,14 @@
 namespace Pterodactyl\Services\Helpers;
 
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
 
 class BlueprintExtensionLibrary
 {
     // Construct BlueprintExtensionLibrary
     public function __construct(
         private SettingsRepositoryInterface $settings,
+        private BlueprintPlaceholderService $placeholder,
     ) {
     }
 
@@ -43,13 +45,13 @@ class BlueprintExtensionLibrary
     */
     public function notify($text) {
         $this->dbSet("blueprint", "notification:text", $text);
-        shell_exec("cd /var/www/pterodactyl;echo \"$text\" > .blueprint/.storage/notification;");
+        shell_exec("cd /var/www/".$this->placeholder->folder().";echo \"$text\" > .blueprint/.storage/notification;");
         return;
     }
 
     public function notifyAfter($delay, $text) {
         $this->dbSet("blueprint", "notification:text", $text);
-        shell_exec("cd /var/www/pterodactyl;echo \"$text\" > .blueprint/.storage/notification;");
+        shell_exec("cd /var/www/".$this->placeholder->folder().";echo \"$text\" > .blueprint/.storage/notification;");
         header("Refresh:$delay");
         return;
     }
