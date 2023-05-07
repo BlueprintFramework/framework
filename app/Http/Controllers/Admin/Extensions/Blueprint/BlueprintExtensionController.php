@@ -69,7 +69,7 @@ class BlueprintExtensionController extends Controller
             $this->settings->set('blueprint::' . $key, $value);
         }
 
-        shell_exec("cd /var/www/".$this->placeholderservice->folder().";echo \"Your changes have been saved.\" > .blueprint/.storage/notification.txt;");
+        $this->bplib->notify("Your changes have been saved.");
         return redirect()->route('admin.extensions.blueprint.index');
     }
 }
