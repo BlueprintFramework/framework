@@ -9,7 +9,7 @@
 * Linux and Pterodactyl knowledge.
 * Fingers and a brain.
 
-**Installation**
+**Installation:**
 1. Navigate to `/var/www/pterodactyl`. (your Pterodactyl installation should be installed there, else it might not be compatible with Blueprint)
 ```sh
 cd /var/www/pterodactyl
