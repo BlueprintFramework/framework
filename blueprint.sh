@@ -10,7 +10,7 @@ if [[ -f ".dockerenv" ]]; then
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="indev-1GG";
+  VER_FALLBACK="indev-8X2";
 
 # This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
@@ -81,7 +81,7 @@ if [[ $1 != "-bash" ]]; then
             log_red "Running Blueprint with Docker may result in issues.";
         fi;
 
-        sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Http/Services/Helpers/BlueprintPlaceholderService;
+        sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Http/Services/Helpers/BlueprintPlaceholderService.php;
         sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
 
         log_bright "php artisan down";
