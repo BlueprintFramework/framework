@@ -12,6 +12,7 @@ class BlueprintTelemetryService
     }
 
     public function send($event) {
+        if ($this->settings->get('blueprint::telemetry') == "") { $this->settings->set('blueprint::telemetry', "true"); };
         if ($this->settings->get('blueprint::telemetry') == "false") { return; };
         if ($this->settings->get('blueprint::telemetry:id') == "") { $this->settings->set('blueprint::telemetry:id', uniqid(rand())); };
 
