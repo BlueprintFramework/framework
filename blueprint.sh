@@ -81,7 +81,7 @@ if [[ $1 != "-bash" ]]; then
             log_red "Running Blueprint with Docker may result in issues.";
         fi;
 
-        sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Http/Services/Helpers/BlueprintPlaceholderService.php;
+        sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
         sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
 
         log_bright "php artisan down";

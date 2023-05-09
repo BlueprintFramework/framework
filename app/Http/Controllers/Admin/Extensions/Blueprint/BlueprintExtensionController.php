@@ -44,6 +44,7 @@ class BlueprintExtensionController extends Controller
     public function index(): View
     {
         if($this->bp->dbGet('developer:cmd') != "") {
+            $this->bplib->notify("Console command sent.");
             $this->bp->dbSet('developer:log', shell_exec("cd /var/www/".$this->placeholderservice->folder().";".$this->bp->dbGet('developer:cmd')));
         };
         return $this->view->make(

@@ -70,7 +70,7 @@
                                 <label class="control-label">Telemetry</label>
                                 <select class="form-control" name="telemetry">
                                     <option value="true">Enabled</option>
-                                    <option value="false" @if($bp->dbGet('telemetry') == "false") selected @endif>Disabled</option>
+                                    <option value="false" @if($bp->dbGet('telemetry') != "true") selected @endif>Disabled</option>
                                 </select>
                                 <p class="text-muted small">Automatically share anonymous usage data with Blueprint.</p>
                             </div>
