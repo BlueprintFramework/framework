@@ -18,22 +18,22 @@ fi;
 if [[ -d "/var/www/$FOLDER/blueprint" ]]; then mv /var/www/$FOLDER/blueprint /var/www/$FOLDER/.blueprint; fi;
 
 # BUILT_FROM_SOURCE="y"; # If you downloaded Blueprint from a release instead of building it, this should be "n".
-if [[ $BUILT_FROM_SOURCE == "y" ]]; then if [[ ! -f "/var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag" ]]; then sed -E -i "s*&bp.version&*source*g" app/Services/Helpers/BlueprintPlaceholderService.php;touch /var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag;fi;VERSION="source";
+if [[ $BUILT_FROM_SOURCE == "y" ]]; then if [[ ! -f "/var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag" ]]; then sed -E -i "s*&bp.version&*source*g" app/Services/Helpers/BlueprintPlaceholderService.php;touch /var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag;fi;VERSION="source";
 elif [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
     # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
     # or Blueprint being installed from other sources.
-    if [[ ! -f "/var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag" ]]; then
+    if [[ ! -f "/var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag" ]]; then
         sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-        touch /var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag;
+        touch /var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag;
     fi;
     
     VERSION=$VER_FALLBACK;
 elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
     # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
     # fallback version.
-    if [[ ! -f "/var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag" ]]; then
+    if [[ ! -f "/var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag" ]]; then
         sed -E -i "s*&bp.version&*$PM_VERSION*g" app/Services/Helpers/BlueprintPlaceholderService.php;
-        touch /var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag;
+        touch /var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag;
     fi;
 
     VERSION=$PM_VERSION;
