@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# source: https://github.com/mrbaseman/parse_yaml.git
+# source: https://github.com/mrbaseman/parse_yaml
 
 function parse_yaml {
    local prefix=$2

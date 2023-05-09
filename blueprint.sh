@@ -63,7 +63,7 @@ export NEWT_COLORS='
 
 error() {
     whiptail --title " ◆ " --ok-button "ok" --msgbox "Sorry, this operation could not be completed. For troubleshooting, please go to ptero.shop/error.\n\n\"${1}\"" 15 60;
-    clr_red "${1}";
+    log_red "${1}";
     exit 1;
 };
 
@@ -74,45 +74,45 @@ chmod u+x /usr/local/bin/blueprint > /dev/null;
 
 if [[ $1 != "-bash" ]]; then
     if dbValidate "blueprint.setupFinished"; then
-        clr_blue "This command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.";
+        log_blue "This command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.";
         exit 1;
     else
         if [[ $DOCKER == "y" ]]; then
-            clr_red "Running Blueprint with Docker may result in issues.";
+            log_red "Running Blueprint with Docker may result in issues.";
         fi;
 
         sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Http/Services/Helpers/BlueprintPlaceholderService;
         sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
 
-        clr_bright "php artisan down";
+        log_bright "php artisan down";
         php artisan down;
 
-        clr_bright "/var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css";
+        log_bright "/var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css";
         sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* blueprint reserved line */!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
 
 
-        clr_bright "php artisan view:clear";
+        log_bright "php artisan view:clear";
         php artisan view:clear;
 
 
-        clr_bright "php artisan config:clear";
+        log_bright "php artisan config:clear";
         php artisan config:clear;
 
 
-        clr_bright "php artisan migrate";
+        log_bright "php artisan migrate";
         php artisan migrate;
 
 
-        clr_bright "chown -R www-data:www-data /var/www/$FOLDER/*";
+        log_bright "chown -R www-data:www-data /var/www/$FOLDER/*";
         chown -R www-data:www-data /var/www/$FOLDER/*;
 
-        clr_bright "chown -R www-data:www-data /var/www/$FOLDER/.*";
+        log_bright "chown -R www-data:www-data /var/www/$FOLDER/.*";
         chown -R www-data:www-data /var/www/$FOLDER/.*;
 
-        clr_bright "php artisan up";
+        log_bright "php artisan up";
         php artisan up;
 
-        clr_blue "\n\nBlueprint should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+        log_blue "\n\nBlueprint should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
 
         dbAdd "blueprint.setupFinished";
         exit 1;
@@ -171,7 +171,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $controller_location == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'controller_location' is a required option.";fi;
     if [[ $view_location == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'view_location' is a required option.";fi;
 
-    if [[ $target != $VERSION ]]; then clr_red "This extension is built for version $target, but your version is $VERSION.";fi;
+    if [[ $target != $VERSION ]]; then log_red "This extension is built for version $target, but your version is $VERSION.";fi;
     if [[ $identifier != $3 ]]; then rm -R .blueprint/.storage/tmp/$3; error "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";fi;
     if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/.storage/tmp/$3; error "The operation could not be completed since the extension is attempting to overwrite internal files.";fi;
 
@@ -250,12 +250,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         cp -R .blueprint/.storage/tmp/$3/$css_location/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
     fi;
 
-    if [[ $name == *"~"* ]]; then clr_red "'name' contains '~' and may result in an error.";fi;
-    if [[ $description == *"~"* ]]; then clr_red "'description' contains '~' and may result in an error.";fi;
-    if [[ $version == *"~"* ]]; then clr_red "'version' contains '~' and may result in an error.";fi;
-    if [[ $CONTENT == *"~"* ]]; then clr_red "'CONTENT' contains '~' and may result in an error.";fi;
-    if [[ $ICON == *"~"* ]]; then clr_red "'ICON' contains '~' and may result in an error.";fi;
-    if [[ $identifier == *"~"* ]]; then clr_red "'identifier' contains '~' and may result in an error.";fi;
+    if [[ $name == *"~"* ]]; then log_red "'name' contains '~' and may result in an error.";fi;
+    if [[ $description == *"~"* ]]; then log_red "'description' contains '~' and may result in an error.";fi;
+    if [[ $version == *"~"* ]]; then log_red "'version' contains '~' and may result in an error.";fi;
+    if [[ $CONTENT == *"~"* ]]; then log_red "'CONTENT' contains '~' and may result in an error.";fi;
+    if [[ $ICON == *"~"* ]]; then log_red "'ICON' contains '~' and may result in an error.";fi;
+    if [[ $identifier == *"~"* ]]; then log_red "'identifier' contains '~' and may result in an error.";fi;
 
     sed -i "s~␀title␀~$name~g" .blueprint/defaults/extensions/admin.default.bak;
     sed -i "s~␀name␀~$name~g" .blueprint/defaults/extensions/admin.default.bak;
@@ -314,10 +314,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     rm .blueprint/defaults/extensions/button.default.bak;
     rm -R .blueprint/.storage/tmp/$3;
 
-    if [[ $author == "blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
-    if [[ $author == "Blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
+    if [[ $author == "blueprint" ]]; then log_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
+    if [[ $author == "Blueprint" ]]; then log_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
 
-    clr_blue "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+    log_blue "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
 fi;
 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
