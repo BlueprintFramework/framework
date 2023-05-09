@@ -125,8 +125,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ ! -f "$FILE" ]]; then error "$FILE could not be found.";fi;
 
     ZIP=$3".zip";
-    cp $FILE .blueprint/tmp/$ZIP;
-    cd .blueprint/tmp;
+    cp $FILE .blueprint/.storage/tmp/$ZIP;
+    cd .blueprint/.storage/tmp;
     unzip $ZIP;
     rm $ZIP;
     if [[ ! -f "$3/*" ]]; then
@@ -146,10 +146,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     cd /var/www/$FOLDER;
 
-    eval $(parse_yaml .blueprint/tmp/$3/conf.yml)
+    eval $(parse_yaml .blueprint/.storage/tmp/$3/conf.yml)
 
     if [[ $flags != *"-placeholders.skip;"* ]]; then
-        DIR=.blueprint/tmp/$3/*;
+        DIR=.blueprint/.storage/tmp/$3/*;
 
         # ^#version#^ = version
         # ^#author#^ = author
@@ -161,32 +161,32 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         done;
     else echo "-placeholders.skip;"; fi;
 
-    if [[ $name == "" ]]; then rm -R .blueprint/tmp/$3; error "'name' is a required option.";fi;
-    if [[ $identifier == "" ]]; then rm -R .blueprint/tmp/$3; error "'identifier' is a required option.";fi;
-    if [[ $description == "" ]]; then rm -R .blueprint/tmp/$3; error "'description' is a required option.";fi;
-    if [[ $version == "" ]]; then rm -R .blueprint/tmp/$3; error "'version' is a required option.";fi;
-    if [[ $target == "" ]]; then rm -R .blueprint/tmp/$3; error "'target' is a required option.";fi;
-    if [[ $icon == "" ]]; then rm -R .blueprint/tmp/$3; error "'icon' is a required option.";fi;
+    if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'name' is a required option.";fi;
+    if [[ $identifier == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'identifier' is a required option.";fi;
+    if [[ $description == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'description' is a required option.";fi;
+    if [[ $version == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'version' is a required option.";fi;
+    if [[ $target == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'target' is a required option.";fi;
+    if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'icon' is a required option.";fi;
 
-    if [[ $controller_location == "" ]]; then rm -R .blueprint/tmp/$3; error "'controller_location' is a required option.";fi;
-    if [[ $view_location == "" ]]; then rm -R .blueprint/tmp/$3; error "'view_location' is a required option.";fi;
+    if [[ $controller_location == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'controller_location' is a required option.";fi;
+    if [[ $view_location == "" ]]; then rm -R .blueprint/.storage/tmp/$3; error "'view_location' is a required option.";fi;
 
     if [[ $target != $VERSION ]]; then clr_red "This extension is built for version $target, but your version is $VERSION.";fi;
-    if [[ $identifier != $3 ]]; then rm -R .blueprint/tmp/$3; error "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";fi;
-    if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/tmp/$3; error "The operation could not be completed since the extension is attempting to overwrite internal files.";fi;
+    if [[ $identifier != $3 ]]; then rm -R .blueprint/.storage/tmp/$3; error "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";fi;
+    if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/.storage/tmp/$3; error "The operation could not be completed since the extension is attempting to overwrite internal files.";fi;
 
     if [[ $identifier =~ [a-z] ]]; then echo "ok";
-    else rm -R .blueprint/tmp/$3; error "The extension identifier should be lowercase and only contain characters a-z.";fi;
+    else rm -R .blueprint/.storage/tmp/$3; error "The extension identifier should be lowercase and only contain characters a-z.";fi;
 
-    if [[ ! -f ".blueprint/tmp/$3/$icon" ]]; then rm -R .blueprint/tmp/$3;error "The 'icon' path points to a nonexisting file.";fi;
+    if [[ ! -f ".blueprint/.storage/tmp/$3/$icon" ]]; then rm -R .blueprint/.storage/tmp/$3;error "The 'icon' path points to a nonexisting file.";fi;
 
     if [[ $migrations_directory != "" ]]; then
         if [[ $migrations_enabled == "yes" ]]; then
-            cp -R .blueprint/tmp/$3/$migrations_directory/* database/migrations/ 2> /dev/null;
+            cp -R .blueprint/.storage/tmp/$3/$migrations_directory/* database/migrations/ 2> /dev/null;
         elif [[ $migrations_enabled == "no" ]]; then
             echo "ok";
         else
-            rm -R .blueprint/tmp/$3;
+            rm -R .blueprint/.storage/tmp/$3;
             error "If defined, migrations_enabled should only be 'yes' or 'no'.";
         fi;
     fi;
@@ -197,7 +197,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         elif [[ $css_enabled == "no" ]]; then
             echo "ok";
         else
-            rm -R .blueprint/tmp/$3;
+            rm -R .blueprint/.storage/tmp/$3;
             error "If defined, css_enabled should only be 'yes' or 'no'.";
         fi;
     fi;
@@ -205,11 +205,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $adminrequests_directory != "" ]]; then
         if [[ $adminrequests_enabled == "yes" ]]; then
             mkdir app/Http/Requests/Admin/Extensions/$identifier;
-            cp -R .blueprint/tmp/$3/$adminrequests_directory/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
+            cp -R .blueprint/.storage/tmp/$3/$adminrequests_directory/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
         elif [[ $adminrequests_enabled == "no" ]]; then
             echo "ok";
         else
-            rm -R .blueprint/tmp/$3;
+            rm -R .blueprint/.storage/tmp/$3;
             error "If defined, adminrequests_enabled should only be 'yes' or 'no'.";
         fi;
     fi;
@@ -217,11 +217,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $publicfiles_directory != "" ]]; then
         if [[ $publicfiles_enabled == "yes" ]]; then
             mkdir public/extensions/$identifier;
-            cp -R .blueprint/tmp/$3/$publicfiles_directory/* public/extensions/$identifier/ 2> /dev/null;
+            cp -R .blueprint/.storage/tmp/$3/$publicfiles_directory/* public/extensions/$identifier/ 2> /dev/null;
         elif [[ $publicfiles_enabled == "no" ]]; then
             echo "ok";
         else
-            rm -R .blueprint/tmp/$3;
+            rm -R .blueprint/.storage/tmp/$3;
             error "If defined, publicfiles_enabled should only be 'yes' or 'no'.";
         fi;
     fi;
@@ -233,7 +233,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         elif [[ $controller_type == "custom" ]]; then
             echo "ok";
         else
-            rm -R .blueprint/tmp/$3;
+            rm -R .blueprint/.storage/tmp/$3;
             error "If defined, controller_type should only be 'default' or 'custom'.";
         fi;
     fi;
@@ -241,13 +241,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp -R .blueprint/defaults/extensions/button.default .blueprint/defaults/extensions/button.default.bak 2> /dev/null;
 
     mkdir public/assets/extensions/$identifier;
-    cp .blueprint/tmp/$3/$icon public/assets/extensions/$identifier/icon.jpg;
+    cp .blueprint/.storage/tmp/$3/$icon public/assets/extensions/$identifier/icon.jpg;
     ICON="/assets/extensions/$identifier/icon.jpg";
-    CONTENT=$(cat .blueprint/tmp/$3/$view_location);
+    CONTENT=$(cat .blueprint/.storage/tmp/$3/$view_location);
 
     if [[ $INJECTCSS == true ]]; then
         sed -i "s!/* blueprint reserved line */!/* blueprint reserved line */\n@import url(/assets/extensions/$identifier/$identifier.style.css);!g" public/themes/pterodactyl/css/pterodactyl.css;
-        cp -R .blueprint/tmp/$3/$css_location/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
+        cp -R .blueprint/.storage/tmp/$3/$css_location/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
     fi;
 
     if [[ $name == *"~"* ]]; then clr_red "'name' contains '~' and may result in an error.";fi;
@@ -295,11 +295,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $controller_type != "custom" ]]; then
         echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     else
-        cp .blueprint/tmp/$3/$controller_location app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+        cp .blueprint/.storage/tmp/$3/$controller_location app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     fi;
 
     if [[ $controller_type == "custom" ]]; then
-        cp .blueprint/tmp/$3/$controller_location app/Http/Controllers/Admin/Extensions/$identifier/${identifier}ExtensionController.php;
+        cp .blueprint/.storage/tmp/$3/$controller_location app/Http/Controllers/Admin/Extensions/$identifier/${identifier}ExtensionController.php;
     fi;
 
     echo $ADMINROUTE_RESULT >> routes/admin.php;
@@ -312,7 +312,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     fi;
     rm .blueprint/defaults/extensions/route.default.bak;
     rm .blueprint/defaults/extensions/button.default.bak;
-    rm -R .blueprint/tmp/$3;
+    rm -R .blueprint/.storage/tmp/$3;
 
     if [[ $author == "blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
     if [[ $author == "Blueprint" ]]; then clr_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
