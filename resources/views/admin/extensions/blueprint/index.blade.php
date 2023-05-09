@@ -56,6 +56,7 @@
                 {{ $bp->dbSet('developer:log', '') }}
                 {{ $bp->dbSet('developer:cmd', '') }}
             @endif
+            {{ $bp->dbGet('telemetry') }}
 
         </div>
         <div class="col-xs-9">
