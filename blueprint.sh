@@ -16,10 +16,10 @@ fi;
   PM_VERSION="([(pterodactylmarket_version)])";
 
 if [[ -f "/var/www/$FOLDER/blueprint/" ]]; then
-    mkdir .blueprint 2> /dev/null;
-    cp -R blueprint/* .blueprint/ 2> /dev/null;
-    cp -R blueprint/.* .blueprint/ 2> /dev/null;
-    rm -R blueprint 2> /dev/null;
+    mkdir .blueprint;
+    cp -R blueprint/* .blueprint/;
+    cp -R blueprint/.* .blueprint/;
+    rm -R blueprint;
 fi;
 
 # BUILT_FROM_SOURCE="y"; # If you downloaded Blueprint from a release instead of building it, this should be "n".
