@@ -39,6 +39,9 @@ elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
     VERSION=$PM_VERSION;
 fi;
 
+# Fix for Blueprint's bash database to work with docker and custom folder installations.
+sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/.blueprint/lib/db.sh;
+
 source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
