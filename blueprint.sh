@@ -15,12 +15,7 @@ fi;
 # This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
 
-if [[ -f "/var/www/$FOLDER/blueprint/" ]]; then
-    mkdir .blueprint;
-    cp -R blueprint/* .blueprint/;
-    cp -R blueprint/.* .blueprint/;
-    rm -R blueprint;
-fi;
+if [[ -d "/var/www/$FOLDER/blueprint" ]]; then mv /var/www/$FOLDER/blueprint /var/www/$FOLDER/.blueprint; fi;
 
 # BUILT_FROM_SOURCE="y"; # If you downloaded Blueprint from a release instead of building it, this should be "n".
 if [[ $BUILT_FROM_SOURCE == "y" ]]; then if [[ ! -f "/var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag" ]]; then sed -E -i "s*&bp.version&*source*g" app/Services/Helpers/BlueprintPlaceholderService.php;touch /var/www/$FOLDER/.blueprint/.flags/versionschemefix.flag;fi;VERSION="source";
