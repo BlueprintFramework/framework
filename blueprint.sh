@@ -332,7 +332,16 @@ if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
 fi;
 
 if [[ $2 == "-init" ]]; then
-    error "-init is currently not available";exit 1;
+    if [[ $3 != "--dev" ]]; then
+        error "-init is currently not available";exit 1;
+    fi;
+
+    # Work in progress code that will only run with "--dev" as 3rd argument.
+    log "Preparing variables..";
+    icnNUM=$(expr 1 + $RANDOM % 3);
+
+    log "Copying init defaults to tmp.";
+    cp -R .blueprint/.storage/defaults/init .blueprint/tmp/init
 fi;
 
 if [[ $2 == "-reinstall"  ]]; then
