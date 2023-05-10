@@ -226,10 +226,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         fi;
     fi;
 
-    cp -R .blueprint/defaults/extensions/admin.default .blueprint/defaults/extensions/admin.default.bak 2> /dev/null;
+    cp -R .blueprint/.storage/defaults/extensions/admin.default .blueprint/.storage/defaults/extensions/admin.default.bak 2> /dev/null;
     if [[ $controller_type != "" ]]; then
         if [[ $controller_type == "default" ]]; then
-            cp -R .blueprint/defaults/extensions/controller.default .blueprint/defaults/extensions/controller.default.bak 2> /dev/null;
+            cp -R .blueprint/.storage/defaults/extensions/controller.default .blueprint/.storage/defaults/extensions/controller.default.bak 2> /dev/null;
         elif [[ $controller_type == "custom" ]]; then
             echo "ok";
         else
@@ -237,8 +237,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             error "If defined, controller_type should only be 'default' or 'custom'.";
         fi;
     fi;
-    cp -R .blueprint/defaults/extensions/route.default .blueprint/defaults/extensions/route.default.bak 2> /dev/null;
-    cp -R .blueprint/defaults/extensions/button.default .blueprint/defaults/extensions/button.default.bak 2> /dev/null;
+    cp -R .blueprint/.storage/defaults/extensions/route.default .blueprint/.storage/defaults/extensions/route.default.bak 2> /dev/null;
+    cp -R .blueprint/.storage/defaults/extensions/button.default .blueprint/.storage/defaults/extensions/button.default.bak 2> /dev/null;
 
     mkdir public/assets/extensions/$identifier;
     cp .blueprint/.storage/tmp/$3/$icon public/assets/extensions/$identifier/icon.jpg;
@@ -257,31 +257,31 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $ICON == *"~"* ]]; then log_red "'ICON' contains '~' and may result in an error.";fi;
     if [[ $identifier == *"~"* ]]; then log_red "'identifier' contains '~' and may result in an error.";fi;
 
-    sed -i "s~␀title␀~$name~g" .blueprint/defaults/extensions/admin.default.bak;
-    sed -i "s~␀name␀~$name~g" .blueprint/defaults/extensions/admin.default.bak;
-    sed -i "s~␀breadcrumb␀~$name~g" .blueprint/defaults/extensions/admin.default.bak;
-    sed -i "s~␀name␀~$name~g" .blueprint/defaults/extensions/button.default.bak;
+    sed -i "s~␀title␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+    sed -i "s~␀name␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+    sed -i "s~␀breadcrumb␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+    sed -i "s~␀name␀~$name~g" .blueprint/.storage/defaults/extensions/button.default.bak;
 
-    sed -i "s~␀description␀~$description~g" .blueprint/defaults/extensions/admin.default.bak;
+    sed -i "s~␀description␀~$description~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
 
-    sed -i "s~␀version␀~$version~g" .blueprint/defaults/extensions/admin.default.bak;
-    sed -i "s~␀version␀~$version~g" .blueprint/defaults/extensions/button.default.bak;
+    sed -i "s~␀version␀~$version~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+    sed -i "s~␀version␀~$version~g" .blueprint/.storage/defaults/extensions/button.default.bak;
 
-    sed -i "s~␀icon␀~$ICON~g" .blueprint/defaults/extensions/admin.default.bak;
+    sed -i "s~␀icon␀~$ICON~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
 
-    sed -i "s~␀content␀~$CONTENT~g" .blueprint/defaults/extensions/admin.default.bak;
+    sed -i "s~␀content␀~$CONTENT~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
 
     if [[ $controller_type != "custom" ]]; then
-        sed -i "s~␀id␀~$identifier~g" .blueprint/defaults/extensions/controller.default.bak;
+        sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/controller.default.bak;
     fi;
-    sed -i "s~␀id␀~$identifier~g" .blueprint/defaults/extensions/route.default.bak;
-    sed -i "s~␀id␀~$identifier~g" .blueprint/defaults/extensions/button.default.bak;
+    sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/route.default.bak;
+    sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/button.default.bak;
 
-    ADMINVIEW_RESULT=$(cat .blueprint/defaults/extensions/admin.default.bak);
-    ADMINROUTE_RESULT=$(cat .blueprint/defaults/extensions/route.default.bak);
-    ADMINBUTTON_RESULT=$(cat .blueprint/defaults/extensions/button.default.bak);
+    ADMINVIEW_RESULT=$(cat .blueprint/.storage/defaults/extensions/admin.default.bak);
+    ADMINROUTE_RESULT=$(cat .blueprint/.storage/defaults/extensions/route.default.bak);
+    ADMINBUTTON_RESULT=$(cat .blueprint/.storage/defaults/extensions/button.default.bak);
     if [[ $controller_type != "custom" ]]; then
-        ADMINCONTROLLER_RESULT=$(cat .blueprint/defaults/extensions/controller.default.bak);
+        ADMINCONTROLLER_RESULT=$(cat .blueprint/.storage/defaults/extensions/controller.default.bak);
     fi;
     ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
@@ -306,12 +306,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
 
-    rm .blueprint/defaults/extensions/admin.default.bak;
+    rm .blueprint/.storage/defaults/extensions/admin.default.bak;
     if [[ $controller_type != "custom" ]]; then
-        rm .blueprint/defaults/extensions/controller.default.bak;
+        rm .blueprint/.storage/defaults/extensions/controller.default.bak;
     fi;
-    rm .blueprint/defaults/extensions/route.default.bak;
-    rm .blueprint/defaults/extensions/button.default.bak;
+    rm .blueprint/.storage/defaults/extensions/route.default.bak;
+    rm .blueprint/.storage/defaults/extensions/button.default.bak;
     rm -R .blueprint/.storage/tmp/$3;
 
     if [[ $author == "blueprint" ]]; then log_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
