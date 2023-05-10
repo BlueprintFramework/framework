@@ -1,0 +1,38 @@
+# ◆
+# Thank you for developing with Blueprint.
+# For documentation about conf.yml, refer to ptero.shop/dev/conf.
+
+
+name: "Extension"
+identifier: "extension"
+description: "My awesome extension"
+flags: ""
+version: "1.0"
+target: "␀version␀"
+author: "you"
+icon: "assets/EXTLOGO-␀num␀.png"
+
+
+
+view:
+  location: "view.blade.php"
+
+controller:
+  type: "default"
+
+
+css:
+  enabled: "no"
+  location: ""
+
+migrations:
+  enabled: "no"
+  directory: ""
+
+publicfiles:
+  enabled: "no"
+  directory: ""
+
+adminrequests:
+  enabled: "no"
+  directory: ""
