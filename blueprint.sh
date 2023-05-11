@@ -340,8 +340,16 @@ if [[ $2 == "-init" ]]; then
     log "Preparing variables..";
     icnNUM=$(expr 1 + $RANDOM % 3);
 
-    log "Copying init defaults to tmp.";
-    cp -R .blueprint/.storage/defaults/init .blueprint/tmp/init
+    log "Copying init defaults to tmp..";
+    cp -R .blueprint/.storage/defaults/init .blueprint/tmp/init;
+
+    log "Applying variables.."
+    sed -i "s~␀num␀~$icnNUM~g" .blueprint/.storage/defaults/init/conf.yml;
+    sed -i "s~␀version␀~$VERSION~g" .blueprint/.storage/defaults/init/conf.yml;
+
+    # Remove tmp files
+    rm -R .blueprint/tmp;
+    mkdir .blueprint/tmp;
 fi;
 
 if [[ $2 == "-reinstall"  ]]; then
