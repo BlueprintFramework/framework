@@ -3,13 +3,13 @@
 # For documentation about conf.yml, refer to ptero.shop/dev/conf.
 
 
-name: "Extension"
-identifier: "extension"
-description: "My awesome extension"
+name: "␀name␀"
+identifier: "␀identifier␀"
+description: "␀description␀"
 flags: ""
-version: "1.0"
+version: "␀ver␀"
 target: "␀version␀"
-author: "you"
+author: "␀author␀"
 icon: "assets/EXTLOGO-␀num␀.png"
 
 

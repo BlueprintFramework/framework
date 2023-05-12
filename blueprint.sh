@@ -340,6 +340,12 @@ if [[ $2 == "-init" ]]; then
     log "Preparing variables..";
     icnNUM=$(expr 1 + $RANDOM % 3);
 
+    read "What do you want your extension to be called?" ASKNAME;
+    sed -i "s~␀name␀~$ASKNAME~g" .blueprint/.storage/defaults/init/conf.yml;
+
+    read "What do you want your extension's identifier to be?" ASKIDENTIFIER;
+    sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/.storage/defaults/init/conf.yml;
+
     log "Copying init defaults to tmp..";
     cp -R .blueprint/.storage/defaults/init .blueprint/tmp/init;
 
