@@ -337,19 +337,26 @@ if [[ $2 == "-init" ]]; then
     fi;
 
     # Work in progress code that will only run with "--dev" as 3rd argument.
-    log "Preparing variables..";
-    icnNUM=$(expr 1 + $RANDOM % 3);
 
-    read "What do you want your extension to be called?" ASKNAME;
-    sed -i "s~␀name␀~$ASKNAME~g" .blueprint/.storage/defaults/init/conf.yml;
+    read "Name (Generic Extension):" ASKNAME;
+    read "Identifier (genericextension):" ASKIDENTIFIER;
+    read "Description (My awesome description):" ASKDESCRIPTION;
+    read "Version (indev):" ASKVERSION;
+    read "Author (prplwtf):" ASKAUTHOR;
 
-    read "What do you want your extension's identifier to be?" ASKIDENTIFIER;
-    sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/.storage/defaults/init/conf.yml;
+    log "Validating..";
+    if [[ $ASKIDENTIFIER =~ [a-z] ]]; then echo "ok" > /dev/null; else log "Identifier should only contain a-z characters.";exit 1;fi;
 
     log "Copying init defaults to tmp..";
     cp -R .blueprint/.storage/defaults/init .blueprint/tmp/init;
 
     log "Applying variables.."
+    sed -i "s~␀name␀~$ASKNAME~g" .blueprint/.storage/defaults/init/conf.yml; #NAME
+    sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/.storage/defaults/init/conf.yml; #IDENTIFIER
+    sed -i "s~␀description␀~$ASKDESCRIPTION~g" .blueprint/.storage/defaults/init/conf.yml; #DESCRIPTION
+    sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/.storage/defaults/init/conf.yml; #VERSION
+    sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/.storage/defaults/init/conf.yml; #AUTHOR
+
     sed -i "s~␀num␀~$icnNUM~g" .blueprint/.storage/defaults/init/conf.yml;
     sed -i "s~␀version␀~$VERSION~g" .blueprint/.storage/defaults/init/conf.yml;
 
