@@ -332,12 +332,6 @@ if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
 fi;
 
 if [[ $2 == "-init" ]]; then
-    if [[ $3 != "--dev" ]]; then
-        error "-init is currently not available";exit 1;
-    fi;
-
-    # Work in progress code that will only run with "--dev" as 3rd argument.
-
     read "Name (Generic Extension):" ASKNAME;
     read "Identifier (genericextension):" ASKIDENTIFIER;
     read "Description (My awesome description):" ASKDESCRIPTION;
