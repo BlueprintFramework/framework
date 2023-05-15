@@ -332,11 +332,14 @@ if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
 fi;
 
 if [[ $2 == "-init" ]]; then
+    log "-init is experimental and may break.";
+
     read "Name (Generic Extension):" ASKNAME;
     read "Identifier (genericextension):" ASKIDENTIFIER;
     read "Description (My awesome description):" ASKDESCRIPTION;
     read "Version (indev):" ASKVERSION;
     read "Author (prplwtf):" ASKAUTHOR;
+    read "Destination (~/Documents/genericextension):" ASKDESTINATION;
 
     log "Validating..";
     if [[ $ASKIDENTIFIER =~ [a-z] ]]; then echo "ok" > /dev/null; else log "Identifier should only contain a-z characters.";exit 1;fi;
@@ -345,18 +348,25 @@ if [[ $2 == "-init" ]]; then
     cp -R .blueprint/.storage/defaults/init .blueprint/tmp/init;
 
     log "Applying variables.."
-    sed -i "s~␀name␀~$ASKNAME~g" .blueprint/.storage/defaults/init/conf.yml; #NAME
-    sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/.storage/defaults/init/conf.yml; #IDENTIFIER
-    sed -i "s~␀description␀~$ASKDESCRIPTION~g" .blueprint/.storage/defaults/init/conf.yml; #DESCRIPTION
-    sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/.storage/defaults/init/conf.yml; #VERSION
-    sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/.storage/defaults/init/conf.yml; #AUTHOR
+    sed -i "s~␀name␀~$ASKNAME~g" .blueprint/tmp/init/conf.yml; #NAME
+    sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/tmp/init/conf.yml; #IDENTIFIER
+    sed -i "s~␀description␀~$ASKDESCRIPTION~g" .blueprint/tmp/init/conf.yml; #DESCRIPTION
+    sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/tmp/init/conf.yml; #VERSION
+    sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/tmp/init/conf.yml; #AUTHOR
 
-    sed -i "s~␀num␀~$icnNUM~g" .blueprint/.storage/defaults/init/conf.yml;
-    sed -i "s~␀version␀~$VERSION~g" .blueprint/.storage/defaults/init/conf.yml;
+    icnNUM=$(expr 1 + $RANDOM % 3);
+    sed -i "s~␀num␀~$icnNUM~g" .blueprint/tmp/init/conf.yml;
+    sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml;
+
+    # Return files to folder.
+    mkdir ASKDESTINATION;
+    cp .blueprint/tmp/init/* $ASKDESTINATION/;
 
     # Remove tmp files
     rm -R .blueprint/tmp;
     mkdir .blueprint/tmp;
+
+    log "Your extension files have been generated and exported to '$ASKDESTINATION'.";
 fi;
 
 if [[ $2 == "-reinstall"  ]]; then
