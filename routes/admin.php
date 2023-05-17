@@ -228,7 +228,8 @@ Route::group(['prefix' => 'nests'], function () {
 });
 
 /*
-| Place new routers above this line.
+| Each and every new router must be placed above this line.
+| Blueprint automatically adds new extension routes at the bottom of this file.
 */
 
 /*
