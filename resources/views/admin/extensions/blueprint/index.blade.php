@@ -76,9 +76,9 @@
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">Endpoint</label>
-                                <select class="form-control" name="api:endpoint">
+                                <select class="form-control" name="api:endpoint" readonly>
                                     <option value="api.ptero.shop">api.ptero.shop (default)</option>
-                                    <option value="blueprint.prpl.wtf" @if($bp->dbGet('api:endpoint') == "blueprint.prpl.wtf") selected @endif>blueprint.prpl.wtf</option>
+                                    <option value="none" @if($bp->dbGet('api:endpoint') == "none") selected @endif>none</option>
                                 </select>
                                 <p class="text-muted small">Select your preferred API endpoint.</p>
                             </div>
