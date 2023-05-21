@@ -1,0 +1,2 @@
+This folder is a place for extensions to put non-public files.
+Think of it like what the .blueprint folder for blueprint is.
