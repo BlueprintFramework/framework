@@ -258,6 +258,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp -R .blueprint/.storage/defaults/extensions/route.default .blueprint/.storage/defaults/extensions/route.default.bak 2> /dev/null;
     cp -R .blueprint/.storage/defaults/extensions/button.default .blueprint/.storage/defaults/extensions/button.default.bak 2> /dev/null;
 
+    mkdir .blueprint/.storage/extensiondata/$identifier;
+    if [[ $datafolder_directory != "" ]]; then
+        cp -R .blueprint/.storage/tmp/$n/$datafolder_directory/* .blueprint/.storage/extensiondata/$identifier/;
+    fi;
+
     mkdir public/assets/extensions/$identifier;
     cp .blueprint/.storage/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg;
     ICON="/assets/extensions/$identifier/icon.jpg";
