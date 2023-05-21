@@ -22,4 +22,4 @@ bash blueprint.sh
 3. After waiting for the installation script to finish, open up your Pterodactyl admin panel and click on the puzzle icon in the top right of the website.
 
 ### Development
-We've made some guides for extension development over on [GitBook](https://documentation.ptero.shop/guides/creating-your-first-extension.).
+We've made some guides for extension development over on [GitBook](https://documentation.ptero.shop/guides/creating-your-first-extension).
