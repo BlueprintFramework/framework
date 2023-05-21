@@ -184,6 +184,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $target == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'target' is a required option.";fi;
     if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'icon' is a required option.";fi;
 
+    if [[ $datafolder_directory == "" ]]; then log "Datafolder left blank, skipping..";fi;
+
     if [[ $controller_location == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'controller_location' is a required option.";fi;
     if [[ $view_location == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'view_location' is a required option.";fi;
 
