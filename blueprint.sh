@@ -167,10 +167,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
         # ^#version#^ = version
         # ^#author#^ = author
+        # ^#identifier#^ = identifier
 
         for f in $DIR; do
             sed -i "s~^#version#^~$version~g" $f;
             sed -i "s~^#author#^~$author~g" $f;
+            sed -i "s~^#identifier#^~$identifier~g" $f;
             echo "Done placeholders in '$f'.";
         done;
     else echo "-placeholders.skip;"; fi;
