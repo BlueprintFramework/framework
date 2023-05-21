@@ -20,6 +20,9 @@ view:
 controller:
   type: "default"
 
+datafolder:
+  directory: "data"
+
 
 css:
   enabled: "no"
