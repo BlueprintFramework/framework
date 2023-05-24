@@ -23,3 +23,8 @@ bash blueprint.sh
 
 ### Development
 We've made some guides for extension development over on [GitBook](https://documentation.ptero.shop/guides/creating-your-first-extension).
+
+### Extensions
+Open a pull request to get your extension listed here.
+
+**Galaxy Invaders (example extension)**: [Link](https://github.com/teamblueprint/example/tree/main/Galaxy%20Invaders)
