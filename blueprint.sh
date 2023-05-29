@@ -358,6 +358,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-v                   get the current blueprint version""
 "           "-init                initialize extension development files (experimental)""
 "           "-test                run an installation on your extension development files (experimental)""
+"           "-export              export your extension development files (experimental)""
 "           "-reinstall           rerun the blueprint installation script";
 fi;
 
@@ -406,6 +407,17 @@ if [[ $2 == "-test" ]]; then
     log "Attempting to install extension files located in '.blueprint/.development'.";
 
     blueprint -i test␀;
+fi;
+
+if [[ $2 == "-export" ]]; then
+    log_red "This is an experimental feature, proceed with caution.";
+    log "Attempting to export extension files located in '.blueprint/.development'.";
+
+    cd .blueprint
+    zip .storage/tmp/blueprint.zip .development/*
+    mv .storage/tmp/blueprint.zip ../extension.blueprint;
+
+    log "Extension files should be exported into your Pterodactyl directory now. Some versions of Blueprint may require your identifier to match the filename (excluding the .blueprint extension). You'll need to do this manually.";
 fi;
 
 if [[ $2 == "-reinstall"  ]]; then
