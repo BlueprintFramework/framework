@@ -369,11 +369,11 @@ fi;
 if [[ $2 == "-init" ]]; then
     log_red "This is an experimental feature, proceed with caution.";
 
-    read "Name (Generic Extension):" ASKNAME;
-    read "Identifier (genericextension):" ASKIDENTIFIER;
-    read "Description (My awesome description):" ASKDESCRIPTION;
-    read "Version (indev):" ASKVERSION;
-    read "Author (prplwtf):" ASKAUTHOR;
+    echo "Name (Generic Extension):";             read ASKNAME;
+    echo "Identifier (genericextension):";        read ASKIDENTIFIER;
+    echo "Description (My awesome description):"; read ASKDESCRIPTION;
+    echo "Version (indev):";                      read ASKVERSION;
+    echo "Author (prplwtf):";                     read ASKAUTHOR;
 
     log "Validating..";
     if [[ $ASKIDENTIFIER =~ [a-z] ]]; then echo "ok" > /dev/null; else log "Identifier should only contain a-z characters.";exit 1;fi;
