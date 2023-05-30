@@ -183,11 +183,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             sed -i "s~^#version#^~$version~g" $f;
             sed -i "s~^#author#^~$author~g" $f;
             sed -i "s~^#identifier#^~$identifier~g" $f;
+            sed -i "s~^#path#^~/var/www/$FOLDER~g" $f;
+            sed -i "s~^#datapath#^~/var/www/$FOLDER/.blueprint/.storage/extensiondata/$identifier~g" $f;
 
             if [[ $SKIPAZPLACEHOLDERS != true ]]; then
                 sed -i "s~bpversionreplace~$version~g" $f;
                 sed -i "s~bpauthorreplace~$author~g" $f;
                 sed -i "s~bpidentifierreplace~$identifier~g" $f;
+                sed -i "s~bppathreplace~/var/www/$FOLDER~g" $f;
+                sed -i "s~bpdatapathreplace~/var/www/$FOLDER/.blueprint/.storage/extensiondata/$identifier~g" $f;
             fi;
 
             echo "Done placeholders in '$f'.";
