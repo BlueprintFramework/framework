@@ -172,10 +172,24 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         # ^#author#^ = author
         # ^#identifier#^ = identifier
 
+        if [[ $flags == *"-disable_az_placeholders;"* ]]; then
+            SKIPAZPLACEHOLDERS=true;
+            echo "A-Z placeholders will be skipped due to the '-disable_az_placeholders;' flag.";
+        else
+            SKIPAZPLACEHOLDERS=false;
+        fi;
+
         for f in $DIR; do
             sed -i "s~^#version#^~$version~g" $f;
             sed -i "s~^#author#^~$author~g" $f;
             sed -i "s~^#identifier#^~$identifier~g" $f;
+
+            if [[ $SKIPAZPLACEHOLDERS != true ]]; then
+                sed -i "s~bpversionreplace~$version~g" $f;
+                sed -i "s~bpauthorreplace~$author~g" $f;
+                sed -i "s~bpidentifierreplace~$identifier~g" $f;
+            fi;
+
             echo "Done placeholders in '$f'.";
         done;
     else echo "-placeholders.skip;"; fi;
