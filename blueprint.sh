@@ -379,25 +379,26 @@ if [[ $2 == "-init" ]]; then
     if [[ $ASKIDENTIFIER =~ [a-z] ]]; then echo "ok" > /dev/null; else log "Identifier should only contain a-z characters.";exit 1;fi;
 
     log "Copying init defaults to tmp..";
-    cp -R .blueprint/.storage/defaults/init .blueprint/tmp/init;
+    mkdir .blueprint/.storage/tmp/init;
+    cp -R .blueprint/.storage/defaults/init/* .blueprint/.storage/tmp/init/;
 
     log "Applying variables.."
-    sed -i "s~␀name␀~$ASKNAME~g" .blueprint/tmp/init/conf.yml; #NAME
-    sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/tmp/init/conf.yml; #IDENTIFIER
-    sed -i "s~␀description␀~$ASKDESCRIPTION~g" .blueprint/tmp/init/conf.yml; #DESCRIPTION
-    sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/tmp/init/conf.yml; #VERSION
-    sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/tmp/init/conf.yml; #AUTHOR
+    sed -i "s~␀name␀~$ASKNAME~g" .blueprint/.storage/tmp/init/conf.yml; #NAME
+    sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/.storage/tmp/init/conf.yml; #IDENTIFIER
+    sed -i "s~␀description␀~$ASKDESCRIPTION~g" .blueprint/.storage/tmp/init/conf.yml; #DESCRIPTION
+    sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/.storage/tmp/init/conf.yml; #VERSION
+    sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/.storage/tmp/init/conf.yml; #AUTHOR
 
     icnNUM=$(expr 1 + $RANDOM % 3);
-    sed -i "s~␀num␀~$icnNUM~g" .blueprint/tmp/init/conf.yml;
-    sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml;
+    sed -i "s~␀num␀~$icnNUM~g" .blueprint/.storage/tmp/init/conf.yml;
+    sed -i "s~␀version␀~$VERSION~g" .blueprint/.storage/tmp/init/conf.yml;
 
     # Return files to folder.
-    cp .blueprint/tmp/init/* .blueprint/.development/;
+    cp .blueprint/.storage/tmp/init/* .blueprint/.development/;
 
     # Remove tmp files
-    rm -R .blueprint/tmp;
-    mkdir .blueprint/tmp;
+    rm -R .blueprint/.storage/tmp;
+    mkdir .blueprint/.storage/tmp;
 
     log "Your extension files have been generated and exported to '.blueprint/.development'.";
 fi;
