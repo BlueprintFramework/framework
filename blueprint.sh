@@ -179,7 +179,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             SKIPAZPLACEHOLDERS=false;
         fi;
 
-        for f in $(find . -type f -print); do
+        for f in $(find $DIR -type f -print); do
             sed -i "s~^#version#^~$version~g" $f;
             sed -i "s~^#author#^~$author~g" $f;
             sed -i "s~^#identifier#^~$identifier~g" $f;
