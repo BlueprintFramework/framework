@@ -189,7 +189,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     if [[ $datafolder_directory == "" ]]; then log "Datafolder left blank, skipping..";fi;
 
-    if [[ $controller_location == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'controller_location' is a required option.";fi;
+    if [[ $controller_location == "" ]]; then log "Controller location left blank, using default controller instead..";controller_type="default";fi;
     if [[ $view_location == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'view_location' is a required option.";fi;
 
     if [[ $target != $VERSION ]]; then log_red "This extension is built for version $target, but your version is $VERSION.";fi;
