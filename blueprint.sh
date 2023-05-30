@@ -364,13 +364,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     chmod -R +x .blueprint/.storage/extensiondata/$identifier/*;
 
     if [[ $flags == *"-run.afterinstall;"* ]]; then
-        if [[ $(whoami) == "root" ]]; then
-            log_red "Custom extension installation script will not be ran as root for safety reasons. Running as 'www-data' instead.."
-            sudo -u www-data .blueprint/.storage/extensiondata/$identifier/install.sh;
-        else
-            log_red "Running custom extension installation script.."
-            bash .blueprint/.storage/extensiondata/$identifier/install.sh;
-        fi;
+        log_red "This extension uses a custom installation script, proceed with caution."
+        bash .blueprint/.storage/extensiondata/$identifier/install.sh;
     fi;
 
     log_blue "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
