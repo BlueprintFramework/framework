@@ -357,6 +357,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $author == "blueprint" ]]; then log_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
     if [[ $author == "Blueprint" ]]; then log_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
 
+    chmod -R +x .blueprint/.storage/extensiondata/$identifier/*;
+
     if [[ $flags == *"-run.afterinstall;"* ]]; then
         if [[ $(whoami) == "root" ]]; then
             log_red "Custom extension installation script will not be ran as root for safety reasons. Running as 'www:data' instead.."
