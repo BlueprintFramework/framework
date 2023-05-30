@@ -1,0 +1,1 @@
+Development directory for Blueprint extensions. This file is removed automatically by Blueprint once installed.

@@ -109,6 +109,9 @@ if [[ $1 != "-bash" ]]; then
         log_bright "chown -R www-data:www-data /var/www/$FOLDER/.*";
         chown -R www-data:www-data /var/www/$FOLDER/.*;
 
+        log_bright "rm .blueprint/.development/.hello.txt";
+        rm .blueprint/.development/.hello.txt;
+
         log_bright "php artisan up";
         php artisan up;
 
