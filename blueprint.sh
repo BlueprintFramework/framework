@@ -168,10 +168,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $flags != *"-placeholders.skip;"* ]]; then
         DIR=.blueprint/.storage/tmp/$n/*;
 
-        # ^#version#^ = version
-        # ^#author#^ = author
-        # ^#identifier#^ = identifier
-
         if [[ $flags == *"-disable_az_placeholders;"* ]]; then
             SKIPAZPLACEHOLDERS=true;
             echo "A-Z placeholders will be skipped due to the '-disable_az_placeholders;' flag.";
@@ -179,12 +175,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
             SKIPAZPLACEHOLDERS=false;
         fi;
 
-        for f in $(find $DIR -type f -print); do
-            sed -i "s~^#version#^~$version~g" $f;
-            sed -i "s~^#author#^~$author~g" $f;
-            sed -i "s~^#identifier#^~$identifier~g" $f;
-            sed -i "s~^#path#^~/var/www/$FOLDER~g" $f;
-            sed -i "s~^#datapath#^~/var/www/$FOLDER/.blueprint/.storage/extensiondata/$identifier~g" $f;
+        for f in $(find $DIR -type f -exec echo {} \;); do
+            sed -i "s~\^#version#\^~$version~g" $f;
+            sed -i "s~\^#author#\^~$author~g" $f;
+            sed -i "s~\^#identifier#\^~$identifier~g" $f;
+            sed -i "s~\^#path#\^~/var/www/$FOLDER~g" $f;
+            sed -i "s~\^#datapath#\^~/var/www/$FOLDER/.blueprint/.storage/extensiondata/$identifier~g" $f;
 
             if [[ $SKIPAZPLACEHOLDERS != true ]]; then
                 sed -i "s~bpversionreplace~$version~g" $f;
@@ -196,6 +192,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
             echo "Done placeholders in '$f'.";
         done;
+
     else echo "-placeholders.skip;"; fi;
 
     if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'name' is a required option.";fi;
@@ -313,7 +310,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     sed -i "s~␀icon␀~$ICON~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
 
-    sed -i "s~␀content␀~$CONTENT~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+    echo -e "$CONTENT\n@endsection" >> .blueprint/.storage/defaults/extensions/admin.default.bak;
 
     if [[ $controller_type != "custom" ]]; then
         sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/controller.default.bak;
