@@ -397,7 +397,7 @@ if [[ $2 == "-init" ]]; then
     sed -i "s~␀version␀~$VERSION~g" .blueprint/.storage/tmp/init/conf.yml;
 
     # Return files to folder.
-    cp .blueprint/.storage/tmp/init/* .blueprint/.development/;
+    cp -R .blueprint/.storage/tmp/init/* .blueprint/.development/;
 
     # Remove tmp files
     rm -R .blueprint/.storage/tmp;
