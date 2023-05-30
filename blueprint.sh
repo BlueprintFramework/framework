@@ -354,7 +354,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 fi;
 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
-    echo -e "-i [name]            install a blueprint extension""
+   echo -e " -i [name]            install a blueprint extension""
 "           "-v                   get the current blueprint version""
 "           "-init                initialize extension development files (experimental)""
 "           "-test                run an installation on your extension development files (experimental)""
