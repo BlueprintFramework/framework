@@ -232,7 +232,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     if [[ $css_location != "" ]]; then
         if [[ $css_enabled == "yes" ]]; then
-            INJECTCSS=true;
+            INJECTCSS="y";
         elif [[ $css_enabled == "no" ]]; then
             echo "ok";
         else
@@ -289,7 +289,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     ICON="/assets/extensions/$identifier/icon.jpg";
     CONTENT=$(cat .blueprint/.storage/tmp/$n/$view_location);
 
-    if [[ $INJECTCSS == true ]]; then
+    if [[ $INJECTCSS == "y" ]]; then
         sed -i "s!/* blueprint reserved line */!/* blueprint reserved line */\n@import url(/assets/extensions/$identifier/$identifier.style.css);!g" public/themes/pterodactyl/css/pterodactyl.css;
         cp -R .blueprint/.storage/tmp/$n/$css_location/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
     fi;

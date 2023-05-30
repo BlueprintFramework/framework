@@ -3,3 +3,4 @@ These scripts are meant for simplifying bug testing and development and will pro
 
 
 * update.sh [path to pterodactyl]
+* update-blueprint.sh [path to pterodactyl]
