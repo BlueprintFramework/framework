@@ -128,7 +128,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         dev=true;
         n="dev";
         mkdir .blueprint/.storage/tmp/dev;
-        cp .blueprint/.development/* .blueprint/.storage/tmp/dev/;
+        cp -R .blueprint/.development/* .blueprint/.storage/tmp/dev/;
     else
         dev=false;
         n=$3;
