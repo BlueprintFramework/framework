@@ -48,7 +48,10 @@ class BlueprintExtensionController extends Controller
             $this->bp->dbSet('developer:log', shell_exec("cd /var/www/".$this->placeholderservice->folder().";".$this->bp->dbGet('developer:cmd')));
         };
 
-        if ($this->settings->get('blueprint::panel:id') == "") { $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version()); };
+        if ($this->settings->get('blueprint::panel:id') == "" || $this->bp->version() != $this->settings->get('blueprint::version:cache')) {
+            $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
+            $this->settings->set('blueprint::version:cache', $this->bp->version());
+        };
         return $this->view->make(
             'admin.extensions.blueprint.index', [
                 'version' => $this->version,

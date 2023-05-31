@@ -23,9 +23,10 @@ class CreateBlueprintTable extends Migration
             $table->string('developer:log')->nullable();
 
             $table->string('telemetry')->nullable();
-            $table->string('telemetry:id')->nullable();
 
             $table->string('panel:id')->nullable();
+
+            $table->string('version:cache')->nullable();
 
             $table->string('notification:text')->nullable();
 
