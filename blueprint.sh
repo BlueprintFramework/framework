@@ -358,6 +358,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $author == "blueprint" ]]; then log_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
     if [[ $author == "Blueprint" ]]; then log_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
 
+    if [[ $migrations_enabled == "yes" ]]; then
+        log_bold "This extension comes with migrations. If you get prompted, answer 'yes'.\n";
+        php artisan migrate;
+    fi;
+
     chmod -R +x .blueprint/.storage/extensiondata/$identifier/*;
 
     if [[ $flags == *"-run.afterinstall;"* ]]; then
