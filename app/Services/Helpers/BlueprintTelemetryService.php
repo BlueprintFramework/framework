@@ -14,12 +14,12 @@ class BlueprintTelemetryService
     public function send($event) {
         if ($this->settings->get('blueprint::telemetry') == "") { $this->settings->set('blueprint::telemetry', "true"); };
         if ($this->settings->get('blueprint::telemetry') == "false") { return; };
-        if ($this->settings->get('blueprint::telemetry:id') == "") { $this->settings->set('blueprint::telemetry:id', uniqid(rand())); };
 
+        /*
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'http://relay.ptero.shop:3511/send/'.$this->settings->get('blueprint::telemetry:id')."/".$event."/",
+          CURLOPT_URL => 'http://relay.ptero.shop:3511/send/'.$this->settings->get('blueprint::panel:id')."/".$event."/",
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -31,7 +31,9 @@ class BlueprintTelemetryService
 
         $response = curl_exec($curl);
 
-        curl_close($curl);
+        curl_close($curl);*/
+
+        // telemetry will be revived sometime in the future.
         return;
     }
 }

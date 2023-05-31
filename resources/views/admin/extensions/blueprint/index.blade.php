@@ -75,12 +75,9 @@
                                 <p class="text-muted small">Automatically share anonymous usage data with Blueprint.</p>
                             </div>
                             <div class="col-xs-4">
-                                <label class="control-label">Endpoint</label>
-                                <select class="form-control" name="api:endpoint" readonly>
-                                    <option value="api.ptero.shop">api.ptero.shop (default)</option>
-                                    <option value="none" @if($bp->dbGet('api:endpoint') == "none") selected @endif>none</option>
-                                </select>
-                                <p class="text-muted small">Select your preferred API endpoint.</p>
+                                <label class="control-label">ID</label>
+                                <input type="text" required name="panel:id" id="panel:id" value="{{ $bp->dbGet('panel:id') }}" class="form-control" readonly/>
+                                <p class="text-muted small">Randomly generated string with your version that is used as a panel identifier.</p>
                             </div>
                             <div class="col-xs-4">
                                 <label class="control-label">Developer Mode</label>

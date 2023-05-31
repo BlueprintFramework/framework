@@ -14,7 +14,7 @@ class BlueprintVariableService
     }
 
 
-    // $bp->server()
+    // $bp->serve()
     // $bp->version()
     // $bp->dbGet('db::record')
     // $bp->dbSet('db::record', 'value')

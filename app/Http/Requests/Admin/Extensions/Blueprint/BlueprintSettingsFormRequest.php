@@ -18,8 +18,6 @@ class BlueprintSettingsFormRequest extends AdminFormRequest
             'developer:cmd' => 'string',
 
             'telemetry' => 'string',
-
-            'api:endpoint' => 'string',
         ];
     }
 
@@ -32,8 +30,6 @@ class BlueprintSettingsFormRequest extends AdminFormRequest
             'developer:cmd' => 'Developer Command',
 
             'telemetry' => 'Telemetry',
-
-            'api:endpoint' => 'API Endpoint',
         ];
     }
 }

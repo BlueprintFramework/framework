@@ -47,6 +47,8 @@ class BlueprintExtensionController extends Controller
             $this->bplib->notify("Console command sent.");
             $this->bp->dbSet('developer:log', shell_exec("cd /var/www/".$this->placeholderservice->folder().";".$this->bp->dbGet('developer:cmd')));
         };
+
+        if ($this->settings->get('blueprint::panel:id') == "") { $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->version()); };
         return $this->view->make(
             'admin.extensions.blueprint.index', [
                 'version' => $this->version,
