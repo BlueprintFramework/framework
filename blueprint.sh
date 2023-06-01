@@ -379,7 +379,8 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-init                    initialize extension development files.""
 "           "-build                   run an installation on your extension development files.""
 "           "-export                  export your extension development files (experimental)""
-"           "-reinstall               rerun the blueprint installation script";
+"           "-reinstall               rerun the blueprint installation script""
+"           "-upgrade                 update to a newer version (experimental)";
 fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
@@ -445,4 +446,17 @@ if [[ $2 == "-reinstall"  ]]; then
     dbRemove "blueprint.setupFinished";
     cd /var/www/$FOLDER;
     bash blueprint.sh;
+fi;
+
+if [[ $2 == "-upgrade" ]]; then
+    log_red "This is an experimental feature, proceed with caution.\n";
+    log_bright "Upgrading will wipe your .blueprint folder and will overwrite your extensions.
+    Are you sure you want to continue? (y/N)";
+    
+    read YN;
+    if [[ ( $YN == "y" ) || ( $YN == "Y" ) ]]; then
+      log_bright "Upgrading..";
+      bash tools/update.sh /var/www/$FOLDER;
+      log_bright "Upgrade completed.";
+    fi;
 fi;
