@@ -374,12 +374,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 fi;
 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
-   echo -e " -i [name]            install a blueprint extension""
-"           "-v                   get the current blueprint version""
-"           "-init                initialize extension development files (experimental)""
-"           "-test                run an installation on your extension development files (experimental)""
-"           "-export              export your extension development files (experimental)""
-"           "-reinstall           rerun the blueprint installation script";
+   echo -e " -install -i  [name]      install a blueprint extension""
+"           "-version -v              get the current blueprint version""
+"           "-init                    initialize extension development files.""
+"           "-build                   run an installation on your extension development files.""
+"           "-export                  export your extension development files (experimental)""
+"           "-reinstall               rerun the blueprint installation script";
 fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
@@ -387,8 +387,6 @@ if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
 fi;
 
 if [[ $2 == "-init" ]]; then
-    log_red "This is an experimental feature, proceed with caution.";
-
     echo "Name (Generic Extension):";             read ASKNAME;
     echo "Identifier (genericextension):";        read ASKIDENTIFIER;
     echo "Description (My awesome description):"; read ASKDESCRIPTION;
@@ -423,8 +421,10 @@ if [[ $2 == "-init" ]]; then
     log "Your extension files have been generated and exported to '.blueprint/.development'.";
 fi;
 
-if [[ $2 == "-test" ]]; then
-    log_red "This is an experimental feature, proceed with caution.";
+if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
+    if [[ $2 == "-test" ]]; then
+      log_bright "-test will be removed in future versions, use -build instead.";
+    fi
     log "Attempting to install extension files located in '.blueprint/.development'.";
 
     blueprint -i test␀;
