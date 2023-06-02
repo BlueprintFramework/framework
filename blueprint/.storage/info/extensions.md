@@ -1,1 +1,1 @@
-**Galaxy Invaders (example extension)**: https://github.com/teamblueprint/example/tree/main/Galaxy%20Invaders
+**Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664)
