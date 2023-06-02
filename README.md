@@ -27,4 +27,4 @@ We've made some guides for extension development over on [GitBook](https://ptero
 ### Extensions
 Open a pull request to get your extension listed here.
 
-**Galaxy Invaders (example extension)**: [Link](https://github.com/teamblueprint/example/tree/main/Galaxy%20Invaders)
+**Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664)
