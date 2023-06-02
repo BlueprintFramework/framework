@@ -20,7 +20,7 @@ if [[ -d "/var/www/$FOLDER/blueprint" ]]; then mv /var/www/$FOLDER/blueprint /va
 # BUILT_FROM_SOURCE="y"; # If you downloaded Blueprint from a release instead of building it, this should be "n".
 # if [[ $BUILT_FROM_SOURCE == "y" ]]; then if [[ ! -f "/var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag" ]]; then sed -E -i "s*&bp.version&*source*g" app/Services/Helpers/BlueprintPlaceholderService.php;touch /var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag;fi;VERSION="source";
 
-elif [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
+if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
     # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
     # or Blueprint being installed from other sources.
     if [[ ! -f "/var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag" ]]; then
