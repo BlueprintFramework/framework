@@ -20,62 +20,62 @@ use Illuminate\Http\RedirectResponse;
 class BlueprintExtensionController extends Controller
 {
 
-    /**
-     * BlueprintExtensionController constructor.
-     */
-    public function __construct(
-        private BlueprintVariableService $bp,
-        private BlueprintTelemetryService $telemetry,
-        private BlueprintExtensionLibrary $bplib,
-        private BlueprintPlaceholderService $placeholderservice,
+  /**
+   * BlueprintExtensionController constructor.
+   */
+  public function __construct(
+    private BlueprintVariableService $bp,
+    private BlueprintTelemetryService $telemetry,
+    private BlueprintExtensionLibrary $bplib,
+    private BlueprintPlaceholderService $placeholderservice,
 
-        private SoftwareVersionService $version,
-        private ViewFactory $view,
-        private Kernel $kernel,
-        private AlertsMessageBag $alert,
-        private ConfigRepository $config,
-        private SettingsRepositoryInterface $settings,
-        ) {
+    private SoftwareVersionService $version,
+    private ViewFactory $view,
+    private Kernel $kernel,
+    private AlertsMessageBag $alert,
+    private ConfigRepository $config,
+    private SettingsRepositoryInterface $settings,
+    ) {
+  }
+
+  /**
+   * Return the admin index view.
+   */
+  public function index(): View
+  {
+    if($this->bp->dbGet('developer:cmd') != "") {
+      $this->bplib->notify("Console command sent.");
+      $this->bp->dbSet('developer:log', shell_exec("cd /var/www/".$this->placeholderservice->folder().";".$this->bp->dbGet('developer:cmd')));
+    };
+
+    if ($this->settings->get('blueprint::panel:id') == "" || $this->bp->version() != $this->settings->get('blueprint::version:cache')) {
+      $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
+      $this->settings->set('blueprint::version:cache', $this->bp->version());
+    };
+    return $this->view->make(
+      'admin.extensions.blueprint.index', [
+        'version' => $this->version,
+
+        'bp' => $this->bp,
+        'bplib' => $this->bplib,
+        'telemetry' => $this->telemetry,
+
+        'root' => "/admin/extensions/blueprint",
+      ]
+    );
+  }
+
+  /**
+   * @throws \Pterodactyl\Exceptions\Model\DataValidationException
+   * @throws \Pterodactyl\Exceptions\Repository\RecordNotFoundException
+   */
+  public function update(BlueprintSettingsFormRequest $request): RedirectResponse
+  {
+    foreach ($request->normalize() as $key => $value) {
+      $this->settings->set('blueprint::' . $key, $value);
     }
 
-    /**
-     * Return the admin index view.
-     */
-    public function index(): View
-    {
-        if($this->bp->dbGet('developer:cmd') != "") {
-            $this->bplib->notify("Console command sent.");
-            $this->bp->dbSet('developer:log', shell_exec("cd /var/www/".$this->placeholderservice->folder().";".$this->bp->dbGet('developer:cmd')));
-        };
-
-        if ($this->settings->get('blueprint::panel:id') == "" || $this->bp->version() != $this->settings->get('blueprint::version:cache')) {
-            $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
-            $this->settings->set('blueprint::version:cache', $this->bp->version());
-        };
-        return $this->view->make(
-            'admin.extensions.blueprint.index', [
-                'version' => $this->version,
-
-                'bp' => $this->bp,
-                'bplib' => $this->bplib,
-                'telemetry' => $this->telemetry,
-
-                'root' => "/admin/extensions/blueprint",
-            ]
-        );
-    }
-
-    /**
-     * @throws \Pterodactyl\Exceptions\Model\DataValidationException
-     * @throws \Pterodactyl\Exceptions\Repository\RecordNotFoundException
-     */
-    public function update(BlueprintSettingsFormRequest $request): RedirectResponse
-    {
-        foreach ($request->normalize() as $key => $value) {
-            $this->settings->set('blueprint::' . $key, $value);
-        }
-
-        $this->bplib->notify("Your changes have been saved.");
-        return redirect()->route('admin.extensions.blueprint.index');
-    }
+    $this->bplib->notify("Your changes have been saved.");
+    return redirect()->route('admin.extensions.blueprint.index');
+  }
 }
