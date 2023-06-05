@@ -1,1 +1,1 @@
-**Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664)
+**Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664), [GitHub](https://github.com/prplwtf/blueprint-redirect)
