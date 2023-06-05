@@ -150,7 +150,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
       cd tmp;
 
       mkdir ./$n;
-      cp ../../$FILE ./$n/$ZIP;
+      cp ../../../$FILE ./$n/$ZIP;
       cd $n;
       unzip $ZIP;
       rm $ZIP;
