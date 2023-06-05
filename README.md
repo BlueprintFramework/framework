@@ -25,6 +25,6 @@ bash blueprint.sh
 We've made some guides for extension development over on [GitBook](https://ptero.shop/docs).
 
 ### Extensions
-Open a pull request to get your extension listed here.
+Open an issue to get your extension listed here.
 
-**Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664)
+**Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664) [GitHub](https://github.com/prplwtf/blueprint-redirect)
