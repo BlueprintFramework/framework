@@ -45,11 +45,11 @@ fi;
 # Fix for Blueprint's bash database to work with docker and custom folder installations.
 sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/.blueprint/lib/db.sh;
 
+cd /var/www/$FOLDER;
 source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
-cd /var/www/$FOLDER;
 if [[ "$@" == *"-php"* ]]; then
   exit 1;
 fi;
