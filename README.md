@@ -1,4 +1,4 @@
-## ◆ teamblueprint/main
+## ![](https://i.imgur.com/SsOU6r8.png) teamblueprint/main
 [Discord ➚](https://discord.gg/CUwHwv6xRe)\
 [Documentation ➚](https://ptero.shop/docs)
 

@@ -56,16 +56,16 @@ fi;
 
 export NEWT_COLORS='
   root=,black
-  window=black,blue
-  title=white,blue
-  border=blue,blue
-  textbox=white,blue
+  window=black,red
+  title=white,red
+  border=red,red
+  textbox=white,red
   listbox=white,black
-  button=white,blue
+  button=white,red
 ';
 
 error() {
-  whiptail --title " ◆ " --ok-button "ok" --msgbox "Sorry, this operation could not be completed. For troubleshooting, please go to ptero.shop/error.\n\n\"${1}\"" 15 60;
+  whiptail --title " Blueprint " --ok-button "ok" --msgbox "Sorry, this operation could not be completed. For troubleshooting, please go to ptero.shop/error.\n\n\"${1}\"" 15 60;
   log_red "${1}";
   exit 1;
 };
