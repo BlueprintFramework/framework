@@ -118,7 +118,7 @@ if [[ $1 != "-bash" ]]; then
     log_bright "php artisan up";
     php artisan up;
 
-    log_blue "\n\nBlueprint should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+    log_green "\n\nBlueprint should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
 
     dbAdd "blueprint.setupFinished";
     exit 1;
@@ -126,6 +126,8 @@ if [[ $1 != "-bash" ]]; then
 fi;
 
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
+  log_bright "Always make sure you place your extensions in the Pterodactyl directory, else Blueprint won't be able to find them!";
+
   if [[ $(expr $# - 2) != 1 ]]; then error "Expected 1 argument but got $(expr $# - 2).";fi;
   if [[ $3 == "test␀" ]]; then
     dev=true;
@@ -373,7 +375,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     bash .blueprint/.storage/extensiondata/$identifier/install.sh;
   fi;
 
-  log_blue "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+  log_green "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
 fi;
 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
@@ -383,7 +385,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-build                   run an installation on your extension development files.""
 "           "-export                  export your extension development files (experimental)""
 "           "-reinstall               rerun the blueprint installation script""
-"           "-upgrade                 update to a newer version (experimental)";
+"           "-upgrade                 update/reset to a newer version (experimental)";
 fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
