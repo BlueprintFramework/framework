@@ -460,17 +460,8 @@ if [[ $2 == "-upgrade" ]]; then
   log_bright "Upgrading will wipe your .blueprint folder and will overwrite your extensions.
 Are you sure you want to continue? (y/N)";
   read YN;
-  if [[ ( $YN != "y" ) && ( $YN != "Y" ) ]]; then
-    exit 1;
-  fi;
-  
-  log_bright "Upgrading will use the latest source version of Blueprint.
-This means that you will be using an early build of the next version that
-might break. Upgrading is mainly made for Blueprint development not updating
-to newer versions.
-Are you sure you want to continue? (y/N)";
-  read YN2;
-  if [[ ( $YN2 == "y" ) || ( $YN2 == "Y" ) ]]; then
+
+  if [[ ( $YN == "y" ) || ( $YN == "Y" ) ]]; then
     log_bright "Upgrading..";
     bash tools/update.sh /var/www/$FOLDER;
     log_bright "Upgrade completed.";
