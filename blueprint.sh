@@ -80,6 +80,7 @@ if [[ $1 != "-bash" ]]; then
     log_blue "This command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.";
     exit 1;
   else
+    log "  ██\n██  ██\n  ████\n";
     if [[ $DOCKER == "y" ]]; then
       log_red "Running Blueprint with Docker may result in issues.";
     fi;
