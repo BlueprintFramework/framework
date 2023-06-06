@@ -10,7 +10,7 @@ if [[ -f ".dockerenv" ]]; then
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="alpha-DB4";
+  VER_FALLBACK="alpha-T0R";
 
 # This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
@@ -455,11 +455,21 @@ fi;
 
 if [[ $2 == "-upgrade" ]]; then
   log_red "This is an experimental feature, proceed with caution.\n";
-  log_bright "Upgrading will wipe your .blueprint folder and will overwrite your extensions.
-  Are you sure you want to continue? (y/N)";
   
+  log_bright "Upgrading will wipe your .blueprint folder and will overwrite your extensions.
+Are you sure you want to continue? (y/N)";
   read YN;
-  if [[ ( $YN == "y" ) || ( $YN == "Y" ) ]]; then
+  if [[ ( $YN != "y" ) && ( $YN != "Y" ) ]]; then
+    exit 1;
+  fi;
+  
+  log_bright "Upgrading will use the latest source version of Blueprint.
+This means that you will be using an early build of the next version that
+might break. Upgrading is mainly made for Blueprint development not updating
+to newer versions.
+Are you sure you want to continue? (y/N)";
+  read YN2;
+  if [[ ( $YN2 == "y" ) || ( $YN2 == "Y" ) ]]; then
     log_bright "Upgrading..";
     bash tools/update.sh /var/www/$FOLDER;
     log_bright "Upgrade completed.";
