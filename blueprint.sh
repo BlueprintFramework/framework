@@ -77,49 +77,55 @@ chmod u+x /usr/local/bin/blueprint > /dev/null;
 
 if [[ $1 != "-bash" ]]; then
   if dbValidate "blueprint.setupFinished"; then
-    log_blue "This command only works if you have yet to install Blueprint. You can run \"\033[1;94mblueprint\033[0m\033[0;34m\" instead.";
+    log_yellow "[WARNING] This command only works if you have yet to install Blueprint. You can run 'blueprint (cmd) [arg]' instead.";
     exit 1;
   else
-    log "  ██\n██  ██\n  ████\n";
-    if [[ $DOCKER == "y" ]]; then
-      log_red "Running Blueprint with Docker may result in issues.";
+    if [[ $1 != "--post-upgrade" ]]; then
+      log "  ██\n██  ██\n  ████\n";
+      if [[ $DOCKER == "y" ]]; then
+        log_yellow "[WARNING] Running Blueprint with Docker may result in issues.";
+      fi;
     fi;
 
     sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
     sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
 
-    log_bright "php artisan down";
+    log_bright "[INFO] php artisan down";
     php artisan down;
 
-    log_bright "/var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css";
+    log_bright "[INFO] /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css";
     sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* blueprint reserved line */!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
 
 
-    log_bright "php artisan view:clear";
+    log_bright "[INFO] php artisan view:clear";
     php artisan view:clear;
 
 
-    log_bright "php artisan config:clear";
+    log_bright "[INFO] php artisan config:clear";
     php artisan config:clear;
 
 
-    log_bright "php artisan migrate";
-    php artisan migrate;
+    if [[ $1 != "--post-upgrade" ]]; then
+      log_bright "[INFO] php artisan migrate";
+      php artisan migrate;
+    fi;
 
 
-    log_bright "chown -R www-data:www-data /var/www/$FOLDER/*";
+    log_bright "[INFO] chown -R www-data:www-data /var/www/$FOLDER/*";
     chown -R www-data:www-data /var/www/$FOLDER/*;
 
-    log_bright "chown -R www-data:www-data /var/www/$FOLDER/.*";
+    log_bright "[INFO] chown -R www-data:www-data /var/www/$FOLDER/.*";
     chown -R www-data:www-data /var/www/$FOLDER/.*;
 
-    log_bright "rm .blueprint/.development/.hello.txt";
+    log_bright "[INFO] rm .blueprint/.development/.hello.txt";
     rm .blueprint/.development/.hello.txt;
 
-    log_bright "php artisan up";
+    log_bright "[INFO] php artisan up";
     php artisan up;
 
-    log_green "\n\nBlueprint should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+    if [[ $1 != "--post-upgrade" ]]; then
+      log_green "\n\n[SUCCESS] Blueprint should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+    fi;
 
     dbAdd "blueprint.setupFinished";
     exit 1;
@@ -127,9 +133,9 @@ if [[ $1 != "-bash" ]]; then
 fi;
 
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
-  log_bright "Always make sure you place your extensions in the Pterodactyl directory, else Blueprint won't be able to find them!";
+  log_bright "[INFO] Always make sure you place your extensions in the Pterodactyl directory, else Blueprint won't be able to find them!";
 
-  if [[ $(expr $# - 2) != 1 ]]; then error "Expected 1 argument but got $(expr $# - 2).";fi;
+  if [[ $(expr $# - 2) != 1 ]]; then log_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";exit 1;fi;
   if [[ $3 == "test␀" ]]; then
     dev=true;
     n="dev";
@@ -139,7 +145,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     dev=false;
     n=$3;
     FILE=$n".blueprint"
-    if [[ ! -f "$FILE" ]]; then error "$FILE could not be found.";fi;
+    if [[ ! -f "$FILE" ]]; then log_red "[FATAL] $FILE could not be found.";fi;
 
     ZIP=$n".zip";
     cp $FILE .blueprint/.storage/tmp/$ZIP;
@@ -176,7 +182,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
     if [[ $flags == *"-disable_az_placeholders;"* ]]; then
       SKIPAZPLACEHOLDERS=true;
-      echo "A-Z placeholders will be skipped due to the '-disable_az_placeholders;' flag.";
+      log_bright "[INFO] A-Z placeholders will be skipped due to the '-disable_az_placeholders;' flag.";
     else
       SKIPAZPLACEHOLDERS=false;
     fi;
@@ -196,88 +202,66 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         sed -i "s~bpdatapathreplace~/var/www/$FOLDER/.blueprint/.storage/extensiondata/$identifier~g" $f;
       fi;
 
-      echo "Done placeholders in '$f'.";
+      log_bright "[INFO] Done placeholders in '$f'.";
     done;
 
-  else echo "-placeholders.skip;"; fi;
+  else log_bright "[INFO] Placeholders will be skipped due to the '-placeholders.skip;' flag."; fi;
 
-  if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'name' is a required option.";fi;
-  if [[ $identifier == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'identifier' is a required option.";fi;
-  if [[ $description == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'description' is a required option.";fi;
-  if [[ $version == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'version' is a required option.";fi;
-  if [[ $target == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'target' is a required option.";fi;
-  if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'icon' is a required option.";fi;
+  if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                  log_red "[FATAL] 'name' is a required configuration option.";fi;
+  if [[ $identifier == "" ]]; then rm -R .blueprint/.storage/tmp/$n;            log_red "[FATAL] 'identifier' is a required configuration option.";fi;
+  if [[ $description == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           log_red "[FATAL] 'description' is a required configuration option.";fi;
+  if [[ $version == "" ]]; then rm -R .blueprint/.storage/tmp/$n;               log_red "[FATAL] 'version' is a required configuration option.";fi;
+  if [[ $target == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                log_red "[FATAL] 'target' is a required configuration option.";fi;
+  if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                  log_red "[FATAL] 'icon' is a required configuration option.";fi;
 
-  if [[ $datafolder_directory == "" ]]; then log "Datafolder left blank, skipping..";fi;
+  if [[ $datafolder_directory == "" ]]; then                                 log_bright "[INFO] Datafolder field left blank, skipping..";fi;
+  if [[ $controller_location == "" ]]; then                                  log_bright "[INFO] Controller location field left blank, using default controller instead..";
+    controller_type="default";fi;
+  if [[ $view_location == "" ]]; then rm -R .blueprint/.storage/tmp/$n;         log_red "[FATAL] 'view_location' is a required configuration option.";fi;
+  if [[ $target != $VERSION ]]; then                                         log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi;
+  if [[ $identifier != $n ]]; then rm -R .blueprint/.storage/tmp/$n;            log_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi;
+  if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/.storage/tmp/$n;   log_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi;
 
-  if [[ $controller_location == "" ]]; then log "Controller location left blank, using default controller instead..";controller_type="default";fi;
-  if [[ $view_location == "" ]]; then rm -R .blueprint/.storage/tmp/$n; error "'view_location' is a required option.";fi;
-
-  if [[ $target != $VERSION ]]; then log_red "This extension is built for version $target, but your version is $VERSION.";fi;
-  if [[ $identifier != $n ]]; then rm -R .blueprint/.storage/tmp/$n; error "The extension identifier should be exactly the same as your .blueprint file (just without the .blueprint). This may be subject to change, but is currently required.";fi;
-  if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/.storage/tmp/$n; error "The operation could not be completed since the extension is attempting to overwrite internal files.";fi;
-
-  if [[ $identifier =~ [a-z] ]]; then echo "ok";
-  else rm -R .blueprint/.storage/tmp/$n; error "The extension identifier should be lowercase and only contain characters a-z.";fi;
-
-  if [[ ! -f ".blueprint/.storage/tmp/$n/$icon" ]]; then rm -R .blueprint/.storage/tmp/$n;error "The 'icon' path points to a nonexisting file.";fi;
+  if [[ $identifier =~ [a-z] ]]; then                                        log_bright "[INFO] Identifier a-z checks passed.";
+  else rm -R .blueprint/.storage/tmp/$n;                                        log_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi;
+  if [[ ! -f ".blueprint/.storage/tmp/$n/$icon" ]]; then
+    rm -R .blueprint/.storage/tmp/$n;                                           log_red "[FATAL] The 'icon' path points to a file that does not exist.";fi;
 
   if [[ $migrations_directory != "" ]]; then
-    if [[ $migrations_enabled == "yes" ]]; then
+    if [[ $migrations_enabled == "yes" ]]; then                              log_bright "[INFO] migrations_enabled yes/no checks passed.";
       cp -R .blueprint/.storage/tmp/$n/$migrations_directory/* database/migrations/ 2> /dev/null;
-    elif [[ $migrations_enabled == "no" ]]; then
-      echo "ok";
-    else
-      rm -R .blueprint/.storage/tmp/$n;
-      error "If defined, migrations_enabled should only be 'yes' or 'no'.";
-    fi;
+    elif [[ $migrations_enabled == "no" ]]; then                             log_bright "[INFO] migrations_enabled yes/no checks passed.";
+    else rm -R .blueprint/.storage/tmp/$n;                                      log_red "[FATAL] If defined, migrations_enabled should only be 'yes' or 'no'.";fi;
   fi;
 
   if [[ $css_location != "" ]]; then
-    if [[ $css_enabled == "yes" ]]; then
-      INJECTCSS="y";
-    elif [[ $css_enabled == "no" ]]; then
-      echo "ok";
-    else
-      rm -R .blueprint/.storage/tmp/$n;
-      error "If defined, css_enabled should only be 'yes' or 'no'.";
-    fi;
+    if [[ $css_enabled == "yes" ]]; then                                     log_bright "[INFO] css_enabled yes/no checks passed.";INJECTCSS="y";
+    elif [[ $css_enabled == "no" ]]; then                                    log_bright "[INFO] css_enabled yes/no checks passed.";
+    else rm -R .blueprint/.storage/tmp/$n;                                      log_red "[FATAL] If defined, css_enabled should only be 'yes' or 'no'.";fi;
   fi;
 
   if [[ $adminrequests_directory != "" ]]; then
-    if [[ $adminrequests_enabled == "yes" ]]; then
+    if [[ $adminrequests_enabled == "yes" ]]; then                           log_bright "[INFO] adminrequests_enabled yes/no checks passed.";
       mkdir app/Http/Requests/Admin/Extensions/$identifier;
       cp -R .blueprint/.storage/tmp/$n/$adminrequests_directory/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
-    elif [[ $adminrequests_enabled == "no" ]]; then
-      echo "ok";
-    else
-      rm -R .blueprint/.storage/tmp/$n;
-      error "If defined, adminrequests_enabled should only be 'yes' or 'no'.";
-    fi;
+    elif [[ $adminrequests_enabled == "no" ]]; then                           logbright "[INFO] adminrequests_enabled yes/no checks passed.";
+    else rm -R .blueprint/.storage/tmp/$n;                                    log_red "[FATAL] If defined, adminrequests_enabled should only be 'yes' or 'no'.";fi;
   fi;
 
   if [[ $publicfiles_directory != "" ]]; then
-    if [[ $publicfiles_enabled == "yes" ]]; then
+    if [[ $publicfiles_enabled == "yes" ]]; then                             log_bright "[INFO] publicfiles_enabled yes/no checks passed.";
       mkdir public/extensions/$identifier;
       cp -R .blueprint/.storage/tmp/$n/$publicfiles_directory/* public/extensions/$identifier/ 2> /dev/null;
-    elif [[ $publicfiles_enabled == "no" ]]; then
-      echo "ok";
-    else
-      rm -R .blueprint/.storage/tmp/$n;
-      error "If defined, publicfiles_enabled should only be 'yes' or 'no'.";
-    fi;
+    elif [[ $publicfiles_enabled == "no" ]]; then                            log_bright "[INFO] publicfiles_enabled yes/no checks passed.";
+    else rm -R .blueprint/.storage/tmp/$n;                                      log_red "[FATAL] If defined, publicfiles_enabled should only be 'yes' or 'no'.";fi;
   fi;
 
   cp -R .blueprint/.storage/defaults/extensions/admin.default .blueprint/.storage/defaults/extensions/admin.default.bak 2> /dev/null;
   if [[ $controller_type != "" ]]; then
-    if [[ $controller_type == "default" ]]; then
+    if [[ $controller_type == "default" ]]; then                             log_bright "[INFO] controller_type default/custom checks passed.";
       cp -R .blueprint/.storage/defaults/extensions/controller.default .blueprint/.storage/defaults/extensions/controller.default.bak 2> /dev/null;
-    elif [[ $controller_type == "custom" ]]; then
-      echo "ok";
-    else
-      rm -R .blueprint/.storage/tmp/$n;
-      error "If defined, controller_type should only be 'default' or 'custom'.";
-    fi;
+    elif [[ $controller_type == "custom" ]]; then                            log_bright "[INFO] controller_type default/custom checks passed.";
+    else rm -R .blueprint/.storage/tmp/$n;                                      log_red "[FATAL] If defined, controller_type should only be 'default' or 'custom'.";fi;
   fi;
   cp -R .blueprint/.storage/defaults/extensions/route.default .blueprint/.storage/defaults/extensions/route.default.bak 2> /dev/null;
   cp -R .blueprint/.storage/defaults/extensions/button.default .blueprint/.storage/defaults/extensions/button.default.bak 2> /dev/null;
@@ -297,12 +281,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp -R .blueprint/.storage/tmp/$n/$css_location/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
   fi;
 
-  if [[ $name == *"~"* ]]; then log_red "'name' contains '~' and may result in an error.";fi;
-  if [[ $description == *"~"* ]]; then log_red "'description' contains '~' and may result in an error.";fi;
-  if [[ $version == *"~"* ]]; then log_red "'version' contains '~' and may result in an error.";fi;
-  if [[ $CONTENT == *"~"* ]]; then log_red "'CONTENT' contains '~' and may result in an error.";fi;
-  if [[ $ICON == *"~"* ]]; then log_red "'ICON' contains '~' and may result in an error.";fi;
-  if [[ $identifier == *"~"* ]]; then log_red "'identifier' contains '~' and may result in an error.";fi;
+  if [[ $name == *"~"* ]]; then log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi;
+  if [[ $description == *"~"* ]]; then log_yellow "[WARNING] 'description' contains '~' and may result in an error.";fi;
+  if [[ $version == *"~"* ]]; then log_yellow "[WARNING] 'version' contains '~' and may result in an error.";fi;
+  if [[ $CONTENT == *"~"* ]]; then log_yellow "[WARNING] 'CONTENT' contains '~' and may result in an error.";fi;
+  if [[ $ICON == *"~"* ]]; then log_yellow "[WARNING] 'ICON' contains '~' and may result in an error.";fi;
+  if [[ $identifier == *"~"* ]]; then log_yellow "[WARNING] 'identifier' contains '~' and may result in an error.";fi;
 
   sed -i "s~␀title␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
   sed -i "s~␀name␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
@@ -361,22 +345,19 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   rm .blueprint/.storage/defaults/extensions/button.default.bak;
   rm -R .blueprint/.storage/tmp/$n;
 
-  if [[ $author == "blueprint" ]]; then log_blue "Please refrain from setting the author variable to 'blueprint', thanks!";fi;
-  if [[ $author == "Blueprint" ]]; then log_blue "Please refrain from setting the author variable to 'Blueprint', thanks!";fi;
-
   if [[ $migrations_enabled == "yes" ]]; then
-    log_bold "This extension comes with migrations. If you get prompted, answer 'yes'.\n";
+    log_bright "[INFO] This extension comes with migrations. If you get prompted, answer 'yes'.\n";
     php artisan migrate;
   fi;
 
   chmod -R +x .blueprint/.storage/extensiondata/$identifier/*;
 
   if [[ $flags == *"-run.afterinstall;"* ]]; then
-    log_red "This extension uses a custom installation script, proceed with caution."
+    log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
     bash .blueprint/.storage/extensiondata/$identifier/install.sh;
   fi;
 
-  log_green "\n\n$identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+  log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
 fi;
 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
@@ -400,14 +381,15 @@ if [[ $2 == "-init" ]]; then
   echo "Version (indev):";                      read ASKVERSION;
   echo "Author (prplwtf):";                     read ASKAUTHOR;
 
-  log "Validating..";
-  if [[ $ASKIDENTIFIER =~ [a-z] ]]; then echo "ok" > /dev/null; else log "Identifier should only contain a-z characters.";exit 1;fi;
+  log_bright "[INFO] Running validation checks..";
+  if [[ $ASKIDENTIFIER =~ [a-z] ]]; then log_bright "[INFO] Identifier a-z checks passed." > /dev/null;
+  else log_red "[FATAL] Identifier should only contain a-z characters.";exit 1;fi;
 
-  log "Copying init defaults to tmp..";
+  log_bright "[INFO] Copying init defaults to tmp directory..";
   mkdir .blueprint/.storage/tmp/init;
   cp -R .blueprint/.storage/defaults/init/* .blueprint/.storage/tmp/init/;
 
-  log "Applying variables.."
+  log_bright "[INFO] Applying variables.."
   sed -i "s~␀name␀~$ASKNAME~g" .blueprint/.storage/tmp/init/conf.yml; #NAME
   sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/.storage/tmp/init/conf.yml; #IDENTIFIER
   sed -i "s~␀description␀~$ASKDESCRIPTION~g" .blueprint/.storage/tmp/init/conf.yml; #DESCRIPTION
@@ -419,13 +401,15 @@ if [[ $2 == "-init" ]]; then
   sed -i "s~␀version␀~$VERSION~g" .blueprint/.storage/tmp/init/conf.yml;
 
   # Return files to folder.
+  log_bright "[INFO] Copying output to .development directory."
   cp -R .blueprint/.storage/tmp/init/* .blueprint/.development/;
 
-  # Remove tmp files
+  # Remove tmp files.
+  log_bright "[INFO] Purging tmp files."
   rm -R .blueprint/.storage/tmp;
   mkdir .blueprint/.storage/tmp;
 
-  log "Your extension files have been generated and exported to '.blueprint/.development'.";
+  log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/.development'.";
 fi;
 
 if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
@@ -438,14 +422,14 @@ if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
 fi;
 
 if [[ $2 == "-export" ]]; then
-  log_red "This is an experimental feature, proceed with caution.";
-  log "Attempting to export extension files located in '.blueprint/.development'.";
+  log_yellow "[WARNING] This is an experimental feature, proceed with caution.";
+  log_bright "[INFO] Exporting extension files located in '.blueprint/.development'.";
 
   cd .blueprint
   zip .storage/tmp/blueprint.zip .development/*
   mv .storage/tmp/blueprint.zip ../extension.blueprint;
 
-  log "Extension files should be exported into your Pterodactyl directory now. Some versions of Blueprint may require your identifier to match the filename (excluding the .blueprint extension). You'll need to do this manually.";
+  log_bright "[INFO] Extension files should be exported into your Pterodactyl directory now. Some versions of Blueprint may require your identifier to match the filename (excluding the .blueprint extension). You'll need to do this manually.";
 fi;
 
 if [[ $2 == "-reinstall"  ]]; then
@@ -455,15 +439,43 @@ if [[ $2 == "-reinstall"  ]]; then
 fi;
 
 if [[ $2 == "-upgrade" ]]; then
-  log_red "This is an experimental feature, proceed with caution.\n";
+  log_yellow "[WARNING] This is an experimental feature, proceed with caution.\n";
   
-  log_bright "Upgrading will wipe your .blueprint folder and will overwrite your extensions.
-Are you sure you want to continue? (y/N)";
-  read YN;
+  log_yellow "[WARNING] Upgrading will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
+  read YN1;
+  if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
+  log_yellow "[WARNING] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)";
+  read YN2;
+  if [[ ( $YN2 != "y" ) && ( $YN2 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
+  log_yellow "[WARNING] This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'.";
+  read YN3;
+  if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
 
-  if [[ ( $YN == "y" ) || ( $YN == "Y" ) ]]; then
-    log_bright "Upgrading..";
-    bash tools/update.sh /var/www/$FOLDER;
-    log_bright "Upgrade completed.";
+  log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
+  bash tools/update.sh /var/www/$FOLDER;
+  log_bright "[INFO] Files have been upgraded, running installation script..";
+  chmod +x blueprint.sh;
+  bash blueprint.sh --post-upgrade;
+  log_yellow "[WARNING] Database migrations are skipped when upgrading, run them anyways? (Y/n)";
+  read YN4;
+  if [[ ( $YN4 == "y" ) || ( $YN4 == "Y" ) ]]; then 
+    log_bright "[INFO] Running database migrations..";
+    php artisan migrate;
+  else
+    log_bright "[INFO] Database migrations have been skipped.";
+  fi;
+  log_bright "[INFO] Running post-upgrade checks..";
+  score=0;
+  if dbValidate "blueprint.setupFinished"; then
+    score=$((score+1));
+  else
+    log_yellow "[WARNING] 'blueprint.setupFinished' could not be found.";
+  fi;
+  if [[ $score == 1 ]]; then
+    log_green "[SUCCESS] Blueprint has upgraded successfully.";
+  elif [[ $score == 0 ]]; then
+    log_red "[FATAL] Upgrading has failed."
+  else
+    log_yellow "[WARNING] Some post-upgrade checks have failed."
   fi;
 fi;
