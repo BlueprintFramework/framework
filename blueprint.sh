@@ -50,6 +50,16 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
+# blueprint -preview [args]
+if [[ $2 == "-preview" ]]; then
+  if [[ $3 == "logs" ]]; then
+    log_bright "[INFO] The fox jumps over the lake.";
+    log_yellow "[WARNING] The fox jumps over the lake.";
+    log_red "[FATAL] The fox jumps over the lake.";
+    log_green "[SUCCESS] The fox jumps over the lake.";
+  fi;
+fi;
+
 if [[ "$@" == *"-php"* ]]; then
   exit 1;
 fi;
@@ -351,9 +361,10 @@ fi;
 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
    echo -e " -install -i  [name]      install a blueprint extension""
+"           "-preview     [args]      preview a blueprint feature (not documented)""
 "           "-version -v              get the current blueprint version""
-"           "-init                    initialize extension development files.""
-"           "-build                   run an installation on your extension development files.""
+"           "-init                    initialize extension development files""
+"           "-build                   run an installation on your extension development files""
 "           "-export                  export your extension development files (experimental)""
 "           "-reinstall               rerun the blueprint installation script""
 "           "-upgrade                 update/reset to a newer version (experimental)";
