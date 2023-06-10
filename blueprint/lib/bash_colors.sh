@@ -2,7 +2,7 @@
 #
 # The code has been modified to work better with Blueprint.
 # Source code:
-# https://github.com/digitalnomadru/bash_colors
+# https://github.com/technobomz/bash_colors
 #
 # Constants and functions for terminal colors.
 if [[ "$BASH_SOURCE" == "$0" ]]; then
@@ -34,7 +34,7 @@ log_BLUE=34             # set blue foreground
 log_MAGENTA=35          # set magenta foreground
 log_CYAN=36             # set cyan foreground
 log_WHITE=37            # set white foreground
-log_YELLOW="1;33"       # set yellow foreground
+log_YELLOW=33           # set yellow foreground
 
 log_BLACKB=40           # set black background
 log_REDB=41             # set red background
@@ -44,7 +44,7 @@ log_BLUEB=44            # set blue background
 log_MAGENTAB=45         # set magenta background
 log_CYANB=46            # set cyan background
 log_WHITEB=47           # set white background
-log_YELLOWB="1;43"      # set yellow background
+log_YELLOWB=43          # set yellow background
 
 
 # check if string exists as function
@@ -129,7 +129,7 @@ function log_blue            { log_layer $log_BLUE "$@";            }
 function log_magenta         { log_layer $log_MAGENTA "$@";         }
 function log_cyan            { log_layer $log_CYAN "$@";            }
 function log_white           { log_layer $log_WHITE "$@";           }
-function log_yellow          { log_layer $log_YELLOW "$@";          }
+function log_yellow          { log_layer $log_YELLOW "\e[1;33]m$@"; }
 function log_blackb          { log_layer $log_BLACKB "$@";          }
 function log_redb            { log_layer $log_REDB "$@";            }
 function log_greenb          { log_layer $log_GREENB "$@";          }
@@ -138,7 +138,7 @@ function log_blueb           { log_layer $log_BLUEB "$@";           }
 function log_magentab        { log_layer $log_MAGENTAB "$@";        }
 function log_cyanb           { log_layer $log_CYANB "$@";           }
 function log_whiteb          { log_layer $log_WHITEB "$@";          }
-function log_yellowb         { log_layer $log_YELLOWB "$@";         }
+function log_yellowb         { log_layer $log_YELLOWB "\e[1;43]m$@" }
 
 # Outputs colors table
 function log_dump
