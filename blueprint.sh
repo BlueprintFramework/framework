@@ -54,18 +54,7 @@ if [[ "$@" == *"-php"* ]]; then
   exit 1;
 fi;
 
-export NEWT_COLORS='
-  root=,black
-  window=black,red
-  title=white,red
-  border=red,red
-  textbox=white,red
-  listbox=white,black
-  button=white,red
-';
-
-error() {
-  whiptail --title " Blueprint " --ok-button "ok" --msgbox "Sorry, this operation could not be completed. For troubleshooting, please go to ptero.shop/error.\n\n\"${1}\"" 15 60;
+quit_red() {
   log_red "${1}";
   exit 1;
 };
@@ -135,7 +124,7 @@ fi;
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   log_bright "[INFO] Always make sure you place your extensions in the Pterodactyl directory, else Blueprint won't be able to find them!";
 
-  if [[ $(expr $# - 2) != 1 ]]; then log_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";exit 1;fi;
+  if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi;
   if [[ $3 == "test␀" ]]; then
     dev=true;
     n="dev";
@@ -145,7 +134,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     dev=false;
     n=$3;
     FILE=$n".blueprint"
-    if [[ ! -f "$FILE" ]]; then log_red "[FATAL] $FILE could not be found.";fi;
+    if [[ ! -f "$FILE" ]]; then quit_red "[FATAL] $FILE could not be found.";fi;
 
     ZIP=$n".zip";
     cp $FILE .blueprint/.storage/tmp/$ZIP;
@@ -207,37 +196,37 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   else log_bright "[INFO] Placeholders will be skipped due to the '-placeholders.skip;' flag."; fi;
 
-  if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                  log_red "[FATAL] 'name' is a required configuration option.";fi;
-  if [[ $identifier == "" ]]; then rm -R .blueprint/.storage/tmp/$n;            log_red "[FATAL] 'identifier' is a required configuration option.";fi;
-  if [[ $description == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           log_red "[FATAL] 'description' is a required configuration option.";fi;
-  if [[ $version == "" ]]; then rm -R .blueprint/.storage/tmp/$n;               log_red "[FATAL] 'version' is a required configuration option.";fi;
-  if [[ $target == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                log_red "[FATAL] 'target' is a required configuration option.";fi;
-  if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                  log_red "[FATAL] 'icon' is a required configuration option.";fi;
+  if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'name' is a required configuration option.";fi;
+  if [[ $identifier == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] 'identifier' is a required configuration option.";fi;
+  if [[ $description == "" ]]; then rm -R .blueprint/.storage/tmp/$n;          quit_red "[FATAL] 'description' is a required configuration option.";fi;
+  if [[ $version == "" ]]; then rm -R .blueprint/.storage/tmp/$n;              quit_red "[FATAL] 'version' is a required configuration option.";fi;
+  if [[ $target == "" ]]; then rm -R .blueprint/.storage/tmp/$n;               quit_red "[FATAL] 'target' is a required configuration option.";fi;
+  if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'icon' is a required configuration option.";fi;
 
   if [[ $datafolder_directory == "" ]]; then                                 log_bright "[INFO] Datafolder field left blank, skipping..";fi;
   if [[ $controller_location == "" ]]; then                                  log_bright "[INFO] Controller location field left blank, using default controller instead..";
     controller_type="default";fi;
-  if [[ $view_location == "" ]]; then rm -R .blueprint/.storage/tmp/$n;         log_red "[FATAL] 'view_location' is a required configuration option.";fi;
+  if [[ $view_location == "" ]]; then rm -R .blueprint/.storage/tmp/$n;        quit_red "[FATAL] 'view_location' is a required configuration option.";fi;
   if [[ $target != $VERSION ]]; then                                         log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi;
-  if [[ $identifier != $n ]]; then rm -R .blueprint/.storage/tmp/$n;            log_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi;
-  if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/.storage/tmp/$n;   log_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi;
+  if [[ $identifier != $n ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi;
+  if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/.storage/tmp/$n;  quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi;
 
   if [[ $identifier =~ [a-z] ]]; then                                        log_bright "[INFO] Identifier a-z checks passed.";
-  else rm -R .blueprint/.storage/tmp/$n;                                        log_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi;
+  else rm -R .blueprint/.storage/tmp/$n;                                       quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi;
   if [[ ! -f ".blueprint/.storage/tmp/$n/$icon" ]]; then
-    rm -R .blueprint/.storage/tmp/$n;                                           log_red "[FATAL] The 'icon' path points to a file that does not exist.";fi;
+    rm -R .blueprint/.storage/tmp/$n;                                          quit_red "[FATAL] The 'icon' path points to a file that does not exist.";fi;
 
   if [[ $migrations_directory != "" ]]; then
     if [[ $migrations_enabled == "yes" ]]; then                              log_bright "[INFO] migrations_enabled yes/no checks passed.";
       cp -R .blueprint/.storage/tmp/$n/$migrations_directory/* database/migrations/ 2> /dev/null;
     elif [[ $migrations_enabled == "no" ]]; then                             log_bright "[INFO] migrations_enabled yes/no checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                      log_red "[FATAL] If defined, migrations_enabled should only be 'yes' or 'no'.";fi;
+    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, migrations_enabled should only be 'yes' or 'no'.";fi;
   fi;
 
   if [[ $css_location != "" ]]; then
     if [[ $css_enabled == "yes" ]]; then                                     log_bright "[INFO] css_enabled yes/no checks passed.";INJECTCSS="y";
     elif [[ $css_enabled == "no" ]]; then                                    log_bright "[INFO] css_enabled yes/no checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                      log_red "[FATAL] If defined, css_enabled should only be 'yes' or 'no'.";fi;
+    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, css_enabled should only be 'yes' or 'no'.";fi;
   fi;
 
   if [[ $adminrequests_directory != "" ]]; then
@@ -245,7 +234,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
       mkdir app/Http/Requests/Admin/Extensions/$identifier;
       cp -R .blueprint/.storage/tmp/$n/$adminrequests_directory/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
     elif [[ $adminrequests_enabled == "no" ]]; then                           logbright "[INFO] adminrequests_enabled yes/no checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                    log_red "[FATAL] If defined, adminrequests_enabled should only be 'yes' or 'no'.";fi;
+    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, adminrequests_enabled should only be 'yes' or 'no'.";fi;
   fi;
 
   if [[ $publicfiles_directory != "" ]]; then
@@ -253,7 +242,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
       mkdir public/extensions/$identifier;
       cp -R .blueprint/.storage/tmp/$n/$publicfiles_directory/* public/extensions/$identifier/ 2> /dev/null;
     elif [[ $publicfiles_enabled == "no" ]]; then                            log_bright "[INFO] publicfiles_enabled yes/no checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                      log_red "[FATAL] If defined, publicfiles_enabled should only be 'yes' or 'no'.";fi;
+    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, publicfiles_enabled should only be 'yes' or 'no'.";fi;
   fi;
 
   cp -R .blueprint/.storage/defaults/extensions/admin.default .blueprint/.storage/defaults/extensions/admin.default.bak 2> /dev/null;
@@ -261,7 +250,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ $controller_type == "default" ]]; then                             log_bright "[INFO] controller_type default/custom checks passed.";
       cp -R .blueprint/.storage/defaults/extensions/controller.default .blueprint/.storage/defaults/extensions/controller.default.bak 2> /dev/null;
     elif [[ $controller_type == "custom" ]]; then                            log_bright "[INFO] controller_type default/custom checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                      log_red "[FATAL] If defined, controller_type should only be 'default' or 'custom'.";fi;
+    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, controller_type should only be 'default' or 'custom'.";fi;
   fi;
   cp -R .blueprint/.storage/defaults/extensions/route.default .blueprint/.storage/defaults/extensions/route.default.bak 2> /dev/null;
   cp -R .blueprint/.storage/defaults/extensions/button.default .blueprint/.storage/defaults/extensions/button.default.bak 2> /dev/null;
@@ -383,7 +372,7 @@ if [[ $2 == "-init" ]]; then
 
   log_bright "[INFO] Running validation checks..";
   if [[ $ASKIDENTIFIER =~ [a-z] ]]; then log_bright "[INFO] Identifier a-z checks passed." > /dev/null;
-  else log_red "[FATAL] Identifier should only contain a-z characters.";exit 1;fi;
+  else quit_red "[FATAL] Identifier should only contain a-z characters.";fi;
 
   log_bright "[INFO] Copying init defaults to tmp directory..";
   mkdir .blueprint/.storage/tmp/init;
@@ -414,11 +403,11 @@ fi;
 
 if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
   if [[ $2 == "-test" ]]; then
-    log_bright "-test will be removed in future versions, use -build instead.";
+    quit_red "[FATAL] -test has been removed in alpha-T0R and up, please use -build instead.";
   fi
-  log "Attempting to install extension files located in '.blueprint/.development'.";
-
+  log_bright "[INFO] Installing development extension files..";
   blueprint -i test␀;
+  log_bright "[INFO] Extension installation ends here, if there are any errors during installation, fix them and try again.";
 fi;
 
 if [[ $2 == "-export" ]]; then
