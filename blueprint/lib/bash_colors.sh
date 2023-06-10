@@ -129,7 +129,7 @@ function log_blue            { log_layer $log_BLUE "$@";            }
 function log_magenta         { log_layer $log_MAGENTA "$@";         }
 function log_cyan            { log_layer $log_CYAN "$@";            }
 function log_white           { log_layer $log_WHITE "$@";           }
-function log_yellow          { log_layer $log_YELLOW "\e[1;33]m$@"; }
+function log_yellow          { log_layer $log_YELLOW "\e[1;33]$@";  }
 function log_blackb          { log_layer $log_BLACKB "$@";          }
 function log_redb            { log_layer $log_REDB "$@";            }
 function log_greenb          { log_layer $log_GREENB "$@";          }
@@ -138,7 +138,7 @@ function log_blueb           { log_layer $log_BLUEB "$@";           }
 function log_magentab        { log_layer $log_MAGENTAB "$@";        }
 function log_cyanb           { log_layer $log_CYANB "$@";           }
 function log_whiteb          { log_layer $log_WHITEB "$@";          }
-function log_yellowb         { log_layer $log_YELLOWB "\e[1;43]m$@" }
+function log_yellowb         { log_layer $log_YELLOWB "\e[1;43]$@"; }
 
 # Outputs colors table
 function log_dump
