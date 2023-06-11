@@ -419,10 +419,13 @@ if [[ $2 == "-export" ]]; then
   log_bright "[INFO] Exporting extension files located in '.blueprint/.development'.";
 
   cd .blueprint
-  zip .storage/tmp/blueprint.zip .development/*
-  mv .storage/tmp/blueprint.zip ../extension.blueprint;
+  eval $(parse_yaml .development/conf.yml)
+  mkdir .storage/tmp/$info_identifier
+  mv .development/* .storage/tmp/$info_identifier/
+  zip .storage/tmp/blueprint.zip .storage/tmp/$info_identifier
+  mv .storage/tmp/blueprint.zip ../$info_identifier.blueprint;
 
-  log_bright "[INFO] Extension files should be exported into your Pterodactyl directory now. Some versions of Blueprint may require your identifier to match the filename (excluding the .blueprint extension). You'll need to do this manually.";
+  log_bright "[INFO] Extension files should be exported into your Pterodactyl directory now.";
 fi;
 
 if [[ $2 == "-reinstall"  ]]; then
