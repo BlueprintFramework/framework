@@ -170,6 +170,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   cd /var/www/$FOLDER;
 
   eval $(parse_yaml .blueprint/.storage/tmp/$n/conf.yml)
+  name=$info_name;
+  description=$info_description;
+  flags=$info_flags;
+  version=$info_version;
+  target=$info_target;
+  author=$info_author;
+  icon=$info_icon;
 
   if [[ $dev ]]; then
     mv .blueprint/.storage/tmp/$n .blueprint/.storage/tmp/$identifier;
@@ -214,9 +221,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'icon' is a required configuration option.";fi;
 
   if [[ $datafolder_directory == "" ]]; then                                 log_bright "[INFO] Datafolder field left blank, skipping..";fi;
-  if [[ $controller_location == "" ]]; then                                  log_bright "[INFO] Controller location field left blank, using default controller instead..";
-    controller_type="default";fi;
-  if [[ $view_location == "" ]]; then rm -R .blueprint/.storage/tmp/$n;        quit_red "[FATAL] 'view_location' is a required configuration option.";fi;
+  if [[ $admin_controller == "" ]]; then                                     log_bright "[INFO] Admin controller field left blank, using default controller instead..";
+    controller_type="default";else controller_type="custom";fi;
+  if [[ $admin_view == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] 'admin_view' is a required configuration option.";fi;
   if [[ $target != $VERSION ]]; then                                         log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi;
   if [[ $identifier != $n ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi;
   if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/.storage/tmp/$n;  quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi;
@@ -226,58 +233,44 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ ! -f ".blueprint/.storage/tmp/$n/$icon" ]]; then
     rm -R .blueprint/.storage/tmp/$n;                                          quit_red "[FATAL] The 'icon' path points to a file that does not exist.";fi;
 
-  if [[ $migrations_directory != "" ]]; then
-    if [[ $migrations_enabled == "yes" ]]; then                              log_bright "[INFO] migrations_enabled yes/no checks passed.";
-      cp -R .blueprint/.storage/tmp/$n/$migrations_directory/* database/migrations/ 2> /dev/null;
-    elif [[ $migrations_enabled == "no" ]]; then                             log_bright "[INFO] migrations_enabled yes/no checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, migrations_enabled should only be 'yes' or 'no'.";fi;
+  if [[ $database_migrations != "" ]]; then
+    cp -R .blueprint/.storage/tmp/$n/$database_migrations/* database/migrations/ 2> /dev/null;
   fi;
 
-  if [[ $css_location != "" ]]; then
-    if [[ $css_enabled == "yes" ]]; then                                     log_bright "[INFO] css_enabled yes/no checks passed.";INJECTCSS="y";
-    elif [[ $css_enabled == "no" ]]; then                                    log_bright "[INFO] css_enabled yes/no checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, css_enabled should only be 'yes' or 'no'.";fi;
+  if [[ $css != "" ]]; then
+    INJECTCSS="y";
   fi;
 
-  if [[ $adminrequests_directory != "" ]]; then
-    if [[ $adminrequests_enabled == "yes" ]]; then                           log_bright "[INFO] adminrequests_enabled yes/no checks passed.";
-      mkdir app/Http/Requests/Admin/Extensions/$identifier;
-      cp -R .blueprint/.storage/tmp/$n/$adminrequests_directory/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
-    elif [[ $adminrequests_enabled == "no" ]]; then                           logbright "[INFO] adminrequests_enabled yes/no checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, adminrequests_enabled should only be 'yes' or 'no'.";fi;
+  if [[ $admin_requests != "" ]]; then
+    mkdir app/Http/Requests/Admin/Extensions/$identifier;
+    cp -R .blueprint/.storage/tmp/$n/$admin_requests/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
   fi;
 
-  if [[ $publicfiles_directory != "" ]]; then
-    if [[ $publicfiles_enabled == "yes" ]]; then                             log_bright "[INFO] publicfiles_enabled yes/no checks passed.";
-      mkdir public/extensions/$identifier;
-      cp -R .blueprint/.storage/tmp/$n/$publicfiles_directory/* public/extensions/$identifier/ 2> /dev/null;
-    elif [[ $publicfiles_enabled == "no" ]]; then                            log_bright "[INFO] publicfiles_enabled yes/no checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, publicfiles_enabled should only be 'yes' or 'no'.";fi;
+  if [[ $data_public != "" ]]; then
+    mkdir public/extensions/$identifier;
+    cp -R .blueprint/.storage/tmp/$n/$data_public/* public/extensions/$identifier/ 2> /dev/null;
   fi;
 
   cp -R .blueprint/.storage/defaults/extensions/admin.default .blueprint/.storage/defaults/extensions/admin.default.bak 2> /dev/null;
-  if [[ $controller_type != "" ]]; then
-    if [[ $controller_type == "default" ]]; then                             log_bright "[INFO] controller_type default/custom checks passed.";
-      cp -R .blueprint/.storage/defaults/extensions/controller.default .blueprint/.storage/defaults/extensions/controller.default.bak 2> /dev/null;
-    elif [[ $controller_type == "custom" ]]; then                            log_bright "[INFO] controller_type default/custom checks passed.";
-    else rm -R .blueprint/.storage/tmp/$n;                                     quit_red "[FATAL] If defined, controller_type should only be 'default' or 'custom'.";fi;
+  if [[ $admin_controller == "" ]]; then # use default controller when admin_controller is left blank
+    cp -R .blueprint/.storage/defaults/extensions/controller.default .blueprint/.storage/defaults/extensions/controller.default.bak 2> /dev/null;
   fi;
   cp -R .blueprint/.storage/defaults/extensions/route.default .blueprint/.storage/defaults/extensions/route.default.bak 2> /dev/null;
   cp -R .blueprint/.storage/defaults/extensions/button.default .blueprint/.storage/defaults/extensions/button.default.bak 2> /dev/null;
 
   mkdir .blueprint/.storage/extensiondata/$identifier;
-  if [[ $datafolder_directory != "" ]]; then
-    cp -R .blueprint/.storage/tmp/$n/$datafolder_directory/* .blueprint/.storage/extensiondata/$identifier/;
+  if [[ $data_directory != "" ]]; then
+    cp -R .blueprint/.storage/tmp/$n/$data_directory/* .blueprint/.storage/extensiondata/$identifier/;
   fi;
 
   mkdir public/assets/extensions/$identifier;
   cp .blueprint/.storage/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg;
   ICON="/assets/extensions/$identifier/icon.jpg";
-  CONTENT=$(cat .blueprint/.storage/tmp/$n/$view_location);
+  CONTENT=$(cat .blueprint/.storage/tmp/$n/$admin_view);
 
   if [[ $INJECTCSS == "y" ]]; then
     sed -i "s!/* blueprint reserved line */!/* blueprint reserved line */\n@import url(/assets/extensions/$identifier/$identifier.style.css);!g" public/themes/pterodactyl/css/pterodactyl.css;
-    cp -R .blueprint/.storage/tmp/$n/$css_location/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
+    cp -R .blueprint/.storage/tmp/$n/$css/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
   fi;
 
   if [[ $name == *"~"* ]]; then log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi;
@@ -301,7 +294,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   echo -e "$CONTENT\n@endsection" >> .blueprint/.storage/defaults/extensions/admin.default.bak;
 
-  if [[ $controller_type != "custom" ]]; then
+  if [[ $admin_controller == "" ]]; then
     sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/controller.default.bak;
   fi;
   sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/route.default.bak;
@@ -310,7 +303,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   ADMINVIEW_RESULT=$(cat .blueprint/.storage/defaults/extensions/admin.default.bak);
   ADMINROUTE_RESULT=$(cat .blueprint/.storage/defaults/extensions/route.default.bak);
   ADMINBUTTON_RESULT=$(cat .blueprint/.storage/defaults/extensions/button.default.bak);
-  if [[ $controller_type != "custom" ]]; then
+  if [[ $admin_controller == "" ]]; then
     ADMINCONTROLLER_RESULT=$(cat .blueprint/.storage/defaults/extensions/controller.default.bak);
   fi;
   ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
@@ -322,14 +315,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   mkdir app/Http/Controllers/Admin/Extensions/$identifier;
   touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
 
-  if [[ $controller_type != "custom" ]]; then
+  if [[ $admin_controller == "" ]]; then
     echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
   else
-    cp .blueprint/.storage/tmp/$n/$controller_location app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+    cp .blueprint/.storage/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
   fi;
 
-  if [[ $controller_type == "custom" ]]; then
-    cp .blueprint/.storage/tmp/$n/$controller_location app/Http/Controllers/Admin/Extensions/$identifier/${identifier}ExtensionController.php;
+  if [[ $admin_controller != "" ]]; then
+    cp .blueprint/.storage/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/${identifier}ExtensionController.php;
   fi;
 
   echo $ADMINROUTE_RESULT >> routes/admin.php;
@@ -337,14 +330,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
 
   rm .blueprint/.storage/defaults/extensions/admin.default.bak;
-  if [[ $controller_type != "custom" ]]; then
+  if [[ $admin_controller == "" ]]; then
     rm .blueprint/.storage/defaults/extensions/controller.default.bak;
   fi;
   rm .blueprint/.storage/defaults/extensions/route.default.bak;
   rm .blueprint/.storage/defaults/extensions/button.default.bak;
   rm -R .blueprint/.storage/tmp/$n;
 
-  if [[ $migrations_enabled == "yes" ]]; then
+  if [[ $database_migrations != "" ]]; then
     log_bright "[INFO] This extension comes with migrations. If you get prompted, answer 'yes'.\n";
     php artisan migrate;
   fi;

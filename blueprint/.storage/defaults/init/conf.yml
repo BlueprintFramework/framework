@@ -3,39 +3,25 @@
 # For documentation about conf.yml, refer to ptero.shop/dev/conf.
 
 
-name: "␀name␀"
-identifier: "␀identifier␀"
-description: "␀description␀"
-flags: ""
-version: "␀ver␀"
-target: "␀version␀"
-author: "␀author␀"
-icon: "assets/EXTLOGO-␀num␀.jpg"
+info:
+  name: "␀name␀"
+  identifier: "␀identifier␀"
+  description: "␀description␀"
+  flags: ""
+  version: "␀ver␀"
+  target: "␀version␀"
+  author: "␀author␀"
+  icon: "assets/EXTLOGO-␀num␀.jpg"
 
+admin:
+  view: "view.blade.php"
+  controller: ""
+  requests: ""
+  css: ""
 
-
-view:
-  location: "view.blade.php"
-
-controller:
-  type: "default"
-
-datafolder:
+data:
   directory: "data"
+  public: ""
 
-
-css:
-  enabled: "no"
-  location: ""
-
-migrations:
-  enabled: "no"
-  directory: ""
-
-publicfiles:
-  enabled: "no"
-  directory: ""
-
-adminrequests:
-  enabled: "no"
-  directory: ""
+database:
+  migrations: ""
