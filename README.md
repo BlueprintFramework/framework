@@ -2,6 +2,10 @@
 [Discord ➚](https://discord.gg/CUwHwv6xRe)\
 [Documentation ➚](https://ptero.shop/docs)
 
+[Installation](#installation)\
+[Development](#development)\
+[Extensions](#extensions)
+
 ### Installation
 **What you need:**
 * The latest release of Blueprint. [Download ➚](https://github.com/teamblueprint/main/releases/latest)
