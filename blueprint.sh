@@ -171,6 +171,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   eval $(parse_yaml .blueprint/.storage/tmp/$n/conf.yml)
   name=$info_name;
+  identifier=$info_identifier;
   description=$info_description;
   flags=$info_flags;
   version=$info_version;
