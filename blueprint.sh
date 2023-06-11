@@ -213,14 +213,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   else log_bright "[INFO] Placeholders will be skipped due to the '-placeholders.skip;' flag."; fi;
 
-  if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'name' is a required configuration option.";fi;
-  if [[ $identifier == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] 'identifier' is a required configuration option.";fi;
-  if [[ $description == "" ]]; then rm -R .blueprint/.storage/tmp/$n;          quit_red "[FATAL] 'description' is a required configuration option.";fi;
-  if [[ $version == "" ]]; then rm -R .blueprint/.storage/tmp/$n;              quit_red "[FATAL] 'version' is a required configuration option.";fi;
-  if [[ $target == "" ]]; then rm -R .blueprint/.storage/tmp/$n;               quit_red "[FATAL] 'target' is a required configuration option.";fi;
-  if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'icon' is a required configuration option.";fi;
+  if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'info_name' is a required configuration option.";fi;
+  if [[ $identifier == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] 'info_identifier' is a required configuration option.";fi;
+  if [[ $description == "" ]]; then rm -R .blueprint/.storage/tmp/$n;          quit_red "[FATAL] 'info_description' is a required configuration option.";fi;
+  if [[ $version == "" ]]; then rm -R .blueprint/.storage/tmp/$n;              quit_red "[FATAL] 'info_version' is a required configuration option.";fi;
+  if [[ $target == "" ]]; then rm -R .blueprint/.storage/tmp/$n;               quit_red "[FATAL] 'info_target' is a required configuration option.";fi;
+  if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'info_icon' is a required configuration option.";fi;
 
-  if [[ $datafolder_directory == "" ]]; then                                 log_bright "[INFO] Datafolder field left blank, skipping..";fi;
   if [[ $admin_controller == "" ]]; then                                     log_bright "[INFO] Admin controller field left blank, using default controller instead..";
     controller_type="default";else controller_type="custom";fi;
   if [[ $admin_view == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] 'admin_view' is a required configuration option.";fi;
@@ -231,7 +230,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $identifier =~ [a-z] ]]; then                                        log_bright "[INFO] Identifier a-z checks passed.";
   else rm -R .blueprint/.storage/tmp/$n;                                       quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi;
   if [[ ! -f ".blueprint/.storage/tmp/$n/$icon" ]]; then
-    rm -R .blueprint/.storage/tmp/$n;                                          quit_red "[FATAL] The 'icon' path points to a file that does not exist.";fi;
+    rm -R .blueprint/.storage/tmp/$n;                                          quit_red "[FATAL] The 'info_icon' path points to a file that does not exist.";fi;
 
   if [[ $database_migrations != "" ]]; then
     cp -R .blueprint/.storage/tmp/$n/$database_migrations/* database/migrations/ 2> /dev/null;
