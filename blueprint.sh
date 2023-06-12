@@ -441,6 +441,7 @@ if [[ $2 == "-upgrade" ]]; then
   else
     bash tools/update.sh /var/www/$FOLDER
   fi;
+  rm -R tools/tmp/main;
   log_bright "[INFO] Files have been upgraded, running installation script..";
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
