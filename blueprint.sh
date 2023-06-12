@@ -3,7 +3,6 @@
 # This should allow Blueprint to run in docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="pterodactyl"
-  SOURCE="n"
 
 if [[ -f ".dockerenv" ]]; then
   DOCKER="y";
@@ -47,12 +46,6 @@ cd /var/www/$FOLDER;
 source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
-
-if [[ $SOURCE == "y" ]]; then
-  if [[ $1 != "--post-upgrade" ]]; then
-    log_yellow "[WARNING] You appear to have used -upgrade to update to a pre-release, please update manually to a stable version to remove this warning."
-  fi;
-fi;
 
 if [[ "$@" == *"-php"* ]]; then
   exit 1;
@@ -353,7 +346,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-build                   run an installation on your extension development files""
 "           "-export                  export your extension development files (experimental)""
 "           "-reinstall               rerun the blueprint installation script""
-"           "-upgrade                 update/reset to a newer pre-release version (experimental)";
+"           "-upgrade (dev)           update/reset to a newer pre-release version (experimental)";
 fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
@@ -430,9 +423,11 @@ fi;
 if [[ $2 == "-upgrade" ]]; then
   log_yellow "[WARNING] This is an experimental feature, proceed with caution.\n";
   
-  log_yellow "[WARNING] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
-  read YN1;
-  if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
+  if [[ $3 == "dev" ]]; then
+    log_yellow "[WARNING] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
+    read YN1;
+    if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
+  fi;
   log_yellow "[WARNING] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)";
   read YN2;
   if [[ ( $YN2 != "y" ) && ( $YN2 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
@@ -441,7 +436,11 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
-  bash tools/update.sh /var/www/$FOLDER
+  if [[ $3 == "dev" ]]; then
+    bash tools/update.sh /var/www/$FOLDER dev
+  else
+    bash tools/update.sh /var/www/$FOLDER
+  fi;
   log_bright "[INFO] Files have been upgraded, running installation script..";
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
