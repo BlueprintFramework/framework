@@ -360,7 +360,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-build                   run an installation on your extension development files""
 "           "-export                  export your extension development files (experimental)""
 "           "-reinstall               rerun the blueprint installation script""
-"           "-upgrade                 update/reset to a newer version (experimental)";
+"           "-upgrade     (dev)       update/reset to a newer version (experimental)";
 fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
@@ -437,9 +437,11 @@ fi;
 if [[ $2 == "-upgrade" ]]; then
   log_yellow "[WARNING] This is an experimental feature, proceed with caution.\n";
   
-  log_yellow "[WARNING] Upgrading will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
-  read YN1;
-  if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
+  if [[ $3 == "dev" ]]; then
+    log_yellow "[WARNING] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
+    read YN1;
+    if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
+  fi;
   log_yellow "[WARNING] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)";
   read YN2;
   if [[ ( $YN2 != "y" ) && ( $YN2 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
@@ -448,7 +450,11 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
-  bash tools/update.sh /var/www/$FOLDER;
+  if [[ $3 == "dev" ]]; then
+    bash tools/update.sh /var/www/$FOLDER dev;
+  else
+    bash tools/update.sh /var/www/$FOLDER;
+  fi;
   log_bright "[INFO] Files have been upgraded, running installation script..";
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
@@ -460,13 +466,16 @@ if [[ $2 == "-upgrade" ]]; then
   else
     log_bright "[INFO] Database migrations have been skipped.";
   fi;
+
   log_bright "[INFO] Running post-upgrade checks..";
   score=0;
+
   if dbValidate "blueprint.setupFinished"; then
     score=$((score+1));
   else
     log_yellow "[WARNING] 'blueprint.setupFinished' could not be found.";
   fi;
+
   if [[ $score == 1 ]]; then
     log_green "[SUCCESS] Blueprint has upgraded successfully.";
   elif [[ $score == 0 ]]; then
