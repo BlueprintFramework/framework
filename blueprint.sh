@@ -49,7 +49,9 @@ source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
 if [[ $SOURCE == "y" ]]; then
-  log_yellow "[WARNING] You appear to have used -upgrade to update to a pre-release, please update manually to a stable version to remove this warning."
+  if [[ $1 != "--post-upgrade" ]]; then
+    log_yellow "[WARNING] You appear to have used -upgrade to update to a pre-release, please update manually to a stable version to remove this warning."
+  fi;
 fi;
 
 if [[ "$@" == *"-php"* ]]; then
@@ -443,7 +445,7 @@ if [[ $2 == "-upgrade" ]]; then
   log_bright "[INFO] Files have been upgraded, running installation script..";
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
-  log_yellow "[WARNING] Database migrations are skipped when upgrading, run them anyways? (Y/n)";
+  log_bright "[INFO] Database migrations are skipped when upgrading, run them anyways? (Y/n)";
   read YN4;
   if [[ ( $YN4 == "y" ) || ( $YN4 == "Y" ) ]]; then 
     log_bright "[INFO] Running database migrations..";
