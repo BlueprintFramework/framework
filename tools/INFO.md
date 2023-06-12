@@ -2,4 +2,4 @@
 These scripts are meant for simplifying bug testing and development and will probably break your panel.
 
 
-* update.sh [path to pterodactyl] (dev)
+* update.sh [path to pterodactyl]

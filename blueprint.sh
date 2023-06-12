@@ -3,6 +3,7 @@
 # This should allow Blueprint to run in docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="pterodactyl"
+  SOURCE="n"
 
 if [[ -f ".dockerenv" ]]; then
   DOCKER="y";
@@ -16,9 +17,6 @@ fi;
   PM_VERSION="([(pterodactylmarket_version)])";
 
 if [[ -d "/var/www/$FOLDER/blueprint" ]]; then mv /var/www/$FOLDER/blueprint /var/www/$FOLDER/.blueprint; fi;
-
-# BUILT_FROM_SOURCE="y"; # If you downloaded Blueprint from a release instead of building it, this should be "n".
-# if [[ $BUILT_FROM_SOURCE == "y" ]]; then if [[ ! -f "/var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag" ]]; then sed -E -i "s*&bp.version&*source*g" app/Services/Helpers/BlueprintPlaceholderService.php;touch /var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag;fi;VERSION="source";
 
 if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
   # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
@@ -50,14 +48,8 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
-# blueprint -preview [args]
-if [[ $2 == "-preview" ]]; then
-  if [[ $3 == "logs" ]]; then
-    log_bright "[INFO] The fox jumps over the lake.";
-    log_yellow "[WARNING] The fox jumps over the lake.";
-    log_red "[FATAL] The fox jumps over the lake.";
-    log_green "[SUCCESS] The fox jumps over the lake.";
-  fi;
+if [[ $SOURCE == "y" ]]; then
+  log_yellow "[WARNING] You appear to have used -upgrade to update to a pre-release, please update manually to a stable version to remove this warning."
 fi;
 
 if [[ "$@" == *"-php"* ]]; then
@@ -353,14 +345,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 fi;
 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
-   echo -e " -install -i  [name]      install a blueprint extension""
-"           "-preview     [args]      preview a blueprint feature (not documented)""
-"           "-version -v              get the current blueprint version""
+   echo -e " -install [name]          install a blueprint extension""
+"           "-version                 get the current blueprint version""
 "           "-init                    initialize extension development files""
 "           "-build                   run an installation on your extension development files""
 "           "-export                  export your extension development files (experimental)""
 "           "-reinstall               rerun the blueprint installation script""
-"           "-upgrade     (dev)       update/reset to a newer version (experimental)";
+"           "-upgrade                 update/reset to a newer pre-release version (experimental)";
 fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
@@ -437,11 +428,9 @@ fi;
 if [[ $2 == "-upgrade" ]]; then
   log_yellow "[WARNING] This is an experimental feature, proceed with caution.\n";
   
-  if [[ $3 == "dev" ]]; then
-    log_yellow "[WARNING] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
-    read YN1;
-    if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
-  fi;
+  log_yellow "[WARNING] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
+  read YN1;
+  if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
   log_yellow "[WARNING] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)";
   read YN2;
   if [[ ( $YN2 != "y" ) && ( $YN2 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
@@ -450,11 +439,7 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
-  if [[ $3 == "dev" ]]; then
-    bash tools/update.sh /var/www/$FOLDER dev;
-  else
-    bash tools/update.sh /var/www/$FOLDER;
-  fi;
+  bash tools/update.sh /var/www/$FOLDER
   log_bright "[INFO] Files have been upgraded, running installation script..";
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
