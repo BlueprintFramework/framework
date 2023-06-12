@@ -10,7 +10,7 @@ if [[ -f ".dockerenv" ]]; then
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="alpha-T0R";
+  VER_FALLBACK="alpha-ML7";
 
 # This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
@@ -375,7 +375,7 @@ if [[ $2 == "-init" ]]; then
   sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/.storage/tmp/init/conf.yml; #VERSION
   sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/.storage/tmp/init/conf.yml; #AUTHOR
 
-  icnNUM=$(expr 1 + $RANDOM % 3);
+  icnNUM=$(expr 1 + $RANDOM % 4);
   sed -i "s~␀num␀~$icnNUM~g" .blueprint/.storage/tmp/init/conf.yml;
   sed -i "s~␀version␀~$VERSION~g" .blueprint/.storage/tmp/init/conf.yml;
 
