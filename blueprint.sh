@@ -69,7 +69,7 @@ if [[ $1 != "-bash" ]]; then
     if [[ $1 != "--post-upgrade" ]]; then
       log "  ██\n██  ██\n  ████\n";
       if [[ $DOCKER == "y" ]]; then
-        log_yellow "[WARNING] While running Blueprint with docker is supported, you may run into some issues.";
+        log_yellow "[WARNING] While running Blueprint with docker is supported, you may run into some issues. Report problems you find at ptero.shop/issue.";
       fi;
     fi;
 
@@ -110,7 +110,7 @@ if [[ $1 != "-bash" ]]; then
     php artisan up;
 
     if [[ $1 != "--post-upgrade" ]]; then
-      log_green "\n\n[SUCCESS] Blueprint should now be installed. If something didn't work as expected, please let us know at ptero.shop/community.";
+      log_green "\n\n[SUCCESS] Blueprint should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
     fi;
 
     dbAdd "blueprint.setupFinished";
@@ -336,7 +336,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     bash .blueprint/.storage/extensiondata/$identifier/install.sh;
   fi;
 
-  log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/community.";
+  log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
 fi;
 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
@@ -345,8 +345,8 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-init                    initialize extension development files""
 "           "-build                   run an installation on your extension development files""
 "           "-export                  export your extension development files (experimental)""
-"           "-reinstall               rerun the blueprint installation script""
-"           "-upgrade (dev)           update/reset to a newer pre-release version (experimental)";
+"           "-runinstall              rerun the blueprint installation script (advanced)""
+"           "-upgrade (dev)           update/reset to a newer pre-release version (advanced)";
 fi;
 
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
@@ -414,14 +414,15 @@ if [[ $2 == "-export" ]]; then
   log_bright "[INFO] Extension files should be exported into your Pterodactyl directory now.";
 fi;
 
-if [[ $2 == "-reinstall"  ]]; then
+if [[ $2 == "-runinstall"  ]]; then
+  log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
   dbRemove "blueprint.setupFinished";
   cd /var/www/$FOLDER;
   bash blueprint.sh;
 fi;
 
 if [[ $2 == "-upgrade" ]]; then
-  log_yellow "[WARNING] This is an experimental feature, proceed with caution.\n";
+  log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n";
   
   if [[ $3 == "dev" ]]; then
     log_yellow "[WARNING] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
