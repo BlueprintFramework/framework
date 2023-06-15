@@ -1,5 +1,5 @@
 ## ![](https://i.imgur.com/SsOU6r8.png) teamblueprint/main
-[Discord ➚](https://discord.gg/CUwHwv6xRe)\
+[Discord ➚](https://ptero.shop/community)\
 [Documentation ➚](https://ptero.shop/docs)
 
 [Installation](#installation)\

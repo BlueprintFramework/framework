@@ -63,13 +63,13 @@ chmod u+x /usr/local/bin/blueprint > /dev/null;
 
 if [[ $1 != "-bash" ]]; then
   if dbValidate "blueprint.setupFinished"; then
-    log_yellow "[WARNING] This command only works if you have yet to install Blueprint. You can run 'blueprint (cmd) [arg]' instead.";
+    log_yellow "[WARNING] This command only works if you have yet to install Blueprint. Run 'blueprint (cmd) [arg]' instead.";
     exit 1;
   else
     if [[ $1 != "--post-upgrade" ]]; then
       log "  ██\n██  ██\n  ████\n";
       if [[ $DOCKER == "y" ]]; then
-        log_yellow "[WARNING] Running Blueprint with Docker may result in issues.";
+        log_yellow "[WARNING] While running Blueprint with docker is supported, you may run into some issues.";
       fi;
     fi;
 
@@ -110,7 +110,7 @@ if [[ $1 != "-bash" ]]; then
     php artisan up;
 
     if [[ $1 != "--post-upgrade" ]]; then
-      log_green "\n\n[SUCCESS] Blueprint should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+      log_green "\n\n[SUCCESS] Blueprint should now be installed. If something didn't work as expected, please let us know at ptero.shop/community.";
     fi;
 
     dbAdd "blueprint.setupFinished";
@@ -336,7 +336,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     bash .blueprint/.storage/extensiondata/$identifier/install.sh;
   fi;
 
-  log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at discord.gg/CUwHwv6xRe.";
+  log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/community.";
 fi;
 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
