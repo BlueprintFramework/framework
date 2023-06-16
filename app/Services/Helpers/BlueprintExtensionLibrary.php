@@ -3,8 +3,8 @@
 /*
 | Welcome to the Blueprint Extension Library.
 |
-| This allows developers to interact with
-| Pterodactyl easely and without hassle.
+| This allows extensions to easily communicate with
+| Blueprint and Pterodactyl.
 */
 
 namespace Pterodactyl\Services\Helpers;
