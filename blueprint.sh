@@ -76,9 +76,11 @@ if [[ $1 != "-bash" ]]; then
     sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
     sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
 
+    # Put application into maintenance.
     log_bright "[INFO] php artisan down";
     php artisan down;
 
+    # Inject custom Blueprint css into Pterodactyl's admin panel.
     log_bright "[INFO] /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css";
     sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* blueprint reserved line */!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
 
@@ -91,6 +93,7 @@ if [[ $1 != "-bash" ]]; then
     php artisan config:clear;
 
 
+    # Run migrations if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
       log_bright "[INFO] php artisan migrate";
       php artisan migrate;
@@ -106,6 +109,7 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] rm .blueprint/.development/.hello.txt";
     rm .blueprint/.development/.hello.txt;
 
+    # Put application into production.
     log_bright "[INFO] php artisan up";
     php artisan up;
 
@@ -156,7 +160,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   cd /var/www/$FOLDER;
 
+  # Get all strings from the conf.yml file and make them accessible as variables.
   eval $(parse_yaml .blueprint/.storage/tmp/$n/conf.yml)
+
+  # Add aliases for the info config values to make working with them easier.
   name=$info_name;
   identifier=$info_identifier;
   description=$info_description;
