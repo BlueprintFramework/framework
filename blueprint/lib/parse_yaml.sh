@@ -1,6 +1,7 @@
 #!/bin/bash
-
-# source: https://github.com/mrbaseman/parse_yaml
+#
+# This script may have been modified to work better with Blueprint.
+# Source code: https://github.com/mrbaseman/parse_yaml
 
 function parse_yaml {
    local prefix=$2

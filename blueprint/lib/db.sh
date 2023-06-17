@@ -1,4 +1,7 @@
 #!/bin/bash
+# 
+# This script has been created as part of the Blueprint source code
+# and may be intergrated directly into the core in the future.
 
 FLDR="/var/www/&bp.folder&/.blueprint/.storage/db.md";
 

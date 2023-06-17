@@ -1,8 +1,7 @@
 #!/bin/bash
 #
-# The code has been modified to work better with Blueprint.
-# Source code:
-# https://github.com/technobomz/bash_colors
+# This script may have been modified to work better with Blueprint.
+# Source code: https://github.com/technobomz/bash_colors
 #
 # Constants and functions for terminal colors.
 if [[ "$BASH_SOURCE" == "$0" ]]; then
