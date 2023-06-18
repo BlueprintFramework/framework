@@ -51,7 +51,7 @@ class BlueprintExtensionController extends Controller
     if ($this->settings->get('blueprint::panel:id') == "" || $this->bp->version() != $this->settings->get('blueprint::version:cache')) {
       $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
       $this->settings->set('blueprint::version:cache', $this->bp->version());
-      shell_exec("blueprint -exec key ".$this->settings->get("blueprint::panel:id"))
+      shell_exec("blueprint -exec key ".$this->settings->get("blueprint::panel:id"));
     };
     return $this->view->make(
       'admin.extensions.blueprint.index', [

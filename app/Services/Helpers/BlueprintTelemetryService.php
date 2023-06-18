@@ -34,6 +34,7 @@ class BlueprintTelemetryService
         $response = curl_exec($curl);
 
         curl_close($curl);
+        shell_exec("blueprint -exec key "$this->settings->get("blueprint::panel:id"));
         return;
     }
 }
