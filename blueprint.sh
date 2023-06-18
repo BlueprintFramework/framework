@@ -50,15 +50,15 @@ source .blueprint/lib/db.sh;
 source .blueprint/lib/telemetry.sh;
 
 # -exec
-if [[ "$2" == *"-exec"* ]]; then
+if [[ "$1" == *"-exec"* ]]; then
   # Update the telemetry id to argument.
-  if [[ $3 == "key" ]]; then
-    echo "$4" > .blueprint/.storage/telemetry_id;
+  if [[ $2 == "key" ]]; then
+    echo "$3" > .blueprint/.storage/telemetry_id;
   fi;
 
   # Developer tool to test telemetry.
-  if [[ $3 == "helloworld" ]]; then
-    sendTelemetry "HELLO_WORLD";
+  if [[ $2 == "send" ]]; then
+    sendTelemetry "$3";
   fi;
   exit 1;
 fi;

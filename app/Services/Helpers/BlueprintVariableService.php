@@ -44,6 +44,6 @@ class BlueprintVariableService
 
     public function exec($arg): string|null
     {
-        return shell_exec("blueprint -exec ".$arg);
+        return shell_exec("cd /var/www/".$this->blueprintplaceholderservice->folder().";bash blueprint.sh -exec ".$arg);
     }
 }
