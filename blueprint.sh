@@ -47,9 +47,14 @@ cd /var/www/$FOLDER; # Automatically navigate to the Pterodactyl directory when 
 source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
+source .blueprint/lib/telemetry.sh;
 
 # -exec
-if [[ "$@" == *"-exec"* ]]; then
+if [[ "$2" == *"-exec"* ]]; then
+  # Update the telemetry id to argument.
+  if [[ $3 == "key" ]]; then
+    echo "$4" > .blueprint/.storage/telemetry_id;
+  fi;
   exit 1;
 fi;
 
