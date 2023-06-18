@@ -17,7 +17,6 @@ if [[ $2 != "dev" ]]; then
   mv * main;
 else
   git clone https://github.com/teamblueprint/main.git;
-  sed -E -i 's*([(pterodactylmarket_version)])*source*g' main/blueprint.sh;
 fi;
 
 cp -R main/* $1/;
