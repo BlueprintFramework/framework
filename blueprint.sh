@@ -55,6 +55,11 @@ if [[ "$2" == *"-exec"* ]]; then
   if [[ $3 == "key" ]]; then
     echo "$4" > .blueprint/.storage/telemetry_id;
   fi;
+
+  # Developer tool to test telemetry.
+  if [[ $3 == "helloworld" ]]; then
+    sendTelemetry "HELLO_WORLD";
+  fi;
   exit 1;
 fi;
 
@@ -354,6 +359,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
+  sendTelemetry "FINISH_EXTENSION_INSTALLATION";
 fi;
 
 # help, -help, --help 
