@@ -44,6 +44,6 @@ class BlueprintVariableService
 
     public function exec($arg): string|null
     {
-        return shell_exec("blueprint -php ".$arg);
+        return shell_exec("blueprint -exec ".$arg);
     }
 }

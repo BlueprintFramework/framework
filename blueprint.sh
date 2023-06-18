@@ -42,20 +42,24 @@ fi;
 # Fix for Blueprint's bash database to work with docker and custom folder installations.
 sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/.blueprint/lib/db.sh;
 
-cd /var/www/$FOLDER;
+cd /var/www/$FOLDER; # Automatically navigate to the Pterodactyl directory when running the script.
+# Import libraries.
 source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 
-if [[ "$@" == *"-php"* ]]; then
+# -exec
+if [[ "$@" == *"-exec"* ]]; then
   exit 1;
 fi;
 
+# Function that exits the script after logging a "red" message.
 quit_red() {
   log_red "${1}";
   exit 1;
 };
 
+# Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 touch /usr/local/bin/blueprint > /dev/null;
 echo -e "#!/bin/bash\nbash /var/www/$FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
 chmod u+x /var/www/$FOLDER/blueprint.sh > /dev/null;
@@ -122,6 +126,7 @@ if [[ $1 != "-bash" ]]; then
   fi;
 fi;
 
+# -i, -install
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   log_bright "[INFO] Always make sure you place your extensions in the Pterodactyl directory, else Blueprint won't be able to find them!";
 
@@ -157,7 +162,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     fi;
   fi;
 
-
+  # Return to the Pterodactyl installation folder.
   cd /var/www/$FOLDER;
 
   # Get all strings from the conf.yml file and make them accessible as variables.
@@ -346,6 +351,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
 fi;
 
+# help, -help, --help 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
    echo -e " -install [name]          install a blueprint extension""
 "           "-version                 get the current blueprint version""
@@ -356,10 +362,12 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-upgrade (dev)           update/reset to a newer pre-release version (advanced)";
 fi;
 
+# -v, -version
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
   echo -e $VERSION;
 fi;
 
+# -init
 if [[ $2 == "-init" ]]; then
   echo "Name (Generic Extension):";             read ASKNAME;
   echo "Identifier (genericextension):";        read ASKIDENTIFIER;
@@ -398,6 +406,7 @@ if [[ $2 == "-init" ]]; then
   log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/.development'.";
 fi;
 
+# -build, -test
 if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
   if [[ $2 == "-test" ]]; then
     quit_red "[FATAL] -test has been removed in alpha-T0R and up, please use -build instead.";
@@ -421,6 +430,7 @@ if [[ $2 == "-export" ]]; then
   log_bright "[INFO] Extension files should be exported into your Pterodactyl directory now.";
 fi;
 
+# -runinstall
 if [[ $2 == "-runinstall"  ]]; then
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
   dbRemove "blueprint.setupFinished";
@@ -428,6 +438,7 @@ if [[ $2 == "-runinstall"  ]]; then
   bash blueprint.sh;
 fi;
 
+# -upgrade
 if [[ $2 == "-upgrade" ]]; then
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n";
   

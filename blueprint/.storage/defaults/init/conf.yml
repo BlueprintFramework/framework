@@ -12,6 +12,7 @@ info:
   target: "␀version␀"
   author: "␀author␀"
   icon: "assets/EXTLOGO-␀num␀.jpg"
+  supporturl: ""
 
 admin:
   view: "view.blade.php"
