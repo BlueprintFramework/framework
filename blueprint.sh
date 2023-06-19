@@ -55,11 +55,6 @@ if [[ "$1" == *"-exec"* ]]; then
   if [[ $2 == "key" ]]; then
     echo "$3" > .blueprint/.storage/telemetry_id;
   fi;
-
-  # Developer tool to test telemetry.
-  if [[ $2 == "send" ]]; then
-    sendTelemetry "$3";
-  fi;
   exit 1;
 fi;
 
@@ -374,7 +369,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
-  sendTelemetry "FINISH_EXTENSION_INSTALLATION";
+  if [[ $n != "dev" ]]; then
+    sendTelemetry "FINISH_EXTENSION_INSTALLATION";
+  fi;
 fi;
 
 # help, -help, --help 
@@ -440,6 +437,7 @@ if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
   log_bright "[INFO] Installing development extension files..";
   blueprint -i test␀;
   log_bright "[INFO] Extension installation ends here, if there are any errors during installation, fix them and try again.";
+  sendTelemetry "BUILD_DEVELOPMENT_EXTENSION";
 fi;
 
 if [[ $2 == "-export" ]]; then
@@ -482,8 +480,10 @@ if [[ $2 == "-upgrade" ]]; then
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
   if [[ $3 == "dev" ]]; then
+    sendTelemetry "UPGRADE_DEV";
     bash tools/update.sh /var/www/$FOLDER dev
   else
+    sendTelemetry "UPGRADE";
     bash tools/update.sh /var/www/$FOLDER
   fi;
   rm -R tools/tmp/main;
