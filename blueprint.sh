@@ -490,6 +490,7 @@ if [[ $2 == "-upgrade" ]]; then
   log_bright "[INFO] Files have been upgraded, running installation script..";
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
+  log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour.";
   log_bright "[INFO] Database migrations are skipped when upgrading, run them anyways? (Y/n)";
   read YN4;
   if [[ ( $YN4 == "y" ) || ( $YN4 == "Y" ) ]]; then 
