@@ -187,6 +187,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   target=$info_target;
   author=$info_author;
   icon=$info_icon;
+  website=$info_website;# (optional)
+
+  if [[ $website != "" ]]; then
+    if [[ $website != "https://"* ]]; then
+      if [[ $website != "http://"* ]]; then
+        website="http://"$info_website;
+      fi;
+    fi;
+  fi;
 
   if [[ $dev ]]; then
     mv .blueprint/.storage/tmp/$n .blueprint/.storage/tmp/$identifier;
@@ -291,7 +300,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   sed -i "s~␀title␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
   sed -i "s~␀name␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
-  sed -i "s~␀breadcrumb␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
   sed -i "s~␀name␀~$name~g" .blueprint/.storage/defaults/extensions/button.default.bak;
 
   sed -i "s~␀description␀~$description~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
@@ -301,7 +309,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   sed -i "s~␀icon␀~$ICON~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
 
+  if [[ $website != "" ]]; then
+    sed -i "s~␀website␀~$website~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+    sed -i "s~<!--websitecomment␀ ~~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+    sed -i "s~ ␀websitecomment-->~~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+  fi;
+
   echo -e "$CONTENT\n@endsection" >> .blueprint/.storage/defaults/extensions/admin.default.bak;
+
 
   if [[ $admin_controller == "" ]]; then
     sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/controller.default.bak;
