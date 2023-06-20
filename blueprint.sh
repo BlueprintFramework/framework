@@ -127,6 +127,7 @@ if [[ $1 != "-bash" ]]; then
     fi;
 
     dbAdd "blueprint.setupFinished";
+    sed -i "s!NOTINSTALLED!INSTALLED!g" /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
     exit 1;
   fi;
 fi;

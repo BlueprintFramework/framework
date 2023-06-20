@@ -22,4 +22,10 @@ class BlueprintPlaceholderService
     $v = "&bp.folder&";
     return $v;
   }
+
+  // installed()
+  public function installed(): string {
+    $v = "NOTINSTALLED";
+    return $v;
+  }
 }

@@ -13,7 +13,7 @@
 @endsection
 
 @section('content')
-  @if($bp->version() != "&bp.version&")
+  @if($bp->isInstalled() != "NOTINSTALLED")
 
     <div class="col-xs-6 col-sm-3 text-center">
       <a href="{{ route('admin.extensions.blueprint.index') }}"><button class="btn btn-gray" style="width:100%;margin-bottom:17px;"><img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="img-btn"> Blueprint <small>{{ $bp->version() }}</small></button></a>
