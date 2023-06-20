@@ -480,10 +480,8 @@ if [[ $2 == "-upgrade" ]]; then
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
   if [[ $3 == "dev" ]]; then
-    sendTelemetry "UPGRADE_DEV";
     bash tools/update.sh /var/www/$FOLDER dev
   else
-    sendTelemetry "UPGRADE";
     bash tools/update.sh /var/www/$FOLDER
   fi;
   rm -R tools/tmp/main;
