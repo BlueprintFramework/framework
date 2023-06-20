@@ -22,7 +22,7 @@
 
   @else 
     
-    <p><i class='bx bxs-bug'></i> We're glad you are excited to install Blueprint onto your panel, but please tone it down a little. To start using Blueprint, run the installation script. <a href="https://github.com/teamblueprint/main#installation">Learn more.</a></p>
+    <p><i class='bx bxs-error-alt'></i> We're glad you are excited to install Blueprint onto your panel, but please tone it down a little. To start using Blueprint, run the installation script.</p>
 
   @endif
 @endsection

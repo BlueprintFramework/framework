@@ -29,6 +29,16 @@
                 </div>
             </div>
 
+            <!-- Pulse -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class='bx bx-pulse' style='margin-right:5px;'></i>Pulse</h3>
+                </div>
+                <div class="box-body">
+                    <p>This element is currently not functional. In the future this will show problems with your Blueprint installation.</p>
+                </div>
+            </div>
+
             <!-- Terminal -->
             @if($bp->dbGet('developer') == "true")
                 <div class="box">
