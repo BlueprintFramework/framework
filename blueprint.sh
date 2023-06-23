@@ -453,7 +453,7 @@ if [[ $2 == "-export" ]]; then
   eval $(parse_yaml .development/conf.yml);
   mkdir .storage/tmp/$info_identifier;
   cp -R .development/* .storage/tmp/$info_identifier/;
-  zip .storage/tmp/blueprint.zip .storage/tmp/$info_identifier;
+  zip .storage/tmp/$info_identifier .storage/tmp/$info_identifier;
   mv .storage/tmp/blueprint.zip ../$info_identifier.blueprint;
   rm -R .storage/tmp/*;
 
@@ -516,8 +516,8 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ $score == 1 ]]; then
     log_green "[SUCCESS] Blueprint has upgraded successfully.";
   elif [[ $score == 0 ]]; then
-    log_red "[FATAL] Upgrading has failed."
+    log_red "[FATAL] Upgrading may have failed.";
   else
-    log_yellow "[WARNING] Some post-upgrade checks have failed."
+    log_yellow "[WARNING] Some post-upgrade checks have failed.";
   fi;
 fi;
