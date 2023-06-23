@@ -453,8 +453,8 @@ if [[ $2 == "-export" ]]; then
   eval $(parse_yaml .development/conf.yml);
   mkdir .storage/tmp/$info_identifier;
   cp -R .development/* .storage/tmp/$info_identifier/;
-  zip .storage/tmp/$info_identifier .storage/tmp/blueprint.zip;
-  mv .storage/tmp/blueprint.zip ../$info_identifier.blueprint;
+  zip .storage/tmp/$info_identifier;
+  mv .storage/tmp/$info_identifier.zip ../$info_identifier.blueprint;
   rm -R .storage/tmp/*;
 
   log_bright "[INFO] Extension files should be exported into your Pterodactyl directory now.";
