@@ -6,5 +6,5 @@
 sendTelemetry() {
   key=$(cat .blueprint/.storage/telemetry_id);
   if [[ $key == "KEY_NOT_UPDATED" ]]; then exit 1;fi;
-  curl --location "http://data.ptero.shop:3481/send/$key/$1" > /dev/null;
+  curl --location --silent "http://data.ptero.shop:3481/send/$key/$1" > /dev/null;
 }
