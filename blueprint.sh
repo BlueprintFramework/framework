@@ -370,8 +370,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
-  if [[ $n != "dev" ]]; then
-    sendTelemetry "FINISH_EXTENSION_INSTALLATION";
+  if [[ $dev != true ]]; then
+    sendTelemetry "FINISH_EXTENSION_INSTALLATION" > /dev/null;
   fi;
 fi;
 
@@ -438,7 +438,7 @@ if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
   log_bright "[INFO] Installing development extension files..";
   blueprint -i test␀;
   log_bright "[INFO] Extension installation ends here, if there are any errors during installation, fix them and try again.";
-  sendTelemetry "BUILD_DEVELOPMENT_EXTENSION";
+  sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" > /dev/null;
 fi;
 
 if [[ $2 == "-export" ]]; then
