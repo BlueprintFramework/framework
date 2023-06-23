@@ -31,5 +31,5 @@ We've made some guides for extension development over on [GitBook](https://ptero
 ### Extensions
 Open an issue on GitHub to get your extension listed here. To install an extension, upload your `something.blueprint` file to your Pterodactyl folder and run `blueprint -install something`.
 
-**Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664), [GitHub](https://github.com/prplwtf/blueprint-redirect)
+**Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664), [GitHub](https://github.com/prplwtf/blueprint-redirect)\
 **dbEdit**: [GitHub](https://github.com/prplwtf/blueprint-dbedit)
