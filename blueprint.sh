@@ -49,6 +49,9 @@ source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 source .blueprint/lib/telemetry.sh;
 
+# Re-create "tmp" folder just in case.
+mkdir .blueprint/.storage/tmp > /dev/null;
+
 # -exec
 if [[ "$1" == *"-exec"* ]]; then
   # Update the telemetry id to argument.
@@ -441,16 +444,18 @@ if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
   sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" > /dev/null;
 fi;
 
+# -export
 if [[ $2 == "-export" ]]; then
   log_yellow "[WARNING] This is an experimental feature, proceed with caution.";
   log_bright "[INFO] Exporting extension files located in '.blueprint/.development'.";
 
-  cd .blueprint
-  eval $(parse_yaml .development/conf.yml)
-  mkdir .storage/tmp/$info_identifier
-  mv .development/* .storage/tmp/$info_identifier/
-  zip .storage/tmp/blueprint.zip .storage/tmp/$info_identifier
+  cd .blueprint;
+  eval $(parse_yaml .development/conf.yml);
+  mkdir .storage/tmp/$info_identifier;
+  cp -R .development/* .storage/tmp/$info_identifier/;
+  zip .storage/tmp/blueprint.zip .storage/tmp/$info_identifier;
   mv .storage/tmp/blueprint.zip ../$info_identifier.blueprint;
+  rm -R .storage/tmp/*;
 
   log_bright "[INFO] Extension files should be exported into your Pterodactyl directory now.";
 fi;
