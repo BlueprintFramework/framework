@@ -441,17 +441,20 @@ if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
   sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" > /dev/null;
 fi;
 
+# -export
 if [[ $2 == "-export" ]]; then
   log_yellow "[WARNING] This is an experimental feature, proceed with caution.";
   log_bright "[INFO] Exporting extension files located in '.blueprint/.development'.";
 
   cd .blueprint
-  eval $(parse_yaml .development/conf.yml)
-  mkdir .storage/tmp/$info_identifier
-  mv .development/* .storage/tmp/$info_identifier/
-  zip .storage/tmp/blueprint.zip .storage/tmp/$info_identifier
-  mv .storage/tmp/blueprint.zip ../$info_identifier.blueprint;
-
+  eval $(parse_yaml .development/conf.yml); identifier=$info_identifier;
+  cp -R .development/* .storage/tmp/;
+  cd .storage/tmp;
+  zip -r extension.zip *;
+  cd /var/www/$FOLDER;
+  cp .blueprint/.storage/tmp/extension.zip $identifier.blueprint;
+  rm -R .blueprint/.storage/tmp;
+  mkdir .blueprint/.storage/tmp;
   log_bright "[INFO] Extension files should be exported into your Pterodactyl directory now.";
 fi;
 
@@ -485,7 +488,7 @@ if [[ $2 == "-upgrade" ]]; then
   else
     bash tools/update.sh /var/www/$FOLDER
   fi;
-  rm -R tools/tmp/main;
+  rm -R tools/tmp/*;
   log_bright "[INFO] Files have been upgraded, running installation script..";
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
