@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# ptero.shop
+# github.com/teamblueprint/main
+# prpl.wtf
+
 # This should allow Blueprint to run in docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="pterodactyl"
@@ -109,6 +113,7 @@ if [[ $1 != "-bash" ]]; then
     # Run migrations if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
       log_bright "[INFO] php artisan migrate";
+      log_yellow "[WARNING] Answering 'no' or 'n' to the following prompt may result into problems with Blueprint."
       php artisan migrate;
     fi;
 
@@ -129,8 +134,10 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] php artisan up";
     php artisan up;
 
-    # Only show success message if Blueprint is not upgrading.
+    # Only show donate + success message if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
+      log_bright "[INFO] Blueprint is completely open source and free. Please consider supporting us on \"ptero.shop/donate\".";
+      sleep 2;
       log_green "\n\n[SUCCESS] Blueprint should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
     fi;
 
@@ -142,8 +149,6 @@ fi;
 
 # -i, -install
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
-  log_bright "[INFO] Always make sure you place your extensions in the Pterodactyl directory, else Blueprint won't be able to find them!";
-
   if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi;
   if [[ $3 == "test␀" ]]; then
     dev=true;
@@ -389,7 +394,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-version                 get the current blueprint version""
 "           "-init                    initialize extension development files""
 "           "-build                   run an installation on your extension development files""
-"           "-export                  export your extension development files (experimental)""
+"           "-export                  export your extension development files""
 "           "-runinstall              rerun the blueprint installation script (advanced)""
 "           "-upgrade (dev)           update/reset to a newer pre-release version (advanced)";
 fi;
@@ -451,7 +456,6 @@ fi;
 
 # -export
 if [[ $2 == "-export" ]]; then
-  log_yellow "[WARNING] This is an experimental feature, proceed with caution.";
   log_bright "[INFO] Exporting extension files located in '.blueprint/.development'.";
 
   cd .blueprint
@@ -463,7 +467,9 @@ if [[ $2 == "-export" ]]; then
   cp .blueprint/.storage/tmp/extension.zip $identifier.blueprint;
   rm -R .blueprint/.storage/tmp;
   mkdir .blueprint/.storage/tmp;
-  log_bright "[INFO] Extension files should be exported into your Pterodactyl directory now.";
+
+  # This will be replaced with a success/fail check in the future.
+  log_bright "[INFO] Export finished.";
 fi;
 
 # -runinstall
