@@ -75,6 +75,7 @@ if [[ $1 != "-bash" ]]; then
     log_yellow "[WARNING] This command only works if you have yet to install Blueprint. Run 'blueprint (cmd) [arg]' instead.";
     exit 1;
   else
+    # Only run if Blueprint is not in the process of upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
       log "  ██\n██  ██\n  ████\n";
       if [[ $DOCKER == "y" ]]; then
@@ -82,6 +83,7 @@ if [[ $1 != "-bash" ]]; then
       fi;
     fi;
 
+    # Update folder placeholder on PlaceholderService and admin layout.
     sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
     sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
 
@@ -94,10 +96,12 @@ if [[ $1 != "-bash" ]]; then
     sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* blueprint reserved line */!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
 
 
+    # Clear view cache.
     log_bright "[INFO] php artisan view:clear";
     php artisan view:clear;
 
 
+    # Clear PHP config. Not sure what this does yet, but I know it fixes some strange problems.
     log_bright "[INFO] php artisan config:clear";
     php artisan config:clear;
 
@@ -109,12 +113,15 @@ if [[ $1 != "-bash" ]]; then
     fi;
 
 
+    # Make sure all files have correct permissions.
     log_bright "[INFO] chown -R www-data:www-data /var/www/$FOLDER/*";
     chown -R www-data:www-data /var/www/$FOLDER/*;
 
+    # Make sure all .files have the correct permissions as well.
     log_bright "[INFO] chown -R www-data:www-data /var/www/$FOLDER/.*";
     chown -R www-data:www-data /var/www/$FOLDER/.*;
 
+    # Remove placeholder .hello.txt file in .development.
     log_bright "[INFO] rm .blueprint/.development/.hello.txt";
     rm .blueprint/.development/.hello.txt;
 
@@ -122,6 +129,7 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] php artisan up";
     php artisan up;
 
+    # Only show success message if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
       log_green "\n\n[SUCCESS] Blueprint should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
     fi;
