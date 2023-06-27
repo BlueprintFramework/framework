@@ -55,12 +55,14 @@ source .blueprint/lib/telemetry.sh;
 
 # -exec
 if [[ "$1" == "-exec" ]]; then
+
   # Update the telemetry id to argument.
   if [[ $2 == "key" ]]; then
+    z=true;
     echo "$3" > .blueprint/data/internal/db/telemetry_id;
-    exit 1;
   fi;
-  log "Command not found.";exit 1;
+
+  if [[ $z == false ]]; then echo "Command not found."; else; echo " "; fi; exit 1;
 fi;
 
 # Function that exits the script after logging a "red" message.
