@@ -58,7 +58,7 @@
                                 </a>
                             </li>
                             <li>
-                                <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if(shell_exec("cd /var/www/&bp.folder&;cat .blueprint/.storage/onboarding.md") == "*blueprint*"){ echo "bx-flashing"; } ?>'></i></a></li>
+                                <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if(shell_exec("cd /var/www/&bp.folder&;cat .blueprint/data/internal/db/onboarding") == "*blueprint*"){ echo "bx-flashing"; } ?>'></i></a></li>
                             </li>
                             <li>
                                 <li><a href="{{ route('index') }}" data-toggle="tooltip" data-placement="bottom" title="Exit Admin Control"><i class="fa fa-server"></i></a></li>
@@ -158,22 +158,22 @@
                     @yield('content')
                     <?php
 
-                        if(shell_exec("cd /var/www/&bp.folder&;cat .blueprint/.storage/onboarding.md") == "*blueprint*") {
+                        if(shell_exec("cd /var/www/&bp.folder&;cat .blueprint/data/internal/db/onboarding") == "*blueprint*") {
                             echo "
                             <div class=\"notification\">
                             <p>Blueprint has now been installed, click the extension icon to take a look.</p>
                             </div>";
-                            `cd /var/www/&bp.folder&;rm .blueprint/.storage/onboarding.md;`;
+                            `cd /var/www/&bp.folder&;rm .blueprint/data/internal/db/onboarding;`;
                         }
     
-                        $notification = shell_exec("cd /var/www/&bp.folder&;cat .blueprint/.storage/notification");
+                        $notification = shell_exec("cd /var/www/&bp.folder&;cat .blueprint/data/internal/db/notification");
                         if($notification != null) {
                             echo "<div class=\"notification\">
                             <p>".$notification."</p>
                             </div>
                             ";
     
-                            shell_exec("cd /var/www/&bp.folder&;rm .blueprint/.storage/notification;touch .blueprint/.storage/notification;");
+                            shell_exec("cd /var/www/&bp.folder&;rm .blueprint/data/internal/db/notification;touch .blueprint/data/internal/db/notification;");
                         }
                     ?>
                 </section>

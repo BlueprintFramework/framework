@@ -24,20 +24,20 @@ if [[ -d "/var/www/$FOLDER/blueprint" ]]; then mv /var/www/$FOLDER/blueprint /va
 if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
   # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
   # or Blueprint being installed from other sources.
-  if [[ ! -f "/var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag" ]]; then
+  if [[ ! -f "/var/www/$FOLDER/.blueprint/data/internal/db/version" ]]; then
     sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/Services/Helpers/BlueprintPlaceholderService.php;
     sed -E -i "s*@version*$VER_FALLBACK*g" public/extensions/blueprint/index.html;
-    touch /var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag;
+    touch /var/www/$FOLDER/.blueprint/data/internal/db/version;
   fi;
   
   VERSION=$VER_FALLBACK;
 elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
   # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
   # fallback version.
-  if [[ ! -f "/var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag" ]]; then
+  if [[ ! -f "/var/www/$FOLDER/.blueprint/data/internal/db/version" ]]; then
     sed -E -i "s*&bp.version&*$PM_VERSION*g" app/Services/Helpers/BlueprintPlaceholderService.php;
     sed -E -i "s*@version*$PM_VERSION*g" public/extensions/blueprint/index.html;
-    touch /var/www/$FOLDER/.blueprint/.storage/versionschemefix.flag;
+    touch /var/www/$FOLDER/.blueprint/data/internal/db/version;
   fi;
 
   VERSION=$PM_VERSION;
@@ -57,7 +57,7 @@ source .blueprint/lib/telemetry.sh;
 if [[ "$1" == *"-exec"* ]]; then
   # Update the telemetry id to argument.
   if [[ $2 == "key" ]]; then
-    echo "$3" > .blueprint/.storage/telemetry_id;
+    echo "$3" > .blueprint/data/internal/db/telemetry_id;
   fi;
   exit 1;
 fi;
@@ -126,9 +126,9 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] chown -R www-data:www-data /var/www/$FOLDER/.*";
     chown -R www-data:www-data /var/www/$FOLDER/.*;
 
-    # Remove placeholder .hello.txt file in .development.
-    log_bright "[INFO] rm .blueprint/.development/.hello.txt";
-    rm .blueprint/.development/.hello.txt;
+    # Remove placeholder .hello.txt file in dev.
+    log_bright "[INFO] rm .blueprint/dev/.hello.txt";
+    rm .blueprint/dev/.hello.txt;
 
     # Put application into production.
     log_bright "[INFO] php artisan up";
@@ -153,8 +153,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $3 == "test␀" ]]; then
     dev=true;
     n="dev";
-    mkdir .blueprint/.storage/tmp/dev;
-    cp -R .blueprint/.development/* .blueprint/.storage/tmp/dev/;
+    mkdir .blueprint/tmp/dev;
+    cp -R .blueprint/dev/* .blueprint/tmp/dev/;
   else
     dev=false;
     n=$3;
@@ -162,8 +162,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ ! -f "$FILE" ]]; then quit_red "[FATAL] $FILE could not be found.";fi;
 
     ZIP=$n".zip";
-    cp $FILE .blueprint/.storage/tmp/$ZIP;
-    cd .blueprint/.storage/tmp;
+    cp $FILE .blueprint/tmp/$ZIP;
+    cd .blueprint/tmp;
     unzip $ZIP;
     rm $ZIP;
     if [[ ! -f "$n/*" ]]; then
@@ -173,7 +173,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
       cd tmp;
 
       mkdir ./$n;
-      cp ../../../$FILE ./$n/$ZIP;
+      cp ../../$FILE ./$n/$ZIP;
       cd $n;
       unzip $ZIP;
       rm $ZIP;
@@ -185,7 +185,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   cd /var/www/$FOLDER;
 
   # Get all strings from the conf.yml file and make them accessible as variables.
-  eval $(parse_yaml .blueprint/.storage/tmp/$n/conf.yml)
+  eval $(parse_yaml .blueprint/tmp/$n/conf.yml)
 
   # Add aliases for the info config values to make working with them easier.
   name=$info_name;
@@ -207,12 +207,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   if [[ $dev ]]; then
-    mv .blueprint/.storage/tmp/$n .blueprint/.storage/tmp/$identifier;
+    mv .blueprint/tmp/$n .blueprint/tmp/$identifier;
     n=$identifier;
   fi;
 
   if [[ ( $flags != *"ignorePlaceholders,"* ) && ( $flags != *"ignorePlaceholders" ) ]]; then
-    DIR=.blueprint/.storage/tmp/$n/*;
+    DIR=.blueprint/tmp/$n/*;
 
     if [[ ( $flags == *"ignoreAlphabetPlaceholders,"* ) || ( $flags == *"ignoreAlphabetPlaceholders" ) ]]; then
       SKIPAZPLACEHOLDERS=true;
@@ -226,14 +226,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
       sed -i "s~\^#author#\^~$author~g" $f;
       sed -i "s~\^#identifier#\^~$identifier~g" $f;
       sed -i "s~\^#path#\^~/var/www/$FOLDER~g" $f;
-      sed -i "s~\^#datapath#\^~/var/www/$FOLDER/.blueprint/.storage/extensiondata/$identifier~g" $f;
+      sed -i "s~\^#datapath#\^~/var/www/$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
 
       if [[ $SKIPAZPLACEHOLDERS != true ]]; then
         sed -i "s~bpversionreplace~$version~g" $f;
         sed -i "s~bpauthorreplace~$author~g" $f;
         sed -i "s~bpidentifierreplace~$identifier~g" $f;
         sed -i "s~bppathreplace~/var/www/$FOLDER~g" $f;
-        sed -i "s~bpdatapathreplace~/var/www/$FOLDER/.blueprint/.storage/extensiondata/$identifier~g" $f;
+        sed -i "s~bpdatapathreplace~/var/www/$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
       fi;
 
       log_bright "[INFO] Done placeholders in '$f'.";
@@ -241,27 +241,27 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   else log_bright "[INFO] Placeholders will be skipped due to the 'ignorePlaceholders' flag."; fi;
 
-  if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'info_name' is a required configuration option.";fi;
-  if [[ $identifier == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] 'info_identifier' is a required configuration option.";fi;
-  if [[ $description == "" ]]; then rm -R .blueprint/.storage/tmp/$n;          quit_red "[FATAL] 'info_description' is a required configuration option.";fi;
-  if [[ $version == "" ]]; then rm -R .blueprint/.storage/tmp/$n;              quit_red "[FATAL] 'info_version' is a required configuration option.";fi;
-  if [[ $target == "" ]]; then rm -R .blueprint/.storage/tmp/$n;               quit_red "[FATAL] 'info_target' is a required configuration option.";fi;
-  if [[ $icon == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'info_icon' is a required configuration option.";fi;
+  if [[ $name == "" ]]; then rm -R .blueprint/tmp/$n;                 quit_red "[FATAL] 'info_name' is a required configuration option.";fi;
+  if [[ $identifier == "" ]]; then rm -R .blueprint/tmp/$n;           quit_red "[FATAL] 'info_identifier' is a required configuration option.";fi;
+  if [[ $description == "" ]]; then rm -R .blueprint/tmp/$n;          quit_red "[FATAL] 'info_description' is a required configuration option.";fi;
+  if [[ $version == "" ]]; then rm -R .blueprint/tmp/$n;              quit_red "[FATAL] 'info_version' is a required configuration option.";fi;
+  if [[ $target == "" ]]; then rm -R .blueprint/tmp/$n;               quit_red "[FATAL] 'info_target' is a required configuration option.";fi;
+  if [[ $icon == "" ]]; then rm -R .blueprint/tmp/$n;                 quit_red "[FATAL] 'info_icon' is a required configuration option.";fi;
 
   if [[ $admin_controller == "" ]]; then                                     log_bright "[INFO] Admin controller field left blank, using default controller instead..";
     controller_type="default";else controller_type="custom";fi;
-  if [[ $admin_view == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] 'admin_view' is a required configuration option.";fi;
+  if [[ $admin_view == "" ]]; then rm -R .blueprint/tmp/$n;           quit_red "[FATAL] 'admin_view' is a required configuration option.";fi;
   if [[ $target != $VERSION ]]; then                                         log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi;
-  if [[ $identifier != $n ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi;
-  if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/.storage/tmp/$n;  quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi;
+  if [[ $identifier != $n ]]; then rm -R .blueprint/tmp/$n;           quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi;
+  if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/tmp/$n;  quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi;
 
   if [[ $identifier =~ [a-z] ]]; then                                        log_bright "[INFO] Identifier a-z checks passed.";
-  else rm -R .blueprint/.storage/tmp/$n;                                       quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi;
-  if [[ ! -f ".blueprint/.storage/tmp/$n/$icon" ]]; then
-    rm -R .blueprint/.storage/tmp/$n;                                          quit_red "[FATAL] The 'info_icon' path points to a file that does not exist.";fi;
+  else rm -R .blueprint/tmp/$n;                                       quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi;
+  if [[ ! -f ".blueprint/tmp/$n/$icon" ]]; then
+    rm -R .blueprint/tmp/$n;                                          quit_red "[FATAL] The 'info_icon' path points to a file that does not exist.";fi;
 
   if [[ $database_migrations != "" ]]; then
-    cp -R .blueprint/.storage/tmp/$n/$database_migrations/* database/migrations/ 2> /dev/null;
+    cp -R .blueprint/tmp/$n/$database_migrations/* database/migrations/ 2> /dev/null;
   fi;
 
   if [[ $css != "" ]]; then
@@ -270,34 +270,34 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   if [[ $admin_requests != "" ]]; then
     mkdir app/Http/Requests/Admin/Extensions/$identifier;
-    cp -R .blueprint/.storage/tmp/$n/$admin_requests/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
+    cp -R .blueprint/tmp/$n/$admin_requests/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
   fi;
 
   if [[ $data_public != "" ]]; then
     mkdir public/extensions/$identifier;
-    cp -R .blueprint/.storage/tmp/$n/$data_public/* public/extensions/$identifier/ 2> /dev/null;
+    cp -R .blueprint/tmp/$n/$data_public/* public/extensions/$identifier/ 2> /dev/null;
   fi;
 
-  cp -R .blueprint/.storage/defaults/extensions/admin.default .blueprint/.storage/defaults/extensions/admin.default.bak 2> /dev/null;
+  cp -R .blueprint/data/internal/build/extensions/admin.default .blueprint/data/internal/build/extensions/admin.default.bak 2> /dev/null;
   if [[ $admin_controller == "" ]]; then # use default controller when admin_controller is left blank
-    cp -R .blueprint/.storage/defaults/extensions/controller.default .blueprint/.storage/defaults/extensions/controller.default.bak 2> /dev/null;
+    cp -R .blueprint/data/internal/build/extensions/controller.default .blueprint/data/internal/build/extensions/controller.default.bak 2> /dev/null;
   fi;
-  cp -R .blueprint/.storage/defaults/extensions/route.default .blueprint/.storage/defaults/extensions/route.default.bak 2> /dev/null;
-  cp -R .blueprint/.storage/defaults/extensions/button.default .blueprint/.storage/defaults/extensions/button.default.bak 2> /dev/null;
+  cp -R .blueprint/data/internal/build/extensions/route.default .blueprint/data/internal/build/extensions/route.default.bak 2> /dev/null;
+  cp -R .blueprint/data/internal/build/extensions/button.default .blueprint/data/internal/build/extensions/button.default.bak 2> /dev/null;
 
-  mkdir .blueprint/.storage/extensiondata/$identifier;
+  mkdir .blueprint/data/extensions/$identifier;
   if [[ $data_directory != "" ]]; then
-    cp -R .blueprint/.storage/tmp/$n/$data_directory/* .blueprint/.storage/extensiondata/$identifier/;
+    cp -R .blueprint/tmp/$n/$data_directory/* .blueprint/data/extensions/$identifier/;
   fi;
 
   mkdir public/assets/extensions/$identifier;
-  cp .blueprint/.storage/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg;
+  cp .blueprint/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg;
   ICON="/assets/extensions/$identifier/icon.jpg";
-  CONTENT=$(cat .blueprint/.storage/tmp/$n/$admin_view);
+  CONTENT=$(cat .blueprint/tmp/$n/$admin_view);
 
   if [[ $INJECTCSS == "y" ]]; then
     sed -i "s!/* blueprint reserved line */!/* blueprint reserved line */\n@import url(/assets/extensions/$identifier/$identifier.style.css);!g" public/themes/pterodactyl/css/pterodactyl.css;
-    cp -R .blueprint/.storage/tmp/$n/$css/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
+    cp -R .blueprint/tmp/$n/$css/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
   fi;
 
   if [[ $name == *"~"* ]]; then log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi;
@@ -307,37 +307,37 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $ICON == *"~"* ]]; then log_yellow "[WARNING] 'ICON' contains '~' and may result in an error.";fi;
   if [[ $identifier == *"~"* ]]; then log_yellow "[WARNING] 'identifier' contains '~' and may result in an error.";fi;
 
-  sed -i "s~␀title␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
-  sed -i "s~␀name␀~$name~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
-  sed -i "s~␀name␀~$name~g" .blueprint/.storage/defaults/extensions/button.default.bak;
+  sed -i "s~␀title␀~$name~g" .blueprint/data/internal/build/extensions/admin.default.bak;
+  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/admin.default.bak;
+  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/button.default.bak;
 
-  sed -i "s~␀description␀~$description~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+  sed -i "s~␀description␀~$description~g" .blueprint/data/internal/build/extensions/admin.default.bak;
 
-  sed -i "s~␀version␀~$version~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
-  sed -i "s~␀version␀~$version~g" .blueprint/.storage/defaults/extensions/button.default.bak;
+  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/admin.default.bak;
+  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/button.default.bak;
 
-  sed -i "s~␀icon␀~$ICON~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+  sed -i "s~␀icon␀~$ICON~g" .blueprint/data/internal/build/extensions/admin.default.bak;
 
   if [[ $website != "" ]]; then
-    sed -i "s~␀website␀~$website~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
-    sed -i "s~<!--websitecomment␀ ~~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
-    sed -i "s~ ␀websitecomment-->~~g" .blueprint/.storage/defaults/extensions/admin.default.bak;
+    sed -i "s~␀website␀~$website~g" .blueprint/data/internal/build/extensions/admin.default.bak;
+    sed -i "s~<!--websitecomment␀ ~~g" .blueprint/data/internal/build/extensions/admin.default.bak;
+    sed -i "s~ ␀websitecomment-->~~g" .blueprint/data/internal/build/extensions/admin.default.bak;
   fi;
 
-  echo -e "$CONTENT\n@endsection" >> .blueprint/.storage/defaults/extensions/admin.default.bak;
+  echo -e "$CONTENT\n@endsection" >> .blueprint/data/internal/build/extensions/admin.default.bak;
 
 
   if [[ $admin_controller == "" ]]; then
-    sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/controller.default.bak;
+    sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/controller.default.bak;
   fi;
-  sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/route.default.bak;
-  sed -i "s~␀id␀~$identifier~g" .blueprint/.storage/defaults/extensions/button.default.bak;
+  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/route.default.bak;
+  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/button.default.bak;
 
-  ADMINVIEW_RESULT=$(cat .blueprint/.storage/defaults/extensions/admin.default.bak);
-  ADMINROUTE_RESULT=$(cat .blueprint/.storage/defaults/extensions/route.default.bak);
-  ADMINBUTTON_RESULT=$(cat .blueprint/.storage/defaults/extensions/button.default.bak);
+  ADMINVIEW_RESULT=$(cat .blueprint/data/internal/build/extensions/admin.default.bak);
+  ADMINROUTE_RESULT=$(cat .blueprint/data/internal/build/extensions/route.default.bak);
+  ADMINBUTTON_RESULT=$(cat .blueprint/data/internal/build/extensions/button.default.bak);
   if [[ $admin_controller == "" ]]; then
-    ADMINCONTROLLER_RESULT=$(cat .blueprint/.storage/defaults/extensions/controller.default.bak);
+    ADMINCONTROLLER_RESULT=$(cat .blueprint/data/internal/build/extensions/controller.default.bak);
   fi;
   ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
@@ -351,35 +351,35 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $admin_controller == "" ]]; then
     echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
   else
-    cp .blueprint/.storage/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
+    cp .blueprint/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
   fi;
 
   if [[ $admin_controller != "" ]]; then
-    cp .blueprint/.storage/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/${identifier}ExtensionController.php;
+    cp .blueprint/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/${identifier}ExtensionController.php;
   fi;
 
   echo $ADMINROUTE_RESULT >> routes/admin.php;
 
   sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
 
-  rm .blueprint/.storage/defaults/extensions/admin.default.bak;
+  rm .blueprint/data/internal/build/extensions/admin.default.bak;
   if [[ $admin_controller == "" ]]; then
-    rm .blueprint/.storage/defaults/extensions/controller.default.bak;
+    rm .blueprint/data/internal/build/extensions/controller.default.bak;
   fi;
-  rm .blueprint/.storage/defaults/extensions/route.default.bak;
-  rm .blueprint/.storage/defaults/extensions/button.default.bak;
-  rm -R .blueprint/.storage/tmp/$n;
+  rm .blueprint/data/internal/build/extensions/route.default.bak;
+  rm .blueprint/data/internal/build/extensions/button.default.bak;
+  rm -R .blueprint/tmp/$n;
 
   if [[ $database_migrations != "" ]]; then
     log_bright "[INFO] This extension comes with migrations. If you get prompted, answer 'yes'.\n";
     php artisan migrate;
   fi;
 
-  chmod -R +x .blueprint/.storage/extensiondata/$identifier/*;
+  chmod -R +x .blueprint/data/extensions/$identifier/*;
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
-    bash .blueprint/.storage/extensiondata/$identifier/install.sh;
+    bash .blueprint/data/extensions/$identifier/install.sh;
   fi;
 
   log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
@@ -417,30 +417,30 @@ if [[ $2 == "-init" ]]; then
   else quit_red "[FATAL] Identifier should only contain a-z characters.";fi;
 
   log_bright "[INFO] Copying init defaults to tmp directory..";
-  mkdir .blueprint/.storage/tmp/init;
-  cp -R .blueprint/.storage/defaults/init/* .blueprint/.storage/tmp/init/;
+  mkdir .blueprint/tmp/init;
+  cp -R .blueprint/data/internal/build/init/* .blueprint/tmp/init/;
 
   log_bright "[INFO] Applying variables.."
-  sed -i "s~␀name␀~$ASKNAME~g" .blueprint/.storage/tmp/init/conf.yml; #NAME
-  sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/.storage/tmp/init/conf.yml; #IDENTIFIER
-  sed -i "s~␀description␀~$ASKDESCRIPTION~g" .blueprint/.storage/tmp/init/conf.yml; #DESCRIPTION
-  sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/.storage/tmp/init/conf.yml; #VERSION
-  sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/.storage/tmp/init/conf.yml; #AUTHOR
+  sed -i "s~␀name␀~$ASKNAME~g" .blueprint/tmp/init/conf.yml; #NAME
+  sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/tmp/init/conf.yml; #IDENTIFIER
+  sed -i "s~␀description␀~$ASKDESCRIPTION~g" .blueprint/tmp/init/conf.yml; #DESCRIPTION
+  sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/tmp/init/conf.yml; #VERSION
+  sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/tmp/init/conf.yml; #AUTHOR
 
   icnNUM=$(expr 1 + $RANDOM % 4);
-  sed -i "s~␀num␀~$icnNUM~g" .blueprint/.storage/tmp/init/conf.yml;
-  sed -i "s~␀version␀~$VERSION~g" .blueprint/.storage/tmp/init/conf.yml;
+  sed -i "s~␀num␀~$icnNUM~g" .blueprint/tmp/init/conf.yml;
+  sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml;
 
   # Return files to folder.
-  log_bright "[INFO] Copying output to .development directory."
-  cp -R .blueprint/.storage/tmp/init/* .blueprint/.development/;
+  log_bright "[INFO] Copying output to dev directory."
+  cp -R .blueprint/tmp/init/* .blueprint/dev/;
 
   # Remove tmp files.
   log_bright "[INFO] Purging tmp files."
-  rm -R .blueprint/.storage/tmp;
-  mkdir .blueprint/.storage/tmp;
+  rm -R .blueprint/tmp;
+  mkdir .blueprint/tmp;
 
-  log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/.development'.";
+  log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/dev'.";
 fi;
 
 # -build, -test
@@ -456,17 +456,17 @@ fi;
 
 # -export
 if [[ $2 == "-export" ]]; then
-  log_bright "[INFO] Exporting extension files located in '.blueprint/.development'.";
+  log_bright "[INFO] Exporting extension files located in '.blueprint/dev'.";
 
   cd .blueprint
-  eval $(parse_yaml .development/conf.yml); identifier=$info_identifier;
-  cp -R .development/* .storage/tmp/;
-  cd .storage/tmp;
+  eval $(parse_yaml dev/conf.yml); identifier=$info_identifier;
+  cp -R dev/* tmp/;
+  cd tmp;
   zip -r extension.zip *;
   cd /var/www/$FOLDER;
-  cp .blueprint/.storage/tmp/extension.zip $identifier.blueprint;
-  rm -R .blueprint/.storage/tmp;
-  mkdir .blueprint/.storage/tmp;
+  cp .blueprint/tmp/extension.zip $identifier.blueprint;
+  rm -R .blueprint/tmp;
+  mkdir .blueprint/tmp;
 
   # This will be replaced with a success/fail check in the future.
   log_bright "[INFO] Export finished.";

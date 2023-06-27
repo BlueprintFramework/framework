@@ -1,1 +1,0 @@
-All files you put in your datafolder are moved to .blueprint/.storage/extensiondata/youridentifier/..

@@ -45,13 +45,13 @@ class BlueprintExtensionLibrary
     */
     public function notify($text) {
         $this->dbSet("blueprint", "notification:text", $text);
-        shell_exec("cd /var/www/".$this->placeholder->folder().";echo \"$text\" > .blueprint/.storage/notification;");
+        shell_exec("cd /var/www/".$this->placeholder->folder().";echo \"$text\" > .blueprint/data/internal/db/notification;");
         return;
     }
 
     public function notifyAfter($delay, $text) {
         $this->dbSet("blueprint", "notification:text", $text);
-        shell_exec("cd /var/www/".$this->placeholder->folder().";echo \"$text\" > .blueprint/.storage/notification;");
+        shell_exec("cd /var/www/".$this->placeholder->folder().";echo \"$text\" > .blueprint/data/internal/db/notification;");
         header("Refresh:$delay");
         return;
     }
