@@ -14,7 +14,7 @@ if [[ -f ".dockerenv" ]]; then
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="alpha-5KB";
+  VER_FALLBACK="alpha-EV0";
 
 # This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
@@ -211,12 +211,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     n=$identifier;
   fi;
 
-  if [[ $flags != *"-placeholders.skip;"* ]]; then
+  if [[ ( $flags != *"ignorePlaceholders,"* ) && ( $flags != *"ignorePlaceholders" ) ]]; then
     DIR=.blueprint/.storage/tmp/$n/*;
 
-    if [[ $flags == *"-disable_az_placeholders;"* ]]; then
+    if [[ ( $flags == *"ignoreAlphabetPlaceholders,"* ) || ( $flags == *"ignoreAlphabetPlaceholders" ) ]]; then
       SKIPAZPLACEHOLDERS=true;
-      log_bright "[INFO] A-Z placeholders will be skipped due to the '-disable_az_placeholders;' flag.";
+      log_bright "[INFO] Alphabet placeholders will be skipped due to the 'ignoreAlphabetPlaceholders' flag.";
     else
       SKIPAZPLACEHOLDERS=false;
     fi;
@@ -239,7 +239,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
       log_bright "[INFO] Done placeholders in '$f'.";
     done;
 
-  else log_bright "[INFO] Placeholders will be skipped due to the '-placeholders.skip;' flag."; fi;
+  else log_bright "[INFO] Placeholders will be skipped due to the 'ignorePlaceholders' flag."; fi;
 
   if [[ $name == "" ]]; then rm -R .blueprint/.storage/tmp/$n;                 quit_red "[FATAL] 'info_name' is a required configuration option.";fi;
   if [[ $identifier == "" ]]; then rm -R .blueprint/.storage/tmp/$n;           quit_red "[FATAL] 'info_identifier' is a required configuration option.";fi;
@@ -377,7 +377,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   chmod -R +x .blueprint/.storage/extensiondata/$identifier/*;
 
-  if [[ $flags == *"-run.afterinstall;"* ]]; then
+  if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
     bash .blueprint/.storage/extensiondata/$identifier/install.sh;
   fi;
