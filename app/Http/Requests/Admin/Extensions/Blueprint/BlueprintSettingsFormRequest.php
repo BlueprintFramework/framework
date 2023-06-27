@@ -27,7 +27,7 @@ class BlueprintSettingsFormRequest extends AdminFormRequest
             'placeholder' => 'Placeholder',
 
             'developer' => 'Developer Mode',
-            'developer:cmd' => 'Developer Command',
+            'developer:cmd' => 'Blueprint Execute Command',
 
             'telemetry' => 'Telemetry',
         ];
