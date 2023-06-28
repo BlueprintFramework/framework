@@ -232,11 +232,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
       sed -i "s~\^#datapath#\^~/var/www/$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
 
       if [[ $SKIPAZPLACEHOLDERS != true ]]; then
-        sed -i "s~bpversionreplace~$version~g" $f;
-        sed -i "s~bpauthorreplace~$author~g" $f;
-        sed -i "s~bpidentifierreplace~$identifier~g" $f;
-        sed -i "s~bppathreplace~/var/www/$FOLDER~g" $f;
-        sed -i "s~bpdatapathreplace~/var/www/$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
+        sed -i "s~__version__~$version~g" $f;
+        sed -i "s~__author__~$author~g" $f;
+        sed -i "s~__identifier__~$identifier~g" $f;
+        sed -i "s~__path__~/var/www/$FOLDER~g" $f;
+        sed -i "s~__datapath__~/var/www/$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
       fi;
 
       log_bright "[INFO] Done placeholders in '$f'.";
