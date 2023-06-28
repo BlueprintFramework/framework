@@ -14,7 +14,7 @@ if [[ -f ".dockerenv" ]]; then
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="alpha-EV0";
+  VER_FALLBACK="alpha-7FZ";
 
 # This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
@@ -451,11 +451,8 @@ if [[ $2 == "-init" ]]; then
   log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/dev'.";
 fi;
 
-# -build, -test
-if [[ ( $2 == "-build" ) || ( $2 == "-test" ) ]]; then
-  if [[ $2 == "-test" ]]; then
-    quit_red "[FATAL] -test has been removed in alpha-T0R and up, please use -build instead.";
-  fi
+# -build
+if [[ $2 == "-build" ]]; then
   log_bright "[INFO] Installing development extension files..";
   blueprint -i test␀;
   log_bright "[INFO] Extension installation ends here, if there are any errors during installation, fix them and try again.";
