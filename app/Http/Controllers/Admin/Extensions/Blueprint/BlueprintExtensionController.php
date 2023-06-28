@@ -14,7 +14,6 @@ use Pterodactyl\Services\Helpers\BlueprintExtensionLibrary;
 use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use BlueprintSettingsFormRequest;
 use Illuminate\Http\RedirectResponse;
 use Pterodactyl\Http\Requests\Admin\AdminFormRequest;
 
@@ -44,11 +43,6 @@ class BlueprintExtensionController extends Controller
    */
   public function index(): View
   {
-    if($this->bp->dbGet('developer:cmd') != "") {
-      $this->bplib->notify("Execute arguments sent to Blueprint.");
-      $this->bp->dbSet('developer:log', $this->bp->exec($this->bp->dbGet('developer:cmd')));
-    };
-
     if ($this->settings->get('blueprint::panel:id') == "" || $this->bp->version() != $this->settings->get('blueprint::version:cache')) {
       $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
       $this->settings->set('blueprint::version:cache', $this->bp->version());
@@ -71,7 +65,7 @@ class BlueprintExtensionController extends Controller
    * @throws \Pterodactyl\Exceptions\Model\DataValidationException
    * @throws \Pterodactyl\Exceptions\Repository\RecordNotFoundException
    */
-  public function update(BlueprintSettingsFormRequest $request): RedirectResponse
+  public function update(BlueprintAdminFormRequest $request): RedirectResponse
   {
     foreach ($request->normalize() as $key => $value) {
       $this->settings->set('blueprint::' . $key, $value);
@@ -82,7 +76,7 @@ class BlueprintExtensionController extends Controller
   }
 }
 
-class BlueprintSettingsFormRequest extends AdminFormRequest
+class BlueprintAdminFormRequest extends AdminFormRequest
 {
   public function rules(): array {
     return [

@@ -56,13 +56,19 @@ source .blueprint/lib/telemetry.sh;
 # -exec
 if [[ "$1" == "-exec" ]]; then
 
+  # Quoteless arguments.
+  # There should be an easier way to do this and will be added in the future.
+  ql1=$(echo "$1" | tr -d "'\\\n\r;");ql2=$(echo "$2" | tr -d "'\\\n\r;");ql3=$(echo "$3" | tr -d "'\\\n\r;");ql4=$(echo "$4" | tr -d "'\\\n\r;");ql5=$(echo "$5" | tr -d "'\\\n\r;");
+
   # Update the telemetry id to argument.
-  if [[ $2 == "key" ]]; then
-    z=true;
-    echo "$3" > .blueprint/data/internal/db/telemetry_id;
+  if [[ $ql2 == "key" ]]; then
+    echo "$ql3" > .blueprint/data/internal/db/telemetry_id;
+    echo Command executed.;
+    exit 1;
   fi;
 
-  if [[ $z == false ]]; then echo "Command not found."; else; echo " "; fi; exit 1;
+  echo Command not found.;
+  exit 1;
 fi;
 
 # Function that exits the script after logging a "red" message.
@@ -499,6 +505,7 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
+  cp blueprint.sh .blueprint.sh.bak;
   if [[ $3 == "dev" ]]; then
     bash tools/update.sh /var/www/$FOLDER dev
   else
@@ -530,8 +537,17 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ $score == 1 ]]; then
     log_green "[SUCCESS] Blueprint has upgraded successfully.";
   elif [[ $score == 0 ]]; then
+    log_yellow "[WARNING] All checks have failed, attempting automatic repair.";
+    rm blueprint.sh;
+    cp .blueprint.sh.bak blueprint.sh;
+    log_bright "[INFO] blueprint.sh has been rolled back.";
     log_red "[FATAL] Upgrading has failed."
   else
-    log_yellow "[WARNING] Some post-upgrade checks have failed."
+    log_yellow "[WARNING] Some post-upgrade checks have failed, attempting automatic repair.";
+    rm blueprint.sh;
+    cp .blueprint.sh.bak blueprint.sh;
+    log_bright "[INFO] blueprint.sh has been rolled back.";
+    log_red "[FATAL] Upgrading has failed."
   fi;
+  rm .blueprint.sh.bak;
 fi;

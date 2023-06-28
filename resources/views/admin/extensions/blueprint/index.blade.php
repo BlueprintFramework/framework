@@ -29,32 +29,6 @@
                 </div>
             </div>
 
-            <!-- Terminal -->
-            @if($bp->dbGet('developer') == "true")
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><i class='bx bxs-terminal' style='margin-right:5px;'></i>Terminal</h3>
-                    </div>
-                    <div class="box-body">
-                        <form action="" method="POST">
-                            <div class="col-xs-12" style="padding-top:5px;">
-                                <input type="text" required name="developer:cmd" id="developer:cmd" value="{{ $bp->dbGet('developer:cmd') }}" class="form-control" style="height:40px;width:100%;"/>
-                                <p class="text-muted small">Run a execute command on blueprint.sh, but you'll probably never use this anyways.</p>
-                                {{ csrf_field() }}
-                                <button type="submit" name="_method" value="PATCH" class="btn btn-gray-alt btn-sm pull-right" style="display:none;">Send</button>
-                            </div>
-                            <div class="col-xs-12" style="padding-top:10px;">
-                                @if($bp->dbGet('developer:log') != "")
-                                    <code>{{ $bp->dbGet('developer:log') }}</code>
-                                @endif
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                {{ $bp->dbSet('developer:log', '') }}
-                {{ $bp->dbSet('developer:cmd', '') }}
-            @endif
-
         </div>
         <div class="col-xs-9">
             <form action="" method="POST">
