@@ -272,8 +272,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   if [[ $admin_requests != "" ]]; then
-    mkdir app/Http/Requests/Admin/Extensions/$identifier;
-    cp -R .blueprint/tmp/$n/$admin_requests/* app/Http/Requests/Admin/Extensions/$identifier/ 2> /dev/null;
+    log_yellow "[WARNING] Admin requests are deprecated. Use them in your controller instead."
   fi;
 
   if [[ $data_public != "" ]]; then

@@ -14,8 +14,9 @@ use Pterodactyl\Services\Helpers\BlueprintExtensionLibrary;
 use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use Pterodactyl\Http\Requests\Admin\Extensions\Blueprint\BlueprintSettingsFormRequest;
+use BlueprintSettingsFormRequest;
 use Illuminate\Http\RedirectResponse;
+use Pterodactyl\Http\Requests\Admin\AdminFormRequest;
 
 class BlueprintExtensionController extends Controller
 {
@@ -78,5 +79,26 @@ class BlueprintExtensionController extends Controller
 
     $this->bplib->notify("Your changes have been saved.");
     return redirect()->route('admin.extensions.blueprint.index');
+  }
+}
+
+class BlueprintSettingsFormRequest extends AdminFormRequest
+{
+  public function rules(): array {
+    return [
+      'placeholder' => 'string',
+      'developer' => 'string',
+      'developer:cmd' => 'string',
+      'telemetry' => 'string',
+    ];
+  }
+
+  public function attributes(): array {
+    return [
+      'placeholder' => 'Placeholder Value',
+      'developer' => 'Developer Mode',
+      'developer:cmd' => 'Blueprint Execute Command',
+      'telemetry' => 'Telemetry',
+    ];
   }
 }
