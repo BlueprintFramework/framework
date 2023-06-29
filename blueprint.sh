@@ -286,12 +286,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp -R .blueprint/tmp/$n/$data_public/* public/extensions/$identifier/ 2> /dev/null;
   fi;
 
-  cp -R .blueprint/data/internal/build/extensions/admin.default .blueprint/data/internal/build/extensions/admin.default.bak 2> /dev/null;
+  cp -R .blueprint/data/internal/build/extensions/admin.blade.php .blueprint/data/internal/build/extensions/admin.blade.php.bak 2> /dev/null;
   if [[ $admin_controller == "" ]]; then # use default controller when admin_controller is left blank
-    cp -R .blueprint/data/internal/build/extensions/controller.default .blueprint/data/internal/build/extensions/controller.default.bak 2> /dev/null;
+    cp -R .blueprint/data/internal/build/extensions/controller.php.php .blueprint/data/internal/build/extensions/controller.php.bak 2> /dev/null;
   fi;
-  cp -R .blueprint/data/internal/build/extensions/route.default .blueprint/data/internal/build/extensions/route.default.bak 2> /dev/null;
-  cp -R .blueprint/data/internal/build/extensions/button.default .blueprint/data/internal/build/extensions/button.default.bak 2> /dev/null;
+  cp -R .blueprint/data/internal/build/extensions/route.php .blueprint/data/internal/build/extensions/route.php.bak 2> /dev/null;
+  cp -R .blueprint/data/internal/build/extensions/button.php .blueprint/data/internal/build/extensions/button.php.bak 2> /dev/null;
 
   mkdir .blueprint/data/extensions/$identifier;
   if [[ $data_directory != "" ]]; then
@@ -315,37 +315,37 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $ICON == *"~"* ]]; then log_yellow "[WARNING] 'ICON' contains '~' and may result in an error.";fi;
   if [[ $identifier == *"~"* ]]; then log_yellow "[WARNING] 'identifier' contains '~' and may result in an error.";fi;
 
-  sed -i "s~␀title␀~$name~g" .blueprint/data/internal/build/extensions/admin.default.bak;
-  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/admin.default.bak;
-  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/button.default.bak;
+  sed -i "s~␀title␀~$name~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
+  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
+  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/button.php.bak;
 
-  sed -i "s~␀description␀~$description~g" .blueprint/data/internal/build/extensions/admin.default.bak;
+  sed -i "s~␀description␀~$description~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
 
-  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/admin.default.bak;
-  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/button.default.bak;
+  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
+  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/button.php.bak;
 
-  sed -i "s~␀icon␀~$ICON~g" .blueprint/data/internal/build/extensions/admin.default.bak;
+  sed -i "s~␀icon␀~$ICON~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
 
   if [[ $website != "" ]]; then
-    sed -i "s~␀website␀~$website~g" .blueprint/data/internal/build/extensions/admin.default.bak;
-    sed -i "s~<!--websitecomment␀ ~~g" .blueprint/data/internal/build/extensions/admin.default.bak;
-    sed -i "s~ ␀websitecomment-->~~g" .blueprint/data/internal/build/extensions/admin.default.bak;
+    sed -i "s~␀website␀~$website~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
+    sed -i "s~<!--websitecomment␀ ~~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
+    sed -i "s~ ␀websitecomment-->~~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
   fi;
 
-  echo -e "$CONTENT\n@endsection" >> .blueprint/data/internal/build/extensions/admin.default.bak;
+  echo -e "$CONTENT\n@endsection" >> .blueprint/data/internal/build/extensions/admin.blade.php.bak;
 
 
   if [[ $admin_controller == "" ]]; then
-    sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/controller.default.bak;
+    sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/controller.php.bak;
   fi;
-  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/route.default.bak;
-  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/button.default.bak;
+  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/route.php.bak;
+  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/button.php.bak;
 
-  ADMINVIEW_RESULT=$(cat .blueprint/data/internal/build/extensions/admin.default.bak);
-  ADMINROUTE_RESULT=$(cat .blueprint/data/internal/build/extensions/route.default.bak);
-  ADMINBUTTON_RESULT=$(cat .blueprint/data/internal/build/extensions/button.default.bak);
+  ADMINVIEW_RESULT=$(cat .blueprint/data/internal/build/extensions/admin.blade.php.bak);
+  ADMINROUTE_RESULT=$(cat .blueprint/data/internal/build/extensions/route.php.bak);
+  ADMINBUTTON_RESULT=$(cat .blueprint/data/internal/build/extensions/button.php.bak);
   if [[ $admin_controller == "" ]]; then
-    ADMINCONTROLLER_RESULT=$(cat .blueprint/data/internal/build/extensions/controller.default.bak);
+    ADMINCONTROLLER_RESULT=$(cat .blueprint/data/internal/build/extensions/controller.php.bak);
   fi;
   ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
@@ -370,12 +370,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
 
-  rm .blueprint/data/internal/build/extensions/admin.default.bak;
+  rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;
   if [[ $admin_controller == "" ]]; then
-    rm .blueprint/data/internal/build/extensions/controller.default.bak;
+    rm .blueprint/data/internal/build/extensions/controller.php.bak;
   fi;
-  rm .blueprint/data/internal/build/extensions/route.default.bak;
-  rm .blueprint/data/internal/build/extensions/button.default.bak;
+  rm .blueprint/data/internal/build/extensions/route.php.bak;
+  rm .blueprint/data/internal/build/extensions/button.php.bak;
   rm -R .blueprint/tmp/$n;
 
   if [[ $database_migrations != "" ]]; then
