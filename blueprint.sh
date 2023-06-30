@@ -14,7 +14,7 @@ if [[ -f ".dockerenv" ]]; then
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="alpha-7FZ";
+  VER_FALLBACK="alpha-Y4Y";
 
 # This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
