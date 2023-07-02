@@ -205,7 +205,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   target=$info_target;
   author=$info_author;
   icon=$info_icon;
-  website=$info_website;# (optional)
+  website=$info_website; #(optional)
+
+  if [[ $esc != "" ]]; then esc="y"; fi;
+  if [[ ( $icon == "/"* ) || ( $icon == "."* ) ]]; then esc="y"; fi;
+  if [[ ( $admin_view == "/"* ) || ( $admin_view == "."* ) ]]; then esc="y"; fi;
+  if [[ ( $admin_controller == "/"* ) || ( $admin_controller == "."* ) ]]; then esc="y"; fi;
+  if [[ ( $admin_css == "/"* ) || ( $admin_css == "."* ) ]]; then esc="y"; fi;
+  if [[ ( $data_directory == "/"* ) || ( $data_directory == "."* ) ]]; then esc="y"; fi;
+  if [[ ( $data_public == "/"* ) || ( $data_public == "."* ) ]]; then esc="y"; fi;
+  if [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) ]]; then esc="y"; fi;
+
+  if [[ $esc == "y" ]]; then
+    rm -R .blueprint/tmp/$n;
+    quit_red "[FATAL] Extension has failed security checks, halting installation.";
+  fi;
 
   if [[ $website != "" ]]; then
     if [[ $website != "https://"* ]]; then
