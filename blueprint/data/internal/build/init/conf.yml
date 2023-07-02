@@ -15,7 +15,6 @@ info:
 admin:
   view: "view.blade.php"
   controller: ""
-  requests: ""
   css: ""
 
 data:
