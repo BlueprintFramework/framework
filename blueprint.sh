@@ -194,20 +194,28 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   cd /var/www/$FOLDER;
 
   # Get all strings from the conf.yml file and make them accessible as variables.
-  eval $(parse_yaml .blueprint/tmp/$n/conf.yml)
+  eval $(parse_yaml .blueprint/tmp/$n/conf.yml conf_)
 
   # Add aliases for the info config values to make working with them easier.
-  name=$info_name;
-  identifier=$info_identifier;
-  description=$info_description;
-  flags=$info_flags;
-  version=$info_version;
-  target=$info_target;
-  author=$info_author;
-  icon=$info_icon;
-  website=$info_website; #(optional)
+  name=$conf_info_name;
+  identifier=$conf_info_identifier;
+  description=$conf_info_description;
+  flags=$conf_info_flags;
+  version=$conf_info_version;
+  target=$conf_info_target;
+  author=$conf_info_author;
+  icon=$conf_info_icon;
+  website=$conf_info_website; #(optional)
 
-  if [[ $esc != "" ]]; then esc="y"; fi;
+  admin_view=$conf_admin_view;
+  admin_controller=$conf_admin_controller; #(optional)
+  admin_css=$conf_admin_css; #(optional)
+
+  data_directory=$conf_data_directory; #(optional)
+  data_public=$conf_data_public; #(optional)
+
+  database_migrations=$conf_database_migrations; #(optional)
+
   if [[ ( $icon == "/"* ) || ( $icon == "."* ) ]]; then esc="y"; fi;
   if [[ ( $admin_view == "/"* ) || ( $admin_view == "."* ) ]]; then esc="y"; fi;
   if [[ ( $admin_controller == "/"* ) || ( $admin_controller == "."* ) ]]; then esc="y"; fi;
@@ -478,7 +486,7 @@ if [[ $2 == "-export" ]]; then
   log_bright "[INFO] Exporting extension files located in '.blueprint/dev'.";
 
   cd .blueprint
-  eval $(parse_yaml dev/conf.yml); identifier=$info_identifier;
+  eval $(parse_yaml dev/conf.yml conf_); identifier=$conf_info_identifier;
   cp -R dev/* tmp/;
   cd tmp;
   zip -r extension.zip *;
