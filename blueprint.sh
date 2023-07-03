@@ -311,7 +311,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   cp -R .blueprint/data/internal/build/extensions/admin.blade.php .blueprint/data/internal/build/extensions/admin.blade.php.bak 2> /dev/null;
   if [[ $admin_controller == "" ]]; then # use default controller when admin_controller is left blank
-    cp -R .blueprint/data/internal/build/extensions/controller.php.php .blueprint/data/internal/build/extensions/controller.php.bak 2> /dev/null;
+    cp -R .blueprint/data/internal/build/extensions/controller.php .blueprint/data/internal/build/extensions/controller.php.bak 2> /dev/null;
   fi;
   cp -R .blueprint/data/internal/build/extensions/route.php .blueprint/data/internal/build/extensions/route.php.bak 2> /dev/null;
   cp -R .blueprint/data/internal/build/extensions/button.blade.php .blueprint/data/internal/build/extensions/button.blade.php.bak 2> /dev/null;
