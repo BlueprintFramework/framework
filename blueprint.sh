@@ -74,6 +74,7 @@ fi;
 # Function that exits the script after logging a "red" message.
 quit_red() {
   log_red "${1}";
+  mkdir .blueprint/tmp > /dev/null;
   exit 1;
 };
 
@@ -237,7 +238,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     fi;
   fi;
 
-  if [[ $dev ]]; then
+  if [[ $dev == true ]]; then
     mv .blueprint/tmp/$n .blueprint/tmp/$identifier;
     n=$identifier;
   fi;
@@ -313,7 +314,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp -R .blueprint/data/internal/build/extensions/controller.php.php .blueprint/data/internal/build/extensions/controller.php.bak 2> /dev/null;
   fi;
   cp -R .blueprint/data/internal/build/extensions/route.php .blueprint/data/internal/build/extensions/route.php.bak 2> /dev/null;
-  cp -R .blueprint/data/internal/build/extensions/button.php .blueprint/data/internal/build/extensions/button.php.bak 2> /dev/null;
+  cp -R .blueprint/data/internal/build/extensions/button.blade.php .blueprint/data/internal/build/extensions/button.blade.php.bak 2> /dev/null;
 
   mkdir .blueprint/data/extensions/$identifier;
   if [[ $data_directory != "" ]]; then
@@ -339,12 +340,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   sed -i "s~␀title␀~$name~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
   sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
-  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/button.php.bak;
+  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/button.blade.php.bak;
 
   sed -i "s~␀description␀~$description~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
 
   sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
-  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/button.php.bak;
+  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/button.blade.php.bak;
 
   sed -i "s~␀icon␀~$ICON~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak;
 
@@ -361,11 +362,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/controller.php.bak;
   fi;
   sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/route.php.bak;
-  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/button.php.bak;
+  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/button.blade.php.bak;
 
   ADMINVIEW_RESULT=$(cat .blueprint/data/internal/build/extensions/admin.blade.php.bak);
   ADMINROUTE_RESULT=$(cat .blueprint/data/internal/build/extensions/route.php.bak);
-  ADMINBUTTON_RESULT=$(cat .blueprint/data/internal/build/extensions/button.php.bak);
+  ADMINBUTTON_RESULT=$(cat .blueprint/data/internal/build/extensions/button.blade.php.bak);
   if [[ $admin_controller == "" ]]; then
     ADMINCONTROLLER_RESULT=$(cat .blueprint/data/internal/build/extensions/controller.php.bak);
   fi;
@@ -397,7 +398,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     rm .blueprint/data/internal/build/extensions/controller.php.bak;
   fi;
   rm .blueprint/data/internal/build/extensions/route.php.bak;
-  rm .blueprint/data/internal/build/extensions/button.php.bak;
+  rm .blueprint/data/internal/build/extensions/button.blade.php.bak;
   rm -R .blueprint/tmp/$n;
 
   if [[ $database_migrations != "" ]]; then
