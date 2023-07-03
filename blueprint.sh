@@ -380,13 +380,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
 
   if [[ $admin_controller == "" ]]; then
+    touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
     echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
   else
     cp .blueprint/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
-  fi;
-
-  if [[ $admin_controller != "" ]]; then
-    cp .blueprint/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/${identifier}ExtensionController.php;
   fi;
 
   echo $ADMINROUTE_RESULT >> routes/admin.php;
