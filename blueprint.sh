@@ -411,7 +411,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
-  if [[ $dev != true ]]; then
+  if [[ $dev == false ]]; then
     sendTelemetry "FINISH_EXTENSION_INSTALLATION" > /dev/null;
   fi;
 fi;
@@ -434,15 +434,86 @@ fi;
 
 # -init
 if [[ $2 == "-init" ]]; then
-  echo "Name (Generic Extension):";             read ASKNAME;
-  echo "Identifier (genericextension):";        read ASKIDENTIFIER;
-  echo "Description (My awesome description):"; read ASKDESCRIPTION;
-  echo "Version (indev):";                      read ASKVERSION;
-  echo "Author (prplwtf):";                     read ASKAUTHOR;
 
-  log_bright "[INFO] Running validation checks..";
-  if [[ $ASKIDENTIFIER =~ [a-z] ]]; then log_bright "[INFO] Identifier a-z checks passed." > /dev/null;
-  else quit_red "[FATAL] Identifier should only contain a-z characters.";fi;
+  ask_name() {
+    echo "[1/5]  Name (Generic Extension):";             read ASKNAME;
+
+    REDO_NAME=false;
+
+    # Name should not be empty
+    if [[ $ASKNAME == "" ]]; then echo ok > /dev/null;
+    else log_red "[FATAL] Name should not be empty.";REDO_NAME=true;fi;
+
+    if [[ $REDO_NAME == true ]]; then
+      ask_name;
+    fi;
+  };
+
+  ask_identifier() {
+    echo "[2/5]  Identifier (genericextension):";        read ASKIDENTIFIER;
+
+    REDO_IDENTIFIER=false;
+
+    # Identifier should not be empty
+    if [[ $ASKIDENTIFIER == "" ]]; then echo ok > /dev/null;
+    else quit_red "[FATAL] Identifier should not be empty.";REDO_IDENTIFIER=true;fi;
+  
+    # Identifier should be a-z.
+    if [[ $ASKIDENTIFIER =~ [a-z] ]]; then echo ok > /dev/null;
+    else quit_red "[FATAL] Identifier should only contain a-z characters.";REDO_IDENTIFIER=true;fi;
+
+    if [[ $REDO_IDENTIFIER == true ]]; then
+      ask_identifier;
+    fi;
+  };
+
+  ask_description() {
+    echo "[3/5]  Description (My awesome description):"; read ASKDESCRIPTION;
+
+    REDO_DESCRIPTION=false;
+
+    # Description should not be empty
+    if [[ $ASKDESCRIPTION == "" ]]; then echo ok > /dev/null;
+    else quit_red "[FATAL] Description should not be empty.";REDO_DESCRIPTION=true;fi;
+
+    if [[ $REDO_DESCRIPTION == true ]]; then
+      ask_description;
+    fi;
+  };
+
+  ask_version() {
+    echo "[4/5]  Version (indev):";                      read ASKVERSION;
+
+    REDO_VERSION=false;
+
+    # Version should not be empty
+    if [[ $ASKVERSION == "" ]]; then echo ok > /dev/null;
+    else quit_red "[FATAL] Version should not be empty.";REDO_VERSION=true;fi;
+
+    if [[ $REDO_VERSION == true ]]; then
+      ask_version;
+    fi;
+  };
+
+  ask_author() {
+    echo "[5/5]  Author (prplwtf):";                     read ASKAUTHOR;
+
+    REDO_AUTHOR=false;
+
+    # Author should not be empty
+    if [[ $ASKAUTHOR == "" ]]; then echo ok > /dev/null;
+    else quit_red "[FATAL] Author should not be empty.";REDO_AUTHOR=true;fi;
+
+    if [[ $REDO_AUTHOR == true ]]; then
+      ask_author;
+    fi;
+  };
+
+  ask_name;
+  ask_identifier;
+  ask_description;
+  ask_version;
+  ask_author;
 
   log_bright "[INFO] Copying init defaults to tmp directory..";
   mkdir .blueprint/tmp/init;
