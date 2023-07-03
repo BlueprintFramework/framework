@@ -441,8 +441,10 @@ if [[ $2 == "-init" ]]; then
     REDO_NAME=false;
 
     # Name should not be empty
-    if [[ $ASKNAME == "" ]]; then echo ok > /dev/null;
-    else log_red "[FATAL] Name should not be empty.";REDO_NAME=true;fi;
+    if [[ $ASKNAME == "" ]]; then 
+      log_red "[FATAL] Name should not be empty.";
+      REDO_NAME=true;
+    fi;
 
     if [[ $REDO_NAME == true ]]; then
       ask_name;
@@ -455,12 +457,18 @@ if [[ $2 == "-init" ]]; then
     REDO_IDENTIFIER=false;
 
     # Identifier should not be empty
-    if [[ $ASKIDENTIFIER == "" ]]; then echo ok > /dev/null;
-    else quit_red "[FATAL] Identifier should not be empty.";REDO_IDENTIFIER=true;fi;
+    if [[ $ASKIDENTIFIER == "" ]]; then
+      log_red "[FATAL] Identifier should not be empty.";
+      REDO_IDENTIFIER=true;
+    fi;
   
     # Identifier should be a-z.
-    if [[ $ASKIDENTIFIER =~ [a-z] ]]; then echo ok > /dev/null;
-    else quit_red "[FATAL] Identifier should only contain a-z characters.";REDO_IDENTIFIER=true;fi;
+    if [[ $ASKIDENTIFIER =~ [a-z] ]]; then
+      echo ok > /dev/null;
+    else 
+      log_red "[FATAL] Identifier should only contain a-z characters.";
+      REDO_IDENTIFIER=true;
+    fi;
 
     if [[ $REDO_IDENTIFIER == true ]]; then
       ask_identifier;
@@ -473,8 +481,10 @@ if [[ $2 == "-init" ]]; then
     REDO_DESCRIPTION=false;
 
     # Description should not be empty
-    if [[ $ASKDESCRIPTION == "" ]]; then echo ok > /dev/null;
-    else quit_red "[FATAL] Description should not be empty.";REDO_DESCRIPTION=true;fi;
+    if [[ $ASKDESCRIPTION == "" ]]; then
+      log_red "[FATAL] Description should not be empty.";
+      REDO_DESCRIPTION=true;
+    fi;
 
     if [[ $REDO_DESCRIPTION == true ]]; then
       ask_description;
@@ -487,8 +497,10 @@ if [[ $2 == "-init" ]]; then
     REDO_VERSION=false;
 
     # Version should not be empty
-    if [[ $ASKVERSION == "" ]]; then echo ok > /dev/null;
-    else quit_red "[FATAL] Version should not be empty.";REDO_VERSION=true;fi;
+    if [[ $ASKVERSION == "" ]]; then
+      log_red "[FATAL] Version should not be empty.";
+      REDO_VERSION=true;
+    fi;
 
     if [[ $REDO_VERSION == true ]]; then
       ask_version;
@@ -501,8 +513,10 @@ if [[ $2 == "-init" ]]; then
     REDO_AUTHOR=false;
 
     # Author should not be empty
-    if [[ $ASKAUTHOR == "" ]]; then echo ok > /dev/null;
-    else quit_red "[FATAL] Author should not be empty.";REDO_AUTHOR=true;fi;
+    if [[ $ASKAUTHOR == "" ]]; then
+      log_red "[FATAL] Author should not be empty.";
+      REDO_AUTHOR=true;
+    fi;
 
     if [[ $REDO_AUTHOR == true ]]; then
       ask_author;
