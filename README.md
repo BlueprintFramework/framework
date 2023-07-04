@@ -4,7 +4,8 @@
 
 [Installation](#installation)\
 [Development](#development)\
-[Extensions](#extensions)
+[Extensions](#extensions)\
+[Contributions](#contributions)
 
 ### Installation
 **What you need:**
@@ -33,3 +34,8 @@ Open an issue on GitHub to get your extension listed here. To install an extensi
 
 **Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664), [GitHub](https://github.com/prplwtf/blueprint-redirect)\
 **dbEdit**: [GitHub](https://github.com/prplwtf/blueprint-dbedit)
+
+### Contributions
+[prplwtf](https://github.com/prplwtf) - creator and maintainer\
+[alipoyrazaydin](https://github.com/alipoyrazaydin) - contributor\
+[sp11rum](https://github.com/sp11rumk) - contributor
