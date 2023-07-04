@@ -11,6 +11,8 @@
 if [[ -f ".dockerenv" ]]; then
   DOCKER="y";
   FOLDER="html"
+else
+  DOCKER="n";
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
@@ -77,10 +79,6 @@ quit_red() {
   mkdir .blueprint/tmp > /dev/null;
   exit 1;
 };
-
-debug() {
-  log_cyan "[DEBUG] ${$1}" > /dev/null;
-}
 
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 touch /usr/local/bin/blueprint > /dev/null;
@@ -237,7 +235,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   if [[ $esc == "y" ]]; then
     rm -R .blueprint/tmp/$n;
-    debug "The following error is thrown because one of your conf.yml path items starts with '/', '.' or contains '\\n'.";
     quit_red "[FATAL] Extension has failed security checks, halting installation.";
   fi;
 
@@ -418,9 +415,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution.";
-    debug "Extension has custom post-installation script, running now..\n";
     bash .blueprint/data/extensions/$identifier/install.sh;
-    debug "\nPost-installation script completed.";
   fi;
 
   log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
@@ -437,7 +432,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-build                   run an installation on your extension development files""
 "           "-export                  export your extension development files""
 "           "-runinstall              rerun the blueprint installation script (advanced)""
-"           "-collect                 collect debug information""
+"           "-collect                 collect debug info""
 "           "-upgrade (dev)           update/reset to a newer pre-release version (advanced)";
 fi;
 
@@ -611,9 +606,10 @@ fi;
 
 # -collect
 if [[ $2 == "-collect" ]]; then
-  echo -e "@@@@@@@@@@@@ LOGS.TXT START @@@@@@@@@@@@\n\n";
-  echo -e $(cat .blueprint/data/internal/debug/logs.txt);
-  echo -e "\n\n@@@@@@@@@@@@@ LOGS.TXT END @@@@@@@@@@@@@";
+  log_cyan "Variables";
+  log_blue "FOLDER: $FOLDER";
+  log_blue "VERSION: $VERSION";
+  log_blue "DOCKER: $DOCKER";
 fi;
 
 # -upgrade
