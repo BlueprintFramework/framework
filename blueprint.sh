@@ -98,8 +98,14 @@ if [[ $1 != "-bash" ]]; then
     fi;
 
     # Update folder placeholder on PlaceholderService and admin layout.
+    log_bright "[INFO] /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php";
     sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
+    log_bright "[INFO] /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php";
     sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
+
+    # Copy "Blueprint" extension page logo from assets.
+    log_bright "[INFO] cp /var/www/$FOLDER/.blueprint/assets/logo.jpg /var/www/$FOLDER/public/assets/extensions/blueprint/logo.jpg;";
+    cp /var/www/$FOLDER/.blueprint/assets/logo.jpg /var/www/$FOLDER/public/assets/extensions/blueprint/logo.jpg;
 
     # Put application into maintenance.
     log_bright "[INFO] php artisan down";
