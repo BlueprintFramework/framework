@@ -430,6 +430,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-build                   run an installation on your extension development files""
 "           "-export                  export your extension development files""
 "           "-runinstall              rerun the blueprint installation script (advanced)""
+"           "-collect                 collect debug information""
 "           "-upgrade (dev)           update/reset to a newer pre-release version (advanced)";
 fi;
 
@@ -599,6 +600,13 @@ if [[ $2 == "-runinstall"  ]]; then
   dbRemove "blueprint.setupFinished";
   cd /var/www/$FOLDER;
   bash blueprint.sh;
+fi;
+
+# -collect
+if [[ $2 == "-collect" ]]; then
+  echo -e "@@@@@@@@@@@@ LOGS.TXT START @@@@@@@@@@@@\n\n";
+  echo -e $(cat .blueprint/data/internal/debug/logs.txt);
+  echo -e "\n\n@@@@@@@@@@@@@ LOGS.TXT END @@@@@@@@@@@@@";
 fi;
 
 # -upgrade
