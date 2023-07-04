@@ -442,7 +442,8 @@ fi;
 if [[ $2 == "-init" ]]; then
 
   ask_name() {
-    echo "[1/5]  Name (Generic Extension):";             read ASKNAME;
+    log_blue "[INPUT] Name (Generic Extension):";
+    read ASKNAME;
 
     REDO_NAME=false;
 
@@ -458,7 +459,8 @@ if [[ $2 == "-init" ]]; then
   };
 
   ask_identifier() {
-    echo "[2/5]  Identifier (genericextension):";        read ASKIDENTIFIER;
+    log_blue "[INPUT] Identifier (genericextension):";
+    read ASKIDENTIFIER;
 
     REDO_IDENTIFIER=false;
 
@@ -482,7 +484,8 @@ if [[ $2 == "-init" ]]; then
   };
 
   ask_description() {
-    echo "[3/5]  Description (My awesome description):"; read ASKDESCRIPTION;
+    log_blue "[INFO] Description (My awesome description):";
+    read ASKDESCRIPTION;
 
     REDO_DESCRIPTION=false;
 
@@ -498,7 +501,8 @@ if [[ $2 == "-init" ]]; then
   };
 
   ask_version() {
-    echo "[4/5]  Version (indev):";                      read ASKVERSION;
+    log_blue "[INPUT] Version (indev):";
+    read ASKVERSION;
 
     REDO_VERSION=false;
 
@@ -514,7 +518,8 @@ if [[ $2 == "-init" ]]; then
   };
 
   ask_author() {
-    echo "[5/5]  Author (prplwtf):";                     read ASKAUTHOR;
+    log_blue "[INPUT] Author (prplwtf):";
+    read ASKAUTHOR;
 
     REDO_AUTHOR=false;
 
@@ -601,14 +606,14 @@ if [[ $2 == "-upgrade" ]]; then
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n";
   
   if [[ $3 == "dev" ]]; then
-    log_yellow "[WARNING] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
+    log_blue "[INPUT] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
     read YN1;
     if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
   fi;
-  log_yellow "[WARNING] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)";
+  log_blue "[INPUT] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)";
   read YN2;
   if [[ ( $YN2 != "y" ) && ( $YN2 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
-  log_yellow "[WARNING] This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'.";
+  log_blue "[INPUT] This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'.";
   read YN3;
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
 
@@ -624,7 +629,7 @@ if [[ $2 == "-upgrade" ]]; then
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour.";
-  log_bright "[INFO] Database migrations are skipped when upgrading, run them anyways? (Y/n)";
+  log_blue "[INPUT] Database migrations are skipped when upgrading, run them anyways? (Y/n)";
   read YN4;
   if [[ ( $YN4 == "y" ) || ( $YN4 == "Y" ) ]]; then 
     log_bright "[INFO] Running database migrations..";

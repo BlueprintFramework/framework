@@ -108,6 +108,7 @@ function log_escape
     done
 
     echo "$log_ECHOSWITCHES" "$result"
+    echo "$log_ECHOSWITCHES" "$result" >> .blueprint/data/internal/debug/logs.txt;
 }
 
 function log                 { log_layer $log_RESET "$@";           }
