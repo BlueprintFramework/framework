@@ -73,10 +73,14 @@ fi;
 
 # Function that exits the script after logging a "red" message.
 quit_red() {
-  log_red "${1}";
+  log_red "${$1}";
   mkdir .blueprint/tmp > /dev/null;
   exit 1;
 };
+
+debug() {
+  log_cyan "[DEBUG] ${$1}" > /dev/null;
+}
 
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 touch /usr/local/bin/blueprint > /dev/null;
@@ -174,7 +178,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   else
     dev=false;
     n=$3;
-    FILE=$n".blueprint"
+    FILE=$n".blueprint";
     if [[ ! -f "$FILE" ]]; then quit_red "[FATAL] $FILE could not be found.";fi;
 
     ZIP=$n".zip";
@@ -223,16 +227,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   database_migrations=$conf_database_migrations; #(optional)
 
-  if [[ ( $icon == "/"* ) || ( $icon == "."* ) ]]; then esc="y"; fi;
-  if [[ ( $admin_view == "/"* ) || ( $admin_view == "."* ) ]]; then esc="y"; fi;
-  if [[ ( $admin_controller == "/"* ) || ( $admin_controller == "."* ) ]]; then esc="y"; fi;
-  if [[ ( $admin_css == "/"* ) || ( $admin_css == "."* ) ]]; then esc="y"; fi;
-  if [[ ( $data_directory == "/"* ) || ( $data_directory == "."* ) ]]; then esc="y"; fi;
-  if [[ ( $data_public == "/"* ) || ( $data_public == "."* ) ]]; then esc="y"; fi;
-  if [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) ]]; then esc="y"; fi;
+  if [[ ( $icon == "/"* ) || ( $icon == "."* ) || ( $icon == *"\n"* ) ]]; then esc="y"; fi;
+  if [[ ( $admin_view == "/"* ) || ( $admin_view == "."* ) || ( $admin_view == *"\n"* ) ]]; then esc="y"; fi;
+  if [[ ( $admin_controller == "/"* ) || ( $admin_controller == "."* ) || ( $admin_controller == *"\n"* ) ]]; then esc="y"; fi;
+  if [[ ( $admin_css == "/"* ) || ( $admin_css == "."* ) || ( $admin_css == *"\n"* ) ]]; then esc="y"; fi;
+  if [[ ( $data_directory == "/"* ) || ( $data_directory == "."* ) || ( $data_directory == *"\n"* ) ]]; then esc="y"; fi;
+  if [[ ( $data_public == "/"* ) || ( $data_public == "."* ) || ( $data_public == *"\n"* ) ]]; then esc="y"; fi;
+  if [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) || ( $database_migrations == *"\n"* ) ]]; then esc="y"; fi;
 
   if [[ $esc == "y" ]]; then
     rm -R .blueprint/tmp/$n;
+    debug "The following error is thrown because one of your conf.yml path items starts with '/', '.' or contains '\\n'.";
     quit_red "[FATAL] Extension has failed security checks, halting installation.";
   fi;
 
@@ -412,8 +417,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   chmod -R +x .blueprint/data/extensions/$identifier/*;
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
-    log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
+    log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution.";
+    debug "Extension has custom post-installation script, running now..\n";
     bash .blueprint/data/extensions/$identifier/install.sh;
+    debug "\nPost-installation script completed.";
   fi;
 
   log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
