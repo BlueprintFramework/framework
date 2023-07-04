@@ -626,7 +626,6 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
-  cp blueprint.sh .blueprint.sh.bak;
   if [[ $3 == "dev" ]]; then
     bash tools/update.sh /var/www/$FOLDER dev
   else
@@ -658,17 +657,8 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ $score == 1 ]]; then
     log_green "[SUCCESS] Blueprint has upgraded successfully.";
   elif [[ $score == 0 ]]; then
-    log_yellow "[WARNING] All checks have failed, attempting automatic repair.";
-    rm blueprint.sh;
-    cp .blueprint.sh.bak blueprint.sh;
-    log_bright "[INFO] blueprint.sh has been rolled back.";
-    log_red "[FATAL] Upgrading has failed."
+    log_red "[FATAL] All checks have failed.";
   else
-    log_yellow "[WARNING] Some post-upgrade checks have failed, attempting automatic repair.";
-    rm blueprint.sh;
-    cp .blueprint.sh.bak blueprint.sh;
-    log_bright "[INFO] blueprint.sh has been rolled back.";
-    log_red "[FATAL] Upgrading has failed."
+    log_yellow "[WARNING] Some post-upgrade checks have failed.";
   fi;
-  rm .blueprint.sh.bak;
 fi;
