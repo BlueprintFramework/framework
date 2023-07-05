@@ -432,7 +432,6 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-build                   run an installation on your extension development files""
 "           "-export                  export your extension development files""
 "           "-runinstall              rerun the blueprint installation script (advanced)""
-"           "-collect                 collect debug info""
 "           "-upgrade (dev)           update/reset to a newer pre-release version (advanced)";
 fi;
 
@@ -602,14 +601,6 @@ if [[ $2 == "-runinstall"  ]]; then
   dbRemove "blueprint.setupFinished";
   cd /var/www/$FOLDER;
   bash blueprint.sh;
-fi;
-
-# -collect
-if [[ $2 == "-collect" ]]; then
-  log_cyan "Variables";
-  log_blue "FOLDER: $FOLDER";
-  log_blue "VERSION: $VERSION";
-  log_blue "DOCKER: $DOCKER";
 fi;
 
 # -upgrade
