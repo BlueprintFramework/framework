@@ -38,4 +38,4 @@ Open an issue on GitHub to get your extension listed here. To install an extensi
 ### Contributions
 [prplwtf](https://github.com/prplwtf) - creator and maintainer\
 [alipoyrazaydin](https://github.com/alipoyrazaydin) - contributor\
-[sp11rum](https://github.com/sp11rumk) - contributor
+[sp11rum](https://github.com/sp11rum) - contributor
