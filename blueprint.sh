@@ -144,9 +144,11 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] chown -R www-data:www-data /var/www/$FOLDER/.*";
     chown -R www-data:www-data /var/www/$FOLDER/.*;
 
-    # Remove placeholder .hello.txt file in dev.
-    log_bright "[INFO] rm .blueprint/dev/.hello.txt";
-    rm .blueprint/dev/.hello.txt;
+    # Remove placeholder README.md files.
+    log_bright "[INFO] rm .blueprint/dev/README.md";
+    rm .blueprint/dev/README.md;
+    log_bright "[INFO] rm .blueprint/data/extensions/README.md";
+    rm .blueprint/data/extensions/README.md;
 
     # Put application into production.
     log_bright "[INFO] php artisan up";
