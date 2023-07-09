@@ -8,6 +8,7 @@
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="pterodactyl"
 
+# Check for panels that are using Docker.
 if [[ -f ".dockerenv" ]]; then
   DOCKER="y";
   FOLDER="html"
@@ -93,7 +94,7 @@ if [[ $1 != "-bash" ]]; then
   else
     # Only run if Blueprint is not in the process of upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
-      log "  ██\n██  ██\n  ████\n";
+      log "  ██\n██  ██\n  ████\n"; # Blueprint logo made out of unicode icons.
       if [[ $DOCKER == "y" ]]; then
         log_yellow "[WARNING] While running Blueprint with docker is supported, you may run into some issues. Report problems you find at ptero.shop/issue.";
       fi;
@@ -162,6 +163,7 @@ if [[ $1 != "-bash" ]]; then
     fi;
 
     dbAdd "blueprint.setupFinished";
+    # Let the panel know the user has finished installation.
     sed -i "s!NOTINSTALLED!INSTALLED!g" /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
     exit 1;
   fi;
@@ -207,7 +209,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   # Get all strings from the conf.yml file and make them accessible as variables.
   eval $(parse_yaml .blueprint/tmp/$n/conf.yml conf_)
 
-  # Add aliases for the info config values to make working with them easier.
+  # Add aliases for config values to make working with them easier.
   name=$conf_info_name;
   identifier=$conf_info_identifier;
   description=$conf_info_description;
