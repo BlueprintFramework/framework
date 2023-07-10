@@ -146,10 +146,10 @@ if [[ $1 != "-bash" ]]; then
     chown -R www-data:www-data /var/www/$FOLDER/.*;
 
     # Remove placeholder README.md files.
-    log_bright "[INFO] rm .blueprint/dev/README.md";
-    rm .blueprint/dev/README.md;
-    log_bright "[INFO] rm .blueprint/data/extensions/README.md";
-    rm .blueprint/data/extensions/README.md;
+    log_bright "[INFO] rm -R .blueprint/dev/*";
+    rm -R .blueprint/dev/*;
+    log_bright "[INFO] rm -R .blueprint/data/extensions/*";
+    rm -R .blueprint/data/extensions/*;
 
     # Put application into production.
     log_bright "[INFO] php artisan up";
