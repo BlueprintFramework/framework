@@ -150,6 +150,8 @@ if [[ $1 != "-bash" ]]; then
     rm -R .blueprint/dev/*;
     log_bright "[INFO] rm -R .blueprint/data/extensions/*";
     rm -R .blueprint/data/extensions/*;
+    log_bright "[INFO] rm -R tools/tmp/*";
+    rm -R tools/tmp/*;
 
     # Put application into production.
     log_bright "[INFO] php artisan up";
