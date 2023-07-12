@@ -294,14 +294,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $target == "" ]]; then rm -R .blueprint/tmp/$n;               quit_red "[FATAL] 'info_target' is a required configuration option.";fi;
   if [[ $icon == "" ]]; then rm -R .blueprint/tmp/$n;                 quit_red "[FATAL] 'info_icon' is a required configuration option.";fi;
 
-  if [[ $admin_controller == "" ]]; then                                     log_bright "[INFO] Admin controller field left blank, using default controller instead..";
+  if [[ $admin_controller == "" ]]; then                            log_bright "[INFO] Admin controller field left blank, using default controller instead..";
     controller_type="default";else controller_type="custom";fi;
   if [[ $admin_view == "" ]]; then rm -R .blueprint/tmp/$n;           quit_red "[FATAL] 'admin_view' is a required configuration option.";fi;
-  if [[ $target != $VERSION ]]; then                                         log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi;
+  if [[ $target != $VERSION ]]; then                                log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi;
   if [[ $identifier != $n ]]; then rm -R .blueprint/tmp/$n;           quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi;
   if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/tmp/$n;  quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi;
 
-  if [[ $identifier =~ [a-z] ]]; then                                        log_bright "[INFO] Identifier a-z checks passed.";
+  if [[ $identifier =~ [a-z] ]]; then                               log_bright "[INFO] Identifier a-z checks passed.";
   else rm -R .blueprint/tmp/$n;                                       quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi;
   if [[ ! -f ".blueprint/tmp/$n/$icon" ]]; then
     rm -R .blueprint/tmp/$n;                                          quit_red "[FATAL] The 'info_icon' path points to a file that does not exist.";fi;
@@ -315,7 +315,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   if [[ $admin_requests != "" ]]; then
-    log_yellow "[WARNING] Admin requests are deprecated. Use them in your controller instead."
+    log_yellow "[WARNING] Admin requests are deprecated. Use them in your controller instead.";
   fi;
 
   if [[ $data_public != "" ]]; then
@@ -330,10 +330,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   cp -R .blueprint/data/internal/build/extensions/route.php .blueprint/data/internal/build/extensions/route.php.bak 2> /dev/null;
   cp -R .blueprint/data/internal/build/extensions/button.blade.php .blueprint/data/internal/build/extensions/button.blade.php.bak 2> /dev/null;
 
+  # Start creating data directory.
   mkdir .blueprint/data/extensions/$identifier;
+  mkdir .blueprint/data/extensions/$identifier/.store;
+  
+  cp .blueprint/tmp/$n/conf.yml .blueprint/data/extension/$identifier/.store/conf.yml; #backup conf.yml
+  
   if [[ $data_directory != "" ]]; then
     cp -R .blueprint/tmp/$n/$data_directory/* .blueprint/data/extensions/$identifier/;
   fi;
+  # End creating data directory.
 
   mkdir public/assets/extensions/$identifier;
   cp .blueprint/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg;
