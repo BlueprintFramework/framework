@@ -71,6 +71,6 @@ class BlueprintExtensionLibrary
   | fileRead("path");
   */
   public function fileRead($path) {
-    return shell_exec("cat ".escapeshellarg($path));
+    return shell_exec("cat ".escapeshellarg($path).";");
   }
 }
