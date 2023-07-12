@@ -41,7 +41,8 @@ class BlueprintExtensionLibrary
   | Notifications
   |
   | notify("text");
-  | notifyAfter("text");
+  | notifyAfter(delay, "text");
+  | notifyNow("text");
   */
   public function notify($text) {
     $this->dbSet("blueprint", "notification:text", $text);
@@ -53,6 +54,13 @@ class BlueprintExtensionLibrary
     $this->dbSet("blueprint", "notification:text", $text);
     shell_exec("cd /var/www/".escapeshellarg($this->placeholder->folder()).";echo ".escapeshellarg($text)." > .blueprint/data/internal/db/notification;");
     header("Refresh:$delay");
+    return;
+  }
+
+  public function notifyNow($text) {
+    $this->dbSet("blueprint", "notification:text", $text);
+    shell_exec("cd /var/www/".escapeshellarg($this->placeholder->folder()).";echo ".escapeshellarg($text)." > .blueprint/data/internal/db/notification;");
+    header("Refresh:0");
     return;
   }
 
