@@ -226,6 +226,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   admin_controller=$conf_admin_controller; #(optional)
   admin_css=$conf_admin_css; #(optional)
 
+  dashboard_wrapper=$conf_dashboard_wrapper; #(optional)
+
   data_directory=$conf_data_directory; #(optional)
   data_public=$conf_data_public; #(optional)
 
@@ -411,10 +413,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
 
   # insert "dashboard_wrapper" into wrapper.blade.php
-  if [[ $dashboard_header != "" ]]; then
-    cp .blueprint/tmp/$n/$dashboard_header .blueprint/tmp/$n/$dashboard_header.bak;
-    echo "<!-- dashboard:header-bottom -->" >> .blueprint/tmp/$n/$dashboard_header.bak;
-    sed "/<!-- dashboard:header-bottom -->/r .blueprint/tmp/$n/$dashboard_header.bak" resources/views/templates/wrapper.blade.php;
+  if [[ $dashboard_wrapper != "" ]]; then
+    cp .blueprint/tmp/$n/$dashboard_wrapper .blueprint/tmp/$n/$dashboard_wrapper.bak;
+    echo "<!-- dashboard:header-bottom -->" >> .blueprint/tmp/$n/$dashboard_wrapper.bak;
+    sed "/<!-- dashboard:header-bottom -->/r .blueprint/tmp/$n/$dashboard_wrapper.bak" resources/views/templates/wrapper.blade.php;
   fi;
 
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;
