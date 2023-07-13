@@ -334,7 +334,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   mkdir .blueprint/data/extensions/$identifier;
   mkdir .blueprint/data/extensions/$identifier/.store;
   
-  cp .blueprint/tmp/$n/conf.yml .blueprint/data/extension/$identifier/.store/conf.yml; #backup conf.yml
+  cp .blueprint/tmp/$n/conf.yml .blueprint/data/extensions/$identifier/.store/conf.yml; #backup conf.yml
   
   if [[ $data_directory != "" ]]; then
     cp -R .blueprint/tmp/$n/$data_directory/* .blueprint/data/extensions/$identifier/;
