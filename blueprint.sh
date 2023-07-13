@@ -410,6 +410,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
 
+  # insert "dashboard_wrapper" into wrapper.blade.php
+  if [[ $dashboard_header != "" ]]; then
+    cp .blueprint/tmp/$n/$dashboard_header .blueprint/tmp/$n/$dashboard_header.bak;
+    echo "<!-- dashboard:header-bottom -->" >> .blueprint/tmp/$n/$dashboard_header.bak;
+    sed "/<!-- dashboard:header-bottom -->/r .blueprint/tmp/$n/$dashboard_header.bak" resources/views/templates/wrapper.blade.php;
+  fi;
+
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;
   if [[ $admin_controller == "" ]]; then
     rm .blueprint/data/internal/build/extensions/controller.php.bak;
@@ -632,6 +639,7 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
+  cp blueprint.sh .blueprint.sh.bak;
   if [[ $3 == "dev" ]]; then
     bash tools/update.sh /var/www/$FOLDER dev
   else
@@ -662,9 +670,17 @@ if [[ $2 == "-upgrade" ]]; then
 
   if [[ $score == 1 ]]; then
     log_green "[SUCCESS] Blueprint has upgraded successfully.";
+    rm .blueprint.sh.bak;
+    exit 1;
   elif [[ $score == 0 ]]; then
     log_red "[FATAL] All checks have failed.";
+    rm blueprint.sh;
+    mv .blueprint.sh.bak;
+    exit 1;
   else
     log_yellow "[WARNING] Some post-upgrade checks have failed.";
+    rm blueprint.sh;
+    mv .blueprint.sh.bak;
+    exit 1;
   fi;
 fi;

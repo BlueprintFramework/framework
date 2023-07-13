@@ -17,6 +17,9 @@ admin:
   controller: ""
   css: ""
 
+dashboard:
+  wrapper: ""
+
 data:
   directory: "data"
   public: ""
