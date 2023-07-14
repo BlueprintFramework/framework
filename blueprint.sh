@@ -233,15 +233,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   database_migrations=$conf_database_migrations; #(optional)
 
-  if [[ ( $icon == "/"* ) || ( $icon == "."* ) || ( $icon == *"\n"* ) ]]; then esc="y"; fi;
-  if [[ ( $admin_view == "/"* ) || ( $admin_view == "."* ) || ( $admin_view == *"\n"* ) ]]; then esc="y"; fi;
-  if [[ ( $admin_controller == "/"* ) || ( $admin_controller == "."* ) || ( $admin_controller == *"\n"* ) ]]; then esc="y"; fi;
-  if [[ ( $admin_css == "/"* ) || ( $admin_css == "."* ) || ( $admin_css == *"\n"* ) ]]; then esc="y"; fi;
-  if [[ ( $data_directory == "/"* ) || ( $data_directory == "."* ) || ( $data_directory == *"\n"* ) ]]; then esc="y"; fi;
-  if [[ ( $data_public == "/"* ) || ( $data_public == "."* ) || ( $data_public == *"\n"* ) ]]; then esc="y"; fi;
-  if [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) || ( $database_migrations == *"\n"* ) ]]; then esc="y"; fi;
-
-  if [[ $esc == "y" ]]; then
+  if [[ ( $icon == "/"*                ) || ( $icon == "."*                ) || ( $icon == *"\n"*                ) ]] ||
+     [[ ( $admin_view == "/"*          ) || ( $admin_view == "."*          ) || ( $admin_view == *"\n"*          ) ]] ||
+     [[ ( $admin_controller == "/"*    ) || ( $admin_controller == "."*    ) || ( $admin_controller == *"\n"*    ) ]] ||
+     [[ ( $admin_css == "/"*           ) || ( $admin_css == "."*           ) || ( $admin_css == *"\n"*           ) ]] ||
+     [[ ( $data_directory == "/"*      ) || ( $data_directory == "."*      ) || ( $data_directory == *"\n"*      ) ]] ||
+     [[ ( $data_public == "/"*         ) || ( $data_public == "."*         ) || ( $data_public == *"\n"*         ) ]] ||
+     [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) || ( $database_migrations == *"\n"* ) ]]; then
     rm -R .blueprint/tmp/$n;
     quit_red "[FATAL] Extension has failed security checks, halting installation.";
   fi;
@@ -415,8 +413,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
     cp .blueprint/tmp/$n/$dashboard_wrapper .blueprint/tmp/$n/$dashboard_wrapper.bak;
-    echo "<!-- dashboard:header-bottom -->" >> .blueprint/tmp/$n/$dashboard_wrapper.bak;
-    sed "/<!-- dashboard:header-bottom -->/r .blueprint/tmp/$n/$dashboard_wrapper.bak" resources/views/templates/wrapper.blade.php;
+    sed -i '/<!-- dashboard:header-bottom -->/r .blueprint/tmp/'"$n"'/'"$dashboard_wrapper.bak"'\' resources/views/templates/wrapper.blade.php;
   fi;
 
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;
