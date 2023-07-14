@@ -624,7 +624,11 @@ fi;
 # -upgrade
 if [[ $2 == "-upgrade" ]]; then
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n";
-  
+
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+    quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to upgrade unless you clear your .blueprint/dev folder.";
+  fi;
+
   if [[ $3 == "dev" ]]; then
     log_blue "[INPUT] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
     read YN1;
