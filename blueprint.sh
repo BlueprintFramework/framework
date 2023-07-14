@@ -76,8 +76,7 @@ fi;
 
 # Function that exits the script after logging a "red" message.
 quit_red() {
-  log_red "${$1}";
-  mkdir .blueprint/tmp > /dev/null;
+  log_red "$1";
   exit 1;
 };
 
@@ -412,8 +411,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
-    cp .blueprint/tmp/$n/$dashboard_wrapper .blueprint/tmp/$n/$dashboard_wrapper.bak;
-    sed -i '/<!-- dashboard:header-bottom -->/r .blueprint/tmp/'"$n"'/'"$dashboard_wrapper.bak"'\' resources/views/templates/wrapper.blade.php;
+    sed -i "/<\!-- dashboard:header-bottom -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php;
   fi;
 
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;
