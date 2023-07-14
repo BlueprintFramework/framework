@@ -17,7 +17,7 @@ else
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="alpha-A9X";
+  VER_FALLBACK="alpha-4TK";
 
 # This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
