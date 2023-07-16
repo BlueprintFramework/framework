@@ -19,7 +19,7 @@ class BlueprintVariableService
   // $bp->version()
   // $bp->dbGet('db::record')
   // $bp->dbSet('db::record', 'value')
-  // $bp->exec('arguments')
+  // $bp->config('item', value);
   public function serve(): void {
     return;
   }
@@ -46,7 +46,8 @@ class BlueprintVariableService
     return;
   }
 
-  public function exec($arg): string|null {
-    return shell_exec("cd /var/www/".$this->blueprintplaceholderservice->folder().";bash blueprint.sh -exec ".escapeshellarg($arg));
+  public function config($item, $value): string|null {
+    // I'm aware this isn't done perfectly and this is subject to change.
+    return shell_exec("cd /var/www/".$this->blueprintplaceholderservice->folder().";c$item=$value bash blueprint.sh -config");
   }
 }
