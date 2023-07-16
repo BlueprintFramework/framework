@@ -56,21 +56,17 @@ source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 source .blueprint/lib/telemetry.sh;
 
-# -exec
-if [[ "$1" == "-exec" ]]; then
+# -config
+# usage: "cITEM=VALUE bash blueprint.sh -config"
+if [[ "$1" == "-config" ]]; then
 
-  # Quoteless arguments.
-  # There should be an easier way to do this and will be added in the future.
-  ql1=$(echo "$1" | tr -d "'\\\n\r;");ql2=$(echo "$2" | tr -d "'\\\n\r;");ql3=$(echo "$3" | tr -d "'\\\n\r;");ql4=$(echo "$4" | tr -d "'\\\n\r;");ql5=$(echo "$5" | tr -d "'\\\n\r;");
-
-  # Update the telemetry id to argument.
-  if [[ $ql2 == "key" ]]; then
-    echo "$ql3" > .blueprint/data/internal/db/telemetry_id;
-    echo Command executed.;
-    exit 1;
+  # cTELEMETRY_ID
+  # Update the telemetry id.
+  if [[ $cTELEMETRY_ID != "" ]]; then
+    echo "$cTELEMETRY" > .blueprint/data/internal/db/telemetry_id;
   fi;
 
-  echo Command not found.;
+  echo BP_100;
   exit 1;
 fi;
 
