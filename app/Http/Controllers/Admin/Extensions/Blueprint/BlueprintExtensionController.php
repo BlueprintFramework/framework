@@ -82,7 +82,6 @@ class BlueprintAdminFormRequest extends AdminFormRequest
     return [
       'placeholder' => 'string',
       'developer' => 'string',
-      'developer:cmd' => 'string',
       'telemetry' => 'string',
     ];
   }
@@ -91,7 +90,6 @@ class BlueprintAdminFormRequest extends AdminFormRequest
     return [
       'placeholder' => 'Placeholder Value',
       'developer' => 'Developer Mode',
-      'developer:cmd' => 'Blueprint Execute Command',
       'telemetry' => 'Telemetry',
     ];
   }
