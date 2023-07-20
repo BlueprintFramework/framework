@@ -407,7 +407,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
-    sed -i "/<\!-- dashboard:header-bottom -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php;
+    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php;
   fi;
 
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- dashboard:header-top -->
         <title>{{ config('app.name', 'Pterodactyl') }}</title>
 
         @section('meta')
@@ -40,10 +39,8 @@
         @yield('assets')
 
         @include('layouts.scripts')
-        <!-- dashboard:header-bottom -->
     </head>
     <body class="{{ $css['body'] ?? 'bg-neutral-50' }}">
-        <!-- dashboard:body-top -->
         @section('content')
             @yield('above-container')
             @yield('container')
@@ -52,6 +49,6 @@
         @section('scripts')
             {!! $asset->js('main.js') !!}
         @show
-        <!-- dashboard:body-bottom -->
     </body>
+    <!-- wrapper:insert -->
 </html>
