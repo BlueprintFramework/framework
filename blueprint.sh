@@ -415,7 +415,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $DUPLICATE != "y" ]]; then
     sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
   else
-    log_yellow "[INFO] Changes to the '/admin/extensions' page have been skipped."
+    log_bright "[INFO] Changes to the '/admin/extensions' page have been skipped."
   fi;
 
   # insert "dashboard_wrapper" into wrapper.blade.php
