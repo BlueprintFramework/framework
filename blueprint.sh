@@ -265,6 +265,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     for f in $(find $DIR -type f -exec echo {} \;); do
       sed -i "s~\^#version#\^~$version~g" $f;
       sed -i "s~\^#author#\^~$author~g" $f;
+      sed -i "s~\^#name#\^~$name~g" $f;
       sed -i "s~\^#identifier#\^~$identifier~g" $f;
       sed -i "s~\^#path#\^~/var/www/$FOLDER~g" $f;
       sed -i "s~\^#datapath#\^~/var/www/$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
@@ -273,6 +274,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
         sed -i "s~__version__~$version~g" $f;
         sed -i "s~__author__~$author~g" $f;
         sed -i "s~__identifier__~$identifier~g" $f;
+        sed -i "s~__name__~$name~g" $f;
         sed -i "s~__path__~/var/www/$FOLDER~g" $f;
         sed -i "s~__datapath__~/var/www/$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
       fi;
