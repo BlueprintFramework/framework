@@ -239,6 +239,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     quit_red "[FATAL] Extension has failed security checks, halting installation.";
   fi;
 
+  if [[ $(cat .blueprint/data/internal/db/installed_extensions) == *"$identifier,"* ]]; then
+    log_bright "[INFO] Extension appears to be installed already, skipping some tasks.";
+    DUPLICATE="y";
+  fi;
+
   if [[ $website != "" ]]; then
     if [[ $website != "https://"* ]]; then
       if [[ $website != "http://"* ]]; then
@@ -403,9 +408,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp .blueprint/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
   fi;
 
-  echo $ADMINROUTE_RESULT >> routes/admin.php;
+  if [[ $DUPLICATE != "y" ]]; then
+    echo $ADMINROUTE_RESULT >> routes/admin.php;
+  fi;
 
-  sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
+  if [[ $DUPLICATE != "y" ]]; then
+    sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
+  else
+    log_yellow "[INFO] Changes to the '/admin/extensions' page have been skipped."
+  fi;
 
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
@@ -431,6 +442,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution.";
     chmod +x .blueprint/data/extensions/$identifier/install.sh;
     bash .blueprint/data/extensions/$identifier/install.sh;
+  fi;
+
+  if [[ $DUPLICATE != "y" ]]; then
+    echo $identifier"," >> .blueprint/data/internal/db/installed_extensions;
+    log_bright "[INFO] Added '$identifier' to the list of installed extensions.";
   fi;
 
   log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
