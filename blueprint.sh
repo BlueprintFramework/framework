@@ -220,6 +220,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   admin_view=$conf_admin_view;
   admin_controller=$conf_admin_controller; #(optional)
   admin_css=$conf_admin_css; #(optional)
+  admin_wrapper=$conf_admin_wrapper; #(optional)
 
   dashboard_wrapper=$conf_dashboard_wrapper; #(optional)
 
@@ -421,6 +422,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php;
+  fi;
+
+  # insert "admin_wrapper" into admin.blade.php
+  if [[ $dashboard_wrapper != "" ]]; then
+    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" resources/views/layouts/admin.blade.php;
   fi;
 
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;

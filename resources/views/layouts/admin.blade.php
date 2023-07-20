@@ -235,4 +235,5 @@
             </script>
         @show
     </body>
+    <!-- wrapper:insert -->
 </html>
