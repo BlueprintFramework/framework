@@ -429,6 +429,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution.";
+    chmod +x .blueprint/data/extensions/$identifier/install.sh;
     bash .blueprint/data/extensions/$identifier/install.sh;
   fi;
 
