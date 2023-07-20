@@ -63,7 +63,7 @@ if [[ "$1" == "-config" ]]; then
   # cTELEMETRY_ID
   # Update the telemetry id.
   if [[ $cTELEMETRY_ID != "" ]]; then
-    echo "$cTELEMETRY" > .blueprint/data/internal/db/telemetry_id;
+    echo "$cTELEMETRY_ID" > .blueprint/data/internal/db/telemetry_id;
   fi;
 
   echo BP_100;
