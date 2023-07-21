@@ -112,7 +112,7 @@ if [[ $1 != "-bash" ]]; then
     # Inject custom Blueprint css into Pterodactyl's admin panel.
     log_bright "[INFO] updating admin css";
     sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */!!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
-    sed -i '1s/^/@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */\n/' /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
+    sed -i '1i@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */' /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
 
     # Clear view cache.
     log_bright "[INFO] php artisan view:clear";
