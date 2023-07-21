@@ -349,7 +349,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   ICON="/assets/extensions/$identifier/icon.jpg";
   CONTENT=$(cat .blueprint/tmp/$n/$admin_view);
 
-  if [[ $INJECTCSS == "y" ]]; then
+  if [[ $INJECTCSS == "y" && $DUPLICATE != "y" ]]; then
     sed -i "s!/* blueprint reserved line */!/* blueprint reserved line */\n@import url(/assets/extensions/$identifier/$identifier.style.css);!g" public/themes/pterodactyl/css/pterodactyl.css;
     cp -R .blueprint/tmp/$n/$css/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
   fi;
