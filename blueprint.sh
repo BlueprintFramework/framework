@@ -244,6 +244,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $(cat .blueprint/data/internal/db/installed_extensions) == *"$identifier,"* ]]; then
     log_bright "[INFO] Extension appears to be installed already, skipping some tasks.";
     DUPLICATE="y";
+    log_yellow "[WARNING] Please note that updating extensions is fairly limited at the moment, some things may not be updated.";
   fi;
 
   if [[ $website != "" ]]; then
@@ -423,7 +424,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   # insert "admin_wrapper" into admin.blade.php
-  if [[ $dashboard_wrapper != "" ]]; then
+  if [[ $admin_wrapper != "" ]]; then
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" resources/views/layouts/admin.blade.php;
   fi;
 
@@ -453,7 +454,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     log_bright "[INFO] Added '$identifier' to the list of installed extensions.";
   fi;
 
-  log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
+  if [[ $DUPLICATE == "y" ]]; then
+    log_green "\n\n[SUCCESS] $identifier should now be updated. If something didn't work as expected, please let us know at ptero.shop/issue.";
+  else
+    log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
+  fi;
   if [[ $dev == false ]]; then
     sendTelemetry "FINISH_EXTENSION_INSTALLATION" > /dev/null;
   fi;
