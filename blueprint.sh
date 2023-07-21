@@ -347,7 +347,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   if [[ $admin_css != "" ]]; then
     sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css;
-    sed -i "s~/* admin.css */~/* admin.css */\n@import url(/assets/extensions/$identifier/$identifier.style.css);~g" public/themes/pterodactyl/css/pterodactyl.css;
+    sed -i "s~/\* admin.css \*/~/\* admin.css \*/\n@import url(/assets/extensions/$identifier/$identifier.style.css);~g" public/themes/pterodactyl/css/pterodactyl.css;
     cp .blueprint/tmp/$n/$css public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
   fi;
 
