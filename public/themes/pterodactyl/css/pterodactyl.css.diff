@@ -1,3 +1,5 @@
++@import url(/assets/extensions/blueprint/blueprint.style.css);
++/* admin.css */
 /**
  * Pterodactyl - Panel
  * Copyright (c) 2015 - 2017 Dane Everitt <dane@daneeveritt.com>
@@ -20,7 +22,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- @import 'checkbox.css';
-+@import url(/assets/extensions/blueprint/blueprint.style.css);
-+/* blueprint reserved line */
 ...
