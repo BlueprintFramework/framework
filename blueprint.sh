@@ -313,10 +313,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp -R .blueprint/tmp/$n/$database_migrations/* database/migrations/ 2> /dev/null;
   fi;
 
-  if [[ $css != "" ]]; then
-    INJECTCSS="y";
-  fi;
-
   if [[ $admin_requests != "" ]]; then
     log_yellow "[WARNING] Admin requests are deprecated. Use them in your controller instead.";
   fi;
@@ -349,7 +345,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   ICON="/assets/extensions/$identifier/icon.jpg";
   CONTENT=$(cat .blueprint/tmp/$n/$admin_view);
 
-  if [[ $INJECTCSS == "y" ]]; then
+  if [[ $admin_css != "" ]]; then
+    INJECTCSS="y";
     if [[ $DUPLICATE != "y" ]]; then
       sed -i "s!/* blueprint reserved line */!/* blueprint reserved line */\n@import url(/assets/extensions/$identifier/$identifier.style.css);!g" public/themes/pterodactyl/css/pterodactyl.css;
     fi;
