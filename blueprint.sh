@@ -111,7 +111,8 @@ if [[ $1 != "-bash" ]]; then
 
     # Inject custom Blueprint css into Pterodactyl's admin panel.
     log_bright "[INFO] updating admin css";
-    sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */!!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
+    sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);!!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
+    sed -i "s!/\* admin.css \*/!!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
     sed -i '1i@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */' /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
 
     # Clear view cache.
@@ -348,7 +349,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $admin_css != "" ]]; then
     sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css;
     sed -i "s~/\* admin.css \*/~/\* admin.css \*/\n@import url(/assets/extensions/$identifier/$identifier.style.css);~g" public/themes/pterodactyl/css/pterodactyl.css;
-    cp .blueprint/tmp/$n/$css public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
+    cp .blueprint/tmp/$n/$admin_css public/assets/extensions/$identifier/$identifier.style.css;
   fi;
 
   if [[ $name == *"~"* ]]; then log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi;
