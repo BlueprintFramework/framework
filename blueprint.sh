@@ -102,7 +102,7 @@ if [[ $1 != "-bash" ]]; then
     sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
 
     # Copy "Blueprint" extension page logo from assets.
-    log_bright "[INFO] cp /var/www/$FOLDER/.blueprint/assets/logo.jpg /var/www/$FOLDER/public/assets/extensions/blueprint/logo.jpg;";
+    log_bright "[INFO] pulling blueprint logo from assets";
     cp /var/www/$FOLDER/.blueprint/assets/logo.jpg /var/www/$FOLDER/public/assets/extensions/blueprint/logo.jpg;
 
     # Put application into maintenance.
@@ -110,8 +110,9 @@ if [[ $1 != "-bash" ]]; then
     php artisan down;
 
     # Inject custom Blueprint css into Pterodactyl's admin panel.
-    log_bright "[INFO] /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css";
-    sed -i "s!@import 'checkbox.css';!@import 'checkbox.css';\n@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* blueprint reserved line */!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
+    log_bright "[INFO] updating admin css";
+    sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);!!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
+    echo "@import url(/assets/extensions/blueprint/blueprint.style.css);" >> /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css
 
 
     # Clear view cache.
@@ -346,11 +347,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   CONTENT=$(cat .blueprint/tmp/$n/$admin_view);
 
   if [[ $admin_css != "" ]]; then
-    INJECTCSS="y";
-    if [[ $DUPLICATE != "y" ]]; then
-      sed -i "s!/* blueprint reserved line */!/* blueprint reserved line */\n@import url(/assets/extensions/$identifier/$identifier.style.css);!g" public/themes/pterodactyl/css/pterodactyl.css;
-    fi;
-    cp -R .blueprint/tmp/$n/$css/* public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
+    sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css;
+    echo "@import url(/assets/extensions/$identifier/$identifier.style.css);" >> public/themes/pterodactyl/css/pterodactyl.css;
+    cp .blueprint/tmp/$n/$css public/assets/extensions/$identifier/$identifier.style.css 2> /dev/null;
   fi;
 
   if [[ $name == *"~"* ]]; then log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi;
