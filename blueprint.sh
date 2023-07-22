@@ -246,14 +246,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     eval $(parse_yaml .blueprint/data/extensions/$identifier/.store/conf.yml old_);
     DUPLICATE="y";
 
-    if [[ ! -f ".blueprint/data/extensions/$identifier/.store/*"                            ]] ||
-       [[ ! -f ".blueprint/data/extensions/$identifier/.store/conf.yml"                     ]] ||
-       [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/button.blade.php"       ]] ||
-       [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/controller.php"         ]] ||
-       [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/route.php"              ]] ||
-       [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/admin.blade.php"        ]]; then
+    if [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/button.blade.php" ]]; then
       rm -R .blueprint/tmp/$n;
-      quit_red "[FATAL] Upgrading extension has failed due to missing .store files.";
+      quit_red "[FATAL] Upgrading extension has failed due to missing essential .store files.";
     fi;
   fi;
 
@@ -438,12 +433,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   # Create backup of generated values.
-  log_bright "[INFO] Backing up build files..";
+  log_bright "[INFO] Backing up (some) build files..";
   mkdir .blueprint/data/extensions/$identifier/.store/build;
-  cp .blueprint/data/internal/build/extensions/admin.blade.php.bak   .blueprint/data/extensions/$identifier/.store/build/admin.blade.php;
-  cp .blueprint/data/internal/build/extensions/controller.php.bak    .blueprint/data/extensions/$identifier/.store/build/controller.php;
-  cp .blueprint/data/internal/build/extensions/route.php.bak         .blueprint/data/extensions/$identifier/.store/build/route.php;
-  cp .blueprint/data/internal/build/extensions/button.blade.php.bak  .blueprint/data/extensions/$identifier/.store/build/button.blade.php;
+  cp .blueprint/data/internal/build/extensions/button.blade.php.bak .blueprint/data/extensions/$identifier/.store/build/button.blade.php;
 
   log_bright "[INFO] Cleaning up build files..";
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;
