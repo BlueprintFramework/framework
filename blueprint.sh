@@ -241,6 +241,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     quit_red "[FATAL] Extension has failed security checks, halting installation.";
   fi;
 
+  # Detect if extension is already installed and prepare the upgrading process.
   if [[ $(cat .blueprint/data/internal/db/installed_extensions) == *"$identifier,"* ]]; then
     log_bright "[INFO] Extension appears to be installed already, reading variables..";
     eval $(parse_yaml .blueprint/data/extensions/$identifier/.store/conf.yml old_);
@@ -249,6 +250,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     if [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/button.blade.php" ]]; then
       rm -R .blueprint/tmp/$n;
       quit_red "[FATAL] Upgrading extension has failed due to missing essential .store files.";
+    fi;
+
+    # clean up public folder
+    log_bright "[INFO] Cleaning up old extension files..";
+    if [[ $old_data_public != "" ]]; then
+      rm -R public/extensions/$old_identifier/*;
     fi;
   fi;
 
@@ -425,17 +432,36 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
+    if [[ $DUPLICATE == "y" ]]; then
+      if [[ -f ".blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak" ]]; then
+        DASHBOARD_WRAPPER_BAK=$(cat .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak);
+        sed -i "s~$DASHBOARD_WRAPPER_BAK~~g" resources/views/templates/wrapper.blade.php;
+      fi;
+    fi;
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php;
   fi;
 
   # insert "admin_wrapper" into admin.blade.php
   if [[ $admin_wrapper != "" ]]; then
+    if [[ $DUPLICATE == "y" ]]; then
+      if [[ -f ".blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak" ]]; then
+        ADMIN_WRAPPER_BAK=$(cat .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak);
+        sed -i "s~$ADMIN_WRAPPER_BAK~~g" resources/views/layouts/admin.blade.php;
+      fi;
+    fi;
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" resources/views/layouts/admin.blade.php;
   fi;
 
   # Create backup of generated values.
   log_bright "[INFO] Backing up (some) build files..";
   mkdir .blueprint/data/extensions/$identifier/.store/build;
+  if [[ $dashboard_wrapper != "" ]]; then
+    touch .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak;
+    echo $(cat .blueprint/tmp/$n/$dashboard_wrapper) > .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak;
+  fi; if [[ $admin_wrapper != "" ]]; then
+    touch .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak;
+    echo $(cat .blueprint/tmp/$n/$admin_wrapper) > .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak;
+  fi;
   cp .blueprint/data/internal/build/extensions/button.blade.php.bak .blueprint/data/extensions/$identifier/.store/build/button.blade.php;
 
   log_bright "[INFO] Cleaning up build files..";
