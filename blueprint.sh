@@ -242,9 +242,19 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   if [[ $(cat .blueprint/data/internal/db/installed_extensions) == *"$identifier,"* ]]; then
-    log_bright "[INFO] Extension appears to be installed already, skipping some tasks.";
+    log_bright "[INFO] Extension appears to be installed already, reading variables..";
+    eval $(parse_yaml .blueprint/data/extensions/$identifier/.store/conf.yml old_);
     DUPLICATE="y";
-    log_yellow "[WARNING] Please note that updating extensions is fairly limited at the moment, some things may not be updated.";
+
+    if [[ ! -f ".blueprint/data/extensions/$identifier/.store/*"                            ]] ||
+       [[ ! -f ".blueprint/data/extensions/$identifier/.store/conf.yml"                     ]] ||
+       [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/button.blade.php"       ]] ||
+       [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/controller.php"         ]] ||
+       [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/route.php"              ]] ||
+       [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/admin.blade.php"        ]]; then
+      rm -R .blueprint/tmp/$n;
+      quit_red "[FATAL] Upgrading extension has failed due to missing .store files.";
+    fi;
   fi;
 
   if [[ $website != "" ]]; then
@@ -412,11 +422,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     echo $ADMINROUTE_RESULT >> routes/admin.php;
   fi;
 
-  if [[ $DUPLICATE != "y" ]]; then
-    sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
-  else
-    log_bright "[INFO] Changes to the '/admin/extensions' page have been skipped."
+  if [[ $DUPLICATE == "y" ]]; then
+    sed -E -i "s~$(cat .blueprint/data/extensions/$identifier/.store/build/button.blade.php)~~g" resources/views/admin/extensions.blade.php;
   fi;
+  sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
 
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
@@ -428,12 +437,22 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" resources/views/layouts/admin.blade.php;
   fi;
 
+  # Create backup of generated values.
+  log_bright "[INFO] Backing up build files..";
+  mkdir .blueprint/data/extensions/$identifier/.store/build;
+  cp .blueprint/data/internal/build/extensions/admin.blade.php.bak   .blueprint/data/extensions/$identifier/.store/build/admin.blade.php;
+  cp .blueprint/data/internal/build/extensions/controller.php.bak    .blueprint/data/extensions/$identifier/.store/build/controller.php;
+  cp .blueprint/data/internal/build/extensions/route.php.bak         .blueprint/data/extensions/$identifier/.store/build/route.php;
+  cp .blueprint/data/internal/build/extensions/button.blade.php.bak  .blueprint/data/extensions/$identifier/.store/build/button.blade.php;
+
+  log_bright "[INFO] Cleaning up build files..";
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;
   if [[ $admin_controller == "" ]]; then
     rm .blueprint/data/internal/build/extensions/controller.php.bak;
   fi;
   rm .blueprint/data/internal/build/extensions/route.php.bak;
   rm .blueprint/data/internal/build/extensions/button.blade.php.bak;
+  log_bright "[INFO] Cleaning up temp files..";
   rm -R .blueprint/tmp/$n;
 
   if [[ $database_migrations != "" ]]; then
