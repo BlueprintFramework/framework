@@ -418,7 +418,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   if [[ $DUPLICATE == "y" ]]; then
-    sed -E -i "s~$(cat .blueprint/data/extensions/$identifier/.store/build/button.blade.php)~~g" resources/views/admin/extensions.blade.php;
+    OLDBUTTON_RESULT=$(cat .blueprint/data/extensions/$identifier/.store/build/button.blade.php);
+    sed -i "s~$OLDBUTTON_RESULT~~g" resources/views/admin/extensions.blade.php;
   fi;
   sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php;
 
