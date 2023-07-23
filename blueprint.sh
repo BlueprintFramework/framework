@@ -433,9 +433,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
     if [[ $DUPLICATE == "y" ]]; then
-      if [[ -f ".blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak" ]]; then
-        DASHBOARD_WRAPPER_BAK=$(cat .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak);
-        sed -i "s~$DASHBOARD_WRAPPER_BAK~~g" resources/views/templates/wrapper.blade.php;
+      if [[ -f ".blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.blade.php" ]]; then
+        DASHBOARD_WRAPPER_BAK=$(cat .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.blade.php);
+        perl -i -pe "BEGIN{undef $/;} s~\Q$DASHBOARD_WRAPPER_BAK\E~~g" resources/views/templates/wrapper.blade.php;
       fi;
     fi;
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php;
@@ -444,9 +444,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   # insert "admin_wrapper" into admin.blade.php
   if [[ $admin_wrapper != "" ]]; then
     if [[ $DUPLICATE == "y" ]]; then
-      if [[ -f ".blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak" ]]; then
-        ADMIN_WRAPPER_BAK=$(cat .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak);
-        sed -i "s~$ADMIN_WRAPPER_BAK~~g" resources/views/layouts/admin.blade.php;
+      if [[ -f ".blueprint/data/extensions/$identifier/.store/build/admin_wrapper.blade.php" ]]; then
+        ADMIN_WRAPPER_BAK=$(cat .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.blade.php);
+        perl -i -pe "BEGIN{undef $/;} s~\Q$ADMIN_WRAPPER_BAK\E~~g" resources/views/layouts/admin.blade.php;
       fi;
     fi;
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" resources/views/layouts/admin.blade.php;
@@ -456,9 +456,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   log_bright "[INFO] Backing up (some) build files..";
   mkdir .blueprint/data/extensions/$identifier/.store/build;
   if [[ $dashboard_wrapper != "" ]]; then
-    cp .blueprint/tmp/$n/$dashboard_wrapper .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak;
+    cp .blueprint/tmp/$n/$dashboard_wrapper .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.blade.php;
   fi; if [[ $admin_wrapper != "" ]]; then
-    cp .blueprint/tmp/$n/$admin_wrapper .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak;
+    cp .blueprint/tmp/$n/$admin_wrapper .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.blade.php;
   fi;
   cp .blueprint/data/internal/build/extensions/button.blade.php.bak .blueprint/data/extensions/$identifier/.store/build/button.blade.php;
 
