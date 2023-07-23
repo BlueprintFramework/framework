@@ -456,11 +456,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   log_bright "[INFO] Backing up (some) build files..";
   mkdir .blueprint/data/extensions/$identifier/.store/build;
   if [[ $dashboard_wrapper != "" ]]; then
-    touch .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak;
-    echo $(cat .blueprint/tmp/$n/$dashboard_wrapper) > .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak;
+    cp .blueprint/tmp/$n/$dashboard_wrapper .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.bak;
   fi; if [[ $admin_wrapper != "" ]]; then
-    touch .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak;
-    echo $(cat .blueprint/tmp/$n/$admin_wrapper) > .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak;
+    cp .blueprint/tmp/$n/$admin_wrapper .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.bak;
   fi;
   cp .blueprint/data/internal/build/extensions/button.blade.php.bak .blueprint/data/extensions/$identifier/.store/build/button.blade.php;
 
