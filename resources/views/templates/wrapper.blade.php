@@ -44,6 +44,7 @@
         @section('content')
             @yield('above-container')
             @yield('container')
+            <!-- wrapper:insert -->
             @yield('below-container')
         @show
         @section('scripts')

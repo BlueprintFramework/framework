@@ -433,16 +433,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
     if [[ $DUPLICATE == "y" ]]; then
-      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/templates/base/core.blade.php;
-      sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/templates/base/core.blade.php;
-      sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/templates/base/core.blade.php;
+      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php;
+      sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/templates/wrapper.blade.php;
+      sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/templates/wrapper.blade.php;
     fi;
     touch .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK;
     cat <(echo "<!--␀$identifier:start␀-->") .blueprint/tmp/$n/$dashboard_wrapper > .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK;
     cp .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK .blueprint/tmp/$n/$dashboard_wrapper;
     rm .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK;
     echo -e "\n<!--␀$identifier:stop␀-->" >> .blueprint/tmp/$n/$dashboard_wrapper;
-    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/base/core.blade.php;
+    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php;
   fi;
 
   # insert "admin_wrapper" into admin.blade.php
