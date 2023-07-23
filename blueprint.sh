@@ -433,33 +433,30 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   # insert "dashboard_wrapper" into wrapper.blade.php
   if [[ $dashboard_wrapper != "" ]]; then
     if [[ $DUPLICATE == "y" ]]; then
-      if [[ -f ".blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.blade.php" ]]; then
-        DASHBOARD_WRAPPER_BAK=$(cat .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.blade.php);
-        perl -i -pe "BEGIN{undef $/;} s~\Q$DASHBOARD_WRAPPER_BAK\E~~g" resources/views/templates/wrapper.blade.php;
-      fi;
+      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php;
+      sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/templates/wrapper.blade.php;
+      sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/templates/wrapper.blade.php;
     fi;
+    cat <(echo "<!--␀$identifier:start␀-->") .blueprint/tmp/$n/$dashboard_wrapper;
+    echo "<!--␀$identifier:stop␀-->" >> .blueprint/tmp/$n/$dashboard_wrapper;
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php;
   fi;
 
   # insert "admin_wrapper" into admin.blade.php
   if [[ $admin_wrapper != "" ]]; then
     if [[ $DUPLICATE == "y" ]]; then
-      if [[ -f ".blueprint/data/extensions/$identifier/.store/build/admin_wrapper.blade.php" ]]; then
-        ADMIN_WRAPPER_BAK=$(cat .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.blade.php);
-        perl -i -pe "BEGIN{undef $/;} s~\Q$ADMIN_WRAPPER_BAK\E~~g" resources/views/layouts/admin.blade.php;
-      fi;
+      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/layouts/admin.blade.php;
+      sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/layouts/admin.blade.php;
+      sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/layouts/admin.blade.php;
     fi;
+    cat <(echo "<!--␀$identifier:start␀-->") .blueprint/tmp/$n/$admin_wrapper;
+    echo "<!--␀$identifier:stop␀-->" >> .blueprint/tmp/$n/$admin_wrapper;
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" resources/views/layouts/admin.blade.php;
   fi;
 
   # Create backup of generated values.
   log_bright "[INFO] Backing up (some) build files..";
   mkdir .blueprint/data/extensions/$identifier/.store/build;
-  if [[ $dashboard_wrapper != "" ]]; then
-    cp .blueprint/tmp/$n/$dashboard_wrapper .blueprint/data/extensions/$identifier/.store/build/dashboard_wrapper.blade.php;
-  fi; if [[ $admin_wrapper != "" ]]; then
-    cp .blueprint/tmp/$n/$admin_wrapper .blueprint/data/extensions/$identifier/.store/build/admin_wrapper.blade.php;
-  fi;
   cp .blueprint/data/internal/build/extensions/button.blade.php.bak .blueprint/data/extensions/$identifier/.store/build/button.blade.php;
 
   log_bright "[INFO] Cleaning up build files..";
@@ -477,7 +474,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     php artisan migrate;
   fi;
 
-  chown -R www-data:www-data /var/www/$FOLDER/data/extensions/$identifier/*;
+  chown -R www-data:www-data /var/www/$FOLDER/data/extensions/$identifier;
   chmod -R +x .blueprint/data/extensions/$identifier/*;
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
