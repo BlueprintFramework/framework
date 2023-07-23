@@ -441,7 +441,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cat <(echo "<!--␀$identifier:start␀-->") .blueprint/tmp/$n/$dashboard_wrapper > .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK;
     cp .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK .blueprint/tmp/$n/$dashboard_wrapper;
     rm .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK;
-    echo "\n<!--␀$identifier:stop␀-->" >> .blueprint/tmp/$n/$dashboard_wrapper;
+    echo -e "\n<!--␀$identifier:stop␀-->" >> .blueprint/tmp/$n/$dashboard_wrapper;
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php;
   fi;
 
@@ -456,7 +456,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cat <(echo "<!--␀$identifier:start␀-->") .blueprint/tmp/$n/$admin_wrapper > .blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK;
     cp .blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK .blueprint/tmp/$n/$admin_wrapper;
     rm .blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK;
-    echo "\n<!--␀$identifier:stop␀-->" >> .blueprint/tmp/$n/$admin_wrapper;
+    echo -e "\n<!--␀$identifier:stop␀-->" >> .blueprint/tmp/$n/$admin_wrapper;
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" resources/views/layouts/admin.blade.php;
   fi;
 
