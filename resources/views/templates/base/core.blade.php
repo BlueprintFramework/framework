@@ -4,6 +4,11 @@
 
 @section('container')
   <div id="modal-portal"></div>
-  @yield('blueprint')
-  <div id="app"></div>
+  <div id="app">
+    @yield('blueprint')
+  </div>
+@endsection
+
+@section('blueprint')
+  <!-- wrapper:insert -->
 @endsection

@@ -50,7 +50,4 @@
             {!! $asset->js('main.js') !!}
         @show
     </body>
-    @section('blueprint')
-    <!-- wrapper:insert -->
-    @endsection
 </html>
