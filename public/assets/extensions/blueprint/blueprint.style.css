@@ -1,8 +1,10 @@
 @keyframes notification {
-  0%   {right:-300px;opacity:0;background-color: #2a3743;}
-  10%  {right:12px;opacity:1;background-color: #1f2933;}
-  90%   {right:12px;opacity:1;background-color: #1f2933;}
-  100%  {right:-300px;opacity:0;background-color: #2a3743;}
+  0%   {right:-300px;opacity:0;background-color: #2a3743;display:none;}
+  1%   {right:-300px;opacity:0;background-color: #2a3743;display:inline;}
+  10%  {right:12px;opacity:1;background-color: #1f2933;display:inline;}
+  90%   {right:12px;opacity:1;background-color: #1f2933;display:inline;}
+  99%  {right:-300px;opacity:0;background-color: #2a3743;display:inline;}
+  100% {right:-300px;opacity:0;background-color: #2a3743;display:none;}
 }
 
 .notification {
