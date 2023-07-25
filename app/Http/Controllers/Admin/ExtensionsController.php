@@ -7,13 +7,18 @@ use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
 use Pterodactyl\Services\Helpers\BlueprintVariableService;
+use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
 
 class ExtensionsController extends Controller
 {
     /**
      * ExtensionsController constructor.
      */
-    public function __construct(private SoftwareVersionService $version, private ViewFactory $view, private BlueprintVariableService $bp)
+    public function __construct(
+        private SoftwareVersionService $version,
+        private ViewFactory $view,
+        private BlueprintVariableService $bp,
+        private BlueprintPlaceholderService $placeholder)
     {
     }
 
@@ -23,7 +28,7 @@ class ExtensionsController extends Controller
     public function index(): View
     {
         // Onboarding check.
-        if(shell_exec("cd /var/www/pterodactyl;cat .blueprint/data/internal/db/onboarding") == "*blueprint*") {
+        if(shell_exec("cd ".escapeshellarg($this->placeholder->folder()).";cat .blueprint/data/internal/db/onboarding") == "*blueprint*") {
             $onboarding = true;
         } else {
             $onboarding = false;

@@ -15,11 +15,8 @@
 * Fingers and a brain.
 
 **Installation:**
-1. Navigate to `/var/www/pterodactyl`. (your Pterodactyl installation should be installed there or in `/var/www/html`, else it might not be compatible with Blueprint)
-```sh
-cd /var/www/pterodactyl
-```
-2. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly.
+1. Navigate to your Pterodactyl folder. (most likely /var/www/pterodactyl)
+2. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly. If your Pterodactyl folder is not `/var/www/pterodactyl`, put `OVERWRITE_FOLDER="/path/to/pterodactyl";` in front of `bash blueprint.sh`.
 ```sh
 chmod +x blueprint.sh
 bash blueprint.sh

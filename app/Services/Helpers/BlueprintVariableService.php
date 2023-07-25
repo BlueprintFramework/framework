@@ -47,6 +47,6 @@ class BlueprintVariableService
   }
 
   public function config($item, $value): string|null {
-    return shell_exec("cd /var/www/".$this->blueprintplaceholderservice->folder().";c$item=$value bash blueprint.sh -config");
+    return shell_exec("cd ".escapeshellarg($this->blueprintplaceholderservice->folder()).";c$item=$value bash blueprint.sh -config");
   }
 }

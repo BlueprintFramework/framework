@@ -6,14 +6,19 @@
 
 # This should allow Blueprint to run in docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
-  FOLDER="pterodactyl"
+  FOLDER="/var/www/pterodactyl" #..
 
 # Check for panels that are using Docker.
 if [[ -f ".dockerenv" ]]; then
   DOCKER="y";
-  FOLDER="html"
+  FOLDER="/var/www/html"
 else
   DOCKER="n";
+fi;
+
+if [[ $OVERWRITE_FOLDER != "" ]]; then 
+  FOLDER=$CUSTOMFOLDER;
+  sed -E -i "s*FOLDER="/var/www/pterodactyl" #..*$CUSTOMFOLDER*g" .blueprint;
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
@@ -22,34 +27,34 @@ fi;
 # This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
   PM_VERSION="([(pterodactylmarket_version)])";
 
-if [[ -d "/var/www/$FOLDER/blueprint" ]]; then mv /var/www/$FOLDER/blueprint /var/www/$FOLDER/.blueprint; fi;
+if [[ -d "$FOLDER/blueprint" ]]; then mv $FOLDER/blueprint $FOLDER/.blueprint; fi;
 
 if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
   # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
   # or Blueprint being installed from other sources.
-  if [[ ! -f "/var/www/$FOLDER/.blueprint/data/internal/db/version" ]]; then
+  if [[ ! -f "$FOLDER/.blueprint/data/internal/db/version" ]]; then
     sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/Services/Helpers/BlueprintPlaceholderService.php;
     sed -E -i "s*@version*$VER_FALLBACK*g" public/extensions/blueprint/index.html;
-    touch /var/www/$FOLDER/.blueprint/data/internal/db/version;
+    touch $FOLDER/.blueprint/data/internal/db/version;
   fi;
   
   VERSION=$VER_FALLBACK;
 elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
   # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
   # fallback version.
-  if [[ ! -f "/var/www/$FOLDER/.blueprint/data/internal/db/version" ]]; then
+  if [[ ! -f "$FOLDER/.blueprint/data/internal/db/version" ]]; then
     sed -E -i "s*&bp.version&*$PM_VERSION*g" app/Services/Helpers/BlueprintPlaceholderService.php;
     sed -E -i "s*@version*$PM_VERSION*g" public/extensions/blueprint/index.html;
-    touch /var/www/$FOLDER/.blueprint/data/internal/db/version;
+    touch $FOLDER/.blueprint/data/internal/db/version;
   fi;
 
   VERSION=$PM_VERSION;
 fi;
 
 # Fix for Blueprint's bash database to work with docker and custom folder installations.
-sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/.blueprint/lib/db.sh;
+sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/db.sh;
 
-cd /var/www/$FOLDER; # Automatically navigate to the Pterodactyl directory when running the script.
+cd $FOLDER; # Automatically navigate to the Pterodactyl directory when running the script.
 # Import libraries.
 source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
@@ -78,8 +83,8 @@ quit_red() {
 
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 touch /usr/local/bin/blueprint > /dev/null;
-echo -e "#!/bin/bash\nbash /var/www/$FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
-chmod u+x /var/www/$FOLDER/blueprint.sh > /dev/null;
+echo -e "#!/bin/bash\nbash $FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
+chmod u+x $FOLDER/blueprint.sh > /dev/null;
 chmod u+x /usr/local/bin/blueprint > /dev/null;
 
 if [[ $1 != "-bash" ]]; then
@@ -96,14 +101,14 @@ if [[ $1 != "-bash" ]]; then
     fi;
 
     # Update folder placeholder on PlaceholderService and admin layout.
-    log_bright "[INFO] /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php";
-    sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
-    log_bright "[INFO] /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php";
-    sed -i "s!&bp.folder&!$FOLDER!g" /var/www/$FOLDER/resources/views/layouts/admin.blade.php;
+    log_bright "[INFO] $FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php";
+    sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
+    log_bright "[INFO] $FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php";
+    sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/resources/views/layouts/admin.blade.php;
 
     # Copy "Blueprint" extension page logo from assets.
     log_bright "[INFO] pulling blueprint logo from assets";
-    cp /var/www/$FOLDER/.blueprint/assets/logo.jpg /var/www/$FOLDER/public/assets/extensions/blueprint/logo.jpg;
+    cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/public/assets/extensions/blueprint/logo.jpg;
 
     # Put application into maintenance.
     log_bright "[INFO] php artisan down";
@@ -111,9 +116,9 @@ if [[ $1 != "-bash" ]]; then
 
     # Inject custom Blueprint css into Pterodactyl's admin panel.
     log_bright "[INFO] updating admin css";
-    sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);!!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
-    sed -i "s!/\* admin.css \*/!!g" /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
-    sed -i '1i@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */' /var/www/$FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
+    sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);!!g" $FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
+    sed -i "s!/\* admin.css \*/!!g" $FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
+    sed -i '1i@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */' $FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
 
     # Clear view cache.
     log_bright "[INFO] php artisan view:clear";
@@ -134,20 +139,20 @@ if [[ $1 != "-bash" ]]; then
 
 
     # Make sure all files have correct permissions.
-    log_bright "[INFO] chown -R www-data:www-data /var/www/$FOLDER/*";
-    chown -R www-data:www-data /var/www/$FOLDER/*;
+    log_bright "[INFO] chown -R www-data:www-data $FOLDER/*";
+    chown -R www-data:www-data $FOLDER/*;
 
     # Make sure all .files have the correct permissions as well.
-    log_bright "[INFO] chown -R www-data:www-data /var/www/$FOLDER/.*";
-    chown -R www-data:www-data /var/www/$FOLDER/.*;
+    log_bright "[INFO] chown -R www-data:www-data $FOLDER/.*";
+    chown -R www-data:www-data $FOLDER/.*;
 
     # Remove placeholder README.md files.
-    log_bright "[INFO] rm -R /var/www/$FOLDER/.blueprint/dev/*";
-    rm -R /var/www/$FOLDER/.blueprint/dev/*;
-    log_bright "[INFO] rm -R /var/www/$FOLDER/.blueprint/data/extensions/*";
-    rm -R /var/www/$FOLDER/.blueprint/data/extensions/*;
-    log_bright "[INFO] rm /var/www/$FOLDER/tools/tmp/README.md";
-    rm /var/www/$FOLDER/tools/tmp/README.md > /dev/null;
+    log_bright "[INFO] rm -R $FOLDER/.blueprint/dev/*";
+    rm -R $FOLDER/.blueprint/dev/*;
+    log_bright "[INFO] rm -R $FOLDER/.blueprint/data/extensions/*";
+    rm -R $FOLDER/.blueprint/data/extensions/*;
+    log_bright "[INFO] rm $FOLDER/tools/tmp/README.md";
+    rm $FOLDER/tools/tmp/README.md > /dev/null;
 
     # Put application into production.
     log_bright "[INFO] php artisan up";
@@ -162,7 +167,7 @@ if [[ $1 != "-bash" ]]; then
 
     dbAdd "blueprint.setupFinished";
     # Let the panel know the user has finished installation.
-    sed -i "s!NOTINSTALLED!INSTALLED!g" /var/www/$FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
+    sed -i "s!NOTINSTALLED!INSTALLED!g" $FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
     exit 1;
   fi;
 fi;
@@ -202,7 +207,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   # Return to the Pterodactyl installation folder.
-  cd /var/www/$FOLDER;
+  cd $FOLDER;
 
   # Get all strings from the conf.yml file and make them accessible as variables.
   eval $(parse_yaml .blueprint/tmp/$n/conf.yml conf_)
@@ -287,16 +292,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
       sed -i "s~\^#author#\^~$author~g" $f;
       sed -i "s~\^#name#\^~$name~g" $f;
       sed -i "s~\^#identifier#\^~$identifier~g" $f;
-      sed -i "s~\^#path#\^~/var/www/$FOLDER~g" $f;
-      sed -i "s~\^#datapath#\^~/var/www/$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
+      sed -i "s~\^#path#\^~$FOLDER~g" $f;
+      sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
 
       if [[ $SKIPAZPLACEHOLDERS != true ]]; then
         sed -i "s~__version__~$version~g" $f;
         sed -i "s~__author__~$author~g" $f;
         sed -i "s~__identifier__~$identifier~g" $f;
         sed -i "s~__name__~$name~g" $f;
-        sed -i "s~__path__~/var/www/$FOLDER~g" $f;
-        sed -i "s~__datapath__~/var/www/$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
+        sed -i "s~__path__~$FOLDER~g" $f;
+        sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/$identifier~g" $f;
       fi;
 
       log_bright "[INFO] Done placeholders in '$f'.";
@@ -480,7 +485,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     php artisan migrate;
   fi;
 
-  chown -R www-data:www-data /var/www/$FOLDER/data/extensions/$identifier;
+  chown -R www-data:www-data $FOLDER/data/extensions/$identifier;
   chmod -R +x .blueprint/data/extensions/$identifier/*;
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
@@ -666,7 +671,7 @@ if [[ $2 == "-export" ]]; then
   cp -R dev/* tmp/;
   cd tmp;
   zip -r extension.zip *;
-  cd /var/www/$FOLDER;
+  cd $FOLDER;
   cp .blueprint/tmp/extension.zip $identifier.blueprint;
   rm -R .blueprint/tmp;
   mkdir .blueprint/tmp;
@@ -679,7 +684,7 @@ fi;
 if [[ $2 == "-runinstall"  ]]; then
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
   dbRemove "blueprint.setupFinished";
-  cd /var/www/$FOLDER;
+  cd $FOLDER;
   bash blueprint.sh;
 fi;
 
@@ -706,9 +711,9 @@ if [[ $2 == "-upgrade" ]]; then
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
   cp blueprint.sh .blueprint.sh.bak;
   if [[ $3 == "dev" ]]; then
-    bash tools/update.sh /var/www/$FOLDER dev
+    bash tools/update.sh $FOLDER dev
   else
-    bash tools/update.sh /var/www/$FOLDER
+    bash tools/update.sh $FOLDER
   fi;
   rm -R tools/tmp/*;
   log_bright "[INFO] Files have been upgraded, running installation script..";

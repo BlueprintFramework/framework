@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $1     Pterodactyl directory (/var/www/pterodactyl)
+# $1     Pterodactyl directory (pterodactyl)
 
 cd $1/tools/tmp;
 
