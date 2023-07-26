@@ -6,7 +6,7 @@
 
 # This should allow Blueprint to run in docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
-  FOLDER="/var/www/pterodactyl" #..
+  FOLDER="/var/www/pterodactyl"
 
 # Check for panels that are using Docker.
 if [[ -f ".dockerenv" ]]; then
@@ -14,11 +14,6 @@ if [[ -f ".dockerenv" ]]; then
   FOLDER="/var/www/html"
 else
   DOCKER="n";
-fi;
-
-if [[ $OVERWRITE_FOLDER != "" ]]; then 
-  FOLDER=$CUSTOMFOLDER;
-  sed -E -i "s*FOLDER="/var/www/pterodactyl" #..*$CUSTOMFOLDER*g" .blueprint;
 fi;
 
 # If the fallback version below does not match your downloaded version, please let us know.
