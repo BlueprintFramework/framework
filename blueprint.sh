@@ -634,7 +634,7 @@ if [[ $2 == "-init" ]]; then
   sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/tmp/init/conf.yml; #AUTHOR
 
   icnNUM=$(expr 1 + $RANDOM % 4);
-  sed -i "s~␀num␀~$icnNUM~g" .blueprint/tmp/init/conf.yml;
+  cp .blueprint/assets/defaultExtensionLogo$icnNUM .blueprint/tmp/init/assets/logo.jpg;
   sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml;
 
   # Return files to folder.

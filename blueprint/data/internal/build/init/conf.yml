@@ -9,7 +9,7 @@ info:
   version: "␀ver␀"
   target: "␀version␀"
   author: "␀author␀"
-  icon: "assets/EXTLOGO-␀num␀.jpg"
+  icon: "assets/logo.jpg"
   website: ""
 
 admin:
