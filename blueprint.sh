@@ -366,8 +366,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp .blueprint/tmp/$n/$admin_css public/assets/extensions/$identifier/$identifier.style.css;
   fi;
   if [[ $dashboard_css != "" ]]; then
-    sed -i "s~@import url(/assets/extensions/$identifier/client.style.css);~~g" public/assets/extensions/blueprint/client.style.css;
-    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url(/assets/extensions/$identifier/client.style.css);~g" public/assets/extensions/blueprint/client.style.css;
+    sed -i "s~@import url(/assets/extensions/$identifier/client.style.css);~~g" resource/script/extensions.css;
+    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url(/assets/extensions/$identifier/client.style.css);~g" resource/script/extensions.css;
     cp .blueprint/tmp/$n/$dashboard_css public/assets/extensions/$identifier/client.style.css;
   fi;
 
