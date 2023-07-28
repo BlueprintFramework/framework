@@ -142,12 +142,18 @@ if [[ $1 != "-bash" ]]; then
     chown -R www-data:www-data $FOLDER/.*;
 
     # Remove placeholder README.md files.
-    log_bright "[INFO] rm -R $FOLDER/.blueprint/dev/*";
-    rm -R $FOLDER/.blueprint/dev/*;
-    log_bright "[INFO] rm -R $FOLDER/.blueprint/data/extensions/*";
-    rm -R $FOLDER/.blueprint/data/extensions/*;
-    log_bright "[INFO] rm $FOLDER/tools/tmp/README.md";
-    rm $FOLDER/tools/tmp/README.md > /dev/null;
+    if [[ -f "$FOLDER/.blueprint/dev/README.md" ]]; then
+      log_bright "[INFO] rm -R $FOLDER/.blueprint/dev/*";
+      rm -R $FOLDER/.blueprint/dev/*;
+    fi;
+    if [[ -f "$FOLDER/.blueprint/data/extensions/README.md" ]]; then
+      log_bright "[INFO] rm -R $FOLDER/.blueprint/data/extensions/*";
+      rm -R $FOLDER/.blueprint/data/extensions/*;
+    fi;
+    if [[ -f "$FOLDER/tools/tmp/README.md" ]]; then
+      log_bright "[INFO] rm $FOLDER/tools/tmp/README.md";
+      rm $FOLDER/tools/tmp/README.md > /dev/null;
+    fi;
 
     # Put application into production.
     log_bright "[INFO] php artisan up";
@@ -535,6 +541,10 @@ fi;
 # -init
 if [[ $2 == "-init" ]]; then
 
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+    quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to initialize another extension unless you clear your .blueprint/dev folder.";
+  fi;
+
   ask_name() {
     log_blue "[INPUT] Name (Generic Extension):";
     read ASKNAME;
@@ -703,7 +713,7 @@ if [[ $2 == "-upgrade" ]]; then
     quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to upgrade unless you clear your .blueprint/dev folder.";
   fi;
 
-  if [[ $3 == "dev" ]]; then
+  if [[ $@ == *"dev"* ]]; then
     log_blue "[INPUT] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)";
     read YN1;
     if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi;
@@ -717,12 +727,14 @@ if [[ $2 == "-upgrade" ]]; then
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine.";
   cp blueprint.sh .blueprint.sh.bak;
-  if [[ $3 == "dev" ]]; then
+  if [[ $@ == *"dev"* ]]; then
     bash tools/update.sh $FOLDER dev
   else
     bash tools/update.sh $FOLDER
   fi;
-  rm -R tools/tmp/*;
+  if [[ -n $(find tools/tmp -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+    rm -R tools/tmp/*;
+  fi;
   log_bright "[INFO] Files have been upgraded, running installation script..";
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
@@ -736,6 +748,7 @@ if [[ $2 == "-upgrade" ]]; then
     log_bright "[INFO] Database migrations have been skipped.";
   fi;
 
+  # Post-upgrade checks.
   log_bright "[INFO] Running post-upgrade checks..";
   score=0;
 
@@ -745,6 +758,7 @@ if [[ $2 == "-upgrade" ]]; then
     log_yellow "[WARNING] 'blueprint.setupFinished' could not be found.";
   fi;
 
+  # Finalize upgrade.
   if [[ $score == 1 ]]; then
     log_green "[SUCCESS] Blueprint has upgraded successfully.";
     rm .blueprint.sh.bak;
@@ -752,12 +766,12 @@ if [[ $2 == "-upgrade" ]]; then
   elif [[ $score == 0 ]]; then
     log_red "[FATAL] All checks have failed.";
     rm blueprint.sh;
-    mv .blueprint.sh.bak;
+    mv .blueprint.sh.bak blueprint.sh;
     exit 1;
   else
     log_yellow "[WARNING] Some post-upgrade checks have failed.";
     rm blueprint.sh;
-    mv .blueprint.sh.bak;
+    mv .blueprint.sh.bak blueprint.sh;
     exit 1;
   fi;
 fi;
