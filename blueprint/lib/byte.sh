@@ -45,43 +45,43 @@ byteSpawn() {
   │   o   o │
   ╰         ╯
   "
-  sleep 0.2
+  sleep 0.1
   clear;echo -e "
   ╭         ╮   Hello traveler_
   │   o   o │
   ╰         ╯
   "
-  sleep 0.2
+  sleep 0.05
   clear;echo -e "
   ╭         ╮   Hello traveler,_
   │   o   o │
   ╰         ╯
   "
-  sleep 0.2
+  sleep 0.1
   clear;echo -e "
   ╭         ╮   Hello traveler,
   │   o   o │   nice_
   ╰         ╯
   "
-  sleep 0.2
+  sleep 0.05
   clear;echo -e "
   ╭         ╮   Hello traveler,
   │   ^   o │   nice to_
   ╰         ╯
   "
-  sleep 0.2
+  sleep 0.1
   clear;echo -e "
   ╭         ╮   Hello traveler,
   │   ^   ^ │   nice to meet_
   ╰         ╯
   "
-  sleep 0.2
+  sleep 0.05
   clear;echo -e "
   ╭         ╮   Hello traveler,
   │   ^   ^ │   nice to meet you_
   ╰         ╯
   "
-  sleep 0.2
+  sleep 0.1
   clear;echo -e "
   ╭         ╮   Hello traveler,
   │   ^   ^ │   nice to meet you!_
@@ -93,7 +93,7 @@ byteSpawn() {
   │   -   - │   nice to meet you!_
   ╰         ╯
   "
-  sleep 0.2
+  sleep 0.07
   clear;echo -e "
   ╭         ╮   Hello traveler,
   │   ^   ^ │   nice to meet you!_
@@ -101,7 +101,7 @@ byteSpawn() {
   "
   sleep 2
 };
-
+byteSpawn;
 byteIntroduction() {
 
 };
