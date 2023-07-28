@@ -224,6 +224,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   admin_wrapper=$conf_admin_wrapper; #(optional)
 
   dashboard_wrapper=$conf_dashboard_wrapper; #(optional)
+  dashboard_css=$conf_dashboard_css; #(optional)
 
   data_directory=$conf_data_directory; #(optional)
   data_public=$conf_data_public; #(optional)
@@ -364,6 +365,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     sed -i "s~/\* admin.css \*/~/\* admin.css \*/\n@import url(/assets/extensions/$identifier/$identifier.style.css);~g" public/themes/pterodactyl/css/pterodactyl.css;
     cp .blueprint/tmp/$n/$admin_css public/assets/extensions/$identifier/$identifier.style.css;
   fi;
+  if [[ $dashboard_css != "" ]]; then
+    sed -i "s~@import url(/assets/extensions/$identifier/client.style.css);~~g" public/assets/extensions/blueprint/client.style.css;
+    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url(/assets/extensions/$identifier/client.style.css);~g" public/assets/extensions/blueprint/client.style.css;
+    cp .blueprint/tmp/$n/$dashboard_css public/assets/extensions/$identifier/client.style.css;
+  fi;
 
   if [[ $name == *"~"* ]]; then log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi;
   if [[ $description == *"~"* ]]; then log_yellow "[WARNING] 'description' contains '~' and may result in an error.";fi;
@@ -499,7 +505,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   else
     log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue.";
   fi;
-  if [[ $dev == false ]]; then
+  if [[ $dev != true ]]; then
     sendTelemetry "FINISH_EXTENSION_INSTALLATION" > /dev/null;
   fi;
 fi;

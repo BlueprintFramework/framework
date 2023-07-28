@@ -20,6 +20,7 @@ admin:
 
 dashboard:
   wrapper: ""
+  css: ""
 
 data:
   directory: "data"
