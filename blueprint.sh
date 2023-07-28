@@ -366,6 +366,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     cp .blueprint/tmp/$n/$admin_css public/assets/extensions/$identifier/$identifier.style.css;
   fi;
   if [[ $dashboard_css != "" ]]; then
+    YARN="y";
     sed -i "s~@import url(/assets/extensions/$identifier/client.style.css);~~g" resource/script/extensions.css;
     sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url(/assets/extensions/$identifier/client.style.css);~g" resource/script/extensions.css;
     cp .blueprint/tmp/$n/$dashboard_css public/assets/extensions/$identifier/client.style.css;
@@ -498,6 +499,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $DUPLICATE != "y" ]]; then
     echo $identifier"," >> .blueprint/data/internal/db/installed_extensions;
     log_bright "[INFO] Added '$identifier' to the list of installed extensions.";
+  fi;
+
+  if [[ $YARN == "y" ]]; then 
+    log_bright "[INFO] Rebuilding panel..";
+    yarn run build:production;
   fi;
 
   if [[ $DUPLICATE == "y" ]]; then
