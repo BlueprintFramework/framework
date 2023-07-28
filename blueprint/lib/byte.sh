@@ -18,19 +18,43 @@ byteBlink_3=" ╰         ╯   ";
 byteThink() {
   clear;echo -e "
   ╭         ╮   _
-  │ %^&!@*( │
+  │ %V&!@*( │
   ╰         ╯
   "
   sleep 0.05
   clear;echo -e "
   ╭         ╮   _
-  │ *#$&#@@ │
+  │ *#$%A@@ │
   ╰         ╯
   "
   sleep 0.05
   clear;echo -e "
   ╭         ╮   _
   │ #^%&&** │
+  ╰         ╯
+  "
+  sleep 0.05
+  clear;echo -e "
+  ╭         ╮   _
+  │ %%@#$%^ │
+  ╰         ╯
+  "
+  sleep 0.05
+  clear;echo -e "
+  ╭         ╮   _
+  │ ()257#@ │
+  ╰         ╯
+  "
+  sleep 0.05
+  clear;echo -e "
+  ╭         ╮   _
+  │ HY^$}d* │
+  ╰         ╯
+  "
+  sleep 0.05
+  clear;echo -e "
+  ╭         ╮   _
+  │ BY$%@TE │
   ╰         ╯
   "
   sleep 0.05
