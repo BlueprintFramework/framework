@@ -55,6 +55,7 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 source .blueprint/lib/telemetry.sh;
+source .blueprint/lib/byte.sh;
 
 # -config
 # usage: "cITEM=VALUE bash blueprint.sh -config"
