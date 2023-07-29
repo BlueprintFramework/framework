@@ -55,7 +55,6 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 source .blueprint/lib/telemetry.sh;
-source .blueprint/lib/byte.sh;
 
 # -config
 # usage: "cITEM=VALUE bash blueprint.sh -config"
@@ -97,67 +96,61 @@ if [[ $1 != "-bash" ]]; then
     fi;
 
     # Update folder placeholder on PlaceholderService and admin layout.
-    log_bright "[INFO] $FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php";
+    log_bright "[INFO] Updating folder placeholders..";
     sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php;
-    log_bright "[INFO] $FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php";
     sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/resources/views/layouts/admin.blade.php;
 
     # Copy "Blueprint" extension page logo from assets.
-    log_bright "[INFO] pulling blueprint logo from assets";
+    log_bright "[INFO] Copying Blueprint logo from assets.";
     cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/public/assets/extensions/blueprint/logo.jpg;
 
     # Put application into maintenance.
-    log_bright "[INFO] php artisan down";
+    log_bright "[INFO] Enable maintenance.";
     php artisan down;
 
     # Inject custom Blueprint css into Pterodactyl's admin panel.
-    log_bright "[INFO] updating admin css";
+    log_bright "[INFO] Modifying admin panel css.";
     sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);!!g" $FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
     sed -i "s!/\* admin.css \*/!!g" $FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
     sed -i '1i@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */' $FOLDER/public/themes/pterodactyl/css/pterodactyl.css;
 
     # Clear view cache.
-    log_bright "[INFO] php artisan view:clear";
+    log_bright "[INFO] Clearing view cache.";
     php artisan view:clear;
-
-
-    # Clear PHP config. Not sure what this does yet, but I know it fixes some strange problems.
-    log_bright "[INFO] php artisan config:clear";
     php artisan config:clear;
 
 
     # Run migrations if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
-      log_bright "[INFO] php artisan migrate";
+      log_bright "[INFO] Running database migrations.";
       log_yellow "[WARNING] Answering 'no' or 'n' to the following prompt may result into problems with Blueprint."
       php artisan migrate;
     fi;
 
 
     # Make sure all files have correct permissions.
-    log_bright "[INFO] chown -R www-data:www-data $FOLDER/*";
+    log_bright "[INFO] Changing file ownership to www-data.";
     chown -R www-data:www-data $FOLDER/*;
+    chown -R www-data:www-data $FOLDER/.blueprint/*;
 
-    # Make sure all .files have the correct permissions as well.
-    log_bright "[INFO] chown -R www-data:www-data $FOLDER/.*";
-    chown -R www-data:www-data $FOLDER/.*;
-
+    log_bright "[INFO] Removing placeholder files."
     # Remove placeholder README.md files.
     if [[ -f "$FOLDER/.blueprint/dev/README.md" ]]; then
-      log_bright "[INFO] rm -R $FOLDER/.blueprint/dev/*";
       rm -R $FOLDER/.blueprint/dev/*;
     fi;
     if [[ -f "$FOLDER/.blueprint/data/extensions/README.md" ]]; then
-      log_bright "[INFO] rm -R $FOLDER/.blueprint/data/extensions/*";
       rm -R $FOLDER/.blueprint/data/extensions/*;
     fi;
     if [[ -f "$FOLDER/tools/tmp/README.md" ]]; then
-      log_bright "[INFO] rm $FOLDER/tools/tmp/README.md";
-      rm $FOLDER/tools/tmp/README.md > /dev/null;
+      rm $FOLDER/tools/tmp/README.md;
     fi;
 
+    # Rebuild panel assets.
+    log_bright "[INFO] Rebuilding panel assets..";
+    yarn run build:production;
+
     # Put application into production.
-    log_bright "[INFO] php artisan up";
+    log_bright "[INFO] Disable maintenance.";
     php artisan up;
 
     # Only show donate + success message if Blueprint is not upgrading.

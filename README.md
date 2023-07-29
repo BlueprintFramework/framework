@@ -11,6 +11,8 @@
 **What you need:**
 * The latest release of Blueprint. [Download ➚](https://github.com/teamblueprint/main/releases/latest)
 * `unzip` [Download ➚](https://pkgs.org/download/unzip)
+* `nodejs` [Download ➚](https://pkgs.org/download/nodejs)
+* `yarn` (to build the panel)
 * Linux and Pterodactyl knowledge.
 * Fingers and a brain.
 
