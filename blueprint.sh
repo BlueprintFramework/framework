@@ -56,6 +56,9 @@ source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 source .blueprint/lib/telemetry.sh;
 
+# Make sure yarn doesn't freak out when building the panel.
+export NODE_OPTIONS=--openssl-legacy-provider
+
 # -config
 # usage: "cITEM=VALUE bash blueprint.sh -config"
 if [[ "$1" == "-config" ]]; then
@@ -93,6 +96,14 @@ if [[ $1 != "-bash" ]]; then
       if [[ $DOCKER == "y" ]]; then
         log_yellow "[WARNING] While running Blueprint with docker is supported, you may run into some issues. Report problems you find at ptero.shop/issue.";
       fi;
+    fi;
+
+    nodeVer=$(node -v)
+    if [[ $nodeVer != "v17."* ]] && 
+       [[ $nodeVer != "v18."* ]] && 
+       [[ $nodeVer != "v19."* ]] && 
+       [[ $nodeVer != "v20."* ]]; then 
+      log_yellow "[WARNING] Your NodeJS version might not be compatible with Blueprint, expect errors.";
     fi;
 
     # Update folder placeholder on PlaceholderService and admin layout.

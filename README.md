@@ -9,24 +9,31 @@
 
 ### Installation
 **What you need:**
-* The latest release of Blueprint. [Download ➚](https://github.com/teamblueprint/main/releases/latest)
-* `unzip` [Download ➚](https://pkgs.org/download/unzip)
-* `nodejs` [Download ➚](https://pkgs.org/download/nodejs)
-* `yarn` (to build the panel)
+* [The latest release of Blueprint.](https://github.com/teamblueprint/main/releases/latest)
+* [`unzip`](https://pkgs.org/download/unzip)
+* [`nodejs`](https://nodejs.org) (18.x or later)
+* `yarn`
 * Linux and Pterodactyl knowledge.
-* Fingers and a brain.
+* Common sense.
 
 **Installation:**
-1. Navigate to your Pterodactyl folder. (most likely /var/www/pterodactyl)
-2. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly. If your Pterodactyl folder is not `/var/www/pterodactyl`, adjust the `$FOLDER` variable in blueprint.sh before running it.
+1. Navigate to your Pterodactyl folder. (most likely `/var/www/pterodactyl`)
+2. Install NodeJS, NPM and Yarn using the following script. This assumes you are running Pterodactyl on Ubuntu or Debian-based systems.
+```sh
+curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+apt-get install -y nodejs
+npm i -g yarn
+yarn
+```
+3. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly. If your Pterodactyl folder is not `/var/www/pterodactyl`, adjust the `$FOLDER` variable in blueprint.sh before running it.
 ```sh
 chmod +x blueprint.sh
 bash blueprint.sh
 ```
-3. After waiting for the installation script to finish, open up your Pterodactyl admin panel and click on the puzzle icon in the top right of the website.
+4. After waiting for the installation script to finish, open up your Pterodactyl admin panel and click on the puzzle icon in the top right of the website.
 
 ### Development
-We've made some guides for extension development over on [GitBook](https://ptero.shop/docs). We are adding more guides over time, don't hesitate to suggest a topic for future guides.
+We've made some guides and documentation for extension development over on [GitBook](https://ptero.shop/docs). We are adding more guides over time, don't hesitate to suggest a topic for future guides.
 
 ### Extensions
 Open an issue on GitHub to get your extension listed here. To install an extension, upload your `something.blueprint` file to your Pterodactyl folder and run `blueprint -install something`.
