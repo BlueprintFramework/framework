@@ -468,7 +468,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
   ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
-  cat <(echo "// Routes for $identifier") .blueprint/tmp/$n/$dashboard_wrapper > .blueprint/data/internal/build/extensions/route.php.bak;
+  touch .blueprint/data/internal/build/extensions/route.php.bak2;
+  cat <(echo "// Routes for $identifier") .blueprint/data/internal/build/extensions/route.php.bak > .blueprint/data/internal/build/extensions/route.php.bak2;
+  cp .blueprint/data/internal/build/extensions/route.php.bak2 .blueprint/data/internal/build/extensions/route.php.bak;
+  rm .blueprint/data/internal/build/extensions/route.php.bak2;
   echo -e "\n// End of routes for $identifier" >> .blueprint/data/internal/build/extensions/route.php.bak;
   ADMINROUTE_RESULT=$(cat .blueprint/data/internal/build/extensions/route.php.bak);
 
@@ -653,6 +656,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Removing dashboard css..";
     sed -i "s~@import url(/assets/extensions/$identifier/client.style.css);~~g" resource/script/extensions.css;
+    YARN="y";
   fi;
 
   # Remove database migrations (maybe)
@@ -675,12 +679,18 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
   log_bright "[INFO] Removing extension from installed extensions list..";
   sed -i "s~$identifier,~~g" .blueprint/data/internal/db/installed_extensions;
 
+  # Rebuild panel
+  if [[ $YARN == "y" ]]; then
+    log_bright "[INFO] Rebuilding panel assets.."
+    yarn run build:production;
+  fi;
+
   log_green "[SUCCESS] '$identifier' has been removed from your panel. Please note that some files might be left behind.";
 fi;
 
 # help, -help, --help 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
-   echo -e " -install [name]          install a blueprint extension""
+   echo -e " -install [name]          install/update a blueprint extension""
 "           "-remove [name]           remove a blueprint extension (experimental)""
 "           "-version                 get the current blueprint version""
 "           "-init                    initialize extension development files""
@@ -892,7 +902,6 @@ if [[ $2 == "-upgrade" ]]; then
   if [[ -n $(find tools/tmp -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     rm -R tools/tmp/*;
   fi;
-  log_bright "[INFO] Files have been upgraded, running installation script..";
   chmod +x blueprint.sh;
   bash blueprint.sh --post-upgrade;
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour.";
