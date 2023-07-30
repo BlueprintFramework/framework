@@ -7,6 +7,22 @@
 # This should allow Blueprint to run in docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="/var/www/pterodactyl"
+  
+# Check if required programs are installed
+if ! [ -x "$(command -v unzip)" ]; then
+  log_red '[FATAL] Required dependency unzip is not installed or detected.' >&2
+  exit 1
+fi
+
+if ! [ -x "$(command -v node)" ]; then
+  log_red '[FATAL] Required depencency node is not installed or detected.' >&2
+  exit 1
+fi
+
+if ! [ -x "$(command -v yarn)" ]; then
+  log_red '[FATAL] Required depencendy yarn is not installed or detected.' >&2
+  exit 1
+fi
 
 # Check for panels that are using Docker.
 if [[ -f ".dockerenv" ]]; then
