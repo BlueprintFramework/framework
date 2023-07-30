@@ -7,22 +7,6 @@
 # This should allow Blueprint to run in docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="/var/www/pterodactyl"
-  
-# Check if required programs are installed
-if ! [ -x "$(command -v unzip)" ]; then
-  log_red '[FATAL] Required dependency unzip is not installed or detected.' >&2
-  exit 1
-fi
-
-if ! [ -x "$(command -v node)" ]; then
-  log_red '[FATAL] Required depencency node is not installed or detected.' >&2
-  exit 1
-fi
-
-if ! [ -x "$(command -v yarn)" ]; then
-  log_red '[FATAL] Required depencendy yarn is not installed or detected.' >&2
-  exit 1
-fi
 
 # Check for panels that are using Docker.
 if [[ -f ".dockerenv" ]]; then
@@ -114,6 +98,24 @@ if [[ $1 != "-bash" ]]; then
       fi;
     fi;
 
+    log_bright "[INFO] Checking dependencies..";
+    # Check if required programs are installed
+    if ! [ -x "$(command -v unzip)" ]; then
+      log_red '[FATAL] Required dependency unzip is not installed or detected.' >&2
+      exit 1;
+    fi;
+
+    if ! [ -x "$(command -v node)" ]; then
+      log_red '[FATAL] Required depencency node is not installed or detected.' >&2
+      exit 1
+    fi;
+
+    if ! [ -x "$(command -v yarn)" ]; then
+      log_red '[FATAL] Required depencendy yarn is not installed or detected.' >&2
+      exit 1
+    fi;
+
+    # Warn if incorrect Node.JS version.
     nodeVer=$(node -v)
     if [[ $nodeVer != "v17."* ]] && 
        [[ $nodeVer != "v18."* ]] && 
@@ -197,6 +199,32 @@ fi;
 # -i, -install
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi;
+  log_bright "[INFO] Checking dependencies..";
+  # Check if required programs are installed
+  if ! [ -x "$(command -v unzip)" ]; then
+    log_red '[FATAL] Required dependency unzip is not installed or detected.' >&2
+    exit 1;
+  fi;
+
+  if ! [ -x "$(command -v node)" ]; then
+    log_red '[FATAL] Required depencency node is not installed or detected.' >&2
+    exit 1
+  fi;
+
+  if ! [ -x "$(command -v yarn)" ]; then
+    log_red '[FATAL] Required depencendy yarn is not installed or detected.' >&2
+    exit 1
+  fi;
+
+  # Warn if incorrect Node.JS version.
+  nodeVer=$(node -v)
+  if [[ $nodeVer != "v17."* ]] && 
+     [[ $nodeVer != "v18."* ]] && 
+     [[ $nodeVer != "v19."* ]] && 
+     [[ $nodeVer != "v20."* ]]; then 
+    log_yellow "[WARNING] Your NodeJS version might not be compatible with Blueprint, expect errors.";
+  fi;
+
   if [[ $3 == "test␀" ]]; then
     dev=true;
     n="dev";
