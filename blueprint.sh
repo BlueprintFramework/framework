@@ -468,6 +468,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
   ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
+  cat <(echo "// Routes for $identifier") .blueprint/tmp/$n/$dashboard_wrapper > .blueprint/data/internal/build/extensions/route.php.bak;
+  echo -e "\n// End of routes for $identifier" >> .blueprint/data/internal/build/extensions/route.php.bak;
+  ADMINROUTE_RESULT=$(cat .blueprint/data/internal/build/extensions/route.php.bak);
+
   mkdir resources/views/admin/extensions/$identifier;
   touch resources/views/admin/extensions/$identifier/index.blade.php;
   echo $ADMINVIEW_RESULT > resources/views/admin/extensions/$identifier/index.blade.php;
@@ -610,21 +614,68 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
     quit_red "[FATAL] Backup conf.yml could not be found.";
   fi;
 
+  # Remove admin button 
+  log_bright "[INFO] Removing admin button..";
+  OLDBUTTON_RESULT=$(cat .blueprint/data/extensions/$identifier/.store/build/button.blade.php);
+  sed -i "s~$OLDBUTTON_RESULT~~g" resources/views/admin/extensions.blade.php;
+
+  # Remove admin routes 
+  log_bright "[INFO] Removing admin routes..";
+  sed -n -i "/\/\/ Routes for $identifier/{p; :a; N; /\/\/ End of routes for $identifier/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php;
+
   # Remove admin view
+  log_bright "[INFO] Removing admin view..";
   rm -R resources/views/admin/extensions/$identifier;
+
   # Remove admin controller
+  log_bright "[INFO] Removing admin controller..";
   rm -R app/Http/Controllers/Admin/Extensions/$identifier;
+
   # Remove admin css
+  if [[ $admin_css != "" ]]; then
+    log_bright "[INFO] Removing admin css..";
+    sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css;
+  fi;
+
   # Remove admin wrapper
+  if [[ $admin_wrapper != "" ]]; then 
+    log_bright "[INFO] Removing admin wrapper..";
+    sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/layouts/admin.blade.php;
+  fi;
+
   # Remove dashboard wrapper
+  if [[ $dashboard_wrapper != "" ]]; then 
+    log_bright "[INFO] Removing dashboard wrapper..";
+    sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php;
+  fi;
+
   # Remove dashboard css
-  # Remove database migrations
+  if [[ $dashboard_css != "" ]]; then
+    log_bright "[INFO] Removing dashboard css..";
+    sed -i "s~@import url(/assets/extensions/$identifier/client.style.css);~~g" resource/script/extensions.css;
+  fi;
+
+  # Remove database migrations (maybe)
+
   # Remove public folder
-  rm -R public/extensions/$identifier;
+  if [[ $data_public != "" ]]; then 
+    log_bright "[INFO] Removing public folder..";
+    rm -R public/extensions/$identifier;
+  fi;
+
   # Remove assets folder
+  log_bright "[INFO] Removing assets..";
   rm -R public/assets/extensions/$identifier;
+
   # Remove data folder
+  log_bright "[INFO] Removing data folder..";
   rm -R .blueprint/data/extensions/$identifier;
+  
+  # Remove from installed list
+  log_bright "[INFO] Removing extension from installed extensions list..";
+  sed -i "s~$identifier,~~g" .blueprint/data/internal/db/installed_extensions;
+
+  log_green "[SUCCESS] '$identifier' has been removed from your panel. Please note that some files might be left behind.";
 fi;
 
 # help, -help, --help 
