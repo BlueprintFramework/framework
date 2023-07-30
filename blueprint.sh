@@ -469,10 +469,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
   touch .blueprint/data/internal/build/extensions/route.php.bak2;
-  cat <(echo "// Routes for $identifier") .blueprint/data/internal/build/extensions/route.php.bak > .blueprint/data/internal/build/extensions/route.php.bak2;
+  cat <(echo "/* Routes for $identifier */") .blueprint/data/internal/build/extensions/route.php.bak > .blueprint/data/internal/build/extensions/route.php.bak2;
   cp .blueprint/data/internal/build/extensions/route.php.bak2 .blueprint/data/internal/build/extensions/route.php.bak;
   rm .blueprint/data/internal/build/extensions/route.php.bak2;
-  echo -e "\n// End of routes for $identifier" >> .blueprint/data/internal/build/extensions/route.php.bak;
+  echo -e "\n/* End of routes for $identifier */" >> .blueprint/data/internal/build/extensions/route.php.bak;
   ADMINROUTE_RESULT=$(cat .blueprint/data/internal/build/extensions/route.php.bak);
 
   mkdir resources/views/admin/extensions/$identifier;
@@ -624,7 +624,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
 
   # Remove admin routes 
   log_bright "[INFO] Removing admin routes..";
-  sed -n -i "/\/\/ Routes for $identifier/{p; :a; N; /\/\/ End of routes for $identifier/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php;
+  sed -n -i "/\/\* Routes for $identifier \*\\/{p; :a; N; /\/\* End of routes for $identifier \*\\/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php;
 
   # Remove admin view
   log_bright "[INFO] Removing admin view..";
