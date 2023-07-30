@@ -228,7 +228,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $3 == "test␀" ]]; then
     dev=true;
     n="dev";
-    mkdir .blueprint/tmp/dev;
+    mkdir -p .blueprint/tmp/dev;
     cp -R .blueprint/dev/* .blueprint/tmp/dev/;
   else
     dev=false;
@@ -239,18 +239,18 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     ZIP=$n".zip";
     cp $FILE .blueprint/tmp/$ZIP;
     cd .blueprint/tmp;
-    unzip $ZIP;
+    unzip -o -qq $ZIP;
     rm $ZIP;
     if [[ ! -f "$n/*" ]]; then
       cd ..;
       rm -R tmp;
-      mkdir tmp;
+      mkdir -p tmp;
       cd tmp;
 
-      mkdir ./$n;
+      mkdir -p ./$n;
       cp ../../$FILE ./$n/$ZIP;
       cd $n;
-      unzip $ZIP;
+      unzip -o -qq $ZIP;
       rm $ZIP;
       cd ..;
     fi;
@@ -263,26 +263,26 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   eval $(parse_yaml .blueprint/tmp/$n/conf.yml conf_)
 
   # Add aliases for config values to make working with them easier.
-  name=$conf_info_name;
-  identifier=$conf_info_identifier;
-  description=$conf_info_description;
-  flags=$conf_info_flags;
-  version=$conf_info_version;
-  target=$conf_info_target;
-  author=$conf_info_author;
-  icon=$conf_info_icon;
-  website=$conf_info_website; #(optional)
+  name="$conf_info_name";
+  identifier="$conf_info_identifier";
+  description="$conf_info_description";
+  flags="$conf_info_flags";
+  version="$conf_info_version";
+  target="$conf_info_target";
+  author="$conf_info_author";
+  icon="$conf_info_icon";
+  website="$conf_info_website"; #(optional)
 
-  admin_view=$conf_admin_view;
-  admin_controller=$conf_admin_controller; #(optional)
-  admin_css=$conf_admin_css; #(optional)
-  admin_wrapper=$conf_admin_wrapper; #(optional)
+  admin_view="$conf_admin_view";
+  admin_controller="$conf_admin_controller"; #(optional)
+  admin_css="$conf_admin_css"; #(optional)
+  admin_wrapper="$conf_admin_wrapper"; #(optional)
 
-  dashboard_wrapper=$conf_dashboard_wrapper; #(optional)
-  dashboard_css=$conf_dashboard_css; #(optional)
+  dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
+  dashboard_css="$conf_dashboard_css"; #(optional)
 
-  data_directory=$conf_data_directory; #(optional)
-  data_public=$conf_data_public; #(optional)
+  data_directory="$conf_data_directory"; #(optional)
+  data_public="$conf_data_public"; #(optional)
 
   database_migrations=$conf_database_migrations; #(optional)
 
@@ -357,7 +357,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
       log_bright "[INFO] Done placeholders in '$f'.";
     done;
-
   else log_bright "[INFO] Placeholders will be skipped due to the 'ignorePlaceholders' flag."; fi;
 
   if [[ $name == "" ]]; then rm -R .blueprint/tmp/$n;                 quit_red "[FATAL] 'info_name' is a required configuration option.";fi;
@@ -388,7 +387,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   if [[ $data_public != "" ]]; then
-    mkdir public/extensions/$identifier;
+    mkdir -p public/extensions/$identifier;
     cp -R .blueprint/tmp/$n/$data_public/* public/extensions/$identifier/ 2> /dev/null;
   fi;
 
@@ -400,8 +399,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   cp -R .blueprint/data/internal/build/extensions/button.blade.php .blueprint/data/internal/build/extensions/button.blade.php.bak 2> /dev/null;
 
   # Start creating data directory.
-  mkdir .blueprint/data/extensions/$identifier;
-  mkdir .blueprint/data/extensions/$identifier/.store;
+  mkdir -p .blueprint/data/extensions/$identifier;
+  mkdir -p .blueprint/data/extensions/$identifier/.store;
   
   cp .blueprint/tmp/$n/conf.yml .blueprint/data/extensions/$identifier/.store/conf.yml; #backup conf.yml
   
@@ -410,7 +409,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
   # End creating data directory.
 
-  mkdir public/assets/extensions/$identifier;
+  mkdir -p public/assets/extensions/$identifier;
   cp .blueprint/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg;
   ICON="/assets/extensions/$identifier/icon.jpg";
   CONTENT=$(cat .blueprint/tmp/$n/$admin_view);
@@ -468,18 +467,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
   ADMINCONTROLLER_NAME=$identifier"ExtensionController.php";
 
-  touch .blueprint/data/internal/build/extensions/route.php.bak2;
-  cat <(echo "/* Routes for $identifier */") .blueprint/data/internal/build/extensions/route.php.bak > .blueprint/data/internal/build/extensions/route.php.bak2;
-  cp .blueprint/data/internal/build/extensions/route.php.bak2 .blueprint/data/internal/build/extensions/route.php.bak;
-  rm .blueprint/data/internal/build/extensions/route.php.bak2;
-  echo -e "\n/* End of routes for $identifier */" >> .blueprint/data/internal/build/extensions/route.php.bak;
-  ADMINROUTE_RESULT=$(cat .blueprint/data/internal/build/extensions/route.php.bak);
-
-  mkdir resources/views/admin/extensions/$identifier;
+  mkdir -p resources/views/admin/extensions/$identifier;
   touch resources/views/admin/extensions/$identifier/index.blade.php;
   echo $ADMINVIEW_RESULT > resources/views/admin/extensions/$identifier/index.blade.php;
 
-  mkdir app/Http/Controllers/Admin/Extensions/$identifier;
+  mkdir -p app/Http/Controllers/Admin/Extensions/$identifier;
   touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME;
 
   if [[ $admin_controller == "" ]]; then
@@ -531,8 +523,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 
   # Create backup of generated values.
   log_bright "[INFO] Backing up (some) build files..";
-  mkdir .blueprint/data/extensions/$identifier/.store/build;
+  mkdir -p .blueprint/data/extensions/$identifier/.store/build;
   cp .blueprint/data/internal/build/extensions/button.blade.php.bak .blueprint/data/extensions/$identifier/.store/build/button.blade.php;
+  cp .blueprint/data/internal/build/extensions/route.php.bak .blueprint/data/extensions/$identifier/.store/build/route.php;
 
   log_bright "[INFO] Cleaning up build files..";
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak;
@@ -591,28 +584,28 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
   if [[ -f ".blueprint/data/extensions/$3/.store/conf.yml" ]]; then 
     eval $(parse_yaml .blueprint/data/extensions/$3/.store/conf.yml conf_);
     # Add aliases for config values to make working with them easier.
-    name=$conf_info_name;    
-    identifier=$conf_info_identifier;
-    description=$conf_info_description;
-    flags=$conf_info_flags;
-    version=$conf_info_version;
-    target=$conf_info_target;
-    author=$conf_info_author;
-    icon=$conf_info_icon;
-    website=$conf_info_website; #(optional)
+    name="$conf_info_name";    
+    identifier="$conf_info_identifier";
+    description="$conf_info_description";
+    flags="$conf_info_flags";
+    version="$conf_info_version";
+    target="$conf_info_target";
+    author="$conf_info_author";
+    icon="$conf_info_icon";
+    website="$conf_info_website"; #(optional)
 
-    admin_view=$conf_admin_view;
-    admin_controller=$conf_admin_controller; #(optional)
-    admin_css=$conf_admin_css; #(optional)
-    admin_wrapper=$conf_admin_wrapper; #(optional)
+    admin_view="$conf_admin_view";
+    admin_controller="$conf_admin_controller"; #(optional)
+    admin_css="$conf_admin_css"; #(optional)
+    admin_wrapper="$conf_admin_wrapper"; #(optional)
 
-    dashboard_wrapper=$conf_dashboard_wrapper; #(optional)
-    dashboard_css=$conf_dashboard_css; #(optional)
+    dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
+    dashboard_css="$conf_dashboard_css"; #(optional)
 
-    data_directory=$conf_data_directory; #(optional)
-    data_public=$conf_data_public; #(optional)
+    data_directory="$conf_data_directory"; #(optional)
+    data_public="$conf_data_public"; #(optional)
 
-    database_migrations=$conf_database_migrations; #(optional)
+    database_migrations="$conf_database_migrations"; #(optional)
   else 
     quit_red "[FATAL] Backup conf.yml could not be found.";
   fi;
@@ -624,7 +617,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
 
   # Remove admin routes 
   log_bright "[INFO] Removing admin routes..";
-  sed -n -i "/\/\* Routes for $identifier \*\\/{p; :a; N; /\/\* End of routes for $identifier \*\\/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php;
+  OLDROUTE_RESULT=$(sed ':a;N;$!ba;s/\n/___NEWLINE___/g' .blueprint/data/extensions/$identifier/.store/build/route.php) # Read the contents of route.php into the variable, replacing \n with a placeholder string
+  sed -i "s#$(echo "$OLDROUTE_RESULT" | sed 's/[\/&]/\\&/g')##g" routes/admin.php # Perform the sed operation, using the placeholder string as the delimiter
+  OLDROUTE_RESULT=$(echo "$OLDROUTE_RESULT" | sed 's/___NEWLINE___/\n/g') # Restore the original newlines in the $OLDROUTE_RESULT variable
 
   # Remove admin view
   log_bright "[INFO] Removing admin view..";
@@ -812,7 +807,7 @@ if [[ $2 == "-init" ]]; then
   ask_author;
 
   log_bright "[INFO] Copying init defaults to tmp directory..";
-  mkdir .blueprint/tmp/init;
+  mkdir -p .blueprint/tmp/init;
   cp -R .blueprint/data/internal/build/init/* .blueprint/tmp/init/;
 
   log_bright "[INFO] Applying variables.."
@@ -833,7 +828,7 @@ if [[ $2 == "-init" ]]; then
   # Remove tmp files.
   log_bright "[INFO] Purging tmp files."
   rm -R .blueprint/tmp;
-  mkdir .blueprint/tmp;
+  mkdir -p .blueprint/tmp;
 
   log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/dev'.";
 fi;
@@ -851,14 +846,14 @@ if [[ $2 == "-export" ]]; then
   log_bright "[INFO] Exporting extension files located in '.blueprint/dev'.";
 
   cd .blueprint
-  eval $(parse_yaml dev/conf.yml conf_); identifier=$conf_info_identifier;
+  eval $(parse_yaml dev/conf.yml conf_); identifier="$conf_info_identifier";
   cp -R dev/* tmp/;
   cd tmp;
   zip -r extension.zip *;
   cd $FOLDER;
   cp .blueprint/tmp/extension.zip $identifier.blueprint;
   rm -R .blueprint/tmp;
-  mkdir .blueprint/tmp;
+  mkdir -p .blueprint/tmp;
 
   # This will be replaced with a success/fail check in the future.
   log_bright "[INFO] Export finished.";
