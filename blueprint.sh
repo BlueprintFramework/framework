@@ -571,9 +571,66 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 fi;
 
+# -r, -remove
+if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
+  log_yellow "[WARNING] Extension removal is currently experimental, things might break.";
+  if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi;
+  
+  # Check if the extension is installed.
+  if [[ $(cat .blueprint/data/internal/db/installed_extensions) != *"$identifier,"* ]]; then
+    quit_red "[FATAL] '$3' is not installed.";
+  fi;
+
+  if [[ -f ".blueprint/data/extensions/$3/.store/conf.yml" ]]; then 
+    eval $(parse_yaml .blueprint/data/extensions/$3/.store/conf.yml conf_);
+    # Add aliases for config values to make working with them easier.
+    name=$conf_info_name;    
+    identifier=$conf_info_identifier;
+    description=$conf_info_description;
+    flags=$conf_info_flags;
+    version=$conf_info_version;
+    target=$conf_info_target;
+    author=$conf_info_author;
+    icon=$conf_info_icon;
+    website=$conf_info_website; #(optional)
+
+    admin_view=$conf_admin_view;
+    admin_controller=$conf_admin_controller; #(optional)
+    admin_css=$conf_admin_css; #(optional)
+    admin_wrapper=$conf_admin_wrapper; #(optional)
+
+    dashboard_wrapper=$conf_dashboard_wrapper; #(optional)
+    dashboard_css=$conf_dashboard_css; #(optional)
+
+    data_directory=$conf_data_directory; #(optional)
+    data_public=$conf_data_public; #(optional)
+
+    database_migrations=$conf_database_migrations; #(optional)
+  else 
+    quit_red "[FATAL] Backup conf.yml could not be found.";
+  fi;
+
+  # Remove admin view
+  rm -R resources/views/admin/extensions/$identifier;
+  # Remove admin controller
+  rm -R app/Http/Controllers/Admin/Extensions/$identifier;
+  # Remove admin css
+  # Remove admin wrapper
+  # Remove dashboard wrapper
+  # Remove dashboard css
+  # Remove database migrations
+  # Remove public folder
+  rm -R public/extensions/$identifier;
+  # Remove assets folder
+  rm -R public/assets/extensions/$identifier;
+  # Remove data folder
+  rm -R .blueprint/data/extensions/$identifier;
+fi;
+
 # help, -help, --help 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
    echo -e " -install [name]          install a blueprint extension""
+"           "-remove [name]           remove a blueprint extension (experimental)""
 "           "-version                 get the current blueprint version""
 "           "-init                    initialize extension development files""
 "           "-build                   run an installation on your extension development files""
