@@ -79,6 +79,23 @@ quit_red() {
   exit 1;
 };
 
+depend() {
+  if ! [ -x "$(command -v unzip)" ]; then
+    log_red '[FATAL] Required dependency unzip is not installed or detected.' >&2
+    exit 1;
+  fi;
+
+  if ! [ -x "$(command -v node)" ]; then
+    log_red '[FATAL] Required depencency node is not installed or detected.' >&2
+    exit 1
+  fi;
+
+  if ! [ -x "$(command -v yarn)" ]; then
+    log_red '[FATAL] Required depencendy yarn is not installed or detected.' >&2
+    exit 1
+  fi;
+}
+
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 touch /usr/local/bin/blueprint > /dev/null;
 echo -e "#!/bin/bash\nbash $FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
@@ -100,20 +117,7 @@ if [[ $1 != "-bash" ]]; then
 
     log_bright "[INFO] Checking dependencies..";
     # Check if required programs are installed
-    if ! [ -x "$(command -v unzip)" ]; then
-      log_red '[FATAL] Required dependency unzip is not installed or detected.' >&2
-      exit 1;
-    fi;
-
-    if ! [ -x "$(command -v node)" ]; then
-      log_red '[FATAL] Required depencency node is not installed or detected.' >&2
-      exit 1
-    fi;
-
-    if ! [ -x "$(command -v yarn)" ]; then
-      log_red '[FATAL] Required depencendy yarn is not installed or detected.' >&2
-      exit 1
-    fi;
+    depend;
 
     # Warn if incorrect Node.JS version.
     nodeVer=$(node -v)
@@ -201,20 +205,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi;
   log_bright "[INFO] Checking dependencies..";
   # Check if required programs are installed
-  if ! [ -x "$(command -v unzip)" ]; then
-    log_red '[FATAL] Required dependency unzip is not installed or detected.' >&2
-    exit 1;
-  fi;
-
-  if ! [ -x "$(command -v node)" ]; then
-    log_red '[FATAL] Required depencency node is not installed or detected.' >&2
-    exit 1
-  fi;
-
-  if ! [ -x "$(command -v yarn)" ]; then
-    log_red '[FATAL] Required depencendy yarn is not installed or detected.' >&2
-    exit 1
-  fi;
+  depend;
 
   # Warn if incorrect Node.JS version.
   nodeVer=$(node -v)
@@ -608,6 +599,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
   else 
     quit_red "[FATAL] Backup conf.yml could not be found.";
   fi;
+
+  log_bright "[INFO] Checking dependencies..";
+  depend;
 
   log_blue "[INPUT] Are you sure you want to continue? Some extension files might not be removed as Blueprint does not keep track of them. (y/N)";
   read YN;
