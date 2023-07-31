@@ -683,7 +683,7 @@ fi;
 # help, -help, --help 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
    echo -e " -install [name]          install/update a blueprint extension""
-"           "-remove [name]           remove a blueprint extension (experimental)""
+"           "-remove [name]           remove a blueprint extension""
 "           "-version                 get the current blueprint version""
 "           "-init                    initialize extension development files""
 "           "-build                   run an installation on your extension development files""
