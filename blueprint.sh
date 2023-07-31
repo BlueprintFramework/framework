@@ -573,7 +573,6 @@ fi;
 
 # -r, -remove
 if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
-  log_yellow "[WARNING] Extension removal is currently experimental, things might break.";
   if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi;
   
   # Check if the extension is installed.
@@ -609,6 +608,10 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
   else 
     quit_red "[FATAL] Backup conf.yml could not be found.";
   fi;
+
+  log_blue "[INPUT] Are you sure you want to continue? Some extension files might not be removed as Blueprint does not keep track of them. (y/N)";
+  read YN;
+  if [[ ( $YN != "y" ) && ( $YN != "Y" ) ]]; then log_bright "[INFO] Extension removal cancelled.";exit 1;fi;
 
   # Remove admin button 
   log_bright "[INFO] Removing admin button..";
