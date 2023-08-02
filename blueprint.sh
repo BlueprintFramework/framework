@@ -412,8 +412,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
   if [[ $dashboard_css != "" ]]; then
     YARN="y";
-    sed -i "s~@import url(/assets/extensions/$identifier/dashboard.style.css);~~g" resource/script/extensions.css;
-    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url(/assets/extensions/$identifier/dashboard.style.css);~g" resource/script/extensions.css;
+    sed -i "s~@import url(/assets/extensions/$identifier/dashboard.style.css);~~g" resources/scripts/extensions.css;
+    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url(/assets/extensions/$identifier/dashboard.style.css);~g" resources/scripts/extensions.css;
     cp .blueprint/tmp/$n/$dashboard_css public/assets/extensions/$identifier/dashboard.style.css;
   fi;
 
@@ -648,8 +648,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
   # Remove dashboard css
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Removing dashboard css..";
-    sed -i "s~@import url(/assets/extensions/$identifier/dashboard.style.css);~~g" resource/script/extensions.css;
-    sed -i "s~@import url(/assets/extensions/$identifier/client.style.css);~~g" resource/script/extensions.css; #this removes changes made in older versions of blueprint
+    sed -i "s~@import url(/assets/extensions/$identifier/dashboard.style.css);~~g" resources/scripts/extensions.css;
+    sed -i "s~@import url(/assets/extensions/$identifier/client.style.css);~~g" resources/scripts/extensions.css; #this removes changes made in older versions of blueprint
     YARN="y";
   fi;
 
