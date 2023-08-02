@@ -412,8 +412,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
   if [[ $dashboard_css != "" ]]; then
     YARN="y";
-    sed -i "s~@import url(/css/$identifier.css);~~g" resources/scripts/css/extensions.css;
-    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url(/css/$identifier.css);~g" resources/scripts/css/extensions.css;
+    sed -i "s~@import url($identifier.css);~~g" resources/scripts/css/extensions.css;
+    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url($identifier.css);~g" resources/scripts/css/extensions.css;
     cp .blueprint/tmp/$n/$dashboard_css resources/scripts/css/$identifier.css;
   fi;
 
@@ -534,7 +534,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   chown -R www-data:www-data $FOLDER/data/extensions/$identifier;
-  chmod -R +x .blueprint/data/extensions/*;
+  chmod --silent -R +x .blueprint/data/extensions/*;
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution.";
@@ -648,7 +648,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
   # Remove dashboard css
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Removing dashboard css..";
-    sed -i "s~@import url(/css/$identifier.css);~~g" resources/scripts/css/extensions.css;
+    sed -i "s~@import url($identifier.css);~~g" resources/scripts/css/extensions.css;
     YARN="y";
   fi;
 
@@ -816,7 +816,7 @@ if [[ $2 == "-init" ]]; then
   sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/tmp/init/conf.yml; #AUTHOR
 
   icnNUM=$(expr 1 + $RANDOM % 4);
-  cp .blueprint/assets/defaultExtensionLogo$icnNUM .blueprint/tmp/init/assets/logo.jpg;
+  cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg .blueprint/tmp/init/assets/logo.jpg;
   sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml;
 
   # Return files to folder.
