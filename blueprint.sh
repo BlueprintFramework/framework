@@ -412,9 +412,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
   if [[ $dashboard_css != "" ]]; then
     YARN="y";
-    sed -i "s~@import url(/assets/extensions/$identifier/dashboard.style.css);~~g" resources/scripts/extensions.css;
-    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url(/assets/extensions/$identifier/dashboard.style.css);~g" resources/scripts/extensions.css;
-    cp .blueprint/tmp/$n/$dashboard_css public/assets/extensions/$identifier/dashboard.style.css;
+    sed -i "s~@import url(/css/$identifier.css);~~g" resources/scripts/css/extensions.css;
+    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url(/css/$identifier.css);~g" resources/scripts/css/extensions.css;
+    cp .blueprint/tmp/$n/$dashboard_css resources/scripts/css/$identifier.css;
   fi;
 
   if [[ $name == *"~"* ]]; then log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi;
@@ -534,7 +534,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   chown -R www-data:www-data $FOLDER/data/extensions/$identifier;
-  chmod -R +x .blueprint/data/extensions/$identifier/*;
+  chmod -R +x .blueprint/data/extensions/*;
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution.";
@@ -648,8 +648,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
   # Remove dashboard css
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Removing dashboard css..";
-    sed -i "s~@import url(/assets/extensions/$identifier/dashboard.style.css);~~g" resources/scripts/extensions.css;
-    sed -i "s~@import url(/assets/extensions/$identifier/client.style.css);~~g" resources/scripts/extensions.css; #this removes changes made in older versions of blueprint
+    sed -i "s~@import url(/css/$identifier.css);~~g" resources/scripts/css/extensions.css;
     YARN="y";
   fi;
 
