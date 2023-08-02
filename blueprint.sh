@@ -534,7 +534,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
   fi;
 
   chown -R www-data:www-data $FOLDER/data/extensions/$identifier;
-  chmod --silent -R +x .blueprint/data/extensions/*;
+  chmod --silent -R +x .blueprint/data/extensions/* 2> /dev/null;
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution.";
