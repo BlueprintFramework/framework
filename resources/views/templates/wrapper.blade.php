@@ -44,8 +44,8 @@
         @section('content')
             @yield('above-container')
             @yield('container')
-            <!-- wrapper:insert -->
             @yield('below-container')
+            <!-- wrapper:insert -->
         @show
         @section('scripts')
             {!! $asset->js('main.js') !!}
