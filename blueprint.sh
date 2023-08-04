@@ -846,6 +846,12 @@ fi;
 
 # -export
 if [[ $2 == "-export" ]]; then
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+    echo "ok" > /dev/null
+  else 
+    quit_red "[FATAL] You do not have any development files."
+  fi;
+
   log_bright "[INFO] Exporting extension files located in '.blueprint/dev'.";
 
   cd .blueprint
