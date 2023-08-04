@@ -833,6 +833,11 @@ fi;
 
 # -build
 if [[ $2 == "-build" ]]; then
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+    echo "ok" > /dev/null
+  else 
+    quit_red "[FATAL] You do not have any development files."
+  fi;
   log_bright "[INFO] Installing development extension files..";
   blueprint -i test␀;
   log_bright "[INFO] Extension installation ends here, if there are any errors during installation, fix them and try again.";
