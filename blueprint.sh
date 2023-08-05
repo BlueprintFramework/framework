@@ -533,7 +533,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
     php artisan migrate;
   fi;
 
-  chown -R www-data:www-data $FOLDER/data/extensions/$identifier;
+  chown -R www-data:www-data $FOLDER/.blueprint/data/extensions/$identifier;
   chmod --silent -R +x .blueprint/data/extensions/* 2> /dev/null;
 
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
