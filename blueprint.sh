@@ -55,6 +55,10 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 source .blueprint/lib/telemetry.sh;
+if [[ ! -f ".blueprint/lib/bash_colors.sh" ]]; then LIB__bash_colors="missing";fi;
+if [[ ! -f ".blueprint/lib/parse_yaml.sh" ]]; then LIB__parse_yaml="missing";fi;
+if [[ ! -f ".blueprint/lib/db.sh" ]]; then LIB__db="missing";fi;
+if [[ ! -f ".blueprint/lib/telemetry.sh" ]]; then LIB__telemetry="missing";fi;
 
 # Make sure yarn doesn't freak out when building the panel.
 export NODE_OPTIONS=--openssl-legacy-provider
@@ -833,9 +837,7 @@ fi;
 
 # -build
 if [[ $2 == "-build" ]]; then
-  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
-    echo "ok" > /dev/null
-  else 
+  if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi;
   log_bright "[INFO] Installing development extension files..";
