@@ -60,8 +60,41 @@ if [[ ! -f ".blueprint/lib/parse_yaml.sh" ]]; then LIB__parse_yaml="missing";fi;
 if [[ ! -f ".blueprint/lib/db.sh" ]]; then LIB__db="missing";fi;
 if [[ ! -f ".blueprint/lib/telemetry.sh" ]]; then LIB__telemetry="missing";fi;
 
+# Fallback to these functions if "bash_colors.sh" is missing
+if [[ $LIB__bash_colors == "missing" ]]; then
+  log_reset() { echo -e "$1"; };
+  log_reset_underline() { echo -e "$1"; };
+  log_reset_reverse() { echo -e "$1"; };
+  log_default() { echo -e "$1"; };
+  log_defaultb () { echo -e "$1"; };
+  log_bold() { echo -e "$1"; };
+  log_bright() { echo -e "$1"; };
+  log_underscore() { echo -e "$1"; };
+  log_reverse() { echo -e "$1"; };
+  log_black() { echo -e "$1"; };
+  log_red() { echo -e "$1"; };
+  log_green() { echo -e "$1"; };
+  log_brown() { echo -e "$1"; };
+  log_blue() { echo -e "$1"; };
+  log_magenta() { echo -e "$1"; };
+  log_cyan() { echo -e "$1"; };
+  log_white() { echo -e "$1"; };
+  log_yellow() { echo -e "$1"; };
+  log_blackb() { echo -e "$1"; };
+  log_redb() { echo -e "$1"; };
+  log_greenb() { echo -e "$1"; };
+  log_brownb() { echo -e "$1"; };
+  log_blueb() { echo -e "$1"; };
+  log_magentab() { echo -e "$1"; };
+  log_cyanb() { echo -e "$1"; };
+  log_whiteb() { echo -e "$1"; };
+  log_yellowb() { echo -e "$1"; };
+fi;
+
 # Make sure yarn doesn't freak out when building the panel.
 export NODE_OPTIONS=--openssl-legacy-provider
+
+
 
 # -config
 # usage: "cITEM=VALUE bash blueprint.sh -config"
@@ -77,11 +110,10 @@ if [[ "$1" == "-config" ]]; then
   exit 1;
 fi;
 
+
 # Function that exits the script after logging a "red" message.
-quit_red() {
-  log_red "$1";
-  exit 1;
-};
+quit_red() { log_red "$1"; exit 1; };
+
 
 depend() {
   if ! [ -x "$(command -v unzip)" ]; then
@@ -100,11 +132,13 @@ depend() {
   fi;
 }
 
+
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 touch /usr/local/bin/blueprint > /dev/null;
 echo -e "#!/bin/bash\nbash $FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint;
 chmod u+x $FOLDER/blueprint.sh > /dev/null;
 chmod u+x /usr/local/bin/blueprint > /dev/null;
+
 
 if [[ $1 != "-bash" ]]; then
   if dbValidate "blueprint.setupFinished"; then
@@ -203,6 +237,7 @@ if [[ $1 != "-bash" ]]; then
     exit 1;
   fi;
 fi;
+
 
 # -i, -install
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
@@ -685,6 +720,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
   log_green "[SUCCESS] '$identifier' has been removed from your panel. Please note that some files might be left behind.";
 fi;
 
+
 # help, -help, --help 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
    echo -e " -install [name]          install/update a blueprint extension""
@@ -697,10 +733,12 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
 "           "-upgrade (dev)           update/reset to a newer pre-release version (advanced)";
 fi;
 
+
 # -v, -version
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
   echo -e $VERSION;
 fi;
+
 
 # -init
 if [[ $2 == "-init" ]]; then
@@ -835,6 +873,7 @@ if [[ $2 == "-init" ]]; then
   log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/dev'.";
 fi;
 
+
 # -build
 if [[ $2 == "-build" ]]; then
   if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
@@ -845,6 +884,7 @@ if [[ $2 == "-build" ]]; then
   log_bright "[INFO] Extension installation ends here, if there are any errors during installation, fix them and try again.";
   sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" > /dev/null;
 fi;
+
 
 # -export
 if [[ $2 == "-export" ]]; then
@@ -870,6 +910,7 @@ if [[ $2 == "-export" ]]; then
   log_bright "[INFO] Export finished.";
 fi;
 
+
 # -runinstall
 if [[ $2 == "-runinstall"  ]]; then
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
@@ -877,6 +918,7 @@ if [[ $2 == "-runinstall"  ]]; then
   cd $FOLDER;
   bash blueprint.sh;
 fi;
+
 
 # -upgrade
 if [[ $2 == "-upgrade" ]]; then
