@@ -106,6 +106,12 @@ if [[ "$1" == "-config" ]]; then
     echo "$cTELEMETRY_ID" > .blueprint/data/internal/db/telemetry_id;
   fi;
 
+  # cDEVELOPER
+  # Enable/Disable developer mode.
+  if [[ $cDEVELOPER != "" ]]; then
+    echo "$cDEVELOPER" > .blueprint/data/internal/db/developer;
+  fi;
+
   echo BP_100;
   exit 1;
 fi;
@@ -723,14 +729,16 @@ fi;
 
 # help, -help, --help 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
-   echo -e " -install [name]          install/update a blueprint extension""
-"           "-remove [name]           remove a blueprint extension""
-"           "-version                 get the current blueprint version""
-"           "-init                    initialize extension development files""
-"           "-build                   run an installation on your extension development files""
-"           "-export                  export your extension development files""
-"           "-runinstall              rerun the blueprint installation script (advanced)""
-"           "-upgrade (dev)           update/reset to a newer pre-release version (advanced)";
+  echo -e   " -install [name]          install/update a blueprint extension""
+"            "-remove [name]           remove a blueprint extension""
+"            "-version                 get the current blueprint version""
+"            "-runinstall              rerun the blueprint installation script (advanced)""
+"            "-upgrade (dev)           update/reset to a newer pre-release version (advanced)";
+  if [[ $(cat .blueprint/data/internal/db/developer) == "true"* ]]; then
+    echo -e " -init                    initialize extension development files (developer)""
+"            "-build                   run an installation on your extension development files (developer)""
+"            "-export                  export your extension development files (developer)";
+  fi;
 fi;
 
 

@@ -48,6 +48,7 @@ class BlueprintExtensionController extends Controller
       $this->settings->set('blueprint::version:cache', $this->bp->version());
       $this->bp->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id"));
     };
+    $this->bp->config('DEVELOPER', $this->settings->get('blueprint::developer'));
     return $this->view->make(
       'admin.extensions.blueprint.index', [
         'version' => $this->version,
