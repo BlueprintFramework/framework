@@ -750,6 +750,7 @@ fi;
 
 # -init
 if [[ $2 == "-init" ]]; then
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
 
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to initialize another extension unless you clear your .blueprint/dev folder.";
@@ -884,6 +885,8 @@ fi;
 
 # -build
 if [[ $2 == "-build" ]]; then
+if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
+
   if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi;
@@ -896,6 +899,8 @@ fi;
 
 # -export
 if [[ $2 == "-export" ]]; then
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
+  
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     echo "ok" > /dev/null
   else 
