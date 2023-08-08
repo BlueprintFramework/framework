@@ -37,6 +37,33 @@
         @show
     </head>
     <body class="hold-transition skin-blue fixed sidebar-mini">
+        <!-- Begin Blueprint cache-refresh requirement -->
+        <div id="cache-reminder" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #33404D;
+            z-index: 99997;">
+            <div style="
+                background-color: #1F2933;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 50px;
+                z-index: 99998;">
+                <p style="color:#9AA5B1; padding-left:10px;"><b>Cache refresh required.</b></p>
+            </div>
+            <div style="margin-bottom: 60px"></div>
+            <p style="color:#fff; padding-left: 10px;">
+                Windows: <code style="background-color: #1F2933;color:#9AA5B1;padding: 5px;border-radius:5px;">CTRL + SHIFT + R</code> or <code style="background-color: #1F2933;color:#9AA5B1;padding: 5px;border-radius:5px;">CTRL + F5</code><br><br>
+                Linux: <code style="background-color: #1F2933;color:#9AA5B1;padding: 5px;border-radius:5px;">CTRL + SHIFT + R</code> or <code style="background-color: #1F2933;color:#9AA5B1;padding: 5px;border-radius:5px;">CTRL + F5</code><br><br>
+                MacOS: <code style="background-color: #1F2933;color:#9AA5B1;padding: 5px;border-radius:5px;">COMMAND + OPTION + R</code>
+            </p>
+        </div>
+        <!-- End Blueprint cache-refresh requirement -->
         <div class="wrapper">
             <header class="main-header">
                 <a href="{{ route('index') }}" class="logo">

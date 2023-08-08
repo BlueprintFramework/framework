@@ -7,6 +7,11 @@
   100% {right:-300px;top:62px;opacity:0;background-color: #2a3743;}
 }
 
+/* hides admin cache reminder once this css file is loaded */
+#cache-reminder {
+  display: none;
+}
+
 .notification {
   opacity:0;
   position:fixed;
