@@ -246,7 +246,7 @@ fi;
 
 
 # -i, -install
-if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
+if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y";
   if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi;
   log_bright "[INFO] Checking dependencies..";
   # Check if required programs are installed
@@ -608,7 +608,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then
 fi;
 
 # -r, -remove
-if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then
+if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y";
   if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi;
   
   # Check if the extension is installed.
@@ -728,7 +728,7 @@ fi;
 
 
 # help, -help, --help 
-if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then
+if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then VCMD="y";
   echo -e   " -install [name]          install/update a blueprint extension""
 "            "-remove [name]           remove a blueprint extension""
 "            "-version                 get the current blueprint version""
@@ -743,13 +743,13 @@ fi;
 
 
 # -v, -version
-if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then
+if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then VCMD="y";
   echo -e $VERSION;
 fi;
 
 
 # -init
-if [[ $2 == "-init" ]]; then
+if [[ $2 == "-init" ]]; then VCMD="y";
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
 
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
@@ -884,7 +884,7 @@ fi;
 
 
 # -build
-if [[ $2 == "-build" ]]; then
+if [[ $2 == "-build" ]]; then VCMD="y";
 if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
 
   if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
@@ -898,7 +898,7 @@ fi;
 
 
 # -export
-if [[ $2 == "-export" ]]; then
+if [[ $2 == "-export" ]]; then VCMD="y";
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
   
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
@@ -925,7 +925,7 @@ fi;
 
 
 # -runinstall
-if [[ $2 == "-runinstall"  ]]; then
+if [[ $2 == "-runinstall"  ]]; then VCMD="y";
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
   dbRemove "blueprint.setupFinished";
   cd $FOLDER;
@@ -934,7 +934,7 @@ fi;
 
 
 # -upgrade
-if [[ $2 == "-upgrade" ]]; then
+if [[ $2 == "-upgrade" ]]; then VCMD="y";
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n";
 
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
@@ -1001,4 +1001,11 @@ if [[ $2 == "-upgrade" ]]; then
     mv .blueprint.sh.bak blueprint.sh;
     exit 1;
   fi;
+fi;
+
+
+
+# When the users attempts to run an invalid command.
+if [[ $VCMD != "y" && $3 == "-bash" ]]; then
+  log_bright "'$2' is not a valid command or argument."
 fi;
