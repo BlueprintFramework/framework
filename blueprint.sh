@@ -868,7 +868,7 @@ if [[ $2 == "-init" ]]; then VCMD="y";
   sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/tmp/init/conf.yml; #VERSION
   sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/tmp/init/conf.yml; #AUTHOR
 
-  icnNUM=$(expr 1 + $RANDOM % 4);
+  icnNUM=$(expr 1 + $RANDOM % 6);
   cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg .blueprint/tmp/init/assets/logo.jpg;
   sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml;
 
