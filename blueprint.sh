@@ -46,8 +46,10 @@ elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
   VERSION=$PM_VERSION;
 fi;
 
-# Fix for Blueprint's bash database to work with docker and custom folder installations.
+# Fix for Blueprint's bash database/telemetry/admincachereminder to work with docker and custom folder installations.
 sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/db.sh;
+sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/telemetry.sh;
+sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/updateAdminCacheReminder.sh;
 
 cd $FOLDER; # Automatically navigate to the Pterodactyl directory when running the script.
 # Import libraries.
