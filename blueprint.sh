@@ -4,9 +4,12 @@
 # github.com/teamblueprint/main
 # prpl.wtf
 
-# This should allow Blueprint to run in docker. Please note that changing the $FOLDER variable after running
+# This should allow Blueprint to run in Docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
-  FOLDER="/var/www/pterodactyl"
+
+# Blueprint script begins here
+
+FOLDER="/var/www/pterodactyl"
 
 # Check for panels that are using Docker.
 if [[ -f ".dockerenv" ]]; then
