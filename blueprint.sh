@@ -1032,4 +1032,24 @@ fi;
 # When the users attempts to run an invalid command.
 if [[ $VCMD != "y" && $3 == "-bash" ]]; then
   log_bright "'$2' is not a valid command or argument."
+  log_bright "Usage:"
+  log_bright ""
+  log_white "Extensions"
+  log_bright "-install [name]      -i  install/update a blueprint extension"
+  log_bright "-remove [name]       -r  remove a blueprint extension\n"
+
+  if [[ $(cat .blueprint/data/internal/db/developer) == "true"* ]]; then
+    log_white "Developer"
+    log_bright "-init                    initialize development files"
+    log_bright "-build                   install/update your development files"
+    log_bright "-export                  export your development files\n"
+  fi;
+
+  log_white "Misc"
+  log_bright "-version             -v  returns the blueprint version"
+
+  log_white "Advanced"
+  log_bright "-upgrade (dev)           update/reset to a newer (source) version"
+  log_bright "-runinstall              rerun the blueprint installation script"
+
 fi;
