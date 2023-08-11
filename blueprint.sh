@@ -198,6 +198,10 @@ if [[ $1 != "-bash" ]]; then
     php artisan view:clear;
     php artisan config:clear;
 
+    # Roll admin css refresh number.
+    log_bright "[INFO] Rolling admin cache refresh class name.";
+    updateCacheReminder;
+
 
     # Run migrations if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
@@ -455,6 +459,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y";
   CONTENT=$(cat .blueprint/tmp/$n/$admin_view);
 
   if [[ $admin_css != "" ]]; then
+    updateCacheReminder;
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css;
     sed -i "s~/\* admin.css \*/~/\* admin.css \*/\n@import url(/assets/extensions/$identifier/admin.style.css);~g" public/themes/pterodactyl/css/pterodactyl.css;
     cp .blueprint/tmp/$n/$admin_css public/assets/extensions/$identifier/admin.style.css;
@@ -678,6 +683,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y";
   # Remove admin css
   if [[ $admin_css != "" ]]; then
     log_bright "[INFO] Removing admin css..";
+    updateCacheReminder;
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css;
     sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css; #this removes changes made in older versions of blueprint
   fi;
