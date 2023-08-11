@@ -55,10 +55,12 @@ source .blueprint/lib/bash_colors.sh;
 source .blueprint/lib/parse_yaml.sh;
 source .blueprint/lib/db.sh;
 source .blueprint/lib/telemetry.sh;
+source .blueprint/lib/updateAdminCacheReminder.sh;
 if [[ ! -f ".blueprint/lib/bash_colors.sh" ]]; then LIB__bash_colors="missing";fi;
 if [[ ! -f ".blueprint/lib/parse_yaml.sh" ]]; then LIB__parse_yaml="missing";fi;
 if [[ ! -f ".blueprint/lib/db.sh" ]]; then LIB__db="missing";fi;
 if [[ ! -f ".blueprint/lib/telemetry.sh" ]]; then LIB__telemetry="missing";fi;
+if [[ ! -f ".blueprint/lib/updateAdminCacheReminder.sh" ]]; then LIB__updateAdminCacheReminder="missing";fi;
 
 # Fallback to these functions if "bash_colors.sh" is missing
 if [[ $LIB__bash_colors == "missing" ]]; then

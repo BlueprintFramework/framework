@@ -38,7 +38,7 @@
     </head>
     <body class="hold-transition skin-blue fixed sidebar-mini">
         <!-- Begin Blueprint cache-refresh requirement -->
-        <iframe id="cacheOverlay" style="z-index:9998;border:none;position:fixed;width:100%;height:100%;top:0;left:0;" src="/extensions/blueprint/helpers/adminCacheRefreshReminder.html"></iframe>
+        <iframe id="cacheOverlay-1" style="z-index:9998;border:none;position:fixed;width:100%;height:100%;top:0;left:0;" src="/extensions/blueprint/helpers/adminCacheRefreshReminder.html"></iframe>
         <!-- End Blueprint cache-refresh requirement -->
         <div class="wrapper">
             <header class="main-header">
