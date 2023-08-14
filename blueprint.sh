@@ -758,7 +758,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then VCMD=
 
   log_white "Advanced"
   log_bright "-upgrade (dev)           update/reset to a newer (source) version"
-  log_bright "-runinstall              rerun the blueprint installation script"
+  log_bright "-rerun-install           rerun the blueprint installation script"
 
 fi;
 
@@ -945,8 +945,8 @@ if [[ $2 == "-export" ]]; then VCMD="y";
 fi;
 
 
-# -runinstall
-if [[ $2 == "-runinstall"  ]]; then VCMD="y";
+# -rerun-install
+if [[ $2 == "-rerun-install"  ]]; then VCMD="y";
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
   dbRemove "blueprint.setupFinished";
   cd $FOLDER;
@@ -1047,6 +1047,6 @@ if [[ $VCMD != "y" && $3 == "-bash" ]]; then
 
   log_white "Advanced"
   log_bright "-upgrade (dev)           update/reset to a newer (source) version"
-  log_bright "-runinstall              rerun the blueprint installation script"
+  log_bright "-rerun-install           rerun the blueprint installation script"
 
 fi;
