@@ -744,24 +744,37 @@ fi
 # help, -help, --help 
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then VCMD="y"
 
-  log_white "Extensions"
-  log_bright "-install [name]      -i  install/update a blueprint extension"
-  log_bright "-remove [name]       -r  remove a blueprint extension\n"
-
   if [[ $(cat .blueprint/data/internal/db/developer) == "true"* ]]; then
-    log_white "Developer"
-    log_bright "-init                    initialize development files"
-    log_bright "-build                   install/update your development files"
-    log_bright "-export                  export your development files\n"
-  fi
+    help_dev_status=""
+    help_dev_primary="\x1b[34;1m"
+    help_dev_secondary="\x1b[34m"
+  else 
+    help_dev_status=" (disabled)"
+    help_dev_primary="\x1b[37;1m"
+    help_dev_secondary="\x1b[30;1m"
+  fi;
 
-  log_white "Misc"
-  log_bright "-version             -v  returns the blueprint version"
-
-  log_white "Advanced"
-  log_bright "-upgrade (dev)           update/reset to a newer (source) version"
-  log_bright "-rerun-install           rerun the blueprint installation script"
-
+  echo -e "
+\x1b[34;1mExtensions\x1b[0m\x1b[34m
+  -install [name]      -i  install/update a blueprint extension
+  -remove [name]       -r  remove a blueprint extension
+  \x1b[0m
+  
+${help_developer_primary}Developer$help_dev_status\x1b[0m${help_developer_secondary}
+  -init                    initialize development files
+  -build                   install/update your development files
+  -export                  export your development files
+  \x1b[0m
+  
+\x1b[34;1mMisc\x1b[0m\x1b[34m
+  -version             -v  returns the blueprint version
+  \x1b[0m
+  
+\x1b[34;1mAdvanced\x1b[0m\x1b[34m
+  -upgrade (dev)           update/reset to a newer (source) version
+  -rerun-install           rerun the blueprint installation script
+  \x1b[0m
+  "
 fi
 
 
