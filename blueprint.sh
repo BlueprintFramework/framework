@@ -746,12 +746,12 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then VCMD=
 
   if [[ $(cat .blueprint/data/internal/db/developer) == "true"* ]]; then
     help_dev_status=""
-    help_dev_primary="\x1b[34;1m"
-    help_dev_secondary="\x1b[34m"
+    help_dev_primary="\e[34;1m"
+    help_dev_secondary="\e[34m"
   else 
     help_dev_status=" (disabled)"
     help_dev_primary="\x1b[37;1m"
-    help_dev_secondary="\x1b[30;1m"
+    help_dev_secondary="\x1b[37;1m"
   fi;
 
   echo -e "
