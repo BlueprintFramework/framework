@@ -771,7 +771,7 @@ fi;
 
 # -init
 if [[ $2 == "-init" ]]; then VCMD="y";
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi;
 
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to initialize another extension unless you clear your .blueprint/dev folder.";
@@ -906,7 +906,7 @@ fi;
 
 # -build
 if [[ $2 == "-build" ]]; then VCMD="y";
-if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi;
 
   if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
@@ -920,7 +920,7 @@ fi;
 
 # -export
 if [[ $2 == "-export" ]]; then VCMD="y";
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi;
 
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     echo "ok" > /dev/null
@@ -1028,5 +1028,6 @@ fi;
 
 # When the users attempts to run an invalid command.
 if [[ $VCMD != "y" && $3 == "-bash" ]]; then
-  log_bright "'$2' is not a valid command or argument. Use argument '-help' for a list of commands."
+  # This is logged as a "fatal" error since it's something that is making Blueprint run unsuccessfully.
+  quit_red "[FATAL] '$2' is not a valid command or argument. Use argument '-help' for a list of commands.";
 fi;
