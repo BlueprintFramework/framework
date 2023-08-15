@@ -921,7 +921,7 @@ fi;
 # -export
 if [[ $2 == "-export" ]]; then VCMD="y";
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then exit 1;fi;
-  
+
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     echo "ok" > /dev/null
   else 
@@ -1028,25 +1028,5 @@ fi;
 
 # When the users attempts to run an invalid command.
 if [[ $VCMD != "y" && $3 == "-bash" ]]; then
-  log_bright "'$2' is not a valid command or argument."
-  log_bright "Usage:"
-  log_bright ""
-  log_white "Extensions"
-  log_bright "-install [name]      -i  install/update a blueprint extension"
-  log_bright "-remove [name]       -r  remove a blueprint extension\n"
-
-  if [[ $(cat .blueprint/data/internal/db/developer) == "true"* ]]; then
-    log_white "Developer"
-    log_bright "-init                    initialize development files"
-    log_bright "-build                   install/update your development files"
-    log_bright "-export                  export your development files\n"
-  fi;
-
-  log_white "Misc"
-  log_bright "-version             -v  returns the blueprint version"
-
-  log_white "Advanced"
-  log_bright "-upgrade (dev)           update/reset to a newer (source) version"
-  log_bright "-rerun-install           rerun the blueprint installation script"
-
+  log_bright "'$2' is not a valid command or argument. Use argument '-help' for a list of commands."
 fi;
