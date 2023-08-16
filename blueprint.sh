@@ -663,7 +663,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   log_blue "[INPUT] Are you sure you want to continue? Some extension files might not be removed as Blueprint does not keep track of them. (y/N)"
   read YN
-  if [[ ( $YN != "y" ) && ( $YN != "Y" ) ]]; then log_bright "[INFO] Extension removal cancelled.";exit 1;fi
+  if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then log_bright "[INFO] Extension removal cancelled.";exit 1;fi
 
   # Remove admin button 
   log_bright "[INFO] Removing admin button.."
@@ -752,7 +752,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then VCMD=
     help_dev_status=" (disabled)"
     help_dev_primary="\x1b[37;1m"
     help_dev_secondary="\x1b[37;1m"
-  fi;
+  fi
 
   echo -e "
 \x1b[34;1mExtensions\x1b[0m\x1b[34m
@@ -980,11 +980,11 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ $@ == *"dev"* ]]; then
     log_blue "[INPUT] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
     read YN1
-    if [[ ( $YN1 != "y" ) && ( $YN1 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+    if [[ ( $YN1 == "n"* ) || ( $YN1 == "N"* ) || ( $YN1 == "" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
   fi
   log_blue "[INPUT] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)"
   read YN2
-  if [[ ( $YN2 != "y" ) && ( $YN2 != "Y" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  if [[ ( $YN2 == "n"* ) || ( $YN2 == "N"* ) || ( $YN2 == "" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
   log_blue "[INPUT] This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'."
   read YN3
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
@@ -1004,9 +1004,9 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."
   log_blue "[INPUT] Database migrations are skipped when upgrading, run them anyways? (Y/n)"
   read YN4
-  if [[ ( $YN4 == "y" ) || ( $YN4 == "Y" ) ]]; then 
+  if [[ ( $YN4 == "y" ) || ( $YN4 == "Y" ) || ( $YN4 == "" ) ]]; then 
     log_bright "[INFO] Running database migrations.."
-    php artisan migrate
+    php artisan migrate --force
   else
     log_bright "[INFO] Database migrations have been skipped."
   fi
