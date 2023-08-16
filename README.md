@@ -1,4 +1,5 @@
-## ![](https://i.imgur.com/SsOU6r8.png) teamblueprint/main
+<h2><img src="https://i.imgur.com/hH5c2sC.jpg" style="width:20px;padding-right:6px"></img>Blueprint</h2>
+
 [Discord ➚](https://ptero.shop/community)\
 [Documentation ➚](https://ptero.shop/docs)
 
