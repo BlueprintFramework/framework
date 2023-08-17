@@ -142,6 +142,17 @@ depend() {
     log_red '[FATAL] Required depencendy yarn is not installed or detected.' >&2
     exit 1
   fi
+
+  # End process when using an older Node.JS version.
+  nodeVer=$(node -v)
+  if [[ $nodeVer != "v17."* ]] && 
+     [[ $nodeVer != "v18."* ]] && 
+     [[ $nodeVer != "v19."* ]] && 
+     [[ $nodeVer != "v20."* ]] && 
+     [[ $nodeVer != "v21."* ]]; then 
+    log_red '[FATAL] Required depencency node is an unsupported version.' >&2
+    exit 1
+  fi
 }
 
 
@@ -168,15 +179,6 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] Checking dependencies.."
     # Check if required programs are installed
     depend
-
-    # Warn if incorrect Node.JS version.
-    nodeVer=$(node -v)
-    if [[ $nodeVer != "v17."* ]] && 
-       [[ $nodeVer != "v18."* ]] && 
-       [[ $nodeVer != "v19."* ]] && 
-       [[ $nodeVer != "v20."* ]]; then 
-      log_yellow "[WARNING] Your NodeJS version might not be compatible with Blueprint, expect errors."
-    fi
 
     # Update folder placeholder on PlaceholderService and admin layout.
     log_bright "[INFO] Updating folder placeholders.."
@@ -263,15 +265,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   log_bright "[INFO] Checking dependencies.."
   # Check if required programs are installed
   depend
-
-  # Warn if incorrect Node.JS version.
-  nodeVer=$(node -v)
-  if [[ $nodeVer != "v17."* ]] && 
-     [[ $nodeVer != "v18."* ]] && 
-     [[ $nodeVer != "v19."* ]] && 
-     [[ $nodeVer != "v20."* ]]; then 
-    log_yellow "[WARNING] Your NodeJS version might not be compatible with Blueprint, expect errors."
-  fi
 
   if [[ $3 == "test␀" ]]; then
     dev=true
