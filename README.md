@@ -1,4 +1,4 @@
-<h2><img src="https://i.imgur.com/hQX5SZ1.png" style="width:20px;padding-right:6px"></img>Blueprint</h2>
+<h2><img src="https://i.imgur.com/nBYQ4Bl.png" style="height:30px;padding-right:1px"></img></h2>
 
 [Discord ➚](https://ptero.shop/community)\
 [Documentation ➚](https://ptero.shop/docs)
