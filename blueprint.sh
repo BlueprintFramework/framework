@@ -211,9 +211,14 @@ if [[ $1 != "-bash" ]]; then
 
     # Run migrations if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
-      log_bright "[INFO] Running database migrations."
-      log_yellow "[WARNING] Answering 'no' or 'n' to the following prompt may result into problems with Blueprint."
-      php artisan migrate
+      log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
+      read YN
+      if [[ ( $YN == "y" ) || ( $YN == "Y" ) || ( $YN == "" ) ]]; then 
+        log_bright "[INFO] Running database migrations.."
+        php artisan migrate --force
+      else
+        log_bright "[INFO] Database migrations have been skipped."
+      fi
     fi
 
 
@@ -995,7 +1000,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   chmod +x blueprint.sh
   bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."
-  log_blue "[INPUT] Database migrations are skipped when upgrading, run them anyways? (Y/n)"
+  log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
   read YN4
   if [[ ( $YN4 == "y" ) || ( $YN4 == "Y" ) || ( $YN4 == "" ) ]]; then 
     log_bright "[INFO] Running database migrations.."
