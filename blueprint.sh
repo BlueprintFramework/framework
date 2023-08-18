@@ -128,19 +128,16 @@ quit_red() { log_red "$1"; exit 1; }
 
 
 depend() {
+  # Check for required dependencies.
   if ! [ -x "$(command -v unzip)" ]; then
     log_red '[FATAL] Required dependency unzip is not installed or detected.' >&2
-    exit 1
-  fi
-
-  if ! [ -x "$(command -v node)" ]; then
-    log_red '[FATAL] Required depencency node is not installed or detected.' >&2
-    exit 1
-  fi
-
-  if ! [ -x "$(command -v yarn)" ]; then
-    log_red '[FATAL] Required depencendy yarn is not installed or detected.' >&2
-    exit 1
+    DEPEND_MISSING=true
+  fi; if ! [ -x "$(command -v node)" ]; then
+    log_red '[FATAL] Required dependency node is not installed or detected.' >&2
+    DEPEND_MISSING=true
+  fi; if ! [ -x "$(command -v yarn)" ]; then
+    log_red '[FATAL] Required dependency yarn is not installed or detected.' >&2
+    DEPEND_MISSING=true
   fi
 
   # End process when using an older Node.JS version.
@@ -150,9 +147,30 @@ depend() {
      [[ $nodeVer != "v19."* ]] && 
      [[ $nodeVer != "v20."* ]] && 
      [[ $nodeVer != "v21."* ]]; then 
-    log_red '[FATAL] Required depencency node is an unsupported version.' >&2
-    exit 1
+    log_red '[FATAL] Required dependency node is an unsupported version.' >&2
+    DEPEND_MISSING=true
   fi
+
+  # Check for internal dependencies.
+  if [[ $LIB__bash_colors ]]; then
+    log_red '[FATAL] Internal dependency bash_colors is not installed or detected.' >&2
+    DEPEND_MISSING=true
+  fi; if [[ $LIB__parse_yaml ]]; then
+    log_red '[FATAL] Internal dependency parse_yaml is not installed or detected.' >&2
+    DEPEND_MISSING=true
+  fi; if [[ $LIB__db ]]; then
+    log_red '[FATAL] Internal dependency db is not installed or detected.' >&2
+    DEPEND_MISSING=true
+  fi; if [[ $LIB__telemetry ]]; then
+    log_red '[FATAL] Internal dependency telemetry is not installed or detected.' >&2
+    DEPEND_MISSING=true
+  fi; if [[ $LIB__updateAdminCacheReminder ]]; then
+    log_red '[FATAL] Internal dependency updateAdminCacheReminder is not installed or detected.' >&2
+    DEPEND_MISSING=true
+  fi
+
+  # Exit when missing dependencies.
+  if [[ $DEPEND_MISSING == true ]]; then exit 1; fi
 }
 
 
