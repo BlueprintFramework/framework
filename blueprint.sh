@@ -324,6 +324,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   cd $FOLDER
 
   # Get all strings from the conf.yml file and make them accessible as variables.
+  if [[ ! -f ".blueprint/tmp/$n/conf.yml" ]]; then quit_red "[FATAL] Could not find a conf.yml file.";fi
   eval $(parse_yaml .blueprint/tmp/$n/conf.yml conf_)
 
   # Add aliases for config values to make working with them easier.
