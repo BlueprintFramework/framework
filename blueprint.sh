@@ -188,7 +188,7 @@ if [[ $1 != "-bash" ]]; then
   else
     # Only run if Blueprint is not in the process of upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
-      log "  ██\n██  ██\n  ████\n"; # Blueprint logo made out of unicode icons.
+      log "  ██\n██  ██\n  ████\n"; # Blueprint "ascii" "logo".
       if [[ $DOCKER == "y" ]]; then
         log_yellow "[WARNING] While running Blueprint with docker is supported, you may run into some issues. Report problems you find at ptero.shop/issue."
       fi
@@ -348,7 +348,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   data_directory="$conf_data_directory"; #(optional)
   data_public="$conf_data_public"; #(optional)
 
-  database_migrations=$conf_database_migrations; #(optional)
+  database_migrations="$conf_database_migrations"; #(optional)
 
   if [[ ( $icon == "/"*                ) || ( $icon == "."*                ) || ( $icon == *"\n"*                ) ]] ||
      [[ ( $admin_view == "/"*          ) || ( $admin_view == "."*          ) || ( $admin_view == *"\n"*          ) ]] ||
