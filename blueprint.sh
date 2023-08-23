@@ -604,8 +604,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   rm -R .blueprint/tmp/$n
 
   if [[ $database_migrations != "" ]]; then
-    log_bright "[INFO] This extension comes with migrations. If you get prompted, answer 'yes'.\n"
-    php artisan migrate
+    log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
+    read YN
+    if [[ ( $YN == "y" ) || ( $YN == "Y" ) || ( $YN == "" ) ]]; then 
+      log_bright "[INFO] Running database migrations.."
+      php artisan migrate --force
+    else
+      log_bright "[INFO] Database migrations have been skipped."
+    fi
   fi
 
   chown -R www-data:www-data $FOLDER/.blueprint/data/extensions/$identifier
