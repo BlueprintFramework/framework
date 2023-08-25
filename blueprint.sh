@@ -734,8 +734,6 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     YARN="y"
   fi
 
-  # Remove database migrations (maybe)
-
   # Remove public folder
   if [[ $data_public != "" ]]; then 
     log_bright "[INFO] Removing public folder.."
