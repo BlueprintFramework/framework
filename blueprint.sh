@@ -8,6 +8,14 @@
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="/var/www/pterodactyl"
 
+# If the fallback version below does not match your downloaded version, please let us know.
+  VER_FALLBACK="alpha-VKL"
+
+# This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
+  PM_VERSION="([(pterodactylmarket_version)])"
+
+
+
 # Check for panels that are using Docker.
 if [[ -f ".dockerenv" ]]; then
   DOCKER="y"
@@ -15,12 +23,6 @@ if [[ -f ".dockerenv" ]]; then
 else
   DOCKER="n"
 fi
-
-# If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="alpha-VKL"
-
-# This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
-  PM_VERSION="([(pterodactylmarket_version)])"
 
 if [[ -d "$FOLDER/blueprint" ]]; then mv $FOLDER/blueprint $FOLDER/.blueprint; fi
 
