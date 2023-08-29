@@ -16,15 +16,47 @@ class CreateBlueprintTable extends Migration
         Schema::dropIfExists('blueprint');
         Schema::create('blueprint', function (Blueprint $table) {
             $table->id();
-
-            $table->string('placeholder')->nullable();
-            $table->string('developer')->nullable();
-            $table->string('telemetry')->nullable();
-            $table->string('panel:id')->nullable();
-            $table->string('version:cache')->nullable();
-            $table->string('notification:text')->nullable();
-
             $table->timestamp('timestamp')->useCurrent()->onUpdate(null);
+
+
+            /*
+              Placeholder may come useful when developing
+              new features, that's why it's currently included
+              in the migrations.
+            */
+            $table->string('placeholder')->nullable();
+
+            /*
+              Database value for keeping track of the developer
+              mode setting.
+            */
+            $table->string('developer')->nullable();
+
+            /*
+              Database value for keeping track of the telemetry
+              opt-out option.
+            */
+            $table->string('telemetry')->nullable();
+
+            /*
+              Randomly generated ID for the panel to use when
+              sending telemetry messages.
+            */
+            $table->string('panel:id')->nullable();
+
+            /*
+              Cache of the previous version name for Blueprint
+              know when to reroll the panel ID and to know when
+              it has updated.
+            */
+            $table->string('version:cache')->nullable();
+
+            /*
+              String for the notification API in Blueprint. Not
+              sure if I'm still using this value, so it might
+              get removed in the future.
+            */
+            $table->string('notification:text')->nullable();
         });
     }
 
