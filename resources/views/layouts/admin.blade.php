@@ -61,6 +61,7 @@
                                 </a>
                             </li>
                             <li>
+                                <!-- The puzzle icon in the admin panel to manage and configure your installed extensions. -->
                                 <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if(shell_exec("cd &bp.folder&;cat .blueprint/data/internal/db/onboarding") == "true"){ echo "bx-flashing"; } ?>'></i></a></li>
                             </li>
                             <li>
@@ -160,6 +161,13 @@
                     </div>
                     @yield('content')
                     <?php
+
+                        // This could be done so much easier if we modified the controller instead of only the blade template.
+                        // However, we need to overwrite the least amount of files as possible to make Blueprint work nice with
+                        // panel updates, other modifications (most of the time) and itself.
+                        //
+                        // Files are currently fetched with shell_exec but this is subject to change. We might switch to using
+                        // built-in PHP stuff instead.
 
                         if(shell_exec("cd &bp.folder&;cat .blueprint/data/internal/db/onboarding") == "true") {
                             echo "
