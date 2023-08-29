@@ -45,6 +45,12 @@
             @yield('above-container')
             @yield('container')
             @yield('below-container')
+
+            <!--
+                Blueprint extensions containing dashboard wrappers
+                will have their wrapper code injected here.
+            -->
+
             <!-- wrapper:insert -->
         @show
         @section('scripts')

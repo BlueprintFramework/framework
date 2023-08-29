@@ -43,11 +43,14 @@ class BlueprintExtensionController extends Controller
    */
   public function index(): View
   {
+    // The following code rerolls the panel identifier used for telemetry
+    // when the version name changes.
     if ($this->settings->get('blueprint::panel:id') == "" || $this->bp->version() != $this->settings->get('blueprint::version:cache')) {
       $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
       $this->settings->set('blueprint::version:cache', $this->bp->version());
       $this->bp->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id"));
     };
+    // Sync developer mode option with the core of Blueprint.
     $this->bp->config('DEVELOPER', $this->settings->get('blueprint::developer'));
     return $this->view->make(
       'admin.extensions.blueprint.index', [
