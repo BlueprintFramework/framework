@@ -6,7 +6,7 @@
 
 # This should allow Blueprint to run in Docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
-  FOLDER="/var/www/pterodactyl"
+  FOLDER="/var/www/pterodactyl" #;
 
 # If the fallback version below does not match your downloaded version, please let us know.
   VER_FALLBACK="alpha-VKL"
@@ -1033,7 +1033,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     rm -R tools/tmp/*
   fi
   log_bright "[INFO] Passing along folder variable.."
-  sed "s|FOLDER=\"/var/www/pterodactyl\"|FOLDER=\"$FOLDER\"|g"
+  sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g"
   chmod +x blueprint.sh
   bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."
