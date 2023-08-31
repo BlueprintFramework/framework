@@ -75,13 +75,18 @@ class BlueprintExtensionController extends Controller
       $this->settings->set('blueprint::' . $key, $value);
     }
 
+    // Confirm that the database value changes have been applied.
     $this->bplib->notify("Your changes have been saved.");
+    // Redirect back to the page the user was on.
     return redirect()->route('admin.extensions.blueprint.index');
   }
 }
 
 class BlueprintAdminFormRequest extends AdminFormRequest
 {
+  // Form validation for settings on the Blueprint admin page.
+  // This is included in the controller directly as that
+  // simplifies my work.
   public function rules(): array {
     return [
       'placeholder' => 'string',

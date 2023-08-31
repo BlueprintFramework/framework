@@ -811,6 +811,8 @@ fi
 if [[ $2 == "-init" ]]; then VCMD="y"
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
 
+  # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
+  # until you wipe the contents of the .blueprint/dev directory.
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to initialize another extension unless you clear your .blueprint/dev folder."
   fi
@@ -828,6 +830,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
     fi
 
     if [[ $REDO_NAME == true ]]; then
+      # Ask again if response does not pass validation.
       ask_name
     fi
   }
@@ -853,6 +856,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
     fi
 
     if [[ $REDO_IDENTIFIER == true ]]; then
+      # Ask again if response does not pass validation.
       ask_identifier
     fi
   }
@@ -870,6 +874,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
     fi
 
     if [[ $REDO_DESCRIPTION == true ]]; then
+      # Ask again if response does not pass validation.
       ask_description
     fi
   }
@@ -887,6 +892,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
     fi
 
     if [[ $REDO_VERSION == true ]]; then
+      # Ask again if response does not pass validation.
       ask_version
     fi
   }
@@ -904,6 +910,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
     fi
 
     if [[ $REDO_AUTHOR == true ]]; then
+      # Ask again if response does not pass validation.
       ask_author
     fi
   }
