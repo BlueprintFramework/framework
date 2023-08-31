@@ -16,6 +16,12 @@
 
 
 
+# Allow non-default Pterodactyl installation folders.
+if [[ $_FOLDER != "" ]]; then
+  sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$_FOLDER\" #;|g"
+  exit 1
+fi
+
 # Check for panels that are using Docker.
 if [[ -f ".dockerenv" ]]; then
   DOCKER="y"
@@ -48,7 +54,7 @@ elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
   VERSION=$PM_VERSION
 fi
 
-# Fix for Blueprint's bash database/telemetry/admincachereminder to work with docker and custom folder installations.
+# Fix for Blueprint's bash database/telemetry/admincachereminder to work with Docker and custom folder installations.
 sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/db.sh
 sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/telemetry.sh
 sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/updateAdminCacheReminder.sh
@@ -1032,10 +1038,8 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ -n $(find tools/tmp -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     rm -R tools/tmp/*
   fi
-  log_bright "[INFO] Passing along folder variable.."
-  sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g"
   chmod +x blueprint.sh
-  bash blueprint.sh --post-upgrade
+  _FOLDER="$FOLDER" bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."
   log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
   read YN4
