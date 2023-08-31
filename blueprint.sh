@@ -1043,7 +1043,8 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     rm -R tools/tmp/*
   fi
   chmod +x blueprint.sh
-  _FOLDER="$FOLDER" bash blueprint.sh --post-upgrade
+  _FOLDER="$FOLDER" bash blueprint.sh
+  bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."
   log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
   read YN4
