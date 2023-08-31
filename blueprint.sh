@@ -337,7 +337,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   version="$conf_info_version"
   target="$conf_info_target"
   author="$conf_info_author"
-  icon="$conf_info_icon"
+  icon="$conf_info_icon" #(optional)
   website="$conf_info_website"; #(optional)
 
   admin_view="$conf_admin_view"
@@ -431,8 +431,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $description == "" ]]; then rm -R .blueprint/tmp/$n;          quit_red "[FATAL] 'info_description' is a required configuration option.";fi
   if [[ $version == "" ]]; then rm -R .blueprint/tmp/$n;              quit_red "[FATAL] 'info_version' is a required configuration option.";fi
   if [[ $target == "" ]]; then rm -R .blueprint/tmp/$n;               quit_red "[FATAL] 'info_target' is a required configuration option.";fi
-  if [[ $icon == "" ]]; then rm -R .blueprint/tmp/$n;                 quit_red "[FATAL] 'info_icon' is a required configuration option.";fi
 
+  if [[ $icon == "" ]]; then                                        log_yellow "[WARNING] This extension does not come with an icon, consider adding one.";fi
   if [[ $admin_controller == "" ]]; then                            log_bright "[INFO] Admin controller field left blank, using default controller instead.."
     controller_type="default";else controller_type="custom";fi
   if [[ $admin_view == "" ]]; then rm -R .blueprint/tmp/$n;           quit_red "[FATAL] 'admin_view' is a required configuration option.";fi
@@ -477,7 +477,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # End creating data directory.
 
   mkdir -p public/assets/extensions/$identifier
-  cp .blueprint/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg
+  if [[ $icon == "" ]]; then
+    # use random placeholder icon if extension does not
+    # come with an icon.
+    icnNUM=$(expr 1 + $RANDOM % 6)
+    cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg public/assets/extensions/$identifier/icon.jpg
+  else
+    cp .blueprint/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg
+  fi;
   ICON="/assets/extensions/$identifier/icon.jpg"
   CONTENT=$(cat .blueprint/tmp/$n/$admin_view)
 
