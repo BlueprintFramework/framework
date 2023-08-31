@@ -449,10 +449,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     cp -R .blueprint/tmp/$n/$database_migrations/* database/migrations/ 2> /dev/null
   fi
 
-  if [[ $admin_requests != "" ]]; then
-    log_yellow "[WARNING] Admin requests are deprecated. Use them in your controller instead."
-  fi
-
   if [[ $data_public != "" ]]; then
     mkdir -p public/extensions/$identifier
     cp -R .blueprint/tmp/$n/$data_public/* public/extensions/$identifier/ 2> /dev/null
@@ -1036,6 +1032,8 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ -n $(find tools/tmp -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     rm -R tools/tmp/*
   fi
+  log_bright "[INFO] Passing along folder variable.."
+  sed "s|FOLDER=\"/var/www/pterodactyl\"|FOLDER=\"$FOLDER\"|g"
   chmod +x blueprint.sh
   bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."
