@@ -18,12 +18,12 @@
 
 # Allow non-default Pterodactyl installation folders.
 if [[ $_FOLDER != "" ]]; then
-  if [[ ( ! -f "$FOLDER/.blueprint/data/internal/db/version" ) || ( $FOLDER == "/var/www/pterodactyl" ) ]]; then
+  if [[ ( ! -f "$FOLDER/.blueprint/data/internal/db/version" ) && ( $FOLDER == "/var/www/pterodactyl" ) ]]; then
     sed -i -E "s|FOLDER=\"$FOLDER\" #;|FOLDER=\"$_FOLDER\" #;|g" $_FOLDER/blueprint.sh
   else
     echo "Variable cannot be replaced right now."
+    exit 1
   fi
-  exit 1
 fi
 
 # Check for panels that are using Docker.
@@ -1043,8 +1043,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     rm -R tools/tmp/*
   fi
   chmod +x blueprint.sh
-  _FOLDER="$FOLDER" bash blueprint.sh
-  bash blueprint.sh --post-upgrade
+  _FOLDER="$FOLDER" bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."
   log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
   read YN4
