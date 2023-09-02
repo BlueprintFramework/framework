@@ -150,8 +150,14 @@ depend() {
   fi; if ! [ -x "$(command -v yarn)" ]; then
     log_red '[FATAL] Required dependency yarn is not installed or detected.' >&2
     DEPEND_MISSING=true
+  fi; if ! [ -x "$(command -v unzip)" ]; then
+    log_red '[FATAL] Required dependency unzip is not installed or detected.' >&2
+    DEPEND_MISSING=true
+  fi; if ! [ -x "$(command -v zip)" ]; then
+    log_red '[FATAL] Required dependency zip is not installed or detected.' >&2
+    DEPEND_MISSING=true
   fi
-
+ 
   # End process when using an older Node.JS version.
   nodeVer=$(node -v)
   if [[ $nodeVer != "v17."* ]] && 
