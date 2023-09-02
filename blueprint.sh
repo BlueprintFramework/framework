@@ -156,6 +156,15 @@ depend() {
   fi; if ! [ -x "$(command -v zip)" ]; then
     log_red '[FATAL] Required dependency zip is not installed or detected.' >&2
     DEPEND_MISSING=true
+  fi; if ! [ -x "$(command -v curl)" ]; then
+    log_red '[FATAL] Required dependency curl is not installed or detected.' >&2
+    DEPEND_MISSING=true
+  fi; if ! [ -x "$(command -v sed)" ]; then
+    log_red '[FATAL] Required dependency sed is not installed or detected.' >&2
+    DEPEND_MISSING=true
+  fi; if ! [ -x "$(command -v php)" ]; then
+    log_red '[FATAL] Required dependency php is not installed or detected.' >&2
+    DEPEND_MISSING=true
   fi
  
   # End process when using an older Node.JS version.
