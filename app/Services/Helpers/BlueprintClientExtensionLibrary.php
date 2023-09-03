@@ -41,8 +41,18 @@ class BlueprintClientExtensionLibrary
   | Files
   | 
   | fileRead("path");
+  | fileMake("path");
+  | fileWipe("path");
   */
   public function fileRead($path) {
     return shell_exec("cat ".escapeshellarg($path).";");
+  }
+
+  public function fileMake($path) {
+    return shell_exec("touch ".escapeshellarg($path).";");
+  }
+
+  public function fileWipe($path) {
+    return shell_exec("rm ".escapeshellarg($path).";");
   }
 }
