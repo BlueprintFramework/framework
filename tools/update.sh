@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # $1     Pterodactyl directory (pterodactyl)
+# $2     Dev release (dev)
 
 cd $1/tools/tmp;
 

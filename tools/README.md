@@ -3,4 +3,5 @@ These scripts are meant for simplifying bug testing and development and will pro
 All tools are meant to not interact with Blueprint while changing core files.
 
 
+* printDebug.sh `[path to pterodactyl]`
 * update.sh `[path to pterodactyl]` `(dev)`
