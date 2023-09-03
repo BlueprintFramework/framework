@@ -26,7 +26,7 @@ apt-get install -y nodejs
 npm i -g yarn
 yarn
 ```
-3. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly. If your Pterodactyl folder is not `/var/www/pterodactyl`, adjust the `$FOLDER` variable in blueprint.sh before running it.
+3. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly. If your Pterodactyl folder is not `/var/www/pterodactyl` you may need to put `_FOLDER="/path/to/pterodactyl"` in front of `bash blueprint.sh`.
 ```sh
 chmod +x blueprint.sh
 bash blueprint.sh
