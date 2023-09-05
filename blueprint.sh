@@ -313,6 +313,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Check if required programs are installed
   depend
 
+  # The following code does some magic to allow for extensions with a
+  # different root folder structure than expected by Blueprint.
   if [[ $3 == "test␀" ]]; then
     dev=true
     n="dev"
