@@ -377,15 +377,29 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   database_migrations="$conf_database_migrations"; #(optional)
 
-  if [[ ( $icon == "/"*                ) || ( $icon == "."*                ) || ( $icon == *"\n"*                ) ]] ||
-     [[ ( $admin_view == "/"*          ) || ( $admin_view == "."*          ) || ( $admin_view == *"\n"*          ) ]] ||
-     [[ ( $admin_controller == "/"*    ) || ( $admin_controller == "."*    ) || ( $admin_controller == *"\n"*    ) ]] ||
-     [[ ( $admin_css == "/"*           ) || ( $admin_css == "."*           ) || ( $admin_css == *"\n"*           ) ]] ||
-     [[ ( $data_directory == "/"*      ) || ( $data_directory == "."*      ) || ( $data_directory == *"\n"*      ) ]] ||
-     [[ ( $data_public == "/"*         ) || ( $data_public == "."*         ) || ( $data_public == *"\n"*         ) ]] ||
+  # "prevent" folder "escaping"
+  if [[ ( $icon                == "/"* ) || ( $icon                == "."* ) || ( $icon                == *"\n"* ) ]] ||
+     [[ ( $admin_view          == "/"* ) || ( $admin_view          == "."* ) || ( $admin_view          == *"\n"* ) ]] ||
+     [[ ( $admin_controller    == "/"* ) || ( $admin_controller    == "."* ) || ( $admin_controller    == *"\n"* ) ]] ||
+     [[ ( $admin_css           == "/"* ) || ( $admin_css           == "."* ) || ( $admin_css           == *"\n"* ) ]] ||
+     [[ ( $data_directory      == "/"* ) || ( $data_directory      == "."* ) || ( $data_directory      == *"\n"* ) ]] ||
+     [[ ( $data_public         == "/"* ) || ( $data_public         == "."* ) || ( $data_public         == *"\n"* ) ]] ||
      [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) || ( $database_migrations == *"\n"* ) ]]; then
     rm -R .blueprint/tmp/$n
-    quit_red "[FATAL] Extension has failed security checks, halting installation."
+    quit_red "[FATAL] File paths in conf.yml should not start with a slash, dot or have a linebreak."
+  fi
+
+  # prevent potentional problems during installation due to wrongly defined folders
+  if [[ ( $data_directory == *"/" ) || ( $data_public == *"/" ) || ( $database_migrations == *"/" ) ]]; then
+    rm -R .blueprint/tmp/$n
+    quit_red "[FATAL] Folder paths in conf.yml should not end with a slash."
+  fi
+
+  # check if extension still has placeholder values
+  if [[ ( $name    == "␀name␀" ) || ( $identifier == "␀identifier␀" ) || ( $description == "␀description␀" ) ]] ||
+     [[ ( $version == "␀ver␀"  ) || ( $target     == "␀version␀"    ) || ( $author      == "␀author␀"      ) ]]; then
+    rm -R .blueprint/tmp/$n
+    quit_red "[FATAL] Some conf.yml options should be replaced automatically by Blueprint when using \"-init\", but that did not happen. Please verify you have the correct information in your conf.yml and then try again."
   fi
 
   # Detect if extension is already installed and prepare the upgrading process.
