@@ -858,6 +858,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_NAME == true ]]; then
       # Ask again if response does not pass validation.
+      ask_name=""
       ask_name
     fi
   }
@@ -884,6 +885,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_IDENTIFIER == true ]]; then
       # Ask again if response does not pass validation.
+      ask_identifier=""
       ask_identifier
     fi
   }
@@ -902,6 +904,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_DESCRIPTION == true ]]; then
       # Ask again if response does not pass validation.
+      ask_description=""
       ask_description
     fi
   }
@@ -920,6 +923,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_VERSION == true ]]; then
       # Ask again if response does not pass validation.
+      ask_version=""
       ask_version
     fi
   }
@@ -938,6 +942,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_AUTHOR == true ]]; then
       # Ask again if response does not pass validation.
+      ask_author=""
       ask_author
     fi
   }
