@@ -1037,11 +1037,11 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ $@ == *"dev"* ]]; then
     log_blue "[INPUT] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
     read YN1
-    if [[ ( $YN1 == "n"* ) || ( $YN1 == "N"* ) || ( $YN1 == "" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+    if [[ ( $YN1 != "y"* ) && ( $YN1 != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
   fi
   log_blue "[INPUT] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)"
   read YN2
-  if [[ ( $YN2 == "n"* ) || ( $YN2 == "N"* ) || ( $YN2 == "" ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  if [[ ( $YN2 != "y"* ) && ( $YN2 != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
   log_blue "[INPUT] This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'."
   read YN3
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
