@@ -40,7 +40,7 @@ if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
   # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
   # or Blueprint being installed from other sources.
   if [[ ! -f "$FOLDER/.blueprint/data/internal/db/version" ]]; then
-    sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/Services/Helpers/BlueprintPlaceholderService.php
+    sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
     sed -E -i "s*@version*$VER_FALLBACK*g" public/extensions/blueprint/index.html
     touch $FOLDER/.blueprint/data/internal/db/version
   fi
@@ -50,7 +50,7 @@ elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
   # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
   # fallback version.
   if [[ ! -f "$FOLDER/.blueprint/data/internal/db/version" ]]; then
-    sed -E -i "s*&bp.version&*$PM_VERSION*g" app/Services/Helpers/BlueprintPlaceholderService.php
+    sed -E -i "s*&bp.version&*$PM_VERSION*g" app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
     sed -E -i "s*@version*$PM_VERSION*g" public/extensions/blueprint/index.html
     touch $FOLDER/.blueprint/data/internal/db/version
   fi
