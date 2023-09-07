@@ -40,20 +40,17 @@ class BlueprintAdminLibrary
   */
   public function notify($text) {
     $this->dbSet("blueprint", "notification:text", $text);
-    shell_exec("cd ".escapeshellarg($this->placeholder->folder()).";echo ".escapeshellarg($text)." > .blueprint/data/internal/db/notification;");
     return;
   }
 
   public function notifyAfter($delay, $text) {
     $this->dbSet("blueprint", "notification:text", $text);
-    shell_exec("cd ".escapeshellarg($this->placeholder->folder()).";echo ".escapeshellarg($text)." > .blueprint/data/internal/db/notification;");
     header("Refresh:$delay");
     return;
   }
 
   public function notifyNow($text) {
     $this->dbSet("blueprint", "notification:text", $text);
-    shell_exec("cd ".escapeshellarg($this->placeholder->folder()).";echo ".escapeshellarg($text)." > .blueprint/data/internal/db/notification;");
     header("Refresh:0");
     return;
   }

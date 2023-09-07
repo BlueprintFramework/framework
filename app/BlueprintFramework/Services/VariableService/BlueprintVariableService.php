@@ -33,6 +33,7 @@ class BlueprintVariableService
   }
 
   public function dbGet($key): string {
+    // BlueprintExtensionLibrary is preferred where possible.
     $a = $this->settings->get("blueprint::".$key);
     if (!$a) {
       return "";
@@ -42,6 +43,7 @@ class BlueprintVariableService
   }
 
   public function dbSet($key, $value): void {
+    // BlueprintExtensionLibrary is preferred where possible.
     $this->settings->set('blueprint::' . $key, $value);
     return;
   }

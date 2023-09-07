@@ -62,7 +62,7 @@
                             </li>
                             <li>
                                 <!-- The puzzle icon in the admin panel to manage and configure your installed extensions. -->
-                                <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if(shell_exec("cd &bp.folder&;cat .blueprint/data/internal/db/onboarding") == "true"){ echo "bx-flashing"; } ?>'></i></a></li>
+                                <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if($blueprint->fileRead("&bp.folder&/.blueprint/data/internal/db/onboarding") == "true"){ echo "bx-flashing"; } ?>'></i></a></li>
                             </li>
                             <li>
                                 <li><a href="{{ route('index') }}" data-toggle="tooltip" data-placement="bottom" title="Exit Admin Control"><i class="fa fa-server"></i></a></li>
@@ -162,29 +162,24 @@
                     @yield('content')
                     <?php
 
-                        // This could be done so much easier if we modified the controller instead of only the blade template.
-                        // However, we need to overwrite the least amount of files as possible to make Blueprint work nice with
-                        // panel updates, other modifications (most of the time) and itself.
-                        //
-                        // Files are currently fetched with shell_exec but this is subject to change. We might switch to using
-                        // built-in PHP stuff instead.
+                        // This might be further improved later.
 
-                        if(shell_exec("cd &bp.folder&;cat .blueprint/data/internal/db/onboarding") == "true") {
+                        if($blueprint->fileRead("&bp.folder&/.blueprint/data/internal/db/onboarding") == "true") {
                             echo "
                             <div class=\"notification\">
                             <p>Blueprint has now been installed, click the extension icon to take a look.</p>
                             </div>";
-                            `cd &bp.folder&;rm .blueprint/data/internal/db/onboarding;`;
+                            fileWipe("&bp.folder&/.blueprint/data/internal/db/onboarding");
                         }
     
-                        $notification = shell_exec("cd &bp.folder&;cat .blueprint/data/internal/db/notification");
+                        $notification = $blueprint->dbGet("blueprint", "notification:text");
                         if($notification != null) {
                             echo "<div class=\"notification\">
                             <p>".$notification."</p>
                             </div>
                             ";
     
-                            shell_exec("cd &bp.folder&;rm .blueprint/data/internal/db/notification;touch .blueprint/data/internal/db/notification;");
+                            $blueprint->dbSet("blueprint", "notification:text", "");
                         }
                     ?>
                 </section>
