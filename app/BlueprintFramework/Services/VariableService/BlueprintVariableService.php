@@ -2,7 +2,7 @@
 
 namespace Pterodactyl\BlueprintFramework\Services\VariableService;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Pterodactyl\BlueprintFramework\Services\BlueprintPlaceholderService;
+use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 
 class BlueprintVariableService
 {
