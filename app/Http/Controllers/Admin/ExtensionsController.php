@@ -8,6 +8,7 @@ use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
 use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
+use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
 
 class ExtensionsController extends Controller
 {
@@ -18,6 +19,7 @@ class ExtensionsController extends Controller
         private SoftwareVersionService $version,
         private ViewFactory $view,
         private BlueprintVariableService $bp,
+        private BlueprintExtensionLibrary $blueprint,
         private BlueprintPlaceholderService $placeholder)
     {
     }
@@ -28,7 +30,7 @@ class ExtensionsController extends Controller
     public function index(): View
     {
         // Onboarding check.
-        if(shell_exec("cd ".escapeshellarg($this->placeholder->folder()).";cat .blueprint/data/internal/db/onboarding") == "*blueprint*") {
+        if($this->blueprint->fileRead("{$this->placeholder->folder()}/.blueprint/data/internal/db/onboarding") == "*blueprint*") { 
             $onboarding = true;
         } else {
             $onboarding = false;

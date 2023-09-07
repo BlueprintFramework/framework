@@ -1,3 +1,7 @@
+<?php
+    use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Client\BlueprintClientLibrary as BlueprintExtensionLibrary;
+    private BlueprintExtensionLibrary $blueprint;
+?>
 <!DOCTYPE html>
 <html>
     <head>

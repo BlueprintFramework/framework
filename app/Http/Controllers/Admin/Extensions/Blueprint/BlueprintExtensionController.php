@@ -10,7 +10,7 @@ use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
 use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
 use Pterodactyl\BlueprintFramework\Services\TelemetryService\BlueprintTelemetryService;
-use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary;
+use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
@@ -26,7 +26,7 @@ class BlueprintExtensionController extends Controller
   public function __construct(
     private BlueprintVariableService $bp,
     private BlueprintTelemetryService $telemetry,
-    private BlueprintAdminLibrary $bplib,
+    private BlueprintExtensionLibrary $bplib,
     private BlueprintPlaceholderService $placeholderservice,
 
     private SoftwareVersionService $version,

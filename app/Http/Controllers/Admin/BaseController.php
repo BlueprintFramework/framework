@@ -6,7 +6,7 @@ use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
-use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary;
+use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
 
 class BaseController extends Controller
 {
@@ -16,7 +16,7 @@ class BaseController extends Controller
     public function __construct(
         private SoftwareVersionService $version,
         private ViewFactory $view,
-        private BlueprintAdminLibrary $blueprint
+        private BlueprintExtensionLibrary $blueprint
     )
     {
     }
