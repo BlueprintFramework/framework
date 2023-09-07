@@ -664,7 +664,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
     chmod +x .blueprint/data/extensions/$identifier/install.sh
     bash .blueprint/data/extensions/$identifier/install.sh
-    echo -e "\e[0m\x1b[0m\033[0m";
+    echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
