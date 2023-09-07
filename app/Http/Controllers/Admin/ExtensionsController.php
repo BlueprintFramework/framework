@@ -6,8 +6,8 @@ use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
-use Pterodactyl\Services\Helpers\BlueprintVariableService;
-use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
+use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
+use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 
 class ExtensionsController extends Controller
 {

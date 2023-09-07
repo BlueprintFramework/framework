@@ -1,12 +1,12 @@
 <?php
 
-namespace Pterodactyl\Services\Helpers;
+namespace Pterodactyl\BlueprintFramework\Services\TelemetryService;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Pterodactyl\Services\Helpers\BlueprintVariableService;
+use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
 
 class BlueprintTelemetryService
 {
-  // Construct BlueprintTelemetryService
+  // Construct core
   public function __construct(
     private SettingsRepositoryInterface $settings,
     private BlueprintVariableService $bp,

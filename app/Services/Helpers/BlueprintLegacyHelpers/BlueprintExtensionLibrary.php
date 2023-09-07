@@ -1,16 +1,28 @@
 <?php
 
-/*
-| Welcome to the Blueprint Extension Library.
-|
-| This allows extensions to easily communicate with
-| Blueprint and Pterodactyl.
-*/
+
+
+
+// THIS IS FOR BACKWARDS COMPATABILITY ONLY!
+// 
+// This file will be removed in later versions of Blueprint to
+// give developers the time to move to the new location of the
+// extension library.
+
+
+
+
+
+
+
+
+
+
 
 namespace Pterodactyl\Services\Helpers;
 
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
+use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 
 class BlueprintExtensionLibrary
 {

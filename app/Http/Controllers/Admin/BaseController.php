@@ -6,7 +6,7 @@ use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
-use Pterodactyl\Services\Helpers\BlueprintExtensionLibrary;
+use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary;
 
 class BaseController extends Controller
 {

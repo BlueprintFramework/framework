@@ -224,7 +224,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Update folder placeholder on PlaceholderService and admin layout.
     log_bright "[INFO] Updating folder placeholders.."
-    sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php
+    sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
     sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/resources/views/layouts/admin.blade.php
 
     # Copy "Blueprint" extension page logo from assets.
@@ -298,7 +298,7 @@ if [[ $1 != "-bash" ]]; then
 
     dbAdd "blueprint.setupFinished"
     # Let the panel know the user has finished installation.
-    sed -i "s!NOTINSTALLED!INSTALLED!g" $FOLDER/app/Services/Helpers/BlueprintPlaceholderService.php
+    sed -i "s!NOTINSTALLED!INSTALLED!g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
     exit 1
   fi
 fi

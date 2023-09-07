@@ -1,23 +1,17 @@
 <?php
 
-/*
-| Welcome to the Blueprint (Client) Extension Library.
-|
-| This allows extensions to easily communicate with
-| Blueprint and Pterodactyl.
-*/
+// Core file for the client-side library for Blueprint Extensions
 
-namespace Pterodactyl\Services\Helpers;
+
+namespace Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Client;
 
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
 
-class BlueprintClientExtensionLibrary
+class BlueprintClientLibrary
 {
-  // Construct BlueprintClientExtensionLibrary
+  // Construct core
   public function __construct(
     private SettingsRepositoryInterface $settings,
-    private BlueprintPlaceholderService $placeholder,
   ) {
   }
 

@@ -6,7 +6,7 @@ use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Contracts\Repository\ServerRepositoryInterface;
-use Pterodactyl\Services\Helpers\BlueprintClientExtensionLibrary;
+use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Client\BlueprintClientLibrary;
 
 class IndexController extends Controller
 {

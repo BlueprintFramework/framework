@@ -1,12 +1,12 @@
 <?php
 
-namespace Pterodactyl\Services\Helpers;
+namespace Pterodactyl\BlueprintFramework\Services\VariableService;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Pterodactyl\Services\Helpers\BlueprintPlaceholderService;
+use Pterodactyl\BlueprintFramework\Services\BlueprintPlaceholderService;
 
 class BlueprintVariableService
 {
-  // Construct BlueprintVariableService
+  // Construct core
   public function __construct(
     private SettingsRepositoryInterface $settings,
     private BlueprintPlaceholderService $blueprintplaceholderservice,
