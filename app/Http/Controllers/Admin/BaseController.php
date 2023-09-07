@@ -16,7 +16,7 @@ class BaseController extends Controller
     public function __construct(
         private SoftwareVersionService $version,
         private ViewFactory $view,
-        private BlueprintExtensionLibrary $blueprint
+        private BlueprintAdminLibrary $blueprint
     )
     {
     }

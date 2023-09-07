@@ -26,7 +26,7 @@ class BlueprintExtensionController extends Controller
   public function __construct(
     private BlueprintVariableService $bp,
     private BlueprintTelemetryService $telemetry,
-    private BlueprintExtensionLibrary $bplib,
+    private BlueprintAdminLibrary $bplib,
     private BlueprintPlaceholderService $placeholderservice,
 
     private SoftwareVersionService $version,
