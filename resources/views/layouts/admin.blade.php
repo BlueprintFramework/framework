@@ -1,10 +1,3 @@
-<?php
-    use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Client\BlueprintClientLibrary as BlueprintExtensionLibrary;
-    public function __construct(
-        private BlueprintExtensionLibrary $blueprint
-    ){}
-    // yes i know this is scuffed but trust me
-?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -176,7 +169,7 @@
                             <div class=\"notification\">
                             <p>Blueprint has now been installed, click the extension icon to take a look.</p>
                             </div>";
-                            fileWipe("&bp.folder&/.blueprint/data/internal/db/onboarding");
+                            $blueprint->fileWipe("&bp.folder&/.blueprint/data/internal/db/onboarding");
                         }
     
                         $notification = $blueprint->dbGet("blueprint", "notification:text");

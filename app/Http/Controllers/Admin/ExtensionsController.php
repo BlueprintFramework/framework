@@ -38,6 +38,7 @@ class ExtensionsController extends Controller
         return $this->view->make('admin.extensions', [
             'version' => $this->version,
             'bp' => $this->bp,
+            'blueprint' => $this->blueprint,
             'root' => "/admin/extensions",
 
             'onboarding' => $onboarding
