@@ -1,6 +1,9 @@
 <?php
     use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Client\BlueprintClientLibrary as BlueprintExtensionLibrary;
-    private BlueprintExtensionLibrary $blueprint;
+    public function __construct(
+        private BlueprintExtensionLibrary $blueprint
+    ){}
+    // yes i know this is scuffed but trust me
 ?>
 <!DOCTYPE html>
 <html>
