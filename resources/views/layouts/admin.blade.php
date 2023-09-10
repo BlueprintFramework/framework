@@ -240,6 +240,6 @@
                 })
             </script>
         @show
+        <!-- wrapper:insert -->
     </body>
-    <!-- wrapper:insert -->
 </html>
