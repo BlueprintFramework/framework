@@ -140,6 +140,11 @@ quit_red() { log_red "$1"; exit 1; }
 
 
 depend() {
+  # Check for incorrect node version.
+  nodeVer=$(node -v)
+  if [[ $nodeVer != "v17."* ]] && [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then DEPEND_MISSING=true; fi
+
+
   # Check for required dependencies.
   if ! [ -x "$(command -v unzip)" ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v node) " ]; then DEPEND_MISSING=true; fi
@@ -148,10 +153,6 @@ depend() {
   if ! [ -x "$(command -v curl) " ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v sed)  " ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v php)  " ]; then DEPEND_MISSING=true; fi
- 
-  # End process when using an older Node.JS version.
-  nodeVer=$(node -v)
-  if [[ $nodeVer != "v17."* ]] && [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then DEPEND_MISSING=true; fi
 
   # Check for internal dependencies.
   if [[ $LIB__bash_colors              ]]; then DEPEND_MISSING=true; fi
@@ -164,21 +165,23 @@ depend() {
   if [[ $DEPEND_MISSING == true ]]; then 
     log_red "[FATAL] Blueprint found errors for the following dependencies:"
 
-    log_red "  - \"node\" ($nodeVer) is an unsupported version."
+    if [[ $nodeVer != "v17."* ]] && [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($nodeVer) is an unsupported version."; fi
 
-    log_red "  - \"unzip\" is not installed or detected."
-    log_red "  - \"node\" is not installed or detected."
-    log_red "  - \"yarn\" is not installed or detected."
-    log_red "  - \"zip\" is not installed or detected."
-    log_red "  - \"curl\" is not installed or detected."
-    log_red "  - \"sed\" is not installed or detected."
-    log_red "  - \"php\" is not installed or detected."
+    if ! [ -x "$(command -v unzip)" ]; then log_red "  - \"unzip\" is not installed or detected."; fi
+    if ! [ -x "$(command -v node) " ]; then log_red "  - \"node\" is not installed or detected.";  fi
+    if ! [ -x "$(command -v yarn) " ]; then log_red "  - \"yarn\" is not installed or detected.";  fi
+    if ! [ -x "$(command -v zip)  " ]; then log_red "  - \"zip\" is not installed or detected.";   fi
+    if ! [ -x "$(command -v curl) " ]; then log_red "  - \"curl\" is not installed or detected.";  fi
+    if ! [ -x "$(command -v sed)  " ]; then log_red "  - \"sed\" is not installed or detected.";   fi
+    if ! [ -x "$(command -v php)  " ]; then log_red "  - \"php\" is not installed or detected.";   fi
 
-    log_red "  - \"internal:bash_colors\" is not installed or detected."
-    log_red "  - \"internal:parse_yaml\" is not installed or detected."
-    log_red "  - \"internal:db\" is not installed or detected."
-    log_red "  - \"internal:telemetry\" is not installed or detected."
-    log_red "  - \"internal:updateAdminCacheReminder\" is not installed or detected."
+    if [[ $LIB__bash_colors              ]]; then log_red "  - \"internal:bash_colors\" is not installed or detected.";              fi
+    if [[ $LIB__parse_yaml               ]]; then log_red "  - \"internal:parse_yaml\" is not installed or detected.";               fi
+    if [[ $LIB__db                       ]]; then log_red "  - \"internal:db\" is not installed or detected.";                       fi
+    if [[ $LIB__telemetry                ]]; then log_red "  - \"internal:telemetry\" is not installed or detected.";                fi
+    if [[ $LIB__updateAdminCacheReminder ]]; then log_red "  - \"internal:updateAdminCacheReminder\" is not installed or detected."; fi
+
+    exit 1
   fi
 }
 
