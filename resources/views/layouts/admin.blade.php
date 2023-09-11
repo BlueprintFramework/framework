@@ -1,7 +1,10 @@
 @php
-    // if this works i'm going to be really happy
-    use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
-    $blueprint = new BlueprintExtensionLibrary();
+    // Allow BlueprintExtensionLibrary to work in all admin views without
+    // modifying all admin page controllers. Doing this should preserve
+    // basic compatibility for other modifications.
+    use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary;
+    $settings = app()->make('Pterodactyl\Contracts\Repository\SettingsRepositoryInterface');
+    $blueprint = app()->make(BlueprintAdminLibrary::class, ['settings' => $settings]);
 @endphp
 <!DOCTYPE html>
 <html>
