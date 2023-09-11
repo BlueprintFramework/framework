@@ -1,3 +1,8 @@
+@php
+    // if this works i'm going to be really happy
+    use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
+    $blueprint = new BlueprintExtensionLibrary();
+@endphp
 <!DOCTYPE html>
 <html>
     <head>
