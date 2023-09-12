@@ -273,6 +273,10 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] Rebuilding panel assets.."
     yarn run build:production
 
+    # Clear route cache.
+    log_bright "[INFO] Clearing route cache.."
+    php artisan route:cache
+
     # Put application into production.
     log_bright "[INFO] Disable maintenance."
     php artisan up
@@ -665,6 +669,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     yarn run build:production
   fi
 
+  log_bright "[INFO] Clearing route cache.."
+  php artisan route:cache
+
   if [[ $DUPLICATE == "y" ]]; then
     log_green "\n\n[SUCCESS] $identifier should now be updated. If something didn't work as expected, please let us know at ptero.shop/issue."
   else
@@ -789,6 +796,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     log_bright "[INFO] Rebuilding panel assets.."
     yarn run build:production
   fi
+
+  log_bright "[INFO] Clearing route cache.."
+  php artisan route:cache
 
   log_green "[SUCCESS] '$identifier' has been removed from your panel. Please note that some files might be left behind."
 fi
@@ -1075,6 +1085,9 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   else
     log_bright "[INFO] Database migrations have been skipped."
   fi
+
+  log_bright "[INFO] Clearing route cache.."
+  php artisan route:cache
 
   # Post-upgrade checks.
   log_bright "[INFO] Running post-upgrade checks.."
