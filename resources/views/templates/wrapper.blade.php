@@ -1,3 +1,8 @@
+@php
+    use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Client\BlueprintClientLibrary as BlueprintExtensionLibrary;
+    $settings = app()->make('Pterodactyl\Contracts\Repository\SettingsRepositoryInterface');
+    $blueprint = app()->make(BlueprintExtensionLibrary::class, ['settings' => $settings]);
+@endphp
 <!DOCTYPE html>
 <html>
     <head>
