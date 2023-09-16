@@ -23,6 +23,9 @@ class CreateBlueprintTable extends Migration
               Placeholder may come useful when developing
               new features, that's why it's currently included
               in the migrations.
+
+              This value will normally contain next to nothing,
+              but is always useful to include for experimenting.
             */
             $table->string('placeholder')->nullable();
 
