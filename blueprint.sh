@@ -800,6 +800,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   log_bright "[INFO] Updating route cache to include recent changes.."
   php artisan route:cache 2> /dev/null
 
+  sendTelemetry "FINISH_EXTENSION_REMOVAL" > /dev/null
+
   log_green "[SUCCESS] '$identifier' has been removed from your panel. Please note that some files might be left behind."
 fi
 
@@ -990,6 +992,8 @@ if [[ $2 == "-init" ]]; then VCMD="y"
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
 
+  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" > /dev/null
+
   log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/dev'."
 fi
 
@@ -1029,6 +1033,8 @@ if [[ $2 == "-export" ]]; then VCMD="y"
   cp .blueprint/tmp/extension.zip $identifier.blueprint
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
+
+  sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" > /dev/null
 
   # This will be replaced with a success/fail check in the future.
   log_bright "[INFO] Export finished."
