@@ -826,9 +826,10 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then VCMD=
   \x1b[0m
   
 ${help_developer_primary}Developer$help_dev_status\x1b[0m${help_developer_secondary}
-  -init                    initialize development files
-  -build                   install/update your development files
-  -export                  export your development files
+  -init                -I  initialize development files
+  -build               -b  install/update your development files
+  -export              -e  export your development files
+  -wipe                -w  remove your development files
   \x1b[0m
   
 \x1b[34;1mMisc\x1b[0m\x1b[34m
@@ -850,7 +851,7 @@ fi
 
 
 # -init
-if [[ $2 == "-init" ]]; then VCMD="y"
+if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
 
   # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
@@ -1037,7 +1038,7 @@ fi
 
 
 # -build
-if [[ $2 == "-build" ]]; then VCMD="y"
+if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
 
   if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
@@ -1051,7 +1052,7 @@ fi
 
 
 # -export
-if [[ $2 == "-export" ]]; then VCMD="y"
+if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
 
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
@@ -1074,8 +1075,20 @@ if [[ $2 == "-export" ]]; then VCMD="y"
 
   sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" > /dev/null
 
-  # This will be replaced with a success/fail check in the future.
-  log_bright "[INFO] Export finished."
+  log_green "[SUCCESS] Your export has been finished, you can find your extension in your Pterodactyl folder."
+fi
+
+
+# -wipe
+if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
+  log_blue "[INPUT] You are about to wipe all of your extension files, are you sure you want to continue? This cannot be undone. (y/N)"
+  read YN
+  if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
+
+  log_bright "[INFO] Wiping development folder.."
+  rm -R .blueprint/dev/*
+
+  log_green "[SUCCESS] Your development files have been removed."
 fi
 
 
