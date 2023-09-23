@@ -1,0 +1,292 @@
+:root {
+  --one: #1A1A1A;
+  --two: #333333;
+  --three: #585858;
+  --bg: url("https://i.imgur.com/gFCJhqT.jpg");
+}
+
+
+
+html, body.bg-neutral-800 {
+  background-image: var(--bg);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-color: transparent;
+}
+
+/* login page */
+div.LoginFormContainer___StyledDiv-sc-cyh04c-3.cxOtYP {
+  background-color: var(--one) !important;
+}
+
+/* login page label */
+label.Label-sc-g780ms-0.dqkKHi {
+  color: var(--three) !important;
+}
+
+a.GreyRowBox-sc-1xo9c6v-0.ServerRow__StatusIndicatorBox-sc-1ibsw91-2.dyLna-D.fRwFrz.DashboardContainer___StyledServerRow-sc-1topkxf-2 {
+  background-color: var(--one) !important;
+}
+
+a.GreyRowBox-sc-1xo9c6v-0.ServerRow__StatusIndicatorBox-sc-1ibsw91-2.dyLna-D.fwbDSe.DashboardContainer___StyledServerRow-sc-1topkxf-2.jbVWLN {
+  background-color: var(--one) !important;
+  background-size: cover;
+}
+
+.GreyRowBox-sc-1xo9c6v-0 {
+  background-color: var(--one) !important;
+}
+
+div.SubNavigation-sc-lfuaoi-0 {
+  background-color: rgba(255, 255, 255, 0) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+
+}
+
+div.grid.grid-cols-6.gap-2.md:gap-4.col-span-4.lg:col-span-1.order-last.lg:order-none {
+  background-color: var(--one);
+}
+div.ServerRow___StyledP3-sc-1ibsw91-9 {
+   text-decoration-color: whitesmoke;
+}
+div.style-module_2Vp6MaXq.bg-gray-600.cursor-pointer {
+  background: rgba(51, 51, 51, 1);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(9.2px);
+  -webkit-backdrop-filter: blur(9.2px);
+}
+
+div.style-module_2Vp6MaXq.bg-gray-600 {
+  background: rgba(51, 51, 51, 1);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(9.2px);
+  -webkit-backdrop-filter: blur(9.2px);
+}
+
+div.style-module_2XbmHEcn.group {
+  background-color: var(--two);
+}
+
+div.w-full.bg-neutral-900.shadow-md.overflow-x-auto {
+  background-color: var(--one)
+}
+
+div.icon.mr-4 {
+  background-color: var(--two)
+}
+
+a.style-module_35MPv1CD.style-module_35MPv1CD.active {
+  background-color: var(--one);
+}
+
+/* Modal button row */
+.px-6.py-3.bg-gray-700.flex.items-center.justify-end.space-x-3.rounded-b {
+  background-color: var(--one);
+}
+
+/* Schedule "nav"bar */
+.ScheduleEditContainer___StyledDiv3-sc-1fhsmlc-7.bNXcqn {
+  background-color: var(--one);
+} 
+
+/* Schedule Cron */
+.ScheduleEditContainer___StyledDiv-sc-1fhsmlc-0.bWXUsX {
+  background-color: var(--two);
+}
+
+/* Schedule Task */
+.ScheduleTaskRow___StyledDiv-sc-17r38ls-0.ipThkt {
+  background-color: var(--two);
+}
+
+.style-module_1WqkLT9X {
+  background-color: var(--one) !important;
+}
+
+.style-module_1WqkLT9X:hover {
+  background-color: var(--two) !important;
+}
+
+.style-module_35MPv1CD.active {
+  background-color: var(--one) !important;
+}
+
+.style-module_35MPv1CD.active:hover {
+  background-color: var(--two) !important;
+}
+
+div.GreyRowBox-sc-1xo9c6v-0.iTERJN.flex-wrap.md:flex-nowrap.mt-2 {
+  background-color: var(--two)
+}
+
+div.TitledGreyBox___StyledDiv3-sc-gvsoy-4.fKIIIQ {
+  background-color: var(--one);
+}
+
+input.Input-sc-19rce1w-0.jqTCDz.cursor-pointer {
+  background-color: var(--two);
+}
+
+input.Input-sc-19rce1w-0.jqTCDz {
+  background-color: var(--two);
+}
+
+div.grid.grid-cols-10.py-4.border-b-2.border-gray-800.last:rounded-b.last:border-0.group {
+  background-color: var(--two);
+}
+
+div.TitledGreyBox___StyledDiv2-sc-gvsoy-1.jRrWLs {
+  background-color: var(--two);
+}
+
+
+div.ContentBox___StyledDiv-sc-mjlt6f-2.iGOcRf {
+  background-color: var(--two);
+}
+
+div.Modal___StyledDiv2-sc-9vzni8-3.ekHIsr {
+  background-color: var(--two)
+}
+
+
+div.GreyRowBox-sc-1xo9c6v-0.DatabaseRow___StyledGreyRowBox-sc-1t67zwr-13.iTERJN.gkSIus {
+  background-color: var(--two);
+}
+
+div.EditScheduleModal___StyledDiv2-sc-wh9db9-4.fhEpAC {
+  background-color: var(--two);
+}
+
+div.EditScheduleModal___StyledDiv4-sc-wh9db9-6.jyDDEO {
+  background-color: var(--two);
+}
+
+div.EditScheduleModal___StyledDiv5-sc-wh9db9-7.ueIjC {
+  background-color: var(--two);
+}
+
+a.GreyRowBox-sc-1xo9c6v-0.ScheduleContainer___StyledGreyRowBox-sc-dlqnx9-2.dyLna-D.bppajE {
+  background-color: var(--two);
+}
+
+div.GreyRowBox-sc-1xo9c6v-0.UserRow___StyledGreyRowBox-sc-hg2wjz-0.dyLna-D.dmlaEn {
+  background-color: var(--two);
+}
+
+div.CreateBackupButton___StyledDiv2-sc-da8bqw-3.eDncUf {
+  background-color: var(--two);
+}
+
+textarea.Input__Textarea-sc-19rce1w-1.kKFWRA {
+  background-color: var(--two);
+}
+
+div.flex.justify-end.space-x-4.mt-4.w-full.md:mt-0.md:w-48 {
+  background-color: var(--two);
+}
+
+select.Select-sc-17exaqp-0.dupyoa {
+  background-color: var(--one);
+}
+
+div.TitledGreyBox___StyledDiv-sc-gvsoy-0.oLbNP.StartupContainer___StyledTitledGreyBox-sc-163imy2-1.kRunTE {
+  background-color: var(--two);
+}
+
+a.GreyRowBox-sc-1xo9c6v-0.ServerRow__StatusIndicatorBox-sc-1ibsw91-2.dyLna-D {
+  background-color: var(--one)
+}
+
+label.PermissionRow__Container-sc-1h899cn-0.icxFlO:hover {
+  background-color: var(--three);
+}
+
+div.style-module_1DtraXMW.bg-gray-700 {
+  background-color: var(--one);
+}
+
+input.Input-sc-19rce1w-0.jqTCDz {
+  background-color: var(--two);
+}
+
+div.TitledGreyBox___StyledDiv-sc-gvsoy-0.oLbNP {
+  background-color: var(--one);
+}
+
+div.grid.grid-cols-10.py-4.border-b-2.border-gray-800.last:rounded-b.last:border-0.group {
+  background-color: var(--one);
+}
+
+.group {
+  background-color: var(--one);
+}
+
+.GreyRowBox-sc-1xo9c6v-0 {
+  background-color: var(--one);
+}
+
+#app {
+  background-image: var(--bg);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-color: transparent;
+}
+
+/*
+  Server Console style module
+*/
+
+div.server-console-style-module__stat_block {
+  background: rgba(255, 255, 255, 0);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(9.2px);
+  -webkit-backdrop-filter: blur(9.2px);
+}
+
+div.server-console-style-module__icon.bg-gray-700 {
+  background-color: var(--two);
+}
+
+div.headlessui-dialog-panel-2 {
+  background-color: var(--two);
+}
+
+div.style-module_1RnhIT0w {
+  background-color: var(--two);
+}
+
+input.Input-sc-19rce1w-0.ZkNLd {
+  background-color: var(--one);
+}
+
+input.Input-sc-19rce1w-0.jqTCDz {
+  background-color: var(--two);
+  ;
+}
+
+body {
+  overflow: overlay;
+}
+
+Input {
+  background-color: var(--two) !important;
+}
+
+select {
+  background-color: var(--two) !important;
+}
+
+select {
+  background-color: var(--two) !important;
+}
+
+p.StartupContainer___StyledP-sc-163imy2-3.ekbHAG {
+   background-color: var(--two) !important;
+}

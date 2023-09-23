@@ -862,7 +862,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
   ask_template() {
     log_blue "[INPUT] Initial Template:"
     log_blue "  - (0) Barebones"
-    log_blue "  - (1) Placeholder"
+    log_blue "  - (1) Theme"
     log_blue "  - (2) Placeholder"
     read ASKTEMPLATE
 
@@ -1011,12 +1011,14 @@ if [[ $2 == "-init" ]]; then VCMD="y"
   sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/tmp/init/conf.yml; #VERSION
   sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/tmp/init/conf.yml; #AUTHOR
 
-  log_bright "[INFO] Rolling (and applying) extension placeholder icon.."
-  icnNUM=$(expr 1 + $RANDOM % 6)
-  cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg .blueprint/tmp/init/$t_template_files_icon
+  if [[ $t_template_files_icon != "" ]]; then
+    log_bright "[INFO] Rolling (and applying) extension placeholder icon.."
+    icnNUM=$(expr 1 + $RANDOM % 6)
+    cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg .blueprint/tmp/init/$t_template_files_icon
+    sed -i "s~␀icon␀~$t_template_files_icon~g" .blueprint/tmp/init/conf.yml; #ICON
+  fi;
 
   log_bright "[INFO] Applying core variables.."
-  sed -i "s~␀icon␀~$t_template_files_icon~g" .blueprint/tmp/init/conf.yml; #ICON
   sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml #BLUEPRINT-VERSION
 
   # Return files to folder.

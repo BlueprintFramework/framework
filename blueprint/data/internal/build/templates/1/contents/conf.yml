@@ -9,21 +9,21 @@ info:
   version: "␀ver␀"
   target: "␀version␀"
   author: "␀author␀"
-  icon: "assets/logo.jpg"
+  icon: "␀icon␀"
   website: ""
 
 admin:
-  view: "view.blade.php"
+  view: "admin/view.blade.php"
   controller: ""
   css: ""
   wrapper: ""
 
 dashboard:
   wrapper: ""
-  css: ""
+  css: "client/style.css"
 
 data:
-  directory: "data"
+  directory: ""
   public: ""
 
 database:

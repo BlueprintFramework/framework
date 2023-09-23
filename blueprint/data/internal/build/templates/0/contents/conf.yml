@@ -9,7 +9,7 @@ info:
   version: "␀ver␀"
   target: "␀version␀"
   author: "␀author␀"
-  icon: "␀icon␀"
+  icon: ""
   website: ""
 
 admin:
