@@ -862,8 +862,8 @@ if [[ $2 == "-init" ]]; then VCMD="y"
   ask_template() {
     log_blue "[INPUT] Initial Template:"
     log_blue "  - (0) Barebones"
-    log_blue "  - (1) Theme"
-    log_blue "  - (2) Placeholder"
+    log_blue "  - (1) Basic Theme"
+    log_blue "  - (2) Dashboard Overlay"
     read ASKTEMPLATE
 
     REDO_TEMPLATE=false

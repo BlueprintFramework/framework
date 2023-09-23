@@ -1,0 +1,7 @@
+template:
+  name: "Dashboard Overlay"
+  id: 2
+  author: "prplwtf"
+
+  files:
+    icon: "icon.jpg"
