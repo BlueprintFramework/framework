@@ -859,6 +859,32 @@ if [[ $2 == "-init" ]]; then VCMD="y"
     quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to initialize another extension unless you clear your .blueprint/dev folder."
   fi
 
+  ask_template() {
+    log_blue "[INPUT] Initial Template:"
+    log_blue "  - (0) Barebones"
+    read ASKTEMPLATE
+
+    REDO_TEMPLATE=false
+
+    # Template cannot be empty
+    if [[ $ASKTEMPLATE == "" ]]; then 
+      log_red "[FATAL] Template cannot be empty."
+      REDO_TEMPLATE=true
+    fi
+
+    # Unknown template.
+    if [[ ( $ASKTEMPLATE != "0" ) && ( $ASKTEMPLATE != "1" ) && ( $ASKTEMPLATE != "2" ) ]]; then 
+      log_red "[FATAL] Unknown template. Possible answers can be between 0 and 2."
+      REDO_TEMPLATE=true
+    fi
+
+    if [[ $REDO_TEMPLATE == true ]]; then
+      # Ask again if response does not pass validation.
+      ask_TEMPLATE=""
+      ask_template
+    fi
+  }
+
   ask_name() {
     log_blue "[INPUT] Name (Generic Extension):"
     read ASKNAME
