@@ -1,0 +1,7 @@
+template:
+  name: "Barebones"
+  id: 0
+  author: "prplwtf"
+
+  files:
+    icon: "icon.jpg"

@@ -882,7 +882,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_TEMPLATE == true ]]; then
       # Ask again if response does not pass validation.
-      ask_TEMPLATE=""
+      ASKTEMPLATE=""
       ask_template
     fi
   }
@@ -901,7 +901,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_NAME == true ]]; then
       # Ask again if response does not pass validation.
-      ask_name=""
+      ASKNAME=""
       ask_name
     fi
   }
@@ -928,7 +928,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_IDENTIFIER == true ]]; then
       # Ask again if response does not pass validation.
-      ask_identifier=""
+      ASKIDENTIFIER=""
       ask_identifier
     fi
   }
@@ -947,7 +947,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_DESCRIPTION == true ]]; then
       # Ask again if response does not pass validation.
-      ask_description=""
+      ASKDESCRIPTION=""
       ask_description
     fi
   }
@@ -966,7 +966,7 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_VERSION == true ]]; then
       # Ask again if response does not pass validation.
-      ask_version=""
+      ASKVERSION=""
       ask_version
     fi
   }
@@ -985,20 +985,24 @@ if [[ $2 == "-init" ]]; then VCMD="y"
 
     if [[ $REDO_AUTHOR == true ]]; then
       # Ask again if response does not pass validation.
-      ask_author=""
+      ASKAUTHOR=""
       ask_author
     fi
   }
 
+  ask_template
   ask_name
   ask_identifier
   ask_description
   ask_version
   ask_author
 
-  log_bright "[INFO] Copying init defaults to tmp directory.."
+  tnum=$ASKTEMPLATE;
+  eval $(parse_yaml .blueprint/data/internal/build/templates/$tnum/TemplateConfiguration.yml t_);
+
+  log_bright "[INFO] Copying template contents to the tmp directory.."
   mkdir -p .blueprint/tmp/init
-  cp -R .blueprint/data/internal/build/init/* .blueprint/tmp/init/
+  cp -R .blueprint/data/internal/build/templates/$tnum/contents/* .blueprint/tmp/init/
 
   log_bright "[INFO] Applying variables.."
   sed -i "s~␀name␀~$ASKNAME~g" .blueprint/tmp/init/conf.yml; #NAME
@@ -1007,16 +1011,20 @@ if [[ $2 == "-init" ]]; then VCMD="y"
   sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/tmp/init/conf.yml; #VERSION
   sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/tmp/init/conf.yml; #AUTHOR
 
+  log_bright "[INFO] Rolling (and applying) extension placeholder icon.."
   icnNUM=$(expr 1 + $RANDOM % 6)
-  cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg .blueprint/tmp/init/assets/logo.jpg
-  sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml
+  cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg .blueprint/tmp/init/$t_template_files_icon
+
+  log_bright "[INFO] Applying core variables.."
+  sed -i "s~␀icon␀~$t_template_files_icon~g" .blueprint/tmp/init/conf.yml; #ICON
+  sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml #BLUEPRINT-VERSION
 
   # Return files to folder.
-  log_bright "[INFO] Copying output to dev directory."
+  log_bright "[INFO] Copying output to extension development directory."
   cp -R .blueprint/tmp/init/* .blueprint/dev/
 
   # Remove tmp files.
-  log_bright "[INFO] Purging tmp files."
+  log_bright "[INFO] Purging contents of tmp folder."
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
 
