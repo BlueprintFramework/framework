@@ -1,0 +1,30 @@
+# Thank you for developing with Blueprint.
+# For documentation about conf.yml, refer to ptero.shop/dev/conf.
+
+info:
+  name: "␀name␀"
+  identifier: "␀identifier␀"
+  description: "␀description␀"
+  flags: ""
+  version: "␀ver␀"
+  target: "␀version␀"
+  author: "␀author␀"
+  icon: "icon.jpg"
+  website: ""
+
+admin:
+  view: "admin.blade.php"
+  controller: ""
+  css: ""
+  wrapper: ""
+
+dashboard:
+  wrapper: "wrapper.blade.php"
+  css: ""
+
+data:
+  directory: ""
+  public: ""
+
+database:
+  migrations: ""

@@ -865,6 +865,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     log_blue "  - (0) Barebones"
     log_blue "  - (1) Basic Theme"
     log_blue "  - (2) Dashboard Overlay"
+    log_blue "  - (3) Onboarding Modal"
     read ASKTEMPLATE
 
     REDO_TEMPLATE=false
@@ -876,7 +877,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     fi
 
     # Unknown template.
-    if [[ ( $ASKTEMPLATE != "0" ) && ( $ASKTEMPLATE != "1" ) && ( $ASKTEMPLATE != "2" ) ]]; then 
+    if [[ ( $ASKTEMPLATE != "0" ) && ( $ASKTEMPLATE != "1" ) && ( $ASKTEMPLATE != "2" ) && ( $ASKTEMPLATE != "3" ) ]]; then 
       log_red "[FATAL] Unknown template. Possible answers can be between 0 and 2."
       REDO_TEMPLATE=true
     fi
