@@ -216,7 +216,7 @@ if [[ $1 != "-bash" ]]; then
     sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/resources/views/layouts/admin.blade.php
 
     # Copy "Blueprint" extension page logo from assets.
-    log_bright "[INFO] Copying Blueprint logo from assets."
+    log_bright "[INFO] Copying Blueprint logo from assets.."
     cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/public/assets/extensions/blueprint/logo.jpg
 
     # Put application into maintenance.
@@ -230,9 +230,13 @@ if [[ $1 != "-bash" ]]; then
     sed -i '1i@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */' $FOLDER/public/themes/pterodactyl/css/pterodactyl.css
 
     # Clear view cache.
-    log_bright "[INFO] Clearing view cache."
+    log_bright "[INFO] Clearing view cache.."
     php artisan view:clear
     php artisan config:clear
+
+    # Link filesystems.
+    log_bright "[INFO] Linking filesystems.."
+    php artisan storage:link
 
     # Roll admin css refresh number.
     log_bright "[INFO] Rolling admin cache refresh class name."
@@ -243,7 +247,7 @@ if [[ $1 != "-bash" ]]; then
     if [[ $1 != "--post-upgrade" ]]; then
       log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
       read YN
-      if [[ ( $YN == "y" ) || ( $YN == "Y" ) || ( $YN == "" ) ]]; then 
+      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
         log_bright "[INFO] Running database migrations.."
         php artisan migrate --force
       else
@@ -253,11 +257,11 @@ if [[ $1 != "-bash" ]]; then
 
 
     # Make sure all files have correct permissions.
-    log_bright "[INFO] Changing file ownership to www-data."
+    log_bright "[INFO] Changing file ownership to www-data.."
     chown -R www-data:www-data $FOLDER/*
     chown -R www-data:www-data $FOLDER/.blueprint/*
 
-    log_bright "[INFO] Removing placeholder files."
+    log_bright "[INFO] Removing placeholder files.."
     # Remove placeholder README.md files.
     if [[ -f "$FOLDER/.blueprint/dev/README.md" ]]; then
       rm -R $FOLDER/.blueprint/dev/*
@@ -275,7 +279,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Clear route cache.
     log_bright "[INFO] Updating route cache to include recent changes.."
-    php artisan route:cache 2> /dev/null 
+    php artisan route:cache &> /dev/null 
 
     # Put application into production.
     log_bright "[INFO] Disable maintenance."
@@ -373,7 +377,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ ( $icon                == "/"* ) || ( $icon                == "."* ) || ( $icon                == *"\n"* ) ]] ||
      [[ ( $admin_view          == "/"* ) || ( $admin_view          == "."* ) || ( $admin_view          == *"\n"* ) ]] ||
      [[ ( $admin_controller    == "/"* ) || ( $admin_controller    == "."* ) || ( $admin_controller    == *"\n"* ) ]] ||
-     [[ ( $admin_css           == "/"* ) || ( $admin_css           == "."* ) || ( $admin_css           == *"\n"* ) ]] ||
+     [[ ( $admin_css           == "/"* ) || ( $admin_css           == "."* ) |YN| ( $admin_css           == *"\n"* ) ]] ||
      [[ ( $data_directory      == "/"* ) || ( $data_directory      == "."* ) || ( $data_directory      == *"\n"* ) ]] ||
      [[ ( $data_public         == "/"* ) || ( $data_public         == "."* ) || ( $data_public         == *"\n"* ) ]] ||
      [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) || ( $database_migrations == *"\n"* ) ]]; then
@@ -641,13 +645,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $database_migrations != "" ]]; then
     log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
     read YN
-    if [[ ( $YN == "y" ) || ( $YN == "Y" ) || ( $YN == "" ) ]]; then 
+    if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
       log_bright "[INFO] Running database migrations.."
       php artisan migrate --force
     else
       log_bright "[INFO] Database migrations have been skipped."
     fi
   fi
+
+  if [[ $YARN == "y" ]]; then 
+    log_bright "[INFO] Rebuilding panel.."
+    yarn run build:production
+  fi
+
+  log_bright "[INFO] Updating route cache to include recent changes.."
+  php artisan route:cache &> /dev/null
 
   chown -R www-data:www-data $FOLDER/.blueprint/data/extensions/$identifier
   chmod --silent -R +x .blueprint/data/extensions/* 2> /dev/null
@@ -664,20 +676,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     log_bright "[INFO] Added '$identifier' to the list of installed extensions."
   fi
 
-  if [[ $YARN == "y" ]]; then 
-    log_bright "[INFO] Rebuilding panel.."
-    yarn run build:production
-  fi
-
-  log_bright "[INFO] Updating route cache to include recent changes.."
-  php artisan route:cache 2> /dev/null
-
-  if [[ $DUPLICATE == "y" ]]; then
-    log_green "\n\n[SUCCESS] $identifier should now be updated. If something didn't work as expected, please let us know at ptero.shop/issue."
-  else
-    log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue."
-  fi
   if [[ $dev != true ]]; then
+    if [[ $DUPLICATE == "y" ]]; then
+      log_green "\n\n[SUCCESS] $identifier should now be updated. If something didn't work as expected, please let us know at ptero.shop/issue."
+    else
+      log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue."
+    fi
     sendTelemetry "FINISH_EXTENSION_INSTALLATION" > /dev/null
   fi
 fi
@@ -786,10 +790,6 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Remove data folder
   log_bright "[INFO] Removing data folder.."
   rm -R .blueprint/data/extensions/$identifier
-  
-  # Remove from installed list
-  log_bright "[INFO] Removing extension from installed extensions list.."
-  sed -i "s~$identifier,~~g" .blueprint/data/internal/db/installed_extensions
 
   # Rebuild panel
   if [[ $YARN == "y" ]]; then
@@ -798,7 +798,11 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   fi
 
   log_bright "[INFO] Updating route cache to include recent changes.."
-  php artisan route:cache 2> /dev/null
+  php artisan route:cache &> /dev/null
+  
+  # Remove from installed list
+  log_bright "[INFO] Removing extension from installed extensions list.."
+  sed -i "s~$identifier,~~g" .blueprint/data/internal/db/installed_extensions
 
   sendTelemetry "FINISH_EXTENSION_REMOVAL" > /dev/null
 
@@ -1047,7 +1051,7 @@ if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
   fi
   log_bright "[INFO] Installing development extension files.."
   blueprint -i test␀
-  log_bright "[INFO] Extension installation ends here, if there are any errors during installation, fix them and try again."
+  log_green "[SUCCESS] Your extension has been built."
   sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" > /dev/null
 fi
 
@@ -1056,9 +1060,7 @@ fi
 if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
 
-  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
-    echo "ok" > /dev/null
-  else 
+  if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi
 
@@ -1082,6 +1084,10 @@ fi
 
 # -wipe
 if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
+  if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+    quit_red "[FATAL] You do not have any development files."
+  fi
+
   log_blue "[INPUT] You are about to wipe all of your extension files, are you sure you want to continue? This cannot be undone. (y/N)"
   read YN
   if [[ ( ( $YN != "y"* ) && ( $YN != "Y"* ) ) || ( ( $YN == "" ) ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
@@ -1144,9 +1150,6 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   else
     log_bright "[INFO] Database migrations have been skipped."
   fi
-
-  log_bright "[INFO] Updating route cache to include recent changes.."
-  php artisan route:cache 2> /dev/null
 
   # Post-upgrade checks.
   log_bright "[INFO] Running post-upgrade checks.."
