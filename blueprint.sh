@@ -1084,10 +1084,11 @@ fi
 if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
   log_blue "[INPUT] You are about to wipe all of your extension files, are you sure you want to continue? This cannot be undone. (y/N)"
   read YN
-  if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
+  if [[ ( ( $YN != "y"* ) && ( $YN != "Y"* ) ) || ( ( $YN == "" ) ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
 
   log_bright "[INFO] Wiping development folder.."
   rm -R .blueprint/dev/*
+  rm -R .blueprint/dev/.*
 
   log_green "[SUCCESS] Your development files have been removed."
 fi
