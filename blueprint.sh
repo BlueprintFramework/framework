@@ -377,7 +377,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ ( $icon                == "/"* ) || ( $icon                == "."* ) || ( $icon                == *"\n"* ) ]] ||
      [[ ( $admin_view          == "/"* ) || ( $admin_view          == "."* ) || ( $admin_view          == *"\n"* ) ]] ||
      [[ ( $admin_controller    == "/"* ) || ( $admin_controller    == "."* ) || ( $admin_controller    == *"\n"* ) ]] ||
-     [[ ( $admin_css           == "/"* ) || ( $admin_css           == "."* ) |YN| ( $admin_css           == *"\n"* ) ]] ||
+     [[ ( $admin_css           == "/"* ) || ( $admin_css           == "."* ) || ( $admin_css           == *"\n"* ) ]] ||
      [[ ( $data_directory      == "/"* ) || ( $data_directory      == "."* ) || ( $data_directory      == *"\n"* ) ]] ||
      [[ ( $data_public         == "/"* ) || ( $data_public         == "."* ) || ( $data_public         == *"\n"* ) ]] ||
      [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) || ( $database_migrations == *"\n"* ) ]]; then
@@ -1093,8 +1093,8 @@ if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
   if [[ ( ( $YN != "y"* ) && ( $YN != "Y"* ) ) || ( ( $YN == "" ) ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
 
   log_bright "[INFO] Wiping development folder.."
-  rm -R .blueprint/dev/* 2> /dev/null;
-  rm -R .blueprint/dev/.* 2> /dev/null;
+  rm -R .blueprint/dev/* 2> /dev/null
+  rm -R .blueprint/dev/.* 2> /dev/null
 
   log_green "[SUCCESS] Your development files have been removed."
 fi
