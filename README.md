@@ -13,7 +13,7 @@
 * [The latest release of Blueprint.](https://github.com/teamblueprint/main/releases/latest)
 * [`unzip`](https://pkgs.org/download/unzip)
 * [`nodejs`](https://nodejs.org) (18.x or later)
-* `yarn`
+* [`yarn`](https://yarnpkg.com/)
 * Linux and Pterodactyl knowledge.
 * Common sense.
 
