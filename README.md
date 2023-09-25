@@ -44,7 +44,7 @@ We've made some guides and documentation for extension development over on [GitB
 **Cookies**: [sourceXchange](https://www.sourcexchange.net/products/cookies)\
 **dbEdit**: [GitHub](https://github.com/prplwtf/blueprint-dbedit)\
 **Loader**: [sourceXchange](https://www.sourcexchange.net/products/loader)\
-**Nebula**: [sourceXchange](https://www.sourcexchange.net/products/nebula)\
+**Nebula**: [sourceXchange](https://www.sourcexchange.net/products/nebula), [BuiltByBit](https://builtbybit.com/resources/nebula-for-blueprint.32442/)\
 **Recolor**: [GitHub](https://github.com/sp11rum/recolor), [sourceXchange](https://www.sourcexchange.net/products/announcements)\
 **Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664), [GitHub](https://github.com/prplwtf/blueprint-redirect)
 
