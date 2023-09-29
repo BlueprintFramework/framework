@@ -1,5 +1,5 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
-@import url("/assets/extensions/blueprint/misc/cacheOverlay-1.css");
+@import url("/assets/extensions/blueprint/misc/cacheOverlay-12002.css");
 
 @keyframes notification {
   0%   { right:-300px; top:62px; opacity:0; background-color: #2a3743; }
@@ -24,6 +24,7 @@
   animation-duration: 10s;
 }
 
+
 tag {
   display:inline-block;
   padding:3px;
@@ -39,6 +40,7 @@ tag[green] {background-color:#32fb62;}
 tag[blue] {background-color:#288afb;}
 [ext-title]{display:flex; flex-direction:row; align-items:center;}
 
+
 .btn-gray {background-color:#33404d;color:#cad1d8;border-color:#606d7b;}
 .btn-gray:hover {background-color:#29343e;color:#cad1d8;border-color:#606d7b;}
 
@@ -52,3 +54,10 @@ tag[blue] {background-color:#288afb;}
   border-radius:3px;
   margin-right:2px;
 }
+
+
+.extension-btn-image {width:65px;height:auto;border-radius:3px;margin-right:2px;float: left;padding-right:8px;}
+.extension-btn-text {font-size: 20px;margin:0;text-align:left;}
+.extension-btn-version {font-size: 11px; text-align:left;margin:0;}
+.extension-btn {background-color:#1f2933;color:#cad1d8;border-color:#00000000;height:calc(65px + 14px);padding-top:7px;padding-bottom:7px;overflow:hidden;vertical-align:center;}
+.extension-btn:hover {background-color:#192129;color:#cad1d8;border-color:#00000000;}
