@@ -320,6 +320,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     dev=false
     n=$3
     FILE=$n".blueprint"
+    if [[ ( $FILE == *".blueprint.blueprint" ) && ( $n == *".blueprint" ) ]]; then FILE=$n;fi
     if [[ ! -f "$FILE" ]]; then quit_red "[FATAL] $FILE could not be found.";fi
 
     ZIP=$n".zip"
