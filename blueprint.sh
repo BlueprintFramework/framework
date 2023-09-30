@@ -737,10 +737,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   OLDBUTTON_RESULT=$(cat .blueprint/data/extensions/$identifier/.store/build/button.blade.php)
   sed -i "s~$OLDBUTTON_RESULT~~g" resources/views/admin/extensions.blade.php
 
-  # Remove admin routes 
-  log_bright "[INFO] Removing admin routes.."
-  OLDROUTE_RESULT=$(cat .blueprint/data/extensions/$identifier/.store/build/route.php | sed "s#\n##g")
-  sed -i "s#$OLDROUTE_RESULT##g" routes/admin.php # Perform the sed operation, using the placeholder string as the delimiter 
+  # Remove admin routes (soon)
+  
   # Remove admin view
   log_bright "[INFO] Removing admin view.."
   rm -R resources/views/admin/extensions/$identifier
