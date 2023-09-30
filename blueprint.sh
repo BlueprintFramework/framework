@@ -739,10 +739,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove admin routes 
   log_bright "[INFO] Removing admin routes.."
-  OLDROUTE_RESULT=$(sed ':a;N;$!ba;s/\n/___NEWLINE___/g' .blueprint/data/extensions/$identifier/.store/build/route.php) # Read the contents of route.php into the variable, replacing \n with a placeholder string
-  sed -i "s#$(echo "$OLDROUTE_RESULT" | sed 's/[\/&]/\\&/g')##g" routes/admin.php # Perform the sed operation, using the placeholder string as the delimiter
-  OLDROUTE_RESULT=$(echo "$OLDROUTE_RESULT" | sed 's/___NEWLINE___/\n/g') # Restore the original newlines in the $OLDROUTE_RESULT variable
-
+  OLDROUTE_RESULT=$(cat .blueprint/data/extensions/$identifier/.store/build/route.php | sed "s#\n##g")
+  sed -i "s#$OLDROUTE_RESULT##g" routes/admin.php # Perform the sed operation, using the placeholder string as the delimiter 
   # Remove admin view
   log_bright "[INFO] Removing admin view.."
   rm -R resources/views/admin/extensions/$identifier
