@@ -17,7 +17,7 @@
     {{ $telemetry->send("SERVE_BLUEPRINT_ADMIN") }}
     <p>Blueprint is the framework that powers all Blueprint-compatible extensions, enabling multiple extensions to be installed and used simultaneously.</p>
     <div class="row">
-        <div class="col-xs-3">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
             <!-- Overview -->
             <div class="box">
@@ -30,7 +30,7 @@
             </div>
 
         </div>
-        <div class="col-xs-9">
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
             <form action="" method="POST">
                 <div class="box">
                     <div class="box-header with-border">
@@ -38,7 +38,7 @@
                     </div>
                     <div class="box-body">
                         <div class="row">
-                            <div class="col-xs-4">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <label class="control-label">Telemetry</label>
                                 <select class="form-control" name="telemetry">
                                     <option value="true">Enabled</option>
@@ -46,12 +46,12 @@
                                 </select>
                                 <p class="text-muted small">Automatically share anonymous usage data with Blueprint.</p>
                             </div>
-                            <div class="col-xs-4">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <label class="control-label">ID</label>
                                 <input type="text" required name="panel:id" id="panel:id" value="{{ $bp->dbGet('panel:id') }}" class="form-control" readonly/>
                                 <p class="text-muted small">Randomly generated string with your version that is used as a panel identifier.</p>
                             </div>
-                            <div class="col-xs-4">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <label class="control-label">Developer Mode</label>
                                 <select class="form-control" name="developer">
                                     <option value="true">Enabled</option>
