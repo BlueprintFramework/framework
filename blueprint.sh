@@ -354,10 +354,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   name="$conf_info_name"
   identifier="$conf_info_identifier"
   description="$conf_info_description"
-  flags="$conf_info_flags"
+  flags="$conf_info_flags" #(optional)
   version="$conf_info_version"
   target="$conf_info_target"
-  author="$conf_info_author"
+  author="$conf_info_author" #(optional)
   icon="$conf_info_icon" #(optional)
   website="$conf_info_website"; #(optional)
 
@@ -410,18 +410,19 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       quit_red "[FATAL] Upgrading extension has failed due to missing essential .store files."
     fi
 
-    # clean up public folder
+    # Clean up some old extension files.
     log_bright "[INFO] Cleaning up old extension files.."
     if [[ $old_data_public != "" ]]; then
+      # Clean up old public folder.
       rm -R public/extensions/$old_identifier/*
     fi
   fi
 
+  # Force http/https url scheme for extension website urls.
   if [[ $website != "" ]]; then
-    if [[ $website != "https://"* ]]; then
-      if [[ $website != "http://"* ]]; then
-        website="http://"$info_website
-      fi
+    if [[ ( $website != "https://"* ) && ( $website != "http://"* ) ]]; then
+      website="http://"$info_website
+      info_website=$website
     fi
   fi
 
@@ -489,12 +490,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     cp -R .blueprint/tmp/$n/$data_public/* public/extensions/$identifier/ 2> /dev/null
   fi
 
-  cp -R .blueprint/data/internal/build/extensions/admin.blade.php .blueprint/data/internal/build/extensions/admin.blade.php.bak 2> /dev/null
+  cp .blueprint/data/internal/build/extensions/admin.blade.php .blueprint/data/internal/build/extensions/admin.blade.php.bak 2> /dev/null
   if [[ $admin_controller == "" ]]; then # use default controller when admin_controller is left blank
-    cp -R .blueprint/data/internal/build/extensions/controller.php .blueprint/data/internal/build/extensions/controller.php.bak 2> /dev/null
+    cp .blueprint/data/internal/build/extensions/controller.php .blueprint/data/internal/build/extensions/controller.php.bak 2> /dev/null
   fi
-  cp -R .blueprint/data/internal/build/extensions/route.php .blueprint/data/internal/build/extensions/route.php.bak 2> /dev/null
-  cp -R .blueprint/data/internal/build/extensions/button.blade.php .blueprint/data/internal/build/extensions/button.blade.php.bak 2> /dev/null
+  cp .blueprint/data/internal/build/extensions/route.php .blueprint/data/internal/build/extensions/route.php.bak 2> /dev/null
+  cp .blueprint/data/internal/build/extensions/button.blade.php .blueprint/data/internal/build/extensions/button.blade.php.bak 2> /dev/null
 
   # Start creating data directory.
   mkdir -p .blueprint/data/extensions/$identifier
@@ -532,72 +533,83 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     cp .blueprint/tmp/$n/$dashboard_css resources/scripts/css/$identifier.css
   fi
 
-  if [[ $name == *"~"* ]]; then log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi
+  if [[ $name == *"~"* ]]; then        log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi
   if [[ $description == *"~"* ]]; then log_yellow "[WARNING] 'description' contains '~' and may result in an error.";fi
-  if [[ $version == *"~"* ]]; then log_yellow "[WARNING] 'version' contains '~' and may result in an error.";fi
-  if [[ $CONTENT == *"~"* ]]; then log_yellow "[WARNING] 'CONTENT' contains '~' and may result in an error.";fi
-  if [[ $ICON == *"~"* ]]; then log_yellow "[WARNING] 'ICON' contains '~' and may result in an error.";fi
-  if [[ $identifier == *"~"* ]]; then log_yellow "[WARNING] 'identifier' contains '~' and may result in an error.";fi
+  if [[ $version == *"~"* ]]; then     log_yellow "[WARNING] 'version' contains '~' and may result in an error.";fi
+  if [[ $CONTENT == *"~"* ]]; then     log_yellow "[WARNING] 'CONTENT' contains '~' and may result in an error.";fi
+  if [[ $ICON == *"~"* ]]; then        log_yellow "[WARNING] 'ICON' contains '~' and may result in an error.";fi
+  if [[ $identifier == *"~"* ]]; then  log_yellow "[WARNING] 'identifier' contains '~' and may result in an error.";fi
 
+  # Replace $name variables.
   sed -i "s~␀title␀~$name~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
   sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
   sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/button.blade.php.bak
 
+  # Replace $description variables.
   sed -i "s~␀description␀~$description~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
 
+  # Replace $version variables.
   sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
   sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/button.blade.php.bak
 
+  # Replace $ICON variables.
   sed -i "s~␀icon␀~$ICON~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
 
+  # Replace $website variables.
   if [[ $website != "" ]]; then
     sed -i "s~␀website␀~$website~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
     sed -i "s~<!--websitecomment␀ ~~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
     sed -i "s~ ␀websitecomment-->~~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
   fi
 
-  echo -e "$CONTENT\n@endsection" >> .blueprint/data/internal/build/extensions/admin.blade.php.bak
-
-
+  # Replace $identifier variables.
   if [[ $admin_controller == "" ]]; then
     sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/controller.php.bak
   fi
   sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/route.php.bak
   sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/button.blade.php.bak
 
-  ADMINVIEW_RESULT=$(cat .blueprint/data/internal/build/extensions/admin.blade.php.bak)
-  ADMINROUTE_RESULT=$(cat .blueprint/data/internal/build/extensions/route.php.bak)
-  ADMINBUTTON_RESULT=$(cat .blueprint/data/internal/build/extensions/button.blade.php.bak)
+  # Place extension admin view content into template.
+  echo -e "$CONTENT\n@endsection" >> .blueprint/data/internal/build/extensions/admin.blade.php.bak
+
+
+  # Read final results.
+  ADMINVIEW_RESULT=$(<.blueprint/data/internal/build/extensions/admin.blade.php.bak)
+  ADMINROUTE_RESULT=$(<.blueprint/data/internal/build/extensions/route.php.bak)
+  ADMINBUTTON_RESULT=$(<.blueprint/data/internal/build/extensions/button.blade.php.bak)
   if [[ $admin_controller == "" ]]; then
-    ADMINCONTROLLER_RESULT=$(cat .blueprint/data/internal/build/extensions/controller.php.bak)
+    ADMINCONTROLLER_RESULT=$(<.blueprint/data/internal/build/extensions/controller.php.bak)
   fi
   ADMINCONTROLLER_NAME=$identifier"ExtensionController.php"
 
+  # Place admin extension view.
   mkdir -p resources/views/admin/extensions/$identifier
   touch resources/views/admin/extensions/$identifier/index.blade.php
   echo $ADMINVIEW_RESULT > resources/views/admin/extensions/$identifier/index.blade.php
 
+  # Place admin extension view controller.
   mkdir -p app/Http/Controllers/Admin/Extensions/$identifier
   touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME
-
   if [[ $admin_controller == "" ]]; then
+    # Use custom view controller.
     touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME
     echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME
   else
+    # Use default extension controller.
     cp .blueprint/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
+    # Place admin route if extension is not updating.
     echo $ADMINROUTE_RESULT >> routes/admin.php
-  fi
-
-  if [[ $DUPLICATE == "y" ]]; then
-    OLDBUTTON_RESULT=$(cat .blueprint/data/extensions/$identifier/.store/build/button.blade.php)
+  else
+    # Replace old extensions page button if extension is updating.
+    OLDBUTTON_RESULT=$(<.blueprint/data/extensions/$identifier/.store/build/button.blade.php)
     sed -i "s~$OLDBUTTON_RESULT~~g" resources/views/admin/extensions.blade.php
   fi
   sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php
 
-  # insert "dashboard_wrapper" into wrapper.blade.php
+  # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
     if [[ $DUPLICATE == "y" ]]; then
       sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php
@@ -612,7 +624,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php
   fi
 
-  # insert "admin_wrapper" into admin.blade.php
+  # Place admin wrapper
   if [[ $admin_wrapper != "" ]]; then
     if [[ $DUPLICATE == "y" ]]; then
       sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/layouts/admin.blade.php
@@ -633,7 +645,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   cp .blueprint/data/internal/build/extensions/button.blade.php.bak .blueprint/data/extensions/$identifier/.store/build/button.blade.php
   cp .blueprint/data/internal/build/extensions/route.php.bak .blueprint/data/extensions/$identifier/.store/build/route.php
 
-  log_bright "[INFO] Cleaning up build files.."
+  # Remove temporary built files.
+  log_bright "[INFO] Cleaning up temporary built files.."
   rm .blueprint/data/internal/build/extensions/admin.blade.php.bak
   if [[ $admin_controller == "" ]]; then
     rm .blueprint/data/internal/build/extensions/controller.php.bak
@@ -702,11 +715,11 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     name="$conf_info_name";    
     identifier="$conf_info_identifier"
     description="$conf_info_description"
-    flags="$conf_info_flags"
+    flags="$conf_info_flags" #(optional)
     version="$conf_info_version"
     target="$conf_info_target"
-    author="$conf_info_author"
-    icon="$conf_info_icon"
+    author="$conf_info_author" #(optional)
+    icon="$conf_info_icon" #(optional)
     website="$conf_info_website"; #(optional)
 
     admin_view="$conf_admin_view"
@@ -737,7 +750,16 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   OLDBUTTON_RESULT=$(cat .blueprint/data/extensions/$identifier/.store/build/button.blade.php)
   sed -i "s~$OLDBUTTON_RESULT~~g" resources/views/admin/extensions.blade.php
 
-  # Remove admin routes (soon)
+  # Remove admin routes
+  
+  # Blueprint will currently "rebuild" the routes from scratch instead
+  # of using a backed up version of the already built routes as a
+  # workaround for routes not being removed correctly.
+  #
+  # This might be changed back to using the prebuilt extension routes
+  # in the future.
+
+
   
   # Remove admin view
   log_bright "[INFO] Removing admin view.."
