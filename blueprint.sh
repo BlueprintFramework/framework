@@ -955,7 +955,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_description() {
-    log_blue "[INFO] Description (My awesome description):"
+    log_blue "[INPUT] Description (My awesome description):"
     read ASKDESCRIPTION
 
     REDO_DESCRIPTION=false
