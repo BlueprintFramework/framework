@@ -513,7 +513,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
-    icnNUM=$(expr 1 + $RANDOM % 6)
+    icnNUM=$(expr 1 + $RANDOM % 9)
     cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg public/assets/extensions/$identifier/icon.jpg
   else
     cp .blueprint/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg
@@ -1036,7 +1036,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   if [[ $t_template_files_icon != "" ]]; then
     log_bright "[INFO] Rolling (and applying) extension placeholder icon.."
-    icnNUM=$(expr 1 + $RANDOM % 6)
+    icnNUM=$(expr 1 + $RANDOM % 9)
     cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg .blueprint/tmp/init/$t_template_files_icon
     sed -i "s~␀icon␀~$t_template_files_icon~g" .blueprint/tmp/init/conf.yml; #ICON
   fi;
