@@ -236,7 +236,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Link filesystems.
     log_bright "[INFO] Linking filesystems.."
-    php artisan storage:link
+    php artisan storage:link &> /dev/null 
 
     # Roll admin css refresh number.
     log_bright "[INFO] Rolling admin cache refresh class name."
@@ -602,9 +602,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $DUPLICATE != "y" ]]; then
     # Place admin route if extension is not updating.
-    echo -e "\n// ␀$identifier:start␀" >> routes/admin.php
-    echo -e "\n$ADMINROUTE_RESULT" >> routes/admin.php
-    echo -e "\n// ␀$identifier:stop␀" >> routes/admin.php
+    echo "
+    // $identifier:start" >> routes/admin.php
+    echo $ADMINROUTE_RESULT >> routes/admin.php
+    echo // $identifier:stop >> routes/admin.php
   else
     # Replace old extensions page button if extension is updating.
     OLDBUTTON_RESULT=$(<.blueprint/data/extensions/$identifier/.store/build/button.blade.php)
@@ -755,9 +756,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove admin routes
   log_bright "[INFO] Removing admin routes.."
-  sed -n -i "~// ␀$identifier:start␀~{p; :a; N; ~// ␀$identifier:stop␀~!ba; s~.*\n~~}; p" routes/admin.php
-  sed -i "s~// ␀$identifier:start␀~~g" routes/admin.php
-  sed -i "s~// ␀$identifier:stop␀~~g" routes/admin.php
+  sed -n -i "/\/\/ $identifier:start/{p; :a; N; /\/\/ $identifier:stop/!ba; s/.*\n//}; p" routes/admin.php
+  sed -i "s~// $identifier:start~~g" routes/admin.php
+  sed -i "s~// $identifier:stop~~g" routes/admin.php
   
   # Remove admin view
   log_bright "[INFO] Removing admin view.."
@@ -779,12 +780,16 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ $admin_wrapper != "" ]]; then 
     log_bright "[INFO] Removing admin wrapper.."
     sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/layouts/admin.blade.php
+    sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/layouts/admin.blade.php
+    sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/layouts/admin.blade.php
   fi
 
   # Remove dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then 
     log_bright "[INFO] Removing dashboard wrapper.."
     sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php
+    sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/templates/wrapper.blade.php
+    sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/templates/wrapper.blade.php
   fi
 
   # Remove dashboard css
