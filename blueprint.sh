@@ -602,7 +602,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $DUPLICATE != "y" ]]; then
     # Place admin route if extension is not updating.
-    echo $ADMINROUTE_RESULT >> routes/admin.php
+    echo -e "\n// ␀$identifier:start␀" >> routes/admin.php
+    echo -e "\n$ADMINROUTE_RESULT" >> routes/admin.php
+    echo -e "\n// ␀$identifier:stop␀" >> routes/admin.php
   else
     # Replace old extensions page button if extension is updating.
     OLDBUTTON_RESULT=$(<.blueprint/data/extensions/$identifier/.store/build/button.blade.php)
