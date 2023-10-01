@@ -759,7 +759,11 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # This might be changed back to using the prebuilt extension routes
   # in the future.
 
-
+  log_bright "[INFO] Removing admin routes.."
+  cp .blueprint/data/internal/build/extensions/route.php .blueprint/data/internal/build/extensions/route.php.bak 2> /dev/null
+  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/route.php.bak
+  sed -i "s~$(<.blueprint/data/internal/build/extensions/route.php.bak)~~g" routes/admin.php
+  rm .blueprint/data/internal/build/extensions/route.php.bak
   
   # Remove admin view
   log_bright "[INFO] Removing admin view.."
