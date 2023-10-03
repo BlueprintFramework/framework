@@ -64,7 +64,7 @@ class BlueprintAdminLibrary
   | fileWipe("path");
   */
   public function fileRead($path) {
-    return shell_exec("cat ".escapeshellarg($path).";");
+    return file_get_contents($path);
   }
 
   public function fileMake($path) {
