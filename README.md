@@ -56,4 +56,5 @@ We've made some guides and documentation for extension development over on [GitB
 [prplwtf](https://github.com/prplwtf) - creator and maintainer\
 [ahwxorg](https://github.com/ahwxorg) - contributor\
 [alipoyrazaydin](https://github.com/alipoyrazaydin) - contributor\
-[sp11rum](https://github.com/sp11rum) - contributor
+[sp11rum](https://github.com/sp11rum) - contributor\
+[phedona](https://github.com/Phedona) - contributor
