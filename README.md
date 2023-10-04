@@ -26,7 +26,13 @@ apt-get install -y nodejs
 npm i -g yarn
 yarn
 ```
-3. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly. If your Pterodactyl folder is not `/var/www/pterodactyl` you may need to put `_FOLDER="/path/to/pterodactyl"` in front of `bash blueprint.sh`.
+3. Download [The latest release of Blueprint.](https://github.com/teamblueprint/main/releases/latest) and Extract it. Put it in `/var/www/pterodactyl` and Replace the Files if Needed.
+
+
+**Attention:**
+if you have files that already replace files in your path, there is a high chance it will break your panel.
+
+4. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly. If your Pterodactyl folder is not `/var/www/pterodactyl` you may need to put `_FOLDER="/path/to/pterodactyl"` in front of `bash blueprint.sh`.
 ```sh
 chmod +x blueprint.sh
 bash blueprint.sh
