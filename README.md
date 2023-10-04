@@ -18,26 +18,23 @@
 * Common sense.
 
 **Installation:**
-1. Navigate to your Pterodactyl folder. (most likely `/var/www/pterodactyl`)
-2. Install NodeJS, NPM and Yarn using the following script. This assumes you are running Pterodactyl on Ubuntu or Debian-based systems.
+1. Blueprint doesn't mix well with other modifications, so if you already have any, [perform a panel update](https://pterodactyl.io/panel/1.0/updating.html) before moving on with this guide.
+2. Navigate to your Pterodactyl folder. (most likely `/var/www/pterodactyl`)
+3. Install NodeJS, NPM and Yarn using the following script. This assumes you are running Pterodactyl on Ubuntu or Debian-based systems.
 ```sh
 curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 apt-get install -y nodejs
 npm i -g yarn
 yarn
 ```
-3. Download [The latest release of Blueprint.](https://github.com/teamblueprint/main/releases/latest) and Extract it. Put it in `/var/www/pterodactyl` and Replace the Files if Needed.
-
-
-**Attention:**
-if you have files that already replace files in your path, there is a high chance it will break your panel.
-
-4. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly. If your Pterodactyl folder is not `/var/www/pterodactyl` you may need to put `_FOLDER="/path/to/pterodactyl"` in front of `bash blueprint.sh`.
+4. Download [the latest release of Blueprint](https://github.com/teamblueprint/main/releases/latest) and extract it (stable build) or pull the files via git (bleeding-edge build).
+5. If you haven't already, place the Blueprint files inside of your Pterodactyl folder. (common location is `/var/www/pterodactyl`)
+6. Run the Blueprint installation script. This runs the commands required for Blueprint to function correctly. If your Pterodactyl folder is not `/var/www/pterodactyl` you may need to put `_FOLDER="/path/to/pterodactyl"` in front of `bash blueprint.sh`.
 ```sh
 chmod +x blueprint.sh
 bash blueprint.sh
 ```
-4. After waiting for the installation script to finish, open up your Pterodactyl admin panel and click on the puzzle icon in the top right of the website.
+7. After waiting for the installation script to finish, open up your Pterodactyl admin panel and click on the puzzle icon in the top right of the website.
 
 ### Development
 We've made some guides and documentation for extension development over on [GitBook](https://ptero.shop/docs). We are adding more guides over time, don't hesitate to suggest a topic for future guides.
