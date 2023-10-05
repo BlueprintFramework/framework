@@ -39,7 +39,7 @@ class BlueprintClientLibrary
   | fileWipe("path");
   */
   public function fileRead($path) {
-    return file_get_contents($path);
+    return file_get_contents("$path");
   }
 
   public function fileMake($path) {
