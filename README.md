@@ -38,13 +38,12 @@ bash blueprint.sh
 
 **Upgrade:**
 
+To upgrade Blueprint or its extensions, follow these steps:
 
-To make an Upgrade of Blueprint or Extensions do as Follow:
+1. Create a backup of your current panel. In case anything goes wrong, you can use your backup.
+2. Run the command blueprint -upgrade.
 
-1. Make an Backup of your Current Panel, if anything goes wrong, you can use your Backup.
-2. do `blueprint -upgrade`
-
-Succes! You Sucessfully upgraded Blueprint, you can now install your Extensions as Normal!
+Success! You have successfully upgraded Blueprint. Now you can install your extensions as usual!
 
 ### Development
 We've made some guides and documentation for extension development over on [GitBook](https://ptero.shop/docs). We are adding more guides over time, don't hesitate to suggest a topic for future guides.
