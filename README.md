@@ -6,7 +6,7 @@
 [Installation](#installation)\
 [Development](#development)\
 [Extensions](#extensions)\
-[Contributions](#contributions)
+[Contributors](#contributors)
 
 ### Installation
 **What you need:**
@@ -52,7 +52,7 @@ We've made some guides and documentation for extension development over on [GitB
 **Recolor**: [GitHub](https://github.com/sp11rum/recolor), [sourceXchange](https://www.sourcexchange.net/products/announcements)\
 **Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664), [GitHub](https://github.com/prplwtf/blueprint-redirect)
 
-### Contributions
+### Contributors
 [prplwtf](https://github.com/prplwtf) - creator and maintainer\
 [ahwxorg](https://github.com/ahwxorg) - contributor\
 [alipoyrazaydin](https://github.com/alipoyrazaydin) - contributor\
