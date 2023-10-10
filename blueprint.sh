@@ -1068,7 +1068,7 @@ fi
 if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
 
-  if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi
   log_bright "[INFO] Installing development extension files.."
@@ -1082,7 +1082,7 @@ fi
 if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
 
-  if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi
 
@@ -1106,7 +1106,7 @@ fi
 
 # -wipe
 if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
-  if [[ ! -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi
 
