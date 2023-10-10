@@ -414,7 +414,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     log_bright "[INFO] Cleaning up old extension files.."
     if [[ $old_data_public != "" ]]; then
       # Clean up old public folder.
-      rm -R public/extensions/$old_identifier/*
+      rm -R public/extensions/$identifier/*
     fi
   fi
 
