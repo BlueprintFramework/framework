@@ -851,7 +851,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then VCMD=
   -remove [name]       -r  remove a blueprint extension
   \x1b[0m
   
-${help_developer_primary}Developer$help_dev_status\x1b[0m${help_developer_secondary}
+${help_dev_primary}Developer$help_dev_status\x1b[0m${help_dev_secondary}
   -init                -I  initialize development files
   -build               -b  install/update your development files
   -export              -e  export your development files
