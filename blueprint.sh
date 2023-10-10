@@ -246,7 +246,7 @@ if [[ $1 != "-bash" ]]; then
     # Run migrations if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
       log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
-      read YN
+      read -r YN
       if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
         log_bright "[INFO] Running database migrations.."
         php artisan migrate --force
@@ -662,7 +662,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $database_migrations != "" ]]; then
     log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
-    read YN
+    read -r YN
     if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
       log_bright "[INFO] Running database migrations.."
       php artisan migrate --force
@@ -746,7 +746,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   depend
 
   log_blue "[INPUT] Are you sure you want to continue? Some extension files might not be removed as Blueprint does not keep track of them. (y/N)"
-  read YN
+  read -r YN
   if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then log_bright "[INFO] Extension removal cancelled.";exit 1;fi
 
   # Remove admin button 
@@ -892,7 +892,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     log_blue "  - (1) Basic Theme"
     log_blue "  - (2) Dashboard Overlay"
     log_blue "  - (3) Onboarding Modal"
-    read ASKTEMPLATE
+    read -r ASKTEMPLATE
 
     REDO_TEMPLATE=false
 
@@ -917,7 +917,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   ask_name() {
     log_blue "[INPUT] Name (Generic Extension):"
-    read ASKNAME
+    read -r ASKNAME
 
     REDO_NAME=false
 
@@ -936,7 +936,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   ask_identifier() {
     log_blue "[INPUT] Identifier (genericextension):"
-    read ASKIDENTIFIER
+    read -r ASKIDENTIFIER
 
     REDO_IDENTIFIER=false
 
@@ -963,7 +963,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   ask_description() {
     log_blue "[INPUT] Description (My awesome description):"
-    read ASKDESCRIPTION
+    read -r ASKDESCRIPTION
 
     REDO_DESCRIPTION=false
 
@@ -982,7 +982,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   ask_version() {
     log_blue "[INPUT] Version (indev):"
-    read ASKVERSION
+    read -r ASKVERSION
 
     REDO_VERSION=false
 
@@ -1001,7 +1001,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   ask_author() {
     log_blue "[INPUT] Author (prplwtf):"
-    read ASKAUTHOR
+    read -r ASKAUTHOR
 
     REDO_AUTHOR=false
 
@@ -1111,7 +1111,7 @@ if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
   fi
 
   log_blue "[INPUT] You are about to wipe all of your extension files, are you sure you want to continue? This cannot be undone. (y/N)"
-  read YN
+  read -r YN
   if [[ ( ( $YN != "y"* ) && ( $YN != "Y"* ) ) || ( ( $YN == "" ) ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
 
   log_bright "[INFO] Wiping development folder.."
@@ -1141,14 +1141,14 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
 
   if [[ $@ == *"dev"* ]]; then
     log_blue "[INPUT] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
-    read YN1
+    read -r YN1
     if [[ ( $YN1 != "y"* ) && ( $YN1 != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
   fi
   log_blue "[INPUT] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)"
-  read YN2
+  read -r YN2
   if [[ ( $YN2 != "y"* ) && ( $YN2 != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
   log_blue "[INPUT] This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'."
-  read YN3
+  read -r YN3
   if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine."
@@ -1165,7 +1165,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   _FOLDER="$FOLDER" bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."
   log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
-  read YN4
+  read -r YN4
   if [[ ( $YN4 == "y" ) || ( $YN4 == "Y" ) || ( $YN4 == "" ) ]]; then 
     log_bright "[INFO] Running database migrations.."
     php artisan migrate --force
