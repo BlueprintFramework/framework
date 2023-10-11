@@ -302,7 +302,7 @@ fi
 
 # -i, -install
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
-  if [[ $((expr $# - 2)) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $((expr $# - 2)).";fi
+  if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi
   if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then quit_red "[FATAL] Installing extensions located in paths outside of '$FOLDER' is not possible.";fi
 
   log_bright "[INFO] Checking dependencies.."
@@ -706,7 +706,7 @@ fi
 
 # -r, -remove
 if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
-  if [[ $((expr $# - 2)) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $((expr $# - 2)).";fi
+  if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi
   
   # Check if the extension is installed.
   if [[ $(cat .blueprint/data/internal/db/installed_extensions) != *"$identifier,"* ]]; then
@@ -1041,7 +1041,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   if [[ $t_template_files_icon != "" ]]; then
     log_bright "[INFO] Rolling (and applying) extension placeholder icon.."
-    icnNUM=$((expr 1 + $RANDOM % 9))
+    icnNUM=$(expr 1 + $RANDOM % 9)
     cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg .blueprint/tmp/init/$t_template_files_icon
     sed -i "s~␀icon␀~$t_template_files_icon~g" .blueprint/tmp/init/conf.yml; #ICON
   fi;
