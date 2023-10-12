@@ -6,7 +6,8 @@
 [Installation](#installation)\
 [Development](#development)\
 [Extensions](#extensions)\
-[Contributors](#contributors)
+[Contributors](#contributors)\
+[Related Links](#related-links)
 
 ### Installation
 **What you need:**
@@ -58,3 +59,6 @@ We've made some guides and documentation for extension development over on [GitB
 [alipoyrazaydin](https://github.com/alipoyrazaydin) - contributor\
 [sp11rum](https://github.com/sp11rum) - contributor\
 [phedona](https://github.com/Phedona) - contributor
+
+### Related Links
+*to be edited later*
