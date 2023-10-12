@@ -61,4 +61,4 @@ We've made some guides and documentation for extension development over on [GitB
 [phedona](https://github.com/Phedona) - contributor
 
 ### Related Links
-*to be edited later*
+[**Pterodactyl**](https://pterodactyl.io/) is a free, open-source game server management panel built with PHP, React, and Go.
