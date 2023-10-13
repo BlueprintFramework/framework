@@ -1152,9 +1152,6 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   else
     bash tools/update.sh $FOLDER
   fi
-  if [[ -n $(find tools/tmp -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    rm -R tools/tmp/*
-  fi
   chmod +x blueprint.sh
   _FOLDER="$FOLDER" bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."

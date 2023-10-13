@@ -23,4 +23,3 @@ fi;
 cp -R main/* $1/;
 rm -R main;
 rm -R $1/.blueprint;
-rm -R *;
