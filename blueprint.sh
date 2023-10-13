@@ -886,7 +886,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     fi
 
     # Unknown template.
-    if [[ $(echo -e "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/$ASKTEMPLATE/TemplateConfiguration.yml' 2> /dev/null)") == "404: Not Found" ]]; then 
+    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/teamblueprint/templates/main/$ASKTEMPLATE/TemplateConfiguration.yml" 2> /dev/null)") == "404: Not Found" ]]; then 
       log_red "[FATAL] Unknown template, please choose a valid option."
       REDO_TEMPLATE=true
     fi
