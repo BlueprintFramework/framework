@@ -868,7 +868,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
   # until you wipe the contents of the .blueprint/dev directory.
-  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to initialize another extension unless you clear your .blueprint/dev folder."
   fi
 
@@ -1054,7 +1054,7 @@ fi
 if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
 
-  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi
   log_bright "[INFO] Installing development extension files.."
@@ -1068,7 +1068,7 @@ fi
 if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
 
-  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi
 
@@ -1092,7 +1092,7 @@ fi
 
 # -wipe
 if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
-  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi
 
@@ -1121,7 +1121,7 @@ fi
 if [[ $2 == "-upgrade" ]]; then VCMD="y"
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
 
-  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to upgrade unless you clear your .blueprint/dev folder."
   fi
 
@@ -1144,7 +1144,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   else
     bash tools/update.sh $FOLDER
   fi
-  if [[ -n $(find tools/tmp -maxdepth 1 -type f -not -name "README.md" -print -quit) ]]; then
+  if [[ -n $(find tools/tmp -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     rm -R tools/tmp/*
   fi
   chmod +x blueprint.sh
