@@ -904,7 +904,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
     # Unknown template.
     if [[ ( $ASKTEMPLATE != "0" ) && ( $ASKTEMPLATE != "1" ) && ( $ASKTEMPLATE != "2" ) && ( $ASKTEMPLATE != "3" ) ]]; then 
-      log_red "[FATAL] Unknown template. Possible answers can be between 0 and 2."
+      log_red "[FATAL] Unknown template. Possible answers can be 0, 3 and all numbers in between."
       REDO_TEMPLATE=true
     fi
 
