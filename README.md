@@ -9,8 +9,10 @@
 [Contributors](#contributors)\
 [Related Links](#related-links)
 
-### Installation
-**What you need:**
+<br/>
+
+## Installation
+### What you need:
 * [The latest release of Blueprint.](https://github.com/teamblueprint/main/releases/latest)
 * [`unzip`](https://pkgs.org/download/unzip)
 * [`nodejs`](https://nodejs.org) (20.x or later)
@@ -18,7 +20,7 @@
 * Linux and Pterodactyl knowledge.
 * Common sense.
 
-**Installation:**
+### Installation:
 1. Blueprint doesn't mix well with other modifications, so if you already have any, [perform a panel update](https://pterodactyl.io/panel/1.0/updating.html) before moving on with this guide.
 2. Navigate to your Pterodactyl folder. (most likely `/var/www/pterodactyl`)
 3. Install NodeJS, NPM and Yarn using the following script. This assumes you are running Pterodactyl on Ubuntu or Debian-based systems.
@@ -37,10 +39,14 @@ bash blueprint.sh
 ```
 7. After waiting for the installation script to finish, open up your Pterodactyl admin panel and click on the puzzle icon in the top right of the website.
 
-### Development
+<br/>
+
+## Development
 We've made some guides and documentation for extension development over on [GitBook](https://ptero.shop/docs). We are adding more guides over time, don't hesitate to suggest a topic for future guides.
 
-### Extensions
+<br/>
+
+## Extensions
 [Open an issue](https://github.com/teamblueprint/main/issues) on GitHub to get your extension listed here. To install an extension, upload your `something.blueprint` file to your Pterodactyl folder and run `blueprint -install something`.
 
 **Announcements**: [PterodactylMarket](https://pterodactylmarket.com/resource/679), [sourceXchange](https://www.sourcexchange.net/products/announcements), [BuiltByBit](https://builtbybit.com/resources/announcements-for-blueprint.32546/)\
@@ -53,14 +59,18 @@ We've made some guides and documentation for extension development over on [GitB
 **Recolor**: [GitHub](https://github.com/sp11rum/recolor), [sourceXchange](https://www.sourcexchange.net/products/announcements)\
 **Redirect**: [PterodactylMarket](https://pterodactylmarket.com/resource/664), [GitHub](https://github.com/prplwtf/blueprint-redirect)
 
-### Contributors
+<br/>
+
+## Contributors
 [prplwtf](https://github.com/prplwtf) - creator and maintainer\
 [ahwxorg](https://github.com/ahwxorg) - contributor\
 [alipoyrazaydin](https://github.com/alipoyrazaydin) - contributor\
 [sp11rum](https://github.com/sp11rum) - contributor\
 [phedona](https://github.com/Phedona) - contributor
 
-### Related Links
+<br/>
+
+## Related Links
 [**Pterodactyl**](https://pterodactyl.io/) is a free, open-source game server management panel built with PHP, React, and Go.
 
 [**teamblueprint/templates**](https://github.com/teamblueprint/templates) is a repository with initialization templates for extension development.
