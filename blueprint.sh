@@ -242,7 +242,6 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] Rolling admin cache refresh class name."
     updateCacheReminder
 
-
     # Run migrations if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
       log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
@@ -255,23 +254,10 @@ if [[ $1 != "-bash" ]]; then
       fi
     fi
 
-
     # Make sure all files have correct permissions.
     log_bright "[INFO] Changing file ownership to www-data.."
     chown -R www-data:www-data $FOLDER/*
     chown -R www-data:www-data $FOLDER/.blueprint/*
-
-    log_bright "[INFO] Removing placeholder files.."
-    # Remove placeholder README.md files.
-    if [[ -f "$FOLDER/.blueprint/dev/README.md" ]]; then
-      rm -R $FOLDER/.blueprint/dev/*
-    fi
-    if [[ -f "$FOLDER/.blueprint/data/extensions/README.md" ]]; then
-      rm -R $FOLDER/.blueprint/data/extensions/*
-    fi
-    if [[ -f "$FOLDER/tools/tmp/README.md" ]]; then
-      rm $FOLDER/tools/tmp/README.md
-    fi
 
     # Rebuild panel assets.
     log_bright "[INFO] Rebuilding panel assets.."

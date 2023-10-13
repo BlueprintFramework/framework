@@ -1,1 +1,0 @@
-*This folder will be cleared automatically upon installation.*
