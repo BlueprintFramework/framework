@@ -874,10 +874,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   ask_template() {
     log_blue "[INPUT] Initial Template:"
-    log_blue "  - (0) Barebones"
-    log_blue "  - (1) Basic Theme"
-    log_blue "  - (2) Dashboard Overlay"
-    log_blue "  - (3) Onboarding Modal"
+    log_blue "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/repository' 2> /dev/null)"
     read -r ASKTEMPLATE
 
     REDO_TEMPLATE=false
@@ -889,8 +886,8 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     fi
 
     # Unknown template.
-    if [[ ( $ASKTEMPLATE != "0" ) && ( $ASKTEMPLATE != "1" ) && ( $ASKTEMPLATE != "2" ) && ( $ASKTEMPLATE != "3" ) ]]; then 
-      log_red "[FATAL] Unknown template. Possible answers can be 0, 3 and all numbers in between."
+    if [[ $(echo -e "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/$ASKTEMPLATE/TemplateConfiguration.yml' 2> /dev/null)") == "404: Not Found" ]]; then 
+      log_red "[FATAL] Unknown template, please choose a valid option."
       REDO_TEMPLATE=true
     fi
 
@@ -1012,6 +1009,13 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   ask_author
 
   tnum=$ASKTEMPLATE;
+  log_bright "[INFO] Downloading templates from 'teamblueprint/templates'.."
+  cd .blueprint/tmp
+  git clone "https://github.com/teamblueprint/templates.git"
+  cd $FOLDER/.blueprint
+  cp -R tmp/main/* data/internal/build/templates/
+  cd $FOLDER
+
   eval $(parse_yaml .blueprint/data/internal/build/templates/$tnum/TemplateConfiguration.yml t_);
 
   log_bright "[INFO] Copying template contents to the tmp directory.."
@@ -1043,6 +1047,10 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   log_bright "[INFO] Purging contents of tmp folder."
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
+
+  # Wipe templates from disk.
+  log_bright "[INFO] Wiping downloaded templates from disk.."
+  rm -R .blueprint/data/internal/build/templates/*
 
   sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" > /dev/null
 
