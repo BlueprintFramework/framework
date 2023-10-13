@@ -1013,7 +1013,8 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   cd .blueprint/tmp
   git clone "https://github.com/teamblueprint/templates.git"
   cd $FOLDER/.blueprint
-  cp -R tmp/main/* data/internal/build/templates/
+  cp -R tmp/templates/* data/internal/build/templates/
+  rm -R tmp/templates
   cd $FOLDER
 
   eval $(parse_yaml .blueprint/data/internal/build/templates/$tnum/TemplateConfiguration.yml t_);
