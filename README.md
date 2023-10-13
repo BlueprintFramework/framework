@@ -12,7 +12,7 @@
 <br/>
 
 ## Installation
-### What you need:
+**What you need:**
 * [The latest release of Blueprint.](https://github.com/teamblueprint/main/releases/latest)
 * [`unzip`](https://pkgs.org/download/unzip)
 * [`nodejs`](https://nodejs.org) (20.x or later)
@@ -20,7 +20,7 @@
 * Linux and Pterodactyl knowledge.
 * Common sense.
 
-### Installation:
+**Installation:**
 1. Blueprint doesn't mix well with other modifications, so if you already have any, [perform a panel update](https://pterodactyl.io/panel/1.0/updating.html) before moving on with this guide.
 2. Navigate to your Pterodactyl folder. (most likely `/var/www/pterodactyl`)
 3. Install NodeJS, NPM and Yarn using the following script. This assumes you are running Pterodactyl on Ubuntu or Debian-based systems.
