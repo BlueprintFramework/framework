@@ -673,7 +673,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
     chmod +x .blueprint/data/extensions/$identifier/install.sh
-    bash .blueprint/data/extensions/$identifier/install.sh
+    # Run script while also parsing some useful variable for the install script to use.
+    BLUEPRINT_DEVELOPER="$dev" BLUEPRINT_VERSION="$VERSION" bash .blueprint/data/extensions/$identifier/install.sh
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
