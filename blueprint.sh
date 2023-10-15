@@ -146,13 +146,14 @@ depend() {
 
 
   # Check for required dependencies.
-  if ! [ -x "$(command -v unzip)" ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v node)"  ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v yarn)"  ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v zip)"   ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v curl)"  ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v sed)"   ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v php)"   ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v unzip)"                 ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v node)"                  ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v yarn)"                  ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v zip)"                   ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v curl)"                  ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v sed)"                   ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v php)"                   ]; then DEPEND_MISSING=true; fi
+  if   [[   "$(npm ls | grep "cross-env")" == "" ]]; then DEPEND_MISSING=true; fi
 
   # Check for internal dependencies.
   if [[ $LIB__bash_colors              ]]; then DEPEND_MISSING=true; fi
@@ -167,13 +168,14 @@ depend() {
 
     if [[ $nodeVer != "v17."* ]] && [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($nodeVer) is an unsupported version."; fi
 
-    if ! [ -x "$(command -v unzip)" ]; then log_red "  - \"unzip\" is not installed or detected."; fi
-    if ! [ -x "$(command -v node)"  ]; then log_red "  - \"node\" is not installed or detected.";  fi
-    if ! [ -x "$(command -v yarn)"  ]; then log_red "  - \"yarn\" is not installed or detected.";  fi
-    if ! [ -x "$(command -v zip)"   ]; then log_red "  - \"zip\" is not installed or detected.";   fi
-    if ! [ -x "$(command -v curl)"  ]; then log_red "  - \"curl\" is not installed or detected.";  fi
-    if ! [ -x "$(command -v sed)"   ]; then log_red "  - \"sed\" is not installed or detected.";   fi
-    if ! [ -x "$(command -v php)"   ]; then log_red "  - \"php\" is not installed or detected.";   fi
+    if ! [ -x "$(command -v unzip)"             ]; then log_red "  - \"unzip\" is not installed or detected.";     fi
+    if ! [ -x "$(command -v node)"              ]; then log_red "  - \"node\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v yarn)"              ]; then log_red "  - \"yarn\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v zip)"               ]; then log_red "  - \"zip\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v curl)"              ]; then log_red "  - \"curl\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v sed)"               ]; then log_red "  - \"sed\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v php)"               ]; then log_red "  - \"php\" is not installed or detected.";       fi
+    if [[ "$(npm ls | grep "cross-env")" == "" ]]; then log_red "  - \"cross-env\" is not installed or detected."; fi
 
     if [[ $LIB__bash_colors              ]]; then log_red "  - \"internal:bash_colors\" is not installed or detected.";              fi
     if [[ $LIB__parse_yaml               ]]; then log_red "  - \"internal:parse_yaml\" is not installed or detected.";               fi
