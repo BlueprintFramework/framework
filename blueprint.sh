@@ -670,12 +670,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   chown -R www-data:www-data $FOLDER/.blueprint/data/extensions/$identifier
   chmod --silent -R +x .blueprint/data/extensions/* 2> /dev/null
 
-  if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
-    log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
-    chmod +x .blueprint/data/extensions/$identifier/install.sh
-    # Run script while also parsing some useful variable for the install script to use.
-    BLUEPRINT_DEVELOPER="$dev" BLUEPRINT_VERSION="$VERSION" bash .blueprint/data/extensions/$identifier/install.sh
-    echo -e "\e[0m\x1b[0m\033[0m"
+  if [[ ( ( $flags != *"developerIgnoreInstallScript,"* ) && ( $flags != *"developerIgnoreInstallScript" ) ) || ( $dev != true ) ]]; then
+    if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
+      log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
+      chmod +x .blueprint/data/extensions/$identifier/install.sh
+      # Run script while also parsing some useful variable for the install script to use.
+      BLUEPRINT_DEVELOPER="$dev" BLUEPRINT_VERSION="$VERSION" bash .blueprint/data/extensions/$identifier/install.sh
+      echo -e "\e[0m\x1b[0m\033[0m"
+    fi
+  else
+    log_bright "[INFO] Custom installation scripts will be skipped on developer commands due to the 'developerIgnoreInstallScript' flag."
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
