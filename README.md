@@ -15,6 +15,7 @@
 **What you need:**
 * [The latest release of Blueprint.](https://github.com/teamblueprint/main/releases/latest)
 * [`unzip`](https://pkgs.org/download/unzip)
+* [`zip`](https://pkgs.org/download/zip)
 * [`nodejs`](https://nodejs.org) (20.x or later)
 * [`yarn`](https://yarnpkg.com/)
 * Linux and Pterodactyl knowledge.
