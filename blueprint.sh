@@ -422,7 +422,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ ( $flags != *"ignorePlaceholders,"* ) && ( $flags != *"ignorePlaceholders" ) ]]; then
     # Prepare variables for placeholders
     DIR=.blueprint/tmp/$n/*
-    INSTALLMODE="normal"; if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
+    INSTALLMODE="normal";
+    if [[ $dev == true ]]; then
+      INSTALLMODE="developer"
+    fi
 
     if [[ ( $flags == *"ignoreAlphabetPlaceholders,"* ) || ( $flags == *"ignoreAlphabetPlaceholders" ) ]]; then
       SKIPAZPLACEHOLDERS=true
@@ -447,7 +450,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         sed -i "s~__name__~$name~g" $f
         sed -i "s~__path__~$FOLDER~g" $f
         sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/$identifier~g" $f
-        sed -i "s~__installmode__~$INSTALLMODE" $f
+        sed -i "s~__installmode__~$INSTALLMODE~g" $f
       fi
 
       log_bright "[INFO] Done placeholders in '$f'."
