@@ -308,7 +308,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     dev=false
     n=$3
     FILE=$n".blueprint"
-    if [[ ( $FILE == *".blueprint.blueprint" ) && ( $n == *".blueprint" ) ]]; then FILE=$n;fi
+    if [[ ( $FILE == *".blueprint.blueprint" ) && ( $n == *".blueprint" ) ]]; then quit_red "[FATAL] Argument one in '-install' must not end with '.blueprint'."; fi
     if [[ ! -f "$FILE" ]]; then quit_red "[FATAL] $FILE could not be found.";fi
 
     ZIP=$n".zip"
@@ -335,7 +335,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   cd $FOLDER
 
   # Get all strings from the conf.yml file and make them accessible as variables.
-  if [[ ! -f ".blueprint/tmp/$n/conf.yml" ]]; then quit_red "[FATAL] Could not find a conf.yml file.";fi
+  if [[ ! -f ".blueprint/tmp/$n/conf.yml" ]]; then 
+    # Quit if the extension doesn't have a conf.yml file.
+    rm -R .blueprint/tmp/$n
+    quit_red "[FATAL] Could not find a conf.yml file."
+  fi
   eval $(parse_yaml .blueprint/tmp/$n/conf.yml conf_)
 
   # Add aliases for config values to make working with them easier.
