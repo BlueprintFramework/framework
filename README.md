@@ -16,6 +16,8 @@
 * [The latest release of Blueprint.](https://github.com/teamblueprint/main/releases/latest)
 * [`unzip`](https://pkgs.org/download/unzip)
 * [`zip`](https://pkgs.org/download/zip)
+* [`curl`](https://pkgs.org/download/curl)
+* [`git`](https://pkgs.org/download/git)
 * [`nodejs`](https://nodejs.org) (20.x or later)
 * [`yarn`](https://yarnpkg.com/)
 * Linux and Pterodactyl knowledge.
