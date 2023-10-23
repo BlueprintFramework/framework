@@ -17,7 +17,7 @@
 * [`unzip`](https://pkgs.org/download/unzip)
 * [`zip`](https://pkgs.org/download/zip)
 * [`curl`](https://github.com/curl/curl)
-* [`git`](https://pkgs.org/download/git)
+* [`git`](https://github.com/git/git)
 * [`nodejs`](https://nodejs.org) (20.x or later)
 * [`yarn`](https://yarnpkg.com/)
 * Linux and Pterodactyl knowledge.
