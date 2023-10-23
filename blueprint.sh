@@ -153,6 +153,7 @@ depend() {
   if ! [ -x "$(command -v curl)"                  ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v sed)"                   ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v php)"                   ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v git)"                   ]; then DEPEND_MISSING=true; fi
   if   [[   "$(npm ls | grep "cross-env")" == "" ]]; then DEPEND_MISSING=true; fi
 
   # Check for internal dependencies.
@@ -175,6 +176,7 @@ depend() {
     if ! [ -x "$(command -v curl)"              ]; then log_red "  - \"curl\" is not installed or detected.";      fi
     if ! [ -x "$(command -v sed)"               ]; then log_red "  - \"sed\" is not installed or detected.";       fi
     if ! [ -x "$(command -v php)"               ]; then log_red "  - \"php\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v git)"               ]; then log_red "  - \"git\" is not installed or detected.";       fi
     if [[ "$(npm ls | grep "cross-env")" == "" ]]; then log_red "  - \"cross-env\" is not installed or detected."; fi
 
     if [[ $LIB__bash_colors              ]]; then log_red "  - \"internal:bash_colors\" is not installed or detected.";              fi
