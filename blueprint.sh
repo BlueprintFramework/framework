@@ -1108,12 +1108,12 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   log_bright "[INFO] Exporting extension files located in '.blueprint/dev'."
 
   cd .blueprint
-  eval $(parse_yaml dev/conf.yml conf_); identifier="$conf_info_identifier"
+  eval $(parse_yaml dev/conf.yml conf_); identifier="${conf_info_identifier}"
   cp -R dev/* tmp/
   cd tmp
   zip -r extension.zip *
-  cd $FOLDER
-  cp .blueprint/tmp/extension.zip $identifier.blueprint
+  cd ${FOLDER}
+  cp .blueprint/tmp/extension.zip ${identifier}.blueprint
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
 
@@ -1131,7 +1131,7 @@ if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
 
   log_blue "[INPUT] You are about to wipe all of your extension files, are you sure you want to continue? This cannot be undone. (y/N)"
   read -r YN
-  if [[ ( ( $YN != "y"* ) && ( $YN != "Y"* ) ) || ( ( $YN == "" ) ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
+  if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
 
   log_bright "[INFO] Wiping development folder.."
   rm -R .blueprint/dev/* 2> /dev/null
@@ -1145,7 +1145,7 @@ fi
 if [[ $2 == "-rerun-install"  ]]; then VCMD="y"
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
   dbRemove "blueprint.setupFinished"
-  cd $FOLDER
+  cd ${FOLDER}
   bash blueprint.sh
 fi
 
@@ -1161,28 +1161,28 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ $@ == *"dev"* ]]; then
     log_blue "[INPUT] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
     read -r YN1
-    if [[ ( $YN1 != "y"* ) && ( $YN1 != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+    if [[ ( ${YN1} != "y"* ) && ( ${YN1} != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
   fi
   log_blue "[INPUT] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)"
   read -r YN2
-  if [[ ( $YN2 != "y"* ) && ( $YN2 != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  if [[ ( ${YN2} != "y"* ) && ( ${YN2} != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
   log_blue "[INPUT] This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'."
   read -r YN3
-  if [[ $YN3 != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  if [[ ${YN3} != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine."
   cp blueprint.sh .blueprint.sh.bak
-  if [[ $@ == *"dev"* ]]; then
-    bash tools/update.sh $FOLDER dev
+  if [[ $@ == *" dev" ]]; then
+    bash tools/update.sh ${FOLDER} dev
   else
-    bash tools/update.sh $FOLDER
+    bash tools/update.sh ${FOLDER}
   fi
   chmod +x blueprint.sh
-  _FOLDER="$FOLDER" bash blueprint.sh --post-upgrade
-  log_bright "[INFO] Bash might spit out some errors from here on out. EOF, command not found and syntax errors are expected behaviour."
+  _FOLDER="${FOLDER}" bash blueprint.sh --post-upgrade
+  log_bright "[INFO] Bash might spit out some errors from here on out. Unexpected end of file (eof), command not found and syntax errors are expected behaviour."
   log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
   read -r YN4
-  if [[ ( $YN4 == "y" ) || ( $YN4 == "Y" ) || ( $YN4 == "" ) ]]; then 
+  if [[ ( ${YN4} == "y" ) || ( ${YN4} == "Y" ) || ( ${YN4} == "" ) ]]; then 
     log_bright "[INFO] Running database migrations.."
     php artisan migrate --force
   else
@@ -1200,11 +1200,11 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   fi
 
   # Finalize upgrade.
-  if [[ $score == 1 ]]; then
+  if [[ ${score} == 1 ]]; then
     log_green "[SUCCESS] Blueprint has upgraded successfully."
     rm .blueprint.sh.bak
     exit 1
-  elif [[ $score == 0 ]]; then
+  elif [[ ${score} == 0 ]]; then
     log_red "[FATAL] All checks have failed."
     rm blueprint.sh
     mv .blueprint.sh.bak blueprint.sh
@@ -1220,7 +1220,7 @@ fi
 
 
 # When the users attempts to run an invalid command.
-if [[ $VCMD != "y" && $1 == "-bash" ]]; then
+if [[ ${VCMD} != "y" && $1 == "-bash" ]]; then
   # This is logged as a "fatal" error since it's something that is making Blueprint run unsuccessfully.
   quit_red "[FATAL] '$2' is not a valid command or argument. Use argument '-help' for a list of commands."
 fi
