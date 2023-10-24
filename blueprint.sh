@@ -448,6 +448,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       sed -i "s~\^#path#\^~$FOLDER~g" $f
       sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/data/extensions/$identifier~g" $f
       sed -i "s~\^#installmode#\^~$INSTALLMODE~g" $f
+      sed -i "s~\^#blueprintversion#\^~$VERSION~g" $f
 
       if [[ $SKIPAZPLACEHOLDERS != true ]]; then
         sed -i "s~__version__~$version~g" $f
@@ -457,6 +458,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         sed -i "s~__path__~$FOLDER~g" $f
         sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/$identifier~g" $f
         sed -i "s~__installmode__~$INSTALLMODE~g" $f
+        sed -i "s~__blueprintversion__~$VERSION~g" $f
       fi
 
       log_bright "[INFO] Done placeholders in '$f'."
