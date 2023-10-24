@@ -167,7 +167,7 @@ depend() {
   if [[ $DEPEND_MISSING == true ]]; then 
     log_red "[FATAL] Blueprint found errors for the following dependencies:"
 
-    if [[ $nodeVer != "v17."* ]] && [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($nodeVer) is an unsupported version."; fi
+    if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($nodeVer) is an unsupported version."; fi
 
     if ! [ -x "$(command -v unzip)"             ]; then log_red "  - \"unzip\" is not installed or detected.";     fi
     if ! [ -x "$(command -v node)"              ]; then log_red "  - \"node\" is not installed or detected.";      fi
