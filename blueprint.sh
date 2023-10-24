@@ -1032,37 +1032,37 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   ask_version
   ask_author
 
-  tnum=$ASKTEMPLATE;
+  tnum=${ASKTEMPLATE}
   log_bright "[INFO] Downloading templates from 'teamblueprint/templates'.."
   cd .blueprint/tmp
   git clone "https://github.com/teamblueprint/templates.git"
-  cd $FOLDER/.blueprint
+  cd ${FOLDER}/.blueprint
   cp -R tmp/templates/* data/internal/build/templates/
   rm -R tmp/templates
-  cd $FOLDER
+  cd ${FOLDER}
 
-  eval $(parse_yaml .blueprint/data/internal/build/templates/$tnum/TemplateConfiguration.yml t_);
+  eval $(parse_yaml .blueprint/data/internal/build/templates/${tnum}/TemplateConfiguration.yml t_);
 
   log_bright "[INFO] Copying template contents to the tmp directory.."
   mkdir -p .blueprint/tmp/init
-  cp -R .blueprint/data/internal/build/templates/$tnum/contents/* .blueprint/tmp/init/
+  cp -R .blueprint/data/internal/build/templates/${tnum}/contents/* .blueprint/tmp/init/
 
   log_bright "[INFO] Applying variables.."
-  sed -i "s~␀name␀~$ASKNAME~g" .blueprint/tmp/init/conf.yml; #NAME
-  sed -i "s~␀identifier␀~$ASKIDENTIFIER~g" .blueprint/tmp/init/conf.yml; #IDENTIFIER
-  sed -i "s~␀description␀~$ASKDESCRIPTION~g" .blueprint/tmp/init/conf.yml; #DESCRIPTION
-  sed -i "s~␀ver␀~$ASKVERSION~g" .blueprint/tmp/init/conf.yml; #VERSION
-  sed -i "s~␀author␀~$ASKAUTHOR~g" .blueprint/tmp/init/conf.yml; #AUTHOR
+  sed -i "s~␀name␀~${ASKNAME}~g" .blueprint/tmp/init/conf.yml; #NAME
+  sed -i "s~␀identifier␀~${ASKIDENTIFIER}~g" .blueprint/tmp/init/conf.yml; #IDENTIFIER
+  sed -i "s~␀description␀~${ASKDESCRIPTION}~g" .blueprint/tmp/init/conf.yml; #DESCRIPTION
+  sed -i "s~␀ver␀~${ASKVERSION}~g" .blueprint/tmp/init/conf.yml; #VERSION
+  sed -i "s~␀author␀~${ASKAUTHOR}~g" .blueprint/tmp/init/conf.yml; #AUTHOR
 
-  if [[ $t_template_files_icon != "" ]]; then
+  if [[ ${t_template_files_icon} != "" ]]; then
     log_bright "[INFO] Rolling (and applying) extension placeholder icon.."
     icnNUM=$(expr 1 + $RANDOM % 9)
-    cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg .blueprint/tmp/init/$t_template_files_icon
-    sed -i "s~␀icon␀~$t_template_files_icon~g" .blueprint/tmp/init/conf.yml; #ICON
+    cp .blueprint/assets/defaultExtensionLogo${icnNUM}.jpg .blueprint/tmp/init/${t_template_files_icon}
+    sed -i "s~␀icon␀~${t_template_files_icon}~g" .blueprint/tmp/init/conf.yml; #ICON
   fi;
 
   log_bright "[INFO] Applying core variables.."
-  sed -i "s~␀version␀~$VERSION~g" .blueprint/tmp/init/conf.yml #BLUEPRINT-VERSION
+  sed -i "s~␀version␀~${VERSION}~g" .blueprint/tmp/init/conf.yml #BLUEPRINT-VERSION
 
   # Return files to folder.
   log_bright "[INFO] Copying output to extension development directory."
