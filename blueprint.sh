@@ -486,11 +486,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   if [[ $database_migrations != "" ]]; then
+    log_bright "[INFO] Placing database migrations.."
     cp -R .blueprint/tmp/$n/$database_migrations/* database/migrations/ 2> /dev/null
   fi
 
   if [[ $data_public != "" ]]; then
+    log_bright "[INFO] Creating public directory.."
     mkdir -p public/extensions/$identifier
+    log_bright "[INFO] Placing public directory contents.."
     cp -R .blueprint/tmp/$n/$data_public/* public/extensions/$identifier/ 2> /dev/null
   fi
 
@@ -502,12 +505,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   cp .blueprint/data/internal/build/extensions/button.blade.php .blueprint/data/internal/build/extensions/button.blade.php.bak 2> /dev/null
 
   # Start creating data directory.
+  log_bright "[INFO] Creating data directory.."
   mkdir -p .blueprint/data/extensions/$identifier
   mkdir -p .blueprint/data/extensions/$identifier/.store
   
+  log_bright "[INFO] Caching extension config inside of data directory.."
   cp .blueprint/tmp/$n/conf.yml .blueprint/data/extensions/$identifier/.store/conf.yml; #backup conf.yml
   
   if [[ $data_directory != "" ]]; then
+    log_bright "[INFO] Placing private directory contents.."
     cp -R .blueprint/tmp/$n/$data_directory/* .blueprint/data/extensions/$identifier/
   fi
   # End creating data directory.
@@ -525,12 +531,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   CONTENT=$(cat .blueprint/tmp/$n/$admin_view)
 
   if [[ $admin_css != "" ]]; then
+    log_bright "[INFO] Placing admin css.."
     updateCacheReminder
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css
     sed -i "s~/\* admin.css \*/~/\* admin.css \*/\n@import url(/assets/extensions/$identifier/admin.style.css);~g" public/themes/pterodactyl/css/pterodactyl.css
     cp .blueprint/tmp/$n/$admin_css public/assets/extensions/$identifier/admin.style.css
   fi
   if [[ $dashboard_css != "" ]]; then
+    log_bright "[INFO] Placing dashboard css.."
     YARN="y"
     sed -i "s~@import url($identifier.css);~~g" resources/scripts/css/extensions.css
     sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url($identifier.css);~g" resources/scripts/css/extensions.css
@@ -618,6 +626,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
+    log_bright "[INFO] Placing dashboard wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
       sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php
       sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/templates/wrapper.blade.php
@@ -633,6 +642,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Place admin wrapper
   if [[ $admin_wrapper != "" ]]; then
+    log_bright "[INFO] Placing admin wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
       sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/layouts/admin.blade.php
       sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/layouts/admin.blade.php
