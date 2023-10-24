@@ -861,7 +861,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ||
   -remove [name]       -r  remove a blueprint extension
   \x1b[0m
   
-${help_dev_primary}Developer$help_dev_status\x1b[0m${help_dev_secondary}
+${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
   -init                -I  initialize development files
   -build               -b  install/update your development files
   -export              -e  export your development files
@@ -882,7 +882,7 @@ fi
 
 # -v, -version
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then VCMD="y"
-  echo -e $VERSION
+  echo -e ${VERSION}
 fi
 
 
@@ -903,19 +903,19 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
     REDO_TEMPLATE=false
 
-    # Template cannot be empty
-    if [[ $ASKTEMPLATE == "" ]]; then 
-      log_red "[FATAL] Template cannot be empty."
+    # Template should not be empty
+    if [[ ${ASKTEMPLATE} == "" ]]; then 
+      log_yellow "[WARNING] Template should not be empty."
       REDO_TEMPLATE=true
     fi
 
     # Unknown template.
-    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/teamblueprint/templates/main/$ASKTEMPLATE/TemplateConfiguration.yml" 2> /dev/null)") == "404: Not Found" ]]; then 
-      log_red "[FATAL] Unknown template, please choose a valid option."
+    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/teamblueprint/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2> /dev/null)") == "404: Not Found" ]]; then 
+      log_yellow "[WARNING] Unknown template, please choose a valid option."
       REDO_TEMPLATE=true
     fi
 
-    if [[ $REDO_TEMPLATE == true ]]; then
+    if [[ ${REDO_TEMPLATE} == true ]]; then
       # Ask again if response does not pass validation.
       ASKTEMPLATE=""
       ask_template
@@ -929,12 +929,12 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     REDO_NAME=false
 
     # Name should not be empty
-    if [[ $ASKNAME == "" ]]; then 
-      log_red "[FATAL] Name should not be empty."
+    if [[ ${ASKNAME} == "" ]]; then 
+      log_yellow "[WARNING] Name should not be empty."
       REDO_NAME=true
     fi
 
-    if [[ $REDO_NAME == true ]]; then
+    if [[ ${REDO_NAME} == true ]]; then
       # Ask again if response does not pass validation.
       ASKNAME=""
       ask_name
@@ -948,20 +948,20 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     REDO_IDENTIFIER=false
 
     # Identifier should not be empty
-    if [[ $ASKIDENTIFIER == "" ]]; then
-      log_red "[FATAL] Identifier should not be empty."
+    if [[ ${ASKIDENTIFIER} == "" ]]; then
+      log_yellow "[WARNING] Identifier should not be empty."
       REDO_IDENTIFIER=true
     fi
   
     # Identifier should be a-z.
-    if [[ $ASKIDENTIFIER =~ [a-z] ]]; then
+    if [[ ${ASKIDENTIFIER} =~ [a-z] ]]; then
       echo ok > /dev/null
     else 
-      log_red "[FATAL] Identifier should only contain a-z characters."
+      log_yellow "[WARNING] Identifier should only contain a-z characters."
       REDO_IDENTIFIER=true
     fi
 
-    if [[ $REDO_IDENTIFIER == true ]]; then
+    if [[ ${REDO_IDENTIFIER} == true ]]; then
       # Ask again if response does not pass validation.
       ASKIDENTIFIER=""
       ask_identifier
@@ -975,12 +975,12 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     REDO_DESCRIPTION=false
 
     # Description should not be empty
-    if [[ $ASKDESCRIPTION == "" ]]; then
-      log_red "[FATAL] Description should not be empty."
+    if [[ ${ASKDESCRIPTION} == "" ]]; then
+      log_yellow "[WARNING] Description should not be empty."
       REDO_DESCRIPTION=true
     fi
 
-    if [[ $REDO_DESCRIPTION == true ]]; then
+    if [[ ${REDO_DESCRIPTION} == true ]]; then
       # Ask again if response does not pass validation.
       ASKDESCRIPTION=""
       ask_description
@@ -994,12 +994,12 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     REDO_VERSION=false
 
     # Version should not be empty
-    if [[ $ASKVERSION == "" ]]; then
-      log_red "[FATAL] Version should not be empty."
+    if [[ ${ASKVERSION} == "" ]]; then
+      log_yellow "[WARNING] Version should not be empty."
       REDO_VERSION=true
     fi
 
-    if [[ $REDO_VERSION == true ]]; then
+    if [[ ${REDO_VERSION} == true ]]; then
       # Ask again if response does not pass validation.
       ASKVERSION=""
       ask_version
@@ -1013,12 +1013,12 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     REDO_AUTHOR=false
 
     # Author should not be empty
-    if [[ $ASKAUTHOR == "" ]]; then
-      log_red "[FATAL] Author should not be empty."
+    if [[ ${ASKAUTHOR} == "" ]]; then
+      log_yellow "[WARNING] Author should not be empty."
       REDO_AUTHOR=true
     fi
 
-    if [[ $REDO_AUTHOR == true ]]; then
+    if [[ ${REDO_AUTHOR} == true ]]; then
       # Ask again if response does not pass validation.
       ASKAUTHOR=""
       ask_author
