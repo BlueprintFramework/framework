@@ -840,8 +840,10 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 fi
 
 
-# help, -help, --help 
-if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ]]; then VCMD="y"
+# help, -help, --help,
+# h,    -h,    --h
+if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) || 
+      ( $2 == "h" )    || ( $2 == "-h" )    || ( $2 == "--h" )    ]]; then VCMD="y"
 
   if [[ $(cat .blueprint/data/internal/db/developer) == "true"* ]]; then
     help_dev_status=""
