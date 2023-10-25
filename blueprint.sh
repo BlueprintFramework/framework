@@ -1135,6 +1135,8 @@ fi
 
 # -wipe
 if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
+
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
   fi
