@@ -434,6 +434,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     # Prepare variables for placeholders
     DIR=".blueprint/tmp/$n"
     INSTALLMODE="normal"
+    CORES=$(nproc --all)
     if [[ $dev == true ]]; then
       INSTALLMODE="developer"
     fi
@@ -450,26 +451,24 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       for file in "$dir"/*; do
         if [ -f "$file" ]; then
           file=$(echo "$file" | sed "s~ ~\ ~g")
-          sed -i "s~\^#version#\^~$version~g" "$file" &
-          sed -i "s~\^#author#\^~$author~g" "$file" &
-          sed -i "s~\^#name#\^~$name~g" "$file" &
-          sed -i "s~\^#identifier#\^~$identifier~g" "$file" &
-          sed -i "s~\^#path#\^~$FOLDER~g" "$file" &
-          sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/data/extensions/$identifier~g" "$file" &
-          sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$file" &
-          sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file" &
-          wait
+          sed -i "s~\^#version#\^~$version~g" "$file"
+          sed -i "s~\^#author#\^~$author~g" "$file"
+          sed -i "s~\^#name#\^~$name~g" "$file"
+          sed -i "s~\^#identifier#\^~$identifier~g" "$file"
+          sed -i "s~\^#path#\^~$FOLDER~g" "$file"
+          sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/data/extensions/$identifier~g" "$file"
+          sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$file"
+          sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file"
 
           if [[ $SKIPAZPLACEHOLDERS != true ]]; then
-            sed -i "s~__version__~$version~g" "$file" &
-            sed -i "s~__author__~$author~g" "$file" &
-            sed -i "s~__identifier__~$identifier~g" "$file" &
-            sed -i "s~__name__~$name~g" "$file" &
-            sed -i "s~__path__~$FOLDER~g" "$file" &
-            sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/$identifier~g" "$file" &
-            sed -i "s~__installmode__~$INSTALLMODE~g" "$file" &
-            sed -i "s~__blueprintversion__~$VERSION~g" "$file" &
-            wait
+            sed -i "s~__version__~$version~g" "$file"
+            sed -i "s~__author__~$author~g" "$file"
+            sed -i "s~__identifier__~$identifier~g" "$file"
+            sed -i "s~__name__~$name~g" "$file"
+            sed -i "s~__path__~$FOLDER~g" "$file"
+            sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/$identifier~g" "$file"
+            sed -i "s~__installmode__~$INSTALLMODE~g" "$file"
+            sed -i "s~__blueprintversion__~$VERSION~g" "$file"
           fi
 
           log_bright "[INFO] Done placeholders in '$file'."
