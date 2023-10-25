@@ -264,8 +264,9 @@ if [[ $1 != "-bash" ]]; then
 
     # Make sure all files have correct permissions.
     log_bright "[INFO] Changing file ownership to www-data.."
-    chown -R www-data:www-data $FOLDER/*
-    chown -R www-data:www-data $FOLDER/.blueprint/*
+    chown -R www-data:www-data $FOLDER/* &
+    chown -R www-data:www-data $FOLDER/.blueprint/* &
+    wait
 
     # Rebuild panel assets.
     log_bright "[INFO] Rebuilding panel assets.."
@@ -447,24 +448,25 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     for f in $(find $DIR -type f -exec echo {} \;); do
       f=$(echo -e "$f" 2> /dev/null | sed "s~ ~\ ~~g")
 
-      sed -i "s~\^#version#\^~$version~g" "$f"
-      sed -i "s~\^#author#\^~$author~g" "$f"
-      sed -i "s~\^#name#\^~$name~g" "$f"
-      sed -i "s~\^#identifier#\^~$identifier~g" "$f"
-      sed -i "s~\^#path#\^~$FOLDER~g" "$f"
-      sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/data/extensions/$identifier~g" "$f"
-      sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$f"
-      sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$f"
+      sed -i "s~\^#version#\^~$version~g" "$f" &
+      sed -i "s~\^#author#\^~$author~g" "$f" &
+      sed -i "s~\^#name#\^~$name~g" "$f" &
+      sed -i "s~\^#identifier#\^~$identifier~g" "$f" &
+      sed -i "s~\^#path#\^~$FOLDER~g" "$f" &
+      sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/data/extensions/$identifier~g" "$f" &
+      sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$f" &
+      sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$f" &
+      wait
 
       if [[ $SKIPAZPLACEHOLDERS != true ]]; then
-        sed -i "s~__version__~$version~g" "$f"
-        sed -i "s~__author__~$author~g" "$f"
-        sed -i "s~__identifier__~$identifier~g" "$f"
-        sed -i "s~__name__~$name~g" "$f"
-        sed -i "s~__path__~$FOLDER~g" "$f"
-        sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/$identifier~g" "$f"
-        sed -i "s~__installmode__~$INSTALLMODE~g" "$f"
-        sed -i "s~__blueprintversion__~$VERSION~g" "$f"
+        sed -i "s~__version__~$version~g" "$f" &
+        sed -i "s~__author__~$author~g" "$f" &
+        sed -i "s~__identifier__~$identifier~g" "$f" &
+        sed -i "s~__name__~$name~g" "$f" &
+        sed -i "s~__path__~$FOLDER~g" "$f" &
+        sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/$identifier~g" "$f" &
+        sed -i "s~__installmode__~$INSTALLMODE~g" "$f" &
+        sed -i "s~__blueprintversion__~$VERSION~g" "$f" &
       fi
 
       log_bright "[INFO] Done placeholders in '$f'."
