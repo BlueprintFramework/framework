@@ -3,11 +3,19 @@
 [Discord ➚](https://ptero.shop/community)\
 [Documentation ➚](https://ptero.shop/docs)
 
+[Introduction](#introduction)\
 [Installation](#installation)\
 [Development](#development)\
 [Extensions](#extensions)\
 [Contributors](#contributors)\
 [Related Links](#related-links)
+
+<br/>
+
+## Introduction
+**Blueprint** is an open-source extension framework/manager for Pterodactyl. Developers can create versatile, easy-to-install extensions that system administrators can install within minutes *(and sometimes even seconds!)*.
+
+We aim to introduce new developers to Blueprint with easy to understand guides, documentation, developer commands, community support and more.
 
 <br/>
 
