@@ -72,11 +72,11 @@ source .blueprint/lib/parse_yaml.sh
 source .blueprint/lib/db.sh
 source .blueprint/lib/telemetry.sh
 source .blueprint/lib/updateAdminCacheReminder.sh
-if [[ ! -f ".blueprint/lib/bash_colors.sh" ]]; then LIB__bash_colors="missing";fi
-if [[ ! -f ".blueprint/lib/parse_yaml.sh" ]]; then LIB__parse_yaml="missing";fi
-if [[ ! -f ".blueprint/lib/db.sh" ]]; then LIB__db="missing";fi
-if [[ ! -f ".blueprint/lib/telemetry.sh" ]]; then LIB__telemetry="missing";fi
-if [[ ! -f ".blueprint/lib/updateAdminCacheReminder.sh" ]]; then LIB__updateAdminCacheReminder="missing";fi
+if [[ ! -f ".blueprint/lib/bash_colors.sh" ]]; then              LIB__bash_colors="missing";              fi
+if [[ ! -f ".blueprint/lib/parse_yaml.sh" ]]; then               LIB__parse_yaml="missing";               fi
+if [[ ! -f ".blueprint/lib/db.sh" ]]; then                       LIB__db="missing";                       fi
+if [[ ! -f ".blueprint/lib/telemetry.sh" ]]; then                LIB__telemetry="missing";                fi
+if [[ ! -f ".blueprint/lib/updateAdminCacheReminder.sh" ]]; then LIB__updateAdminCacheReminder="missing"; fi
 
 # Fallback to these functions if "bash_colors.sh" is missing
 if [[ $LIB__bash_colors == "missing" ]]; then
@@ -151,9 +151,11 @@ depend() {
   if ! [ -x "$(command -v yarn)"                  ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v zip)"                   ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v curl)"                  ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v sed)"                   ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v php)"                   ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v git)"                   ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v grep)"                  ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v sed)"                   ]; then DEPEND_MISSING=true; fi
+  if ! [ -x "$(command -v awk)"                   ]; then DEPEND_MISSING=true; fi
   if   [[   "$(npm ls | grep "cross-env")" == "" ]]; then DEPEND_MISSING=true; fi
 
   # Check for internal dependencies.
@@ -174,9 +176,11 @@ depend() {
     if ! [ -x "$(command -v yarn)"              ]; then log_red "  - \"yarn\" is not installed or detected.";      fi
     if ! [ -x "$(command -v zip)"               ]; then log_red "  - \"zip\" is not installed or detected.";       fi
     if ! [ -x "$(command -v curl)"              ]; then log_red "  - \"curl\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v sed)"               ]; then log_red "  - \"sed\" is not installed or detected.";       fi
     if ! [ -x "$(command -v php)"               ]; then log_red "  - \"php\" is not installed or detected.";       fi
     if ! [ -x "$(command -v git)"               ]; then log_red "  - \"git\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v grep)"              ]; then log_red "  - \"grep\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v sed)"               ]; then log_red "  - \"sed\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v awk)"               ]; then log_red "  - \"awk\" is not installed or detected.";       fi
     if [[ "$(npm ls | grep "cross-env")" == "" ]]; then log_red "  - \"cross-env\" is not installed or detected."; fi
 
     if [[ $LIB__bash_colors              ]]; then log_red "  - \"internal:bash_colors\" is not installed or detected.";              fi
