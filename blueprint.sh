@@ -432,8 +432,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ ( $flags != *"ignorePlaceholders,"* ) && ( $flags != *"ignorePlaceholders" ) ]]; then
     # Prepare variables for placeholders
-    DIR=.blueprint/tmp/$n/*
-    INSTALLMODE="normal";
+    DIR=".blueprint/tmp/$n"
+    INSTALLMODE="normal"
     if [[ $dev == true ]]; then
       INSTALLMODE="developer"
     fi
@@ -445,32 +445,41 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       SKIPAZPLACEHOLDERS=false
     fi
 
-    for f in $(find $DIR -type f -exec echo {} \;); do
-      f=$(echo -e "$f" 2> /dev/null | sed "s~ ~\ ~~g")
+    PLACE_PLACEHOLDERS() {
+      local dir="$1"
+      for file in "$dir"/*; do
+        if [ -f "$file" ]; then
+          file=$(echo "$file" | sed "s~ ~\ ~g")
+          sed -i "s~\^#version#\^~$version~g" "$file" &
+          sed -i "s~\^#author#\^~$author~g" "$file" &
+          sed -i "s~\^#name#\^~$name~g" "$file" &
+          sed -i "s~\^#identifier#\^~$identifier~g" "$file" &
+          sed -i "s~\^#path#\^~$FOLDER~g" "$file" &
+          sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/data/extensions/$identifier~g" "$file" &
+          sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$file" &
+          sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file" &
+          wait
 
-      sed -i "s~\^#version#\^~$version~g" "$f" &
-      sed -i "s~\^#author#\^~$author~g" "$f" &
-      sed -i "s~\^#name#\^~$name~g" "$f" &
-      sed -i "s~\^#identifier#\^~$identifier~g" "$f" &
-      sed -i "s~\^#path#\^~$FOLDER~g" "$f" &
-      sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/data/extensions/$identifier~g" "$f" &
-      sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$f" &
-      sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$f" &
-      wait
+          if [[ $SKIPAZPLACEHOLDERS != true ]]; then
+            sed -i "s~__version__~$version~g" "$file" &
+            sed -i "s~__author__~$author~g" "$file" &
+            sed -i "s~__identifier__~$identifier~g" "$file" &
+            sed -i "s~__name__~$name~g" "$file" &
+            sed -i "s~__path__~$FOLDER~g" "$file" &
+            sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/$identifier~g" "$file" &
+            sed -i "s~__installmode__~$INSTALLMODE~g" "$file" &
+            sed -i "s~__blueprintversion__~$VERSION~g" "$file" &
+            wait
+          fi
 
-      if [[ $SKIPAZPLACEHOLDERS != true ]]; then
-        sed -i "s~__version__~$version~g" "$f" &
-        sed -i "s~__author__~$author~g" "$f" &
-        sed -i "s~__identifier__~$identifier~g" "$f" &
-        sed -i "s~__name__~$name~g" "$f" &
-        sed -i "s~__path__~$FOLDER~g" "$f" &
-        sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/$identifier~g" "$f" &
-        sed -i "s~__installmode__~$INSTALLMODE~g" "$f" &
-        sed -i "s~__blueprintversion__~$VERSION~g" "$f" &
-      fi
+          log_bright "[INFO] Done placeholders in '$file'."
+        elif [ -d "$file" ]; then
+          PLACE_PLACEHOLDERS "$file"
+        fi
+      done
+    }
 
-      log_bright "[INFO] Done placeholders in '$f'."
-    done
+    PLACE_PLACEHOLDERS "$DIR"
   else log_bright "[INFO] Placeholders will be skipped due to the 'ignorePlaceholders' flag."; fi
 
   if [[ $name == "" ]]; then rm -R .blueprint/tmp/$n;                 quit_red "[FATAL] 'info_name' is a required configuration option.";fi
