@@ -445,7 +445,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     fi
 
     for f in $(find $DIR -type f -exec echo {} \;); do
-      f=$(sed "s~ ~\ ~~g" "$f")
+      f=$(echo -e "$f" 2> /dev/null | sed "s~ ~\ ~~g")
 
       sed -i "s~\^#version#\^~$version~g" "$f"
       sed -i "s~\^#author#\^~$author~g" "$f"
