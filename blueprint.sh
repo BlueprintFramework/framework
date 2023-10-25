@@ -522,26 +522,26 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Start creating data directory.
   log_bright "[INFO] Creating data directory.."
-  mkdir -p .blueprint/data/extensions/$identifier
-  mkdir -p .blueprint/data/extensions/$identifier/.store
+  mkdir -p ".blueprint/data/extensions/$identifier"
+  mkdir -p ".blueprint/data/extensions/$identifier/.store"
   
   log_bright "[INFO] Caching extension config inside of data directory.."
-  cp .blueprint/tmp/$n/conf.yml .blueprint/data/extensions/$identifier/.store/conf.yml; #backup conf.yml
+  cp ".blueprint/tmp/$n/conf.yml" ".blueprint/data/extensions/$identifier/.store/conf.yml"; #backup conf.yml
   
   if [[ $data_directory != "" ]]; then
     log_bright "[INFO] Placing private directory contents.."
-    cp -R .blueprint/tmp/$n/$data_directory/* .blueprint/data/extensions/$identifier/
+    cp -R ".blueprint/tmp/$n/$data_directory/*" ".blueprint/data/extensions/$identifier/"
   fi
   # End creating data directory.
 
-  mkdir -p public/assets/extensions/$identifier
+  mkdir -p "public/assets/extensions/$identifier"
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
     icnNUM=$(expr 1 + $RANDOM % 9)
-    cp .blueprint/assets/defaultExtensionLogo$icnNUM.jpg public/assets/extensions/$identifier/icon.jpg
+    cp ".blueprint/assets/defaultExtensionLogo$icnNUM.jpg" "public/assets/extensions/$identifier/icon.jpg"
   else
-    cp .blueprint/tmp/$n/$icon public/assets/extensions/$identifier/icon.jpg
+    cp ".blueprint/tmp/$n/$icon" "public/assets/extensions/$identifier/icon.jpg"
   fi;
   ICON="/assets/extensions/$identifier/icon.jpg"
   CONTENT=$(cat .blueprint/tmp/$n/$admin_view)
@@ -549,16 +549,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $admin_css != "" ]]; then
     log_bright "[INFO] Placing admin css.."
     updateCacheReminder
-    sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css
-    sed -i "s~/\* admin.css \*/~/\* admin.css \*/\n@import url(/assets/extensions/$identifier/admin.style.css);~g" public/themes/pterodactyl/css/pterodactyl.css
-    cp .blueprint/tmp/$n/$admin_css public/assets/extensions/$identifier/admin.style.css
+    sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" "public/themes/pterodactyl/css/pterodactyl.css"
+    sed -i "s~/\* admin.css \*/~/\* admin.css \*/\n@import url(/assets/extensions/$identifier/admin.style.css);~g" "public/themes/pterodactyl/css/pterodactyl.css"
+    cp ".blueprint/tmp/$n/$admin_css" "public/assets/extensions/$identifier/admin.style.css"
   fi
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Placing dashboard css.."
     YARN="y"
-    sed -i "s~@import url($identifier.css);~~g" resources/scripts/css/extensions.css
-    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url($identifier.css);~g" resources/scripts/css/extensions.css
-    cp .blueprint/tmp/$n/$dashboard_css resources/scripts/css/$identifier.css
+    sed -i "s~@import url($identifier.css);~~g" "resources/scripts/css/extensions.css"
+    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url($identifier.css);~g" "resources/scripts/css/extensions.css"
+    cp ".blueprint/tmp/$n/$dashboard_css" "resources/scripts/css/$identifier.css"
   fi
 
   if [[ $name == *"~"* ]]; then        log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi
@@ -569,36 +569,36 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $identifier == *"~"* ]]; then  log_yellow "[WARNING] 'identifier' contains '~' and may result in an error.";fi
 
   # Replace $name variables.
-  sed -i "s~␀title␀~$name~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
-  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
-  sed -i "s~␀name␀~$name~g" .blueprint/data/internal/build/extensions/button.blade.php.bak
+  sed -i "s~␀title␀~$name~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+  sed -i "s~␀name␀~$name~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+  sed -i "s~␀name␀~$name~g" ".blueprint/data/internal/build/extensions/button.blade.php.bak"
 
   # Replace $description variables.
-  sed -i "s~␀description␀~$description~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
+  sed -i "s~␀description␀~$description~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
 
   # Replace $version variables.
-  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
-  sed -i "s~␀version␀~$version~g" .blueprint/data/internal/build/extensions/button.blade.php.bak
+  sed -i "s~␀version␀~$version~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+  sed -i "s~␀version␀~$version~g" ".blueprint/data/internal/build/extensions/button.blade.php.bak"
 
   # Replace $ICON variables.
-  sed -i "s~␀icon␀~$ICON~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
+  sed -i "s~␀icon␀~$ICON~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
 
   # Replace $website variables.
   if [[ $website != "" ]]; then
-    sed -i "s~␀website␀~$website~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
-    sed -i "s~<!--websitecomment␀ ~~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
-    sed -i "s~ ␀websitecomment-->~~g" .blueprint/data/internal/build/extensions/admin.blade.php.bak
+    sed -i "s~␀website␀~$website~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+    sed -i "s~<!--websitecomment␀ ~~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+    sed -i "s~ ␀websitecomment-->~~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
   fi
 
   # Replace $identifier variables.
   if [[ $admin_controller == "" ]]; then
-    sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/controller.php.bak
+    sed -i "s~␀id␀~$identifier~g" ".blueprint/data/internal/build/extensions/controller.php.bak"
   fi
-  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/route.php.bak
-  sed -i "s~␀id␀~$identifier~g" .blueprint/data/internal/build/extensions/button.blade.php.bak
+  sed -i "s~␀id␀~$identifier~g" ".blueprint/data/internal/build/extensions/route.php.bak"
+  sed -i "s~␀id␀~$identifier~g" ".blueprint/data/internal/build/extensions/button.blade.php.bak"
 
   # Place extension admin view content into template.
-  echo -e "$CONTENT\n@endsection" >> .blueprint/data/internal/build/extensions/admin.blade.php.bak
+  echo -e "$CONTENT\n@endsection" >> ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
 
 
   # Read final results.
@@ -608,23 +608,23 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $admin_controller == "" ]]; then
     ADMINCONTROLLER_RESULT=$(<.blueprint/data/internal/build/extensions/controller.php.bak)
   fi
-  ADMINCONTROLLER_NAME=$identifier"ExtensionController.php"
+  ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
 
   # Place admin extension view.
-  mkdir -p resources/views/admin/extensions/$identifier
-  touch resources/views/admin/extensions/$identifier/index.blade.php
-  echo $ADMINVIEW_RESULT > resources/views/admin/extensions/$identifier/index.blade.php
+  mkdir -p "resources/views/admin/extensions/$identifier"
+  touch "resources/views/admin/extensions/$identifier/index.blade.php"
+  echo $ADMINVIEW_RESULT > "resources/views/admin/extensions/$identifier/index.blade.php"
 
   # Place admin extension view controller.
-  mkdir -p app/Http/Controllers/Admin/Extensions/$identifier
-  touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME
+  mkdir -p "app/Http/Controllers/Admin/Extensions/$identifier"
+  touch "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   if [[ $admin_controller == "" ]]; then
     # Use custom view controller.
-    touch app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME
-    echo $ADMINCONTROLLER_RESULT > app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME
+    touch "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
+    echo $ADMINCONTROLLER_RESULT > "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   else
     # Use default extension controller.
-    cp .blueprint/tmp/$n/$admin_controller app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME
+    cp .blueprint/tmp/$n/$admin_controller "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
