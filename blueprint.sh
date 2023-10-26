@@ -344,7 +344,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Get all strings from the conf.yml file and make them accessible as variables.
   if [[ ! -f ".blueprint/tmp/$n/conf.yml" ]]; then 
     # Quit if the extension doesn't have a conf.yml file.
-    rm -R .blueprint/tmp/$n
+    rm -R ".blueprint/tmp/$n"
     quit_red "[FATAL] Could not find a conf.yml file."
   fi
   eval $(parse_yaml .blueprint/tmp/$n/conf.yml conf_)
@@ -381,20 +381,20 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
      [[ ( $data_directory      == "/"* ) || ( $data_directory      == "."* ) || ( $data_directory      == *"\n"* ) ]] ||
      [[ ( $data_public         == "/"* ) || ( $data_public         == "."* ) || ( $data_public         == *"\n"* ) ]] ||
      [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) || ( $database_migrations == *"\n"* ) ]]; then
-    rm -R .blueprint/tmp/$n
+    rm -R ".blueprint/tmp/$n"
     quit_red "[FATAL] File paths in conf.yml should not start with a slash, dot or have a linebreak."
   fi
 
   # prevent potentional problems during installation due to wrongly defined folders
   if [[ ( $data_directory == *"/" ) || ( $data_public == *"/" ) || ( $database_migrations == *"/" ) ]]; then
-    rm -R .blueprint/tmp/$n
+    rm -R ".blueprint/tmp/$n"
     quit_red "[FATAL] Folder paths in conf.yml should not end with a slash."
   fi
 
   # check if extension still has placeholder values
   if [[ ( $name    == "␀name␀" ) || ( $identifier == "␀identifier␀" ) || ( $description == "␀description␀" ) ]] ||
      [[ ( $version == "␀ver␀"  ) || ( $target     == "␀version␀"    ) || ( $author      == "␀author␀"      ) ]]; then
-    rm -R .blueprint/tmp/$n
+    rm -R ".blueprint/tmp/$n"
     quit_red "[FATAL] Some conf.yml options should be replaced automatically by Blueprint when using \"-init\", but that did not happen. Please verify you have the correct information in your conf.yml and then try again."
   fi
 
@@ -405,7 +405,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     DUPLICATE="y"
 
     if [[ ! -f ".blueprint/data/extensions/$identifier/.store/build/button.blade.php" ]]; then
-      rm -R .blueprint/tmp/$n
+      rm -R ".blueprint/tmp/$n"
       quit_red "[FATAL] Upgrading extension has failed due to missing essential .store files."
     fi
 
@@ -481,44 +481,44 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     PLACE_PLACEHOLDERS "$DIR"
   else log_bright "[INFO] Placeholders will be skipped due to the 'ignorePlaceholders' flag."; fi
 
-  if [[ $name == "" ]]; then rm -R .blueprint/tmp/$n;                 quit_red "[FATAL] 'info_name' is a required configuration option.";fi
-  if [[ $identifier == "" ]]; then rm -R .blueprint/tmp/$n;           quit_red "[FATAL] 'info_identifier' is a required configuration option.";fi
-  if [[ $description == "" ]]; then rm -R .blueprint/tmp/$n;          quit_red "[FATAL] 'info_description' is a required configuration option.";fi
-  if [[ $version == "" ]]; then rm -R .blueprint/tmp/$n;              quit_red "[FATAL] 'info_version' is a required configuration option.";fi
-  if [[ $target == "" ]]; then rm -R .blueprint/tmp/$n;               quit_red "[FATAL] 'info_target' is a required configuration option.";fi
+  if [[ $name == "" ]]; then rm -R ".blueprint/tmp/$n";               quit_red "[FATAL] 'info_name' is a required configuration option.";fi
+  if [[ $identifier == "" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] 'info_identifier' is a required configuration option.";fi
+  if [[ $description == "" ]]; then rm -R ".blueprint/tmp/$n";        quit_red "[FATAL] 'info_description' is a required configuration option.";fi
+  if [[ $version == "" ]]; then rm -R ".blueprint/tmp/$n";            quit_red "[FATAL] 'info_version' is a required configuration option.";fi
+  if [[ $target == "" ]]; then rm -R ".blueprint/tmp/$n";             quit_red "[FATAL] 'info_target' is a required configuration option.";fi
 
-  if [[ $icon == "" ]]; then                                        log_yellow "[WARNING] This extension does not come with an icon, consider adding one.";fi
-  if [[ $admin_controller == "" ]]; then                            log_bright "[INFO] Admin controller field left blank, using default controller instead.."
+  if [[ $icon == "" ]]; then                                      log_yellow "[WARNING] This extension does not come with an icon, consider adding one.";fi
+  if [[ $admin_controller == "" ]]; then                             log_bright "[INFO] Admin controller field left blank, using default controller instead.."
     controller_type="default";else controller_type="custom";fi
-  if [[ $admin_view == "" ]]; then rm -R .blueprint/tmp/$n;           quit_red "[FATAL] 'admin_view' is a required configuration option.";fi
-  if [[ $target != $VERSION ]]; then                                log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi
-  if [[ $identifier != $n ]]; then rm -R .blueprint/tmp/$n;           quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi
-  if [[ $identifier == "blueprint" ]]; then rm -R .blueprint/tmp/$n;  quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi
+  if [[ $admin_view == "" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] 'admin_view' is a required configuration option.";fi
+  if [[ $target != $VERSION ]]; then                              log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi
+  if [[ $identifier != $n ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi
+  if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi
 
-  if [[ $identifier =~ [a-z] ]]; then                               log_bright "[INFO] Identifier a-z checks passed."
-  else rm -R .blueprint/tmp/$n;                                       quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi
+  if [[ $identifier =~ [a-z] ]]; then                                log_bright "[INFO] Identifier a-z checks passed."
+  else rm -R ".blueprint/tmp/$n";                                      quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi
   if [[ ( ! -f ".blueprint/tmp/$n/$icon" ) && ( $icon != "" ) ]]; then
-    rm -R .blueprint/tmp/$n;                                          quit_red "[FATAL] The 'info_icon' path points to a file that does not exist."
+    rm -R ".blueprint/tmp/$n";                                         quit_red "[FATAL] The 'info_icon' path points to a file that does not exist."
   fi
 
   if [[ $database_migrations != "" ]]; then
     log_bright "[INFO] Placing database migrations.."
-    cp -R .blueprint/tmp/$n/$database_migrations/* database/migrations/ 2> /dev/null
+    cp -R ".blueprint/tmp/$n/$database_migrations/*" "database/migrations/" 2> /dev/null
   fi
 
   if [[ $data_public != "" ]]; then
     log_bright "[INFO] Creating public directory.."
-    mkdir -p public/extensions/$identifier
+    mkdir -p "public/extensions/$identifier"
     log_bright "[INFO] Placing public directory contents.."
-    cp -R .blueprint/tmp/$n/$data_public/* public/extensions/$identifier/ 2> /dev/null
+    cp -R ".blueprint/tmp/$n/$data_public/*" "public/extensions/$identifier/" 2> /dev/null
   fi
 
-  cp .blueprint/data/internal/build/extensions/admin.blade.php .blueprint/data/internal/build/extensions/admin.blade.php.bak 2> /dev/null
+  cp ".blueprint/data/internal/build/extensions/admin.blade.php" ".blueprint/data/internal/build/extensions/admin.blade.php.bak" 2> /dev/null
   if [[ $admin_controller == "" ]]; then # use default controller when admin_controller is left blank
-    cp .blueprint/data/internal/build/extensions/controller.php .blueprint/data/internal/build/extensions/controller.php.bak 2> /dev/null
+    cp ".blueprint/data/internal/build/extensions/controller.php" ".blueprint/data/internal/build/extensions/controller.php.bak" 2> /dev/null
   fi
-  cp .blueprint/data/internal/build/extensions/route.php .blueprint/data/internal/build/extensions/route.php.bak 2> /dev/null
-  cp .blueprint/data/internal/build/extensions/button.blade.php .blueprint/data/internal/build/extensions/button.blade.php.bak 2> /dev/null
+  cp ".blueprint/data/internal/build/extensions/route.php" ".blueprint/data/internal/build/extensions/route.php.bak" 2> /dev/null
+  cp ".blueprint/data/internal/build/extensions/button.blade.php" ".blueprint/data/internal/build/extensions/button.blade.php.bak" 2> /dev/null
 
   # Start creating data directory.
   log_bright "[INFO] Creating data directory.."
