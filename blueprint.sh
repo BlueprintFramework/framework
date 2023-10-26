@@ -496,9 +496,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi
 
   if [[ $identifier =~ [a-z] ]]; then                                log_bright "[INFO] Identifier a-z checks passed."
-  else rm -R ".blueprint/tmp/$n";                                      quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi
+  else rm -R ".blueprint/tmp/$n";                                     quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi
   if [[ ( ! -f ".blueprint/tmp/$n/$icon" ) && ( $icon != "" ) ]]; then
-    rm -R ".blueprint/tmp/$n";                                         quit_red "[FATAL] The 'info_icon' path points to a file that does not exist."
+    rm -R ".blueprint/tmp/$n";                                        quit_red "[FATAL] The 'info_icon' path points to a file that does not exist."
   fi
 
   if [[ $database_migrations != "" ]]; then
