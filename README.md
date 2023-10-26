@@ -81,7 +81,8 @@ We've made some guides and documentation for extension development over on [GitB
 [ahwxorg](https://github.com/ahwxorg) - contributor\
 [alipoyrazaydin](https://github.com/alipoyrazaydin) - contributor\
 [sp11rum](https://github.com/sp11rum) - contributor\
-[phedona](https://github.com/Phedona) - contributor
+[phedona](https://github.com/Phedona) - contributor\
+[codixer](https://github.com/Codixer) - contributor
 
 <br/>
 
