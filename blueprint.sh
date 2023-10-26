@@ -632,62 +632,62 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     { echo "
     // $identifier:start";
     echo $ADMINROUTE_RESULT;
-    echo // $identifier:stop; } >> routes/admin.php
+    echo // $identifier:stop; } >> "routes/admin.php"
   else
     # Replace old extensions page button if extension is updating.
     OLDBUTTON_RESULT=$(<.blueprint/data/extensions/$identifier/.store/build/button.blade.php)
-    sed -i "s~$OLDBUTTON_RESULT~~g" resources/views/admin/extensions.blade.php
+    sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
   fi
-  sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" resources/views/admin/extensions.blade.php
+  sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" "resources/views/admin/extensions.blade.php"
 
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
     log_bright "[INFO] Placing dashboard wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
-      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php
-      sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/templates/wrapper.blade.php
-      sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/templates/wrapper.blade.php
+      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
+      sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/templates/wrapper.blade.php"
+      sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/templates/wrapper.blade.php"
     fi
-    touch .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK
-    cat <(echo "<!--␀$identifier:start␀-->") .blueprint/tmp/$n/$dashboard_wrapper > .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK
-    cp .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK .blueprint/tmp/$n/$dashboard_wrapper
-    rm .blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK
-    echo -e "\n<!--␀$identifier:stop␀-->" >> .blueprint/tmp/$n/$dashboard_wrapper
-    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" resources/views/templates/wrapper.blade.php
+    touch ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
+    cat <(echo "<!--␀$identifier:start␀-->") ".blueprint/tmp/$n/$dashboard_wrapper" > ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
+    cp ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$dashboard_wrapper"
+    rm ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
+    echo -e "\n<!--␀$identifier:stop␀-->" >> ".blueprint/tmp/$n/$dashboard_wrapper"
+    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" "resources/views/templates/wrapper.blade.php"
   fi
 
   # Place admin wrapper
   if [[ $admin_wrapper != "" ]]; then
     log_bright "[INFO] Placing admin wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
-      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/layouts/admin.blade.php
-      sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/layouts/admin.blade.php
-      sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/layouts/admin.blade.php
+      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
+      sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/layouts/admin.blade.php"
+      sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/layouts/admin.blade.php"
     fi
-    touch .blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK
-    cat <(echo "<!--␀$identifier:start␀-->") .blueprint/tmp/$n/$admin_wrapper > .blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK
-    cp .blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK .blueprint/tmp/$n/$admin_wrapper
-    rm .blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK
-    echo -e "\n<!--␀$identifier:stop␀-->" >> .blueprint/tmp/$n/$admin_wrapper
-    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" resources/views/layouts/admin.blade.php
+    touch ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
+    cat <(echo "<!--␀$identifier:start␀-->") ".blueprint/tmp/$n/$admin_wrapper" > ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
+    cp ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$admin_wrapper"
+    rm ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
+    echo -e "\n<!--␀$identifier:stop␀-->" >> ".blueprint/tmp/$n/$admin_wrapper"
+    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" "resources/views/layouts/admin.blade.php"
   fi
 
   # Create backup of generated values.
   log_bright "[INFO] Backing up (some) build files.."
-  mkdir -p .blueprint/data/extensions/$identifier/.store/build
-  cp .blueprint/data/internal/build/extensions/button.blade.php.bak .blueprint/data/extensions/$identifier/.store/build/button.blade.php
-  cp .blueprint/data/internal/build/extensions/route.php.bak .blueprint/data/extensions/$identifier/.store/build/route.php
+  mkdir -p ".blueprint/data/extensions/$identifier/.store/build"
+  cp ".blueprint/data/internal/build/extensions/button.blade.php.bak" ".blueprint/data/extensions/$identifier/.store/build/button.blade.php"
+  cp ".blueprint/data/internal/build/extensions/route.php.bak" ".blueprint/data/extensions/$identifier/.store/build/route.php"
 
   # Remove temporary built files.
   log_bright "[INFO] Cleaning up temporary built files.."
-  rm .blueprint/data/internal/build/extensions/admin.blade.php.bak
+  rm ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
   if [[ $admin_controller == "" ]]; then
-    rm .blueprint/data/internal/build/extensions/controller.php.bak
+    rm ".blueprint/data/internal/build/extensions/controller.php.bak"
   fi
-  rm .blueprint/data/internal/build/extensions/route.php.bak
-  rm .blueprint/data/internal/build/extensions/button.blade.php.bak
+  rm ".blueprint/data/internal/build/extensions/route.php.bak"
+  rm ".blueprint/data/internal/build/extensions/button.blade.php.bak"
   log_bright "[INFO] Cleaning up temp files.."
-  rm -R .blueprint/tmp/$n
+  rm -R ".blueprint/tmp/$n"
 
   if [[ $database_migrations != "" ]]; then
     log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
@@ -708,15 +708,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   log_bright "[INFO] Updating route cache to include recent changes.."
   php artisan route:cache &> /dev/null
 
-  chown -R www-data:www-data $FOLDER/.blueprint/data/extensions/$identifier
-  chmod --silent -R +x .blueprint/data/extensions/* 2> /dev/null
+  chown -R www-data:www-data "$FOLDER/.blueprint/data/extensions/$identifier"
+  chmod --silent -R +x ".blueprint/data/extensions/*" 2> /dev/null
 
   if [[ ( ( $flags != *"developerIgnoreInstallScript,"* ) && ( $flags != *"developerIgnoreInstallScript" ) ) || ( $dev != true ) ]]; then
     if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
       log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
-      chmod +x .blueprint/data/extensions/$identifier/install.sh
+      chmod +x ".blueprint/data/extensions/$identifier/install.sh"
       # Run script while also parsing some useful variable for the install script to use.
-      BLUEPRINT_DEVELOPER="$dev" BLUEPRINT_VERSION="$VERSION" bash .blueprint/data/extensions/$identifier/install.sh
+      BLUEPRINT_DEVELOPER="$dev" BLUEPRINT_VERSION="$VERSION" bash ".blueprint/data/extensions/$identifier/install.sh"
       echo -e "\e[0m\x1b[0m\033[0m"
     fi
   else
@@ -724,7 +724,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
-    echo $identifier"," >> .blueprint/data/internal/db/installed_extensions
+    echo "${identifier}," >> ".blueprint/data/internal/db/installed_extensions"
     log_bright "[INFO] Added '$identifier' to the list of installed extensions."
   fi
 
