@@ -743,12 +743,12 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi
   
   # Check if the extension is installed.
-  if [[ $(cat .blueprint/data/internal/db/installed_extensions) != *"$identifier,"* ]]; then
+  if [[ $(cat ".blueprint/data/internal/db/installed_extensions") != *"$identifier,"* ]]; then
     quit_red "[FATAL] '$3' is not installed."
   fi
 
   if [[ -f ".blueprint/data/extensions/$3/.store/conf.yml" ]]; then 
-    eval $(parse_yaml .blueprint/data/extensions/$3/.store/conf.yml conf_)
+    eval $(parse_yaml ".blueprint/data/extensions/$3/.store/conf.yml" conf_)
     # Add aliases for config values to make working with them easier.
     name="$conf_info_name";    
     identifier="$conf_info_identifier"
@@ -785,67 +785,67 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove admin button 
   log_bright "[INFO] Removing admin button.."
-  OLDBUTTON_RESULT=$(cat .blueprint/data/extensions/$identifier/.store/build/button.blade.php)
-  sed -i "s~$OLDBUTTON_RESULT~~g" resources/views/admin/extensions.blade.php
+  OLDBUTTON_RESULT=$(cat ".blueprint/data/extensions/$identifier/.store/build/button.blade.php")
+  sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
 
   # Remove admin routes
   log_bright "[INFO] Removing admin routes.."
-  sed -n -i "/\/\/ $identifier:start/{p; :a; N; /\/\/ $identifier:stop/!ba; s/.*\n//}; p" routes/admin.php
-  sed -i "s~// $identifier:start~~g" routes/admin.php
-  sed -i "s~// $identifier:stop~~g" routes/admin.php
+  sed -n -i "/\/\/ $identifier:start/{p; :a; N; /\/\/ $identifier:stop/!ba; s/.*\n//}; p" "routes/admin.php"
+  sed -i "s~// $identifier:start~~g" "routes/admin.php"
+  sed -i "s~// $identifier:stop~~g" "routes/admin.php"
   
   # Remove admin view
   log_bright "[INFO] Removing admin view.."
-  rm -R resources/views/admin/extensions/$identifier
+  rm -R "resources/views/admin/extensions/$identifier"
 
   # Remove admin controller
   log_bright "[INFO] Removing admin controller.."
-  rm -R app/Http/Controllers/Admin/Extensions/$identifier
+  rm -R "app/Http/Controllers/Admin/Extensions/$identifier"
 
   # Remove admin css
   if [[ $admin_css != "" ]]; then
     log_bright "[INFO] Removing admin css.."
     updateCacheReminder
-    sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css
-    sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" public/themes/pterodactyl/css/pterodactyl.css; #this removes changes made in older versions of blueprint
+    sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" "public/themes/pterodactyl/css/pterodactyl.css"
+    sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" "public/themes/pterodactyl/css/pterodactyl.css"; #this removes changes made in older versions of blueprint
   fi
 
   # Remove admin wrapper
   if [[ $admin_wrapper != "" ]]; then 
     log_bright "[INFO] Removing admin wrapper.."
-    sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/layouts/admin.blade.php
-    sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/layouts/admin.blade.php
-    sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/layouts/admin.blade.php
+    sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
+    sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/layouts/admin.blade.php"
+    sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/layouts/admin.blade.php"
   fi
 
   # Remove dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then 
     log_bright "[INFO] Removing dashboard wrapper.."
-    sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" resources/views/templates/wrapper.blade.php
-    sed -i "s~<!--␀$identifier:start␀-->~~g" resources/views/templates/wrapper.blade.php
-    sed -i "s~<!--␀$identifier:stop␀-->~~g" resources/views/templates/wrapper.blade.php
+    sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
+    sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/templates/wrapper.blade.php"
+    sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/templates/wrapper.blade.php"
   fi
 
   # Remove dashboard css
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Removing dashboard css.."
-    sed -i "s~@import url($identifier.css);~~g" resources/scripts/css/extensions.css
+    sed -i "s~@import url($identifier.css);~~g" "resources/scripts/css/extensions.css"
     YARN="y"
   fi
 
   # Remove public folder
   if [[ $data_public != "" ]]; then 
     log_bright "[INFO] Removing public folder.."
-    rm -R public/extensions/$identifier
+    rm -R "public/extensions/$identifier"
   fi
 
   # Remove assets folder
   log_bright "[INFO] Removing assets.."
-  rm -R public/assets/extensions/$identifier
+  rm -R "public/assets/extensions/$identifier"
 
   # Remove data folder
   log_bright "[INFO] Removing data folder.."
-  rm -R .blueprint/data/extensions/$identifier
+  rm -R ".blueprint/data/extensions/$identifier"
 
   # Rebuild panel
   if [[ $YARN == "y" ]]; then
@@ -858,7 +858,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   
   # Remove from installed list
   log_bright "[INFO] Removing extension from installed extensions list.."
-  sed -i "s~$identifier,~~g" .blueprint/data/internal/db/installed_extensions
+  sed -i "s~$identifier,~~g" ".blueprint/data/internal/db/installed_extensions"
 
   sendTelemetry "FINISH_EXTENSION_REMOVAL" > /dev/null
 
