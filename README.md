@@ -34,9 +34,13 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 **Installation:**
 1. Blueprint doesn't mix well with other modifications, so if you already have any, [perform a panel update](https://pterodactyl.io/panel/1.0/updating.html) before moving on with this guide.
 2. Navigate to your Pterodactyl folder. (most likely `/var/www/pterodactyl`)
-3. Install NodeJS, NPM and Yarn using the following script. This assumes you are running Pterodactyl on Ubuntu or Debian-based systems.
+3. Install NodeJS, NPM and Yarn using the following commands. This assumes you are running Pterodactyl on Ubuntu or Debian-based systems.
 ```sh
-curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y ca-certificates curl gnupg
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+apt-get update
 apt-get install -y nodejs
 npm i -g yarn
 yarn
