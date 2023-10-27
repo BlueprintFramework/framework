@@ -66,7 +66,7 @@ We've made some guides and documentation for extension development over on [GitB
 <br/>
 
 ## Extensions
-> **Information**
+> **Note**
 > [Open an issue](https://github.com/teamblueprint/main/issues) on GitHub to get your extension listed here. To install an extension, upload your `something.blueprint` file to your Pterodactyl folder and run `blueprint -install something`.
 
 <br/>
