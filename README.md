@@ -34,6 +34,9 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 **Installation:**
 > **Important**
 > Blueprint doesn't mix well with other modifications, so if you already have any, [perform a panel update](https://pterodactyl.io/panel/1.0/updating.html) before moving on with this guide.
+
+<br/>
+
 1. Navigate to your Pterodactyl folder. (most likely `/var/www/pterodactyl`)
 2. Install NodeJS, NPM and Yarn using the following commands. This assumes you are running Pterodactyl on Ubuntu or Debian-based systems.
 ```sh
@@ -65,6 +68,8 @@ We've made some guides and documentation for extension development over on [GitB
 ## Extensions
 > **Information**
 > [Open an issue](https://github.com/teamblueprint/main/issues) on GitHub to get your extension listed here. To install an extension, upload your `something.blueprint` file to your Pterodactyl folder and run `blueprint -install something`.
+
+<br/>
 
 **Announcements**: [PterodactylMarket](https://pterodactylmarket.com/resource/679), [sourceXchange](https://www.sourcexchange.net/products/announcements), [BuiltByBit](https://builtbybit.com/resources/announcements-for-blueprint.32546/)\
 **Arc.io Integration**: [BuiltByBit](https://builtbybit.com/resources/pterodactyl-v1-addon-arc-integration.32109/)\
