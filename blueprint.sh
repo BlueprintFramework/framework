@@ -877,8 +877,8 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ||
     help_dev_secondary="\e[34m"
   else 
     help_dev_status=" (disabled)"
-    help_dev_primary="\x1b[37;1m"
-    help_dev_secondary="\x1b[37;1m"
+    help_dev_primary="\x1b[2;1m"
+    help_dev_secondary="\x1b[2m"
   fi
 
   echo -e "
