@@ -1144,15 +1144,25 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
 
-  sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" > /dev/null
-
   if [[ $3 == "expose"* ]]; then 
     log_bright "[INFO] Generating download url.."
     cp ${identifier}.blueprint public/assets/extensions/blueprint/exports/${identifier}.blueprint
-    log_green "[SUCCESS] Your extension has been exported, you can find your extension in your Pterodactyl folder or on '/assets/extensions/blueprint/exports/${identifier}.blueprint' (expires in 30 seconds)."
-    eval $(sleep 30 && rm public/assets/extensions/blueprint/exports/${identifier}.blueprint) &
+    getPanelURL() {
+      source ${FOLDER}/.env
+      echo $APP_URL
+    }
+    log_bright "[INFO] Download url will expire after 2 minutes."
+
+    sendTelemetry "EXPOSE_DEVELOPMENT_EXTENSION" > /dev/null
+    log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
+    log_green "  - $(getPanelURL)/assets/extensions/blueprint/exports/${identifier}.blueprint"
+    log_green "  - ${FOLDER}/${identifier}.blueprint"
+
+    eval $(sleep 120 && rm public/assets/extensions/blueprint/exports/${identifier}.blueprint) &
   else
-    log_green "[SUCCESS] Your extension has been exported, you can find your extension in your Pterodactyl folder."
+    sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" > /dev/null
+    log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
+    log_green "  - ${FOLDER}/${identifier}.blueprint"
   fi
 fi
 
