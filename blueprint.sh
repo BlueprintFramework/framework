@@ -59,24 +59,25 @@ elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
 fi
 
 # Fix for Blueprint's bash database/telemetry/admincachereminder to work with Docker and custom folder installations.
-sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/db.sh
-sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/telemetry.sh
-sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/updateAdminCacheReminder.sh
+# sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/db.sh
+# sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/telemetry.sh
+# sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/updateAdminCacheReminder.sh
+
+# Write environment variables.
+export BLUEPRINT__FOLDER=$FOLDER
+export BLUEPRINT__VERSION=$VERSION
 
 # Automatically navigate to the Pterodactyl directory when running the core.
 cd $FOLDER 
 
 # Import libraries.
-source .blueprint/lib/bash_colors.sh
-source .blueprint/lib/parse_yaml.sh
-source .blueprint/lib/db.sh
-source .blueprint/lib/telemetry.sh
-source .blueprint/lib/updateAdminCacheReminder.sh
+source .blueprint/lib/*
 if [[ ! -f ".blueprint/lib/bash_colors.sh" ]]; then              LIB__bash_colors="missing";              fi
 if [[ ! -f ".blueprint/lib/parse_yaml.sh" ]]; then               LIB__parse_yaml="missing";               fi
 if [[ ! -f ".blueprint/lib/db.sh" ]]; then                       LIB__db="missing";                       fi
 if [[ ! -f ".blueprint/lib/telemetry.sh" ]]; then                LIB__telemetry="missing";                fi
 if [[ ! -f ".blueprint/lib/updateAdminCacheReminder.sh" ]]; then LIB__updateAdminCacheReminder="missing"; fi
+if [[ ! -f ".blueprint/lib/grabenv.sh" ]];                  then LIB__grabEnv="missing";                  fi
 
 # Fallback to these functions if "bash_colors.sh" is missing
 if [[ $LIB__bash_colors == "missing" ]]; then
@@ -144,7 +145,6 @@ depend() {
   nodeVer=$(node -v)
   if [[ $nodeVer != "v17."* ]] && [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then DEPEND_MISSING=true; fi
 
-
   # Check for required dependencies.
   if ! [ -x "$(command -v unzip)"                 ]; then DEPEND_MISSING=true; fi
   if ! [ -x "$(command -v node)"                  ]; then DEPEND_MISSING=true; fi
@@ -164,12 +164,13 @@ depend() {
   if [[ $LIB__db                       ]]; then DEPEND_MISSING=true; fi
   if [[ $LIB__telemetry                ]]; then DEPEND_MISSING=true; fi
   if [[ $LIB__updateAdminCacheReminder ]]; then DEPEND_MISSING=true; fi
+  if [[ $LIB__grabEnv                  ]]; then DEPEND_MISSING=true; fi
 
   # Exit when missing dependencies.
   if [[ $DEPEND_MISSING == true ]]; then 
     log_red "[FATAL] Blueprint found errors for the following dependencies:"
 
-    if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($nodeVer) is an unsupported version."; fi
+    if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($(node -v)) is an unsupported version."; fi
 
     if ! [ -x "$(command -v unzip)"             ]; then log_red "  - \"unzip\" is not installed or detected.";     fi
     if ! [ -x "$(command -v node)"              ]; then log_red "  - \"node\" is not installed or detected.";      fi
@@ -188,6 +189,7 @@ depend() {
     if [[ $LIB__db                       ]]; then log_red "  - \"internal:db\" is not installed or detected.";                       fi
     if [[ $LIB__telemetry                ]]; then log_red "  - \"internal:telemetry\" is not installed or detected.";                fi
     if [[ $LIB__updateAdminCacheReminder ]]; then log_red "  - \"internal:updateAdminCacheReminder\" is not installed or detected."; fi
+    if [[ $LIB__grabEnv                  ]]; then log_red "  - \"internal:grabEnv\" is not installed or detected.";                  fi
 
     exit 1
   fi

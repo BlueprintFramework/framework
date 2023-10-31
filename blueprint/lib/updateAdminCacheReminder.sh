@@ -1,7 +1,7 @@
 #!/bin/bash
 
 updateCacheReminder() {
-  cd &bp.folder&
+  cd $BLUEPRINT__FOLDER
   # Overwrite previous adminCacheReminderHider with the default one.
   oldClassName=$(cat .blueprint/data/internal/db/randomclassname);
   newClassName=$RANDOM;
