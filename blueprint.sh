@@ -417,13 +417,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     fi
   fi
 
-  #  Force http/https url scheme for extension website urls.
-  #  if [[ $website != "" ]]; then
-  #    if [[ ( $website != "https://"* ) && ( $website != "http://"* ) ]]; then
-  #      website="http://$info_website"
-  #      info_website=$website
-  #    fi
-  #  fi
+  # Force http/https url scheme for extension website urls.
+  if [[ $website != "" ]]; then
+    if [[ ( $website != "https://"* ) && ( $website != "http://"* ) ]]; then
+      website="http://$conf_info_website"
+      conf_info_website=$website
+    fi
+  fi
 
   if [[ $dev == true ]]; then
     mv .blueprint/tmp/$n .blueprint/tmp/$identifier
