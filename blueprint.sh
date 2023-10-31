@@ -309,32 +309,32 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $3 == "test␀" ]]; then
     dev=true
     n="dev"
-    mkdir -p .blueprint/tmp/dev
-    cp -R .blueprint/dev/* .blueprint/tmp/dev/
+    mkdir -p ".blueprint/tmp/dev"
+    cp -R ".blueprint/dev/"* ".blueprint/tmp/dev/"
   else
     dev=false
-    n=$3
-    FILE=$n".blueprint"
+    n="$3"
+    FILE="${n}.blueprint"
     if [[ ( $FILE == *".blueprint.blueprint" ) && ( $n == *".blueprint" ) ]]; then quit_red "[FATAL] Argument one in '-install' must not end with '.blueprint'."; fi
     if [[ ! -f "$FILE" ]]; then quit_red "[FATAL] $FILE could not be found.";fi
 
-    ZIP=$n".zip"
-    cp $FILE .blueprint/tmp/$ZIP
-    cd .blueprint/tmp
-    unzip -o -qq $ZIP
-    rm $ZIP
+    ZIP="${n}.zip"
+    cp "$FILE" ".blueprint/tmp/$ZIP"
+    cd ".blueprint/tmp"
+    unzip -o -qq "$ZIP"
+    rm "$ZIP"
     if [[ ! -f "$n/*" ]]; then
-      cd ..
-      rm -R tmp
-      mkdir -p tmp
-      cd tmp
+      cd ".."
+      rm -R "tmp"
+      mkdir -p "tmp"
+      cd "tmp"
 
-      mkdir -p ./$n
-      cp ../../$FILE ./$n/$ZIP
-      cd $n
-      unzip -o -qq $ZIP
-      rm $ZIP
-      cd ..
+      mkdir -p "./$n"
+      cp "../../$FILE" "./$n/$ZIP"
+      cd "$n"
+      unzip -o -qq "$ZIP"
+      rm "$ZIP"
+      cd ".."
     fi
   fi
 
@@ -413,7 +413,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     log_bright "[INFO] Cleaning up old extension files.."
     if [[ $old_data_public != "" ]]; then
       # Clean up old public folder.
-      rm -R public/extensions/$identifier/*
+      rm -R "public/extensions/$identifier/"*
     fi
   fi
 
@@ -426,7 +426,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   if [[ $dev == true ]]; then
-    mv .blueprint/tmp/$n .blueprint/tmp/$identifier
+    mv ".blueprint/tmp/$n" ".blueprint/tmp/$identifier"
     n=$identifier
   fi
 
@@ -503,14 +503,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $database_migrations != "" ]]; then
     log_bright "[INFO] Placing database migrations.."
-    cp -R ".blueprint/tmp/$n/$database_migrations/*" "database/migrations/" 2> /dev/null
+    cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2> /dev/null
   fi
 
   if [[ $data_public != "" ]]; then
     log_bright "[INFO] Creating public directory.."
     mkdir -p "public/extensions/$identifier"
     log_bright "[INFO] Placing public directory contents.."
-    cp -R ".blueprint/tmp/$n/$data_public/*" "public/extensions/$identifier/" 2> /dev/null
+    cp -R ".blueprint/tmp/$n/$data_public/"* "public/extensions/$identifier/" 2> /dev/null
   fi
 
   cp ".blueprint/data/internal/build/extensions/admin.blade.php" ".blueprint/data/internal/build/extensions/admin.blade.php.bak" 2> /dev/null
@@ -530,7 +530,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   
   if [[ $data_directory != "" ]]; then
     log_bright "[INFO] Placing private directory contents.."
-    cp -R ".blueprint/tmp/$n/$data_directory/*" ".blueprint/data/extensions/$identifier/"
+    cp -R ".blueprint/tmp/$n/$data_directory/"* ".blueprint/data/extensions/$identifier/"
   fi
   # End creating data directory.
 
@@ -709,7 +709,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   php artisan route:cache &> /dev/null
 
   chown -R www-data:www-data "$FOLDER/.blueprint/data/extensions/$identifier"
-  chmod --silent -R +x ".blueprint/data/extensions/*" 2> /dev/null
+  chmod --silent -R +x ".blueprint/data/extensions/"* 2> /dev/null
 
   if [[ ( ( $flags != *"developerIgnoreInstallScript,"* ) && ( $flags != *"developerIgnoreInstallScript" ) ) || ( $dev != true ) ]]; then
     if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
