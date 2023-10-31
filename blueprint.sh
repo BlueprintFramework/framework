@@ -891,7 +891,7 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ||
 ${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
   -init                -I  initialize development files
   -build               -b  install/update your development files
-  -export              -e  export your development files
+  -export (expose)     -e  export your development files
   -wipe                -w  remove your development files
   \x1b[0m
   
@@ -900,7 +900,7 @@ ${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
   \x1b[0m
   
 \x1b[34;1mAdvanced\x1b[0m\x1b[34m
-  -upgrade (dev)           update/reset to a newer (source) version
+  -upgrade (dev)           update/reset to a newer/development version
   -rerun-install           rerun the blueprint installation script
   \x1b[0m
   "
@@ -915,7 +915,7 @@ fi
 
 # -init
 if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
   # until you wipe the contents of the .blueprint/dev directory.
@@ -1112,7 +1112,7 @@ fi
 
 # -build
 if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
@@ -1126,7 +1126,7 @@ fi
 
 # -export
 if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
@@ -1146,13 +1146,20 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
 
   sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" > /dev/null
 
-  log_green "[SUCCESS] Your export has been finished, you can find your extension in your Pterodactyl folder."
+  if [[ $3 == "expose"* ]]; then 
+    log_bright "[INFO] Generating download url.."
+    cp ${identifier}.blueprint public/assets/extensions/blueprint/exports/${identifier}.blueprint
+    log_green "[SUCCESS] Your extension has been exported, you can find your extension in your Pterodactyl folder or on '/assets/extensions/blueprint/exports/${identifier}.blueprint' (expires in 30 seconds)."
+    eval $(sleep 30 && rm public/assets/extensions/blueprint/exports/${identifier}.blueprint) &
+  else
+    log_green "[SUCCESS] Your extension has been exported, you can find your extension in your Pterodactyl folder."
+  fi
 fi
 
 
 # -wipe
 if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled.";exit 1;fi
+  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
