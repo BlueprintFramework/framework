@@ -5,3 +5,7 @@
 
 cd "${BLUEPRINT__FOLDER}"
 
+grabPanelUrl() {
+  source ${BLUEPRINT__FOLDER}/.env
+  echo $APP_URL
+}

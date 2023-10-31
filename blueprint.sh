@@ -58,11 +58,6 @@ elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
   VERSION=$PM_VERSION
 fi
 
-# Fix for Blueprint's bash database/telemetry/admincachereminder to work with Docker and custom folder installations.
-# sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/db.sh
-# sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/telemetry.sh
-# sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/.blueprint/lib/updateAdminCacheReminder.sh
-
 # Write environment variables.
 export BLUEPRINT__FOLDER=$FOLDER
 export BLUEPRINT__VERSION=$VERSION
@@ -1154,15 +1149,11 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   if [[ $3 == "expose"* ]]; then 
     log_bright "[INFO] Generating download url.."
     cp ${identifier}.blueprint public/assets/extensions/blueprint/exports/${identifier}.blueprint
-    getPanelURL() {
-      source ${FOLDER}/.env
-      echo $APP_URL
-    }
     log_bright "[INFO] Download url will expire after 2 minutes."
 
     sendTelemetry "EXPOSE_DEVELOPMENT_EXTENSION" > /dev/null
     log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
-    log_green "  - $(getPanelURL)/assets/extensions/blueprint/exports/${identifier}.blueprint"
+    log_green "  - $(grabPanelUrl)/assets/extensions/blueprint/exports/${identifier}.blueprint"
     log_green "  - ${FOLDER}/${identifier}.blueprint"
 
     eval $(sleep 120 && rm public/assets/extensions/blueprint/exports/${identifier}.blueprint 2> /dev/null) &
