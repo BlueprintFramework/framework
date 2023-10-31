@@ -3,10 +3,7 @@
 # This script has been created as part of the Blueprint source code
 # and may be intergrated directly into the core in the future.
 
-FLDR=$BLUEPRINT__FOLDER
-
-# If Blueprint does not replace the variable, default to "/var/www/pterodactyl" as root folder.
-if [[ $FLDR == "&b""p.folder&/.blueprint/data/internal/db/database" ]]; then FLDR="/var/www/pterodactyl/.blueprint/data/internal/db/database"; fi;
+FLDR=$BLUEPRINT__FOLDER".blueprint/data/internal/db/database"
 
 dbAdd() {
     # dbAdd "database.record";
