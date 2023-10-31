@@ -420,7 +420,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Force http/https url scheme for extension website urls.
   if [[ $website != "" ]]; then
     if [[ ( $website != "https://"* ) && ( $website != "http://"* ) ]]; then
-      website="http://"$info_website
+      website="http://$info_website"
       info_website=$website
     fi
   fi
