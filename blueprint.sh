@@ -1158,7 +1158,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     log_green "  - $(grabPanelUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint"
     log_green "  - ${FOLDER}/${identifier}.blueprint"
 
-    eval $(sleep 120 && rm public/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint 2> /dev/null) &
+    eval $(sleep 120 && rm -R public/assets/extensions/blueprint/exports/${randstr} 2> /dev/null) &
   else
     sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" > /dev/null
     log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
