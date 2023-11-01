@@ -9,7 +9,7 @@ use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 
 class SyncCommand extends Command
 {
-  protected $description = 'Forward some database values to Blueprint.';
+  protected $description = 'Sync Blueprint database values.';
   protected $signature = 'bp:sync';
 
   /**
@@ -27,19 +27,16 @@ class SyncCommand extends Command
   public function handle()
   {
     // TELEMETRY ID
-    // initialize telemetry id
     if ($this->settings->get('blueprint::panel:id') == "" || $this->bp->version() != $this->settings->get('blueprint::version:cache')) {
       $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
       $this->settings->set('blueprint::version:cache', $this->bp->version());
     }
-    // set telemetry to true if empty
-    if ($this->settings->get('blueprint::telemetry') == "") {$this->settings->set('blueprint::telemetry', "true");}
-    // enable/disable telemetry if needed
-    if ($this->settings->get('blueprint::telemetry') == "false") { 
-      $this->bp->config('TELEMETRY_ID','KEY_NOT_UPDATED');
-    } else {
-      $this->bp->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id"));
-    }
+    
+    // TELEMETRY STATUS
+    if ($this->settings->get('blueprint::telemetry') == "") { $this->settings->set('blueprint::telemetry', "true"); }
+    if ($this->settings->get('blueprint::telemetry') == "false") { $this->bp->config('TELEMETRY_ID','KEY_NOT_UPDATED');
+    } else { $this->bp->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id")); }
+
 
     // DEVELOPER MODE
     $this->bp->config('DEVELOPER', $this->settings->get('blueprint::developer'));

@@ -4,6 +4,7 @@ namespace Pterodactyl\Http\Controllers\Admin\Extensions\Blueprint;
 
 use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
+use Artisan;
 use Prologue\Alerts\AlertsMessageBag;
 use Illuminate\Contracts\Console\Kernel;
 use Pterodactyl\Http\Controllers\Controller;

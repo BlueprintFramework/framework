@@ -14,11 +14,7 @@ class BlueprintTelemetryService
   }
 
   public function send($event) {
-    if ($this->settings->get('blueprint::telemetry') == "") { $this->settings->set('blueprint::telemetry', "true"); };
-    if ($this->settings->get('blueprint::telemetry') == "false") { 
-      $this->bp->config('TELEMETRY_ID','KEY_NOT_UPDATED');
-      return;
-    };
+    if ($this->settings->get('blueprint::telemetry') == "false") { return; };
 
     $curl = curl_init();
 

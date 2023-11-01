@@ -282,7 +282,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Sync some database values.
     log_bright "[INFO] Syncing database values.."
-    php artisan bp:sync &> /dev/null
+    php artisan bp:sync
 
     # Put application into production.
     log_bright "[INFO] Disable maintenance."
