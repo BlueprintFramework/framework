@@ -78,7 +78,7 @@ if [[ ! -f ".blueprint/lib/parse_yaml.sh" ]]; then               LIB__parse_yaml
 if [[ ! -f ".blueprint/lib/db.sh" ]]; then                       LIB__db="missing";                       fi
 if [[ ! -f ".blueprint/lib/telemetry.sh" ]]; then                LIB__telemetry="missing";                fi
 if [[ ! -f ".blueprint/lib/updateAdminCacheReminder.sh" ]]; then LIB__updateAdminCacheReminder="missing"; fi
-if [[ ! -f ".blueprint/lib/grabenv.sh" ]];                  then LIB__grabEnv="missing";                  fi
+if [[ ! -f ".blueprint/lib/grabenv.sh" ]]; then                  LIB__grabEnv="missing";                  fi
 
 # Fallback to these functions if "bash_colors.sh" is missing
 if [[ $LIB__bash_colors == "missing" ]]; then
@@ -455,6 +455,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       SKIPAZPLACEHOLDERS=false
     fi
 
+    log_bright log_bold "[INFO] Applying placeholders.."
     PLACE_PLACEHOLDERS() {
       local dir="$1"
       for file in "$dir"/*; do
@@ -480,7 +481,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             sed -i "s~__blueprintversion__~$VERSION~g" "$file"
           fi
 
-          log_bright "[INFO] Done placeholders in '$file'."
+          log_bright "  - ${file}"
         elif [ -d "$file" ]; then
           PLACE_PLACEHOLDERS "$file"
         fi
