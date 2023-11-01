@@ -61,6 +61,7 @@ fi
 # Write environment variables.
 export BLUEPRINT__FOLDER=$FOLDER
 export BLUEPRINT__VERSION=$VERSION
+export NODE_OPTIONS=--openssl-legacy-provider
 
 # Automatically navigate to the Pterodactyl directory when running the core.
 cd $FOLDER 
@@ -110,9 +111,6 @@ if [[ $LIB__bash_colors == "missing" ]]; then
   log_yellowb() { echo -e "$1"; }
 fi
 
-# Make sure yarn doesn't freak out when building the panel.
-export NODE_OPTIONS=--openssl-legacy-provider
-
 
 
 # -config
@@ -128,8 +126,11 @@ if [[ "$1" == "-config" ]]; then
   # cDEVELOPER
   # Enable/Disable developer mode.
   if [[ $cDEVELOPER != "" ]]; then
-    if [[ $cDEVELOPER == "true" ]]; then dbAdd "blueprint.developerEnabled"
-    else dbRemove "blueprint.developerEnabled"; fi
+    if [[ $cDEVELOPER == "true" ]]; then 
+      dbAdd "blueprint.developerEnabled"
+    else 
+      dbRemove "blueprint.developerEnabled"
+    fi
   fi
 
   echo .
@@ -278,6 +279,10 @@ if [[ $1 != "-bash" ]]; then
     # Clear route cache.
     log_bright "[INFO] Updating route cache to include recent changes.."
     php artisan route:cache &> /dev/null 
+
+    # Sync some database values.
+    log_bright "[INFO] Syncing database values.."
+    php artisan bp:sync &> /dev/null
 
     # Put application into production.
     log_bright "[INFO] Disable maintenance."
@@ -875,7 +880,7 @@ fi
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) || 
       ( $2 == "h" )    || ( $2 == "-h" )    || ( $2 == "--h" )    ]]; then VCMD="y"
 
-  if [[ $(cat .blueprint/data/internal/db/developer) == "true"* ]]; then
+  if dbValidate "blueprint.developerEnabled"; then
     help_dev_status=""
     help_dev_primary="\e[34;1m"
     help_dev_secondary="\e[34m"
