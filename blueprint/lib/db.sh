@@ -7,7 +7,7 @@ FLDR=$BLUEPRINT__FOLDER"/.blueprint/data/internal/db/database"
 
 dbAdd() {
     # dbAdd "database.record";
-    sed -i "s/+ db.addnewrecord;/* ${1};\n+ db.addnewrecord;/g" $FLDR > /dev/null;
+    sed -i "s/+ db.addnewrecord;/* ${1};+ db.addnewrecord;/g" $FLDR > /dev/null;
 }; dbValidate() {
     # dbValidate "database.record";
     grep -Fxq "* ${1};" $FLDR > /dev/null;
