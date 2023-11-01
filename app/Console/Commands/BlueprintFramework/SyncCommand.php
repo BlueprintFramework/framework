@@ -26,19 +26,22 @@ class SyncCommand extends Command
    */
   public function handle()
   {
-    // The following code rerolls the panel identifier used for telemetry
-    // when the version name changes.
+    // TELEMETRY ID
+    // initialize telemetry id
     if ($this->settings->get('blueprint::panel:id') == "" || $this->bp->version() != $this->settings->get('blueprint::version:cache')) {
-      if ($this->settings->get('blueprint::telemetry') == "") {$this->settings->set('blueprint::telemetry', "true");}
-      if ($this->settings->get('blueprint::telemetry') == "false") { 
-        $this->bp->config('TELEMETRY_ID','KEY_NOT_UPDATED');
-      } else {
-        $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
-        $this->settings->set('blueprint::version:cache', $this->bp->version());
-        $this->bp->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id"));
-      }
-    };
-    // Sync developer mode option with the core of Blueprint.
+      $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
+      $this->settings->set('blueprint::version:cache', $this->bp->version());
+    }
+    // set telemetry to true if empty
+    if ($this->settings->get('blueprint::telemetry') == "") {$this->settings->set('blueprint::telemetry', "true");}
+    // enable/disable telemetry if needed
+    if ($this->settings->get('blueprint::telemetry') == "false") { 
+      $this->bp->config('TELEMETRY_ID','KEY_NOT_UPDATED');
+    } else {
+      $this->bp->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id"));
+    }
+
+    // DEVELOPER MODE
     $this->bp->config('DEVELOPER', $this->settings->get('blueprint::developer'));
   }
 }

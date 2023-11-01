@@ -43,8 +43,7 @@ class BlueprintExtensionController extends Controller
    */
   public function index(): View
   {
-    // Sync developer mode option with the core of Blueprint.
-    $this->bp->config('DEVELOPER', $this->settings->get('blueprint::developer'));
+    Artisan::call("bp:sync");
     return $this->view->make(
       'admin.extensions.blueprint.index', [
         'version' => $this->version,
