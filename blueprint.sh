@@ -128,7 +128,8 @@ if [[ "$1" == "-config" ]]; then
   # cDEVELOPER
   # Enable/Disable developer mode.
   if [[ $cDEVELOPER != "" ]]; then
-    echo "$cDEVELOPER" > .blueprint/data/internal/db/developer
+    if [[ $cDEVELOPER == "true" ]]; then dbAdd "blueprint.developerEnabled"
+    else dbRemove "blueprint.developerEnabled"; fi
   fi
 
   echo .
@@ -917,7 +918,7 @@ fi
 
 # -init
 if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled."; fi
+  if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
   # until you wipe the contents of the .blueprint/dev directory.
@@ -1114,7 +1115,7 @@ fi
 
 # -build
 if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled."; fi
+  if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
@@ -1128,7 +1129,7 @@ fi
 
 # -export
 if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled."; fi
+  if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
@@ -1169,7 +1170,7 @@ fi
 
 # -wipe
 if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
-  if [[ $(cat .blueprint/data/internal/db/developer) != "true"* ]]; then quit_red "[FATAL] Developer mode is not enabled."; fi
+  if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
