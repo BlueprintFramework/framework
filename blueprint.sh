@@ -168,7 +168,7 @@ depend() {
 
   # Exit when missing dependencies.
   if [[ $DEPEND_MISSING == true ]]; then 
-    log_red "[FATAL] Blueprint found errors for the following dependencies:"
+    log_red log_bold "[FATAL] Blueprint found errors for the following dependencies:"
 
     if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($(node -v)) is an unsupported version."; fi
 
