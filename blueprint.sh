@@ -19,7 +19,7 @@
 # Allow non-default Pterodactyl installation folders.
 if [[ $_FOLDER != "" ]]; then
   if [[ ( ! -f "$FOLDER/.blueprint/data/internal/db/version" ) && ( $FOLDER == "/var/www/pterodactyl" ) ]]; then
-    sed -i -E "s|FOLDER=\"$FOLDER\" #;|FOLDER=\"$_FOLDER\" #;|g" $_FOLDER/blueprint.sh
+    sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$_FOLDER\" #;|g" $_FOLDER/blueprint.sh
   else
     echo "Variable cannot be replaced right now."
     exit 1

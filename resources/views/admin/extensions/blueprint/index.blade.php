@@ -9,7 +9,7 @@
   <a href="https://ptero.shop" target="_blank">
     <button class="btn btn-gray-alt pull-right" style="padding: 5px 10px;"><i class="bx bx-link-external"></i></button>
   </a>
-  <h1 ext-title>Blueprint<tag mg-left blue>{{ $bp->version() }}</tag></h1>
+  <h1 ext-title>Blueprint<tag mg-left @if($versionLatest != $bp->version()) red @else blue @endif>{{ $bp->version() }}</tag></h1>
 @endsection
 
 @section('content')
@@ -25,7 +25,7 @@
           <h3 class="box-title"><i class='bx bxs-shapes' style='margin-right:5px;'></i></i>Overview</h3>
         </div>
         <div class="box-body">
-          <p>You are currently using version <code>{{ $bp->version() }}</code>@if($versionLatest != $bp->version()) which is outdated. Please update to a newer release shortly. @else. @endif</p>
+          <p>You are currently using version <code>{{ $bp->version() }}</code>@if($versionLatest != $bp->version()) which is outdated. @else. @endif</p>
         </div>
       </div>
 
