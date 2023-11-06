@@ -45,9 +45,6 @@ class BlueprintExtensionController extends Controller
   public function index(): View
   {
     Artisan::call("bp:sync");
-    $verlatest = Artisan::call("bp:latest");
-
-    if($this->bp->version() != $verlatest) { $outdated = true; }
     return $this->view->make(
       'admin.extensions.blueprint.index', [
         'version' => $this->version,
@@ -55,8 +52,7 @@ class BlueprintExtensionController extends Controller
         'bp' => $this->bp,
         'bplib' => $this->bplib,
         'telemetry' => $this->telemetry,
-        'verlatest' => $verlatest,
-        'veroutdated' => $outdated,
+        'versionLatest' => $this->bp->latestVersion(),
 
         'root' => "/admin/extensions/blueprint",
       ]

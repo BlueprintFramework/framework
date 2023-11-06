@@ -20,12 +20,12 @@
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
       <!-- Overview -->
-      <div class="box @if($veroutdated) box-danger @endif">
+      <div class="box @if($versionLatest != $bp->version()) box-danger @endif">
         <div class="box-header with-border">
           <h3 class="box-title"><i class='bx bxs-shapes' style='margin-right:5px;'></i></i>Overview</h3>
         </div>
         <div class="box-body">
-          <p>You are currently using version <code>{{ $bp->version() }}</code>.</p>
+          <p>You are currently using version <code>{{ $bp->version() }}</code>@if($versionLatest != $bp->version()) which is outdated. Please update to a newer release shortly. @else. @endif</p>
         </div>
       </div>
 
