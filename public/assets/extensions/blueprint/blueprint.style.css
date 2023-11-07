@@ -2,10 +2,10 @@
 @import url("/assets/extensions/blueprint/misc/cacheOverlay-1.css");
 
 @keyframes notification {
-  0%   { right:-300px; top:62px; opacity:0; background-color: #2a3743; }
+  0%   { right:-300px; top:62px; opacity:0; background-color: #1f2933; }
   10%  { right:12px;   top:62px; opacity:1; background-color: #1f2933; }
   90%  { right:12px;   top:62px; opacity:1; background-color: #1f2933; }
-  100% { right:-300px; top:62px; opacity:0; background-color: #2a3743; }
+  100% { right:-300px; top:62px; opacity:0; background-color: #1f2933; }
 }
 
 .notification {
@@ -17,11 +17,12 @@
   width:300px;
   z-index:99999;
   background-color:#1f2933;
-  color:#9aa5b1;
+  color:#cad1d8;
   padding:10px;
-  border-radius:10px;
+  border-radius:3px;
   animation-name: notification;
   animation-duration: 10s;
+  border-top: #3c8dbc 3px solid;
 }
 
 
