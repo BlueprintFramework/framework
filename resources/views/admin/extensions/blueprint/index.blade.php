@@ -19,7 +19,7 @@
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
       <!-- Overview -->
-      <div class="box @if($versionLatest != $bp->version()) box-danger @endif">
+      <div class="box @if($versionLatest != $bp->version()) box-danger @else box-info @endif">
         <div class="box-header with-border">
           <h3 class="box-title"><i class='bx bxs-shapes' style='margin-right:5px;'></i></i>Overview</h3>
         </div>
