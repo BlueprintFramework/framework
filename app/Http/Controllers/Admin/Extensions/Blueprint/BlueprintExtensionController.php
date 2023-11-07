@@ -27,7 +27,7 @@ class BlueprintExtensionController extends Controller
   public function __construct(
     private BlueprintVariableService $bp,
     private BlueprintTelemetryService $telemetry,
-    private BlueprintExtensionLibrary $bplib,
+    private BlueprintExtensionLibrary $blueprint,
     private BlueprintPlaceholderService $placeholderservice,
 
     private SoftwareVersionService $version,
@@ -54,7 +54,7 @@ class BlueprintExtensionController extends Controller
         'version' => $this->version,
 
         'bp' => $this->bp,
-        'bplib' => $this->bplib,
+        'blueprint' => $this->blueprint,
         'telemetry' => $this->telemetry,
         'versionLatest' => $latestVersion,
 
@@ -74,7 +74,7 @@ class BlueprintExtensionController extends Controller
     }
 
     // Confirm that the database value changes have been applied.
-    $this->bplib->notify("Your changes have been saved.");
+    $this->blueprint->notify("Your changes have been saved.");
     // Redirect back to the page the user was on.
     return redirect()->route('admin.extensions.blueprint.index');
   }
