@@ -41,7 +41,7 @@ if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
   # or Blueprint being installed from other sources.
   if [[ ! -f "$FOLDER/.blueprint/data/internal/db/version" ]]; then
     sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*@version*$VER_FALLBACK*g" public/extensions/blueprint/index.html
+    sed -E -i "s*@version*$VER_FALLBACK*g" .blueprint/data/public/blueprint/index.html
     touch $FOLDER/.blueprint/data/internal/db/version
   fi
   
@@ -51,7 +51,7 @@ elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
   # fallback version.
   if [[ ! -f "$FOLDER/.blueprint/data/internal/db/version" ]]; then
     sed -E -i "s*&bp.version&*$PM_VERSION*g" app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*@version*$PM_VERSION*g" public/extensions/blueprint/index.html
+    sed -E -i "s*@version*$PM_VERSION*g" .blueprint/data/public/blueprint/index.html
     touch $FOLDER/.blueprint/data/internal/db/version
   fi
 
@@ -221,6 +221,10 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] Checking dependencies.."
     # Check if required programs are installed
     depend
+
+    # Link directories.
+    log_bright "[INFO] Linking directories.."
+    ln .blueprint/data/public public/extensions
 
     # Update folder placeholder on PlaceholderService and admin layout.
     log_bright "[INFO] Updating folder placeholders.."
@@ -421,8 +425,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     log_bright "[INFO] Cleaning up old extension files.."
     if [[ $old_data_public != "" ]]; then
       # Clean up old public folder.
-      rm -R "public/extensions/$identifier"
-      mkdir "public/extensions/$identifier"
+      rm -R ".blueprint/data/public/$identifier"
+      mkdir ".blueprint/data/public/$identifier"
     fi
   fi
 
@@ -529,9 +533,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $data_public != "" ]]; then
     log_bright "[INFO] Creating public directory.."
-    mkdir -p "public/extensions/$identifier"
+    mkdir -p ".blueprint/data/public/$identifier"
     log_bright "[INFO] Placing public directory contents.."
-    cp -R ".blueprint/tmp/$n/$data_public/"* "public/extensions/$identifier/" 2> /dev/null
+    cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/data/public/$identifier/" 2> /dev/null
   fi
 
   cp ".blueprint/data/internal/build/extensions/admin.blade.php" ".blueprint/data/internal/build/extensions/admin.blade.php.bak" 2> /dev/null
@@ -858,7 +862,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Remove public folder
   if [[ $data_public != "" ]]; then 
     log_bright "[INFO] Removing public folder.."
-    rm -R "public/extensions/$identifier"
+    rm -R ".blueprint/data/public/$identifier"
   fi
 
   # Remove assets folder
