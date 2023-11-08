@@ -224,7 +224,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Link directories.
     log_bright "[INFO] Linking directories.."
-    ln -s .blueprint/data/extensions/public public/extensions 2> /dev/null;
+    cd $FOLDER/public; ln -s -T $FOLDER/.blueprint/data/extensions/public extensions 2> /dev/null; cd $FOLDER
 
     # Update folder placeholder on PlaceholderService and admin layout.
     log_bright "[INFO] Updating folder placeholders.."
