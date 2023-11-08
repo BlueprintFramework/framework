@@ -867,11 +867,13 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ $data_public != "" ]]; then 
     log_bright "[INFO] Removing public folder.."
     rm -R ".blueprint/extensions/$identifier/public"
+    rm -R "public/extensions/$identifier"
   fi
 
   # Remove assets folder
   log_bright "[INFO] Removing assets.."
   rm -R ".blueprint/extensions/$identifier/assets"
+  rm -R "public/assets/extensions/$identifier"
 
   # Remove data folder
   log_bright "[INFO] Removing data folder.."
