@@ -40,8 +40,8 @@ if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
   # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
   # or Blueprint being installed from other sources.
   if [[ ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ]]; then
-    sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*@version*$VER_FALLBACK*g" .blueprint/extensions/blueprint/public/blueprint/index.html
+    sed -E -i "s*&bp.version&*$VER_FALLBACK*g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
+    sed -E -i "s*@version*$VER_FALLBACK*g" $FOLDER/.blueprint/extensions/blueprint/public/index.html
     touch $FOLDER/.blueprint/extensions/blueprint/private/db/version
   fi
   
@@ -50,8 +50,8 @@ elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
   # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
   # fallback version.
   if [[ ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ]]; then
-    sed -E -i "s*&bp.version&*$PM_VERSION*g" app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*@version*$PM_VERSION*g" .blueprint/extensions/blueprint/public/blueprint/index.html
+    sed -E -i "s*&bp.version&*$PM_VERSION*g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
+    sed -E -i "s*@version*$PM_VERSION*g" $FOLDER/.blueprint/extensions/blueprint/public/index.html
     touch $FOLDER/.blueprint/extensions/blueprint/private/db/version
   fi
 
@@ -225,7 +225,7 @@ if [[ $1 != "-bash" ]]; then
     # Link directories.
     log_bright "[INFO] Linking directories.."
     cd $FOLDER/public/extensions;        ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2> /dev/null; cd $FOLDER
-    cd $FOLDER/public/assets/extensions; ln -s -T $FOLDER/.blueprint/extensions/blueprint/private blueprint 2> /dev/null; cd $FOLDER
+    cd $FOLDER/public/assets/extensions; ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets blueprint  2> /dev/null; cd $FOLDER
 
     # Update folder placeholder on PlaceholderService and admin layout.
     log_bright "[INFO] Updating folder placeholders.."
@@ -535,6 +535,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $data_public != "" ]]; then
     log_bright "[INFO] Creating public directory.."
     mkdir -p ".blueprint/extensions/$identifier/public"
+    cd $FOLDER/public/extensions; ln -s -T $FOLDER/.blueprint/extensions/$identifier/public $identifier 2> /dev/null; cd $FOLDER
     log_bright "[INFO] Placing public directory contents.."
     cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2> /dev/null
   fi
@@ -560,8 +561,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
   # End creating data directory.
 
-  # Link assets folder.
-  cd $FOLDER/public/assets/extensions; ln -s -T $FOLDER/.blueprint/extensions/$identifier/private $identifier 2> /dev/null; cd $FOLDER
+  # Link and create assets folder.
+  mkdir .blueprint/extensions/$identifier/assets
+  cd $FOLDER/public/assets/extensions; ln -s -T $FOLDER/.blueprint/extensions/$identifier/assets $identifier 2> /dev/null; cd $FOLDER
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
