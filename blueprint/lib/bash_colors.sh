@@ -106,10 +106,10 @@ function log_escape
         result="${log_ESC}${2}m${result}${log_ESC}${log_RESET}m"
 	shift || break
     done
-
+    
     echo "$log_ECHOSWITCHES" "$result"
-    echo "$log_ECHOSWITCHES" "$result" >> .blueprint/data/internal/debug/logs.txt;
-    echo -e "\n" >> .blueprint/data/internal/debug/logs.txt;
+    echo "$log_ECHOSWITCHES" "$result" >> .blueprint/extensions/blueprint/private/debug/logs.txt;
+    echo -e "\n" >> .blueprint/extensions/blueprint/private/debug/logs.txt;
 }
 
 function log                 { log_layer $log_RESET "$@";           }

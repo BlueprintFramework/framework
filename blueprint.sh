@@ -18,7 +18,7 @@
 
 # Allow non-default Pterodactyl installation folders.
 if [[ $_FOLDER != "" ]]; then
-  if [[ ( ! -f "$FOLDER/.blueprint/data/internal/db/version" ) && ( $FOLDER == "/var/www/pterodactyl" ) ]]; then
+  if [[ ( ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ) && ( $FOLDER == "/var/www/pterodactyl" ) ]]; then
     sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$_FOLDER\" #;|g" $_FOLDER/blueprint.sh
   else
     echo "Variable cannot be replaced right now."
@@ -39,20 +39,20 @@ if [[ -d "$FOLDER/blueprint" ]]; then mv $FOLDER/blueprint $FOLDER/.blueprint; f
 if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
   # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
   # or Blueprint being installed from other sources.
-  if [[ ! -f "$FOLDER/.blueprint/data/internal/db/version" ]]; then
+  if [[ ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ]]; then
     sed -E -i "s*&bp.version&*$VER_FALLBACK*g" app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*@version*$VER_FALLBACK*g" .blueprint/data/extensions/public/blueprint/index.html
-    touch $FOLDER/.blueprint/data/internal/db/version
+    sed -E -i "s*@version*$VER_FALLBACK*g" .blueprint/extensions/blueprint/public/blueprint/index.html
+    touch $FOLDER/.blueprint/extensions/blueprint/private/db/version
   fi
   
   VERSION=$VER_FALLBACK
 elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
   # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
   # fallback version.
-  if [[ ! -f "$FOLDER/.blueprint/data/internal/db/version" ]]; then
+  if [[ ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ]]; then
     sed -E -i "s*&bp.version&*$PM_VERSION*g" app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*@version*$PM_VERSION*g" .blueprint/data/extensions/public/blueprint/index.html
-    touch $FOLDER/.blueprint/data/internal/db/version
+    sed -E -i "s*@version*$PM_VERSION*g" .blueprint/extensions/blueprint/public/blueprint/index.html
+    touch $FOLDER/.blueprint/extensions/blueprint/private/db/version
   fi
 
   VERSION=$PM_VERSION
@@ -120,7 +120,7 @@ if [[ "$1" == "-config" ]]; then
   # cTELEMETRY_ID
   # Update the telemetry id.
   if [[ $cTELEMETRY_ID != "" ]]; then
-    echo "$cTELEMETRY_ID" > .blueprint/data/internal/db/telemetry_id
+    echo "$cTELEMETRY_ID" > .blueprint/extensions/blueprint/private/db/telemetry_id
   fi
 
   # cDEVELOPER
@@ -224,7 +224,8 @@ if [[ $1 != "-bash" ]]; then
 
     # Link directories.
     log_bright "[INFO] Linking directories.."
-    cd $FOLDER/public; ln -s -T $FOLDER/.blueprint/data/extensions/public extensions 2> /dev/null; cd $FOLDER
+    cd $FOLDER/public/extensions;        ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2> /dev/null; cd $FOLDER
+    cd $FOLDER/public/assets/extensions; ln -s -T $FOLDER/.blueprint/extensions/blueprint/private blueprint 2> /dev/null; cd $FOLDER
 
     # Update folder placeholder on PlaceholderService and admin layout.
     log_bright "[INFO] Updating folder placeholders.."
@@ -233,7 +234,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Copy "Blueprint" extension page logo from assets.
     log_bright "[INFO] Copying Blueprint logo from assets.."
-    cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/public/assets/extensions/blueprint/logo.jpg
+    cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg
 
     # Put application into maintenance.
     log_bright "[INFO] Enable maintenance."
@@ -411,12 +412,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   # Detect if extension is already installed and prepare the upgrading process.
-  if [[ $(cat .blueprint/data/internal/db/installed_extensions) == *"$identifier,"* ]]; then
+  if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"$identifier,"* ]]; then
     log_bright "[INFO] Extension appears to be installed already, reading variables.."
-    eval $(parse_yaml .blueprint/data/extensions/private/$identifier/.store/conf.yml old_)
+    eval $(parse_yaml .blueprint/extensions/$identifier/private/.store/conf.yml old_)
     DUPLICATE="y"
 
-    if [[ ! -f ".blueprint/data/extensions/private/$identifier/.store/build/button.blade.php" ]]; then
+    if [[ ! -f ".blueprint/extensions/$identifier/private/.store/build/button.blade.php" ]]; then
       rm -R ".blueprint/tmp/$n"
       quit_red "[FATAL] Upgrading extension has failed due to missing essential .store files."
     fi
@@ -425,8 +426,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     log_bright "[INFO] Cleaning up old extension files.."
     if [[ $old_data_public != "" ]]; then
       # Clean up old public folder.
-      rm -R ".blueprint/data/extensions/public/$identifier"
-      mkdir ".blueprint/data/extensions/public/$identifier"
+      rm -R ".blueprint/extensions/$identifier/public"
+      mkdir ".blueprint/extensions/$identifier/public"
     fi
   fi
 
@@ -481,7 +482,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           sed -i "s~\^#name#\^~$name~g" "$file"
           sed -i "s~\^#identifier#\^~$identifier~g" "$file"
           sed -i "s~\^#path#\^~$FOLDER~g" "$file"
-          sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/data/extensions/private/$identifier~g" "$file"
+          sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/extensions/$identifier/private~g" "$file"
           sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$file"
           sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file"
 
@@ -491,7 +492,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             sed -i "s~__identifier__~$identifier~g" "$file"
             sed -i "s~__name__~$name~g" "$file"
             sed -i "s~__path__~$FOLDER~g" "$file"
-            sed -i "s~__datapath__~$FOLDER/.blueprint/data/extensions/private/$identifier~g" "$file"
+            sed -i "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" "$file"
             sed -i "s~__installmode__~$INSTALLMODE~g" "$file"
             sed -i "s~__blueprintversion__~$VERSION~g" "$file"
           fi
@@ -533,40 +534,41 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $data_public != "" ]]; then
     log_bright "[INFO] Creating public directory.."
-    mkdir -p ".blueprint/data/extensions/public/$identifier"
+    mkdir -p ".blueprint/extensions/$identifier/public"
     log_bright "[INFO] Placing public directory contents.."
-    cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/data/extensions/public/$identifier/" 2> /dev/null
+    cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2> /dev/null
   fi
 
-  cp ".blueprint/data/internal/build/extensions/admin.blade.php" ".blueprint/data/internal/build/extensions/admin.blade.php.bak" 2> /dev/null
+  cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak" 2> /dev/null
   if [[ $admin_controller == "" ]]; then # use default controller when admin_controller is left blank
-    cp ".blueprint/data/internal/build/extensions/controller.php" ".blueprint/data/internal/build/extensions/controller.php.bak" 2> /dev/null
+    cp ".blueprint/extensions/blueprint/private/build/extensions/controller.php" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak" 2> /dev/null
   fi
-  cp ".blueprint/data/internal/build/extensions/route.php" ".blueprint/data/internal/build/extensions/route.php.bak" 2> /dev/null
-  cp ".blueprint/data/internal/build/extensions/button.blade.php" ".blueprint/data/internal/build/extensions/button.blade.php.bak" 2> /dev/null
+  cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" 2> /dev/null
+  cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" 2> /dev/null
 
   # Start creating data directory.
   log_bright "[INFO] Creating data directory.."
-  mkdir -p ".blueprint/data/extensions/private/$identifier"
-  mkdir -p ".blueprint/data/extensions/private/$identifier/.store"
+  mkdir -p ".blueprint/extensions/$identifier/private"
+  mkdir -p ".blueprint/extensions/$identifier/private/.store"
   
   log_bright "[INFO] Caching extension config inside of data directory.."
-  cp ".blueprint/tmp/$n/conf.yml" ".blueprint/data/extensions/private/$identifier/.store/conf.yml"; #backup conf.yml
+  cp ".blueprint/tmp/$n/conf.yml" ".blueprint/extensions/$identifier/private/.store/conf.yml"; #backup conf.yml
   
   if [[ $data_directory != "" ]]; then
     log_bright "[INFO] Placing private directory contents.."
-    cp -R ".blueprint/tmp/$n/$data_directory/"* ".blueprint/data/extensions/private/$identifier/"
+    cp -R ".blueprint/tmp/$n/$data_directory/"* ".blueprint/extensions/$identifier/private/"
   fi
   # End creating data directory.
 
-  mkdir -p "public/assets/extensions/$identifier"
+  # Link assets folder.
+  cd $FOLDER/public/assets/extensions; ln -s -T $FOLDER/.blueprint/extensions/$identifier/private $identifier 2> /dev/null; cd $FOLDER
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
     icnNUM=$(expr 1 + $RANDOM % 9)
-    cp ".blueprint/assets/defaultExtensionLogo$icnNUM.jpg" "public/assets/extensions/$identifier/icon.jpg"
+    cp ".blueprint/assets/defaultExtensionLogo$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.jpg"
   else
-    cp ".blueprint/tmp/$n/$icon" "public/assets/extensions/$identifier/icon.jpg"
+    cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.jpg"
   fi;
   ICON="/assets/extensions/$identifier/icon.jpg"
   CONTENT=$(cat .blueprint/tmp/$n/$admin_view)
@@ -576,7 +578,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     updateCacheReminder
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" "public/themes/pterodactyl/css/pterodactyl.css"
     sed -i "s~/\* admin.css \*/~/\* admin.css \*/\n@import url(/assets/extensions/$identifier/admin.style.css);~g" "public/themes/pterodactyl/css/pterodactyl.css"
-    cp ".blueprint/tmp/$n/$admin_css" "public/assets/extensions/$identifier/admin.style.css"
+    cp ".blueprint/tmp/$n/$admin_css" ".blueprint/extensions/$identifier/assets/admin.style.css"
   fi
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Placing dashboard css.."
@@ -594,45 +596,45 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $identifier == *"~"* ]]; then  log_yellow "[WARNING] 'identifier' contains '~' and may result in an error.";fi
 
   # Replace $name variables.
-  sed -i "s~␀title␀~$name~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
-  sed -i "s~␀name␀~$name~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
-  sed -i "s~␀name␀~$name~g" ".blueprint/data/internal/build/extensions/button.blade.php.bak"
+  sed -i "s~␀title␀~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  sed -i "s~␀name␀~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  sed -i "s~␀name␀~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
 
   # Replace $description variables.
-  sed -i "s~␀description␀~$description~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+  sed -i "s~␀description␀~$description~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
 
   # Replace $version variables.
-  sed -i "s~␀version␀~$version~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
-  sed -i "s~␀version␀~$version~g" ".blueprint/data/internal/build/extensions/button.blade.php.bak"
+  sed -i "s~␀version␀~$version~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  sed -i "s~␀version␀~$version~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
 
   # Replace $ICON variables.
-  sed -i "s~␀icon␀~$ICON~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+  sed -i "s~␀icon␀~$ICON~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
 
   # Replace $website variables.
   if [[ $website != "" ]]; then
-    sed -i "s~␀website␀~$website~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
-    sed -i "s~<!--websitecomment␀ ~~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
-    sed -i "s~ ␀websitecomment-->~~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
-    sed -i "s~␀weblinkicon␀~$websiteiconclass~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+    sed -i "s~␀website␀~$website~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+    sed -i "s~<!--websitecomment␀ ~~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+    sed -i "s~ ␀websitecomment-->~~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+    sed -i "s~␀weblinkicon␀~$websiteiconclass~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
   fi
 
   # Replace $identifier variables.
   if [[ $admin_controller == "" ]]; then
-    sed -i "s~␀id␀~$identifier~g" ".blueprint/data/internal/build/extensions/controller.php.bak"
+    sed -i "s~␀id␀~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak"
   fi
-  sed -i "s~␀id␀~$identifier~g" ".blueprint/data/internal/build/extensions/route.php.bak"
-  sed -i "s~␀id␀~$identifier~g" ".blueprint/data/internal/build/extensions/button.blade.php.bak"
+  sed -i "s~␀id␀~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
+  sed -i "s~␀id␀~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
 
   # Place extension admin view content into template.
-  echo -e "$CONTENT\n@endsection" >> ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+  echo -e "$CONTENT\n@endsection" >> ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
 
 
   # Read final results.
-  ADMINVIEW_RESULT=$(<.blueprint/data/internal/build/extensions/admin.blade.php.bak)
-  ADMINROUTE_RESULT=$(<.blueprint/data/internal/build/extensions/route.php.bak)
-  ADMINBUTTON_RESULT=$(<.blueprint/data/internal/build/extensions/button.blade.php.bak)
+  ADMINVIEW_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak)
+  ADMINROUTE_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/route.php.bak)
+  ADMINBUTTON_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak)
   if [[ $admin_controller == "" ]]; then
-    ADMINCONTROLLER_RESULT=$(<.blueprint/data/internal/build/extensions/controller.php.bak)
+    ADMINCONTROLLER_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/controller.php.bak)
   fi
   ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
 
@@ -661,7 +663,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     echo // $identifier:stop; } >> "routes/admin.php"
   else
     # Replace old extensions page button if extension is updating.
-    OLDBUTTON_RESULT=$(<.blueprint/data/extensions/private/$identifier/.store/build/button.blade.php)
+    OLDBUTTON_RESULT=$(<.blueprint/extensions/$identifier/private/.store/build/button.blade.php)
     sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
   fi
   sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" "resources/views/admin/extensions.blade.php"
@@ -700,18 +702,18 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Create backup of generated values.
   log_bright "[INFO] Backing up (some) build files.."
-  mkdir -p ".blueprint/data/extensions/private/$identifier/.store/build"
-  cp ".blueprint/data/internal/build/extensions/button.blade.php.bak" ".blueprint/data/extensions/private/$identifier/.store/build/button.blade.php"
-  cp ".blueprint/data/internal/build/extensions/route.php.bak" ".blueprint/data/extensions/private/$identifier/.store/build/route.php"
+  mkdir -p ".blueprint/extensions/$identifier/private/.store/build"
+  cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" ".blueprint/extensions/$identifier/private/.store/build/button.blade.php"
+  cp ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" ".blueprint/extensions/$identifier/private/.store/build/route.php"
 
   # Remove temporary built files.
   log_bright "[INFO] Cleaning up temporary built files.."
-  rm ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+  rm ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
   if [[ $admin_controller == "" ]]; then
-    rm ".blueprint/data/internal/build/extensions/controller.php.bak"
+    rm ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak"
   fi
-  rm ".blueprint/data/internal/build/extensions/route.php.bak"
-  rm ".blueprint/data/internal/build/extensions/button.blade.php.bak"
+  rm ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
+  rm ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
   log_bright "[INFO] Cleaning up temp files.."
   rm -R ".blueprint/tmp/$n"
 
@@ -734,15 +736,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   log_bright "[INFO] Updating route cache to include recent changes.."
   php artisan route:cache &> /dev/null
 
-  chown -R www-data:www-data "$FOLDER/.blueprint/data/extensions/private/$identifier"
-  chmod --silent -R +x ".blueprint/data/extensions/private/"* 2> /dev/null
+  chown -R www-data:www-data "$FOLDER/.blueprint/extensions/$identifier/private"
+  chmod --silent -R +x ".blueprint/extensions/"* 2> /dev/null
 
   if [[ ( ( $flags != *"developerIgnoreInstallScript,"* ) && ( $flags != *"developerIgnoreInstallScript" ) ) || ( $dev != true ) ]]; then
     if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
       log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
-      chmod +x ".blueprint/data/extensions/private/$identifier/install.sh"
+      chmod +x ".blueprint/extensions/$identifier/private/install.sh"
       # Run script while also parsing some useful variable for the install script to use.
-      BLUEPRINT_DEVELOPER="$dev" BLUEPRINT_VERSION="$VERSION" bash ".blueprint/data/extensions/private/$identifier/install.sh"
+      BLUEPRINT_DEVELOPER="$dev" BLUEPRINT_VERSION="$VERSION" bash ".blueprint/extensions/$identifier/private/install.sh"
       echo -e "\e[0m\x1b[0m\033[0m"
     fi
   else
@@ -750,7 +752,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
-    echo "${identifier}," >> ".blueprint/data/internal/db/installed_extensions"
+    echo "${identifier}," >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
     log_bright "[INFO] Added '$identifier' to the list of installed extensions."
   fi
 
@@ -769,12 +771,12 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi
   
   # Check if the extension is installed.
-  if [[ $(cat ".blueprint/data/internal/db/installed_extensions") != *"$identifier,"* ]]; then
+  if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$identifier,"* ]]; then
     quit_red "[FATAL] '$3' is not installed."
   fi
 
-  if [[ -f ".blueprint/data/extensions/private/$3/.store/conf.yml" ]]; then 
-    eval $(parse_yaml ".blueprint/data/extensions/private/$3/.store/conf.yml" conf_)
+  if [[ -f ".blueprint/extensions/$3/private/.store/conf.yml" ]]; then 
+    eval $(parse_yaml ".blueprint/extensions/$3/private/.store/conf.yml" conf_)
     # Add aliases for config values to make working with them easier.
     name="$conf_info_name";    
     identifier="$conf_info_identifier"
@@ -811,7 +813,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove admin button 
   log_bright "[INFO] Removing admin button.."
-  OLDBUTTON_RESULT=$(cat ".blueprint/data/extensions/private/$identifier/.store/build/button.blade.php")
+  OLDBUTTON_RESULT=$(cat ".blueprint/extensions/$identifier/private/.store/build/button.blade.php")
   sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
 
   # Remove admin routes
@@ -862,16 +864,16 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Remove public folder
   if [[ $data_public != "" ]]; then 
     log_bright "[INFO] Removing public folder.."
-    rm -R ".blueprint/data/extensions/public/$identifier"
+    rm -R ".blueprint/extensions/$identifier/public"
   fi
 
   # Remove assets folder
   log_bright "[INFO] Removing assets.."
-  rm -R "public/assets/extensions/$identifier"
+  rm -R ".blueprint/extensions/$identifier/assets"
 
   # Remove data folder
   log_bright "[INFO] Removing data folder.."
-  rm -R ".blueprint/data/extensions/private/$identifier"
+  rm -R ".blueprint/extensions/$identifier/private"
 
   # Rebuild panel
   if [[ $YARN == "y" ]]; then
@@ -884,7 +886,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   
   # Remove from installed list
   log_bright "[INFO] Removing extension from installed extensions list.."
-  sed -i "s~$identifier,~~g" ".blueprint/data/internal/db/installed_extensions"
+  sed -i "s~$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
 
   sendTelemetry "FINISH_EXTENSION_REMOVAL" > /dev/null
 
@@ -1090,15 +1092,15 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   cd .blueprint/tmp
   git clone "https://github.com/teamblueprint/templates.git"
   cd ${FOLDER}/.blueprint
-  cp -R tmp/templates/* data/internal/build/templates/
+  cp -R tmp/templates/* extensions/blueprint/private/build/templates/
   rm -R tmp/templates
   cd ${FOLDER}
 
-  eval $(parse_yaml .blueprint/data/internal/build/templates/${tnum}/TemplateConfiguration.yml t_);
+  eval $(parse_yaml .blueprint/extensions/blueprint/private/build/templates/${tnum}/TemplateConfiguration.yml t_);
 
   log_bright "[INFO] Copying template contents to the tmp directory.."
   mkdir -p .blueprint/tmp/init
-  cp -R .blueprint/data/internal/build/templates/${tnum}/contents/* .blueprint/tmp/init/
+  cp -R .blueprint/extensions/blueprint/private/build/templates/${tnum}/contents/* .blueprint/tmp/init/
 
   log_bright "[INFO] Applying variables.."
   sed -i "s~␀name␀~${ASKNAME}~g" .blueprint/tmp/init/conf.yml; #NAME
@@ -1128,7 +1130,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   # Wipe templates from disk.
   log_bright "[INFO] Wiping downloaded templates from disk.."
-  rm -R .blueprint/data/internal/build/templates/*
+  rm -R .blueprint/extensions/blueprint/private/build/templates/*
 
   sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" > /dev/null
 
@@ -1173,8 +1175,8 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   if [[ $3 == "expose"* ]]; then 
     log_bright "[INFO] Generating download url.."
     randstr=${RANDOM}${RANDOM}${RANDOM}${RANDOM}${RANDOM}
-    mkdir public/assets/extensions/blueprint/exports/${randstr}
-    cp ${identifier}.blueprint public/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint
+    mkdir .blueprint/extensions/blueprint/assets/exports/${randstr}
+    cp ${identifier}.blueprint .blueprint/extensions/blueprint/assets/exports/${randstr}/${identifier}.blueprint
     log_bright "[INFO] Download url will expire after 2 minutes."
 
     sendTelemetry "EXPOSE_DEVELOPMENT_EXTENSION" > /dev/null
@@ -1182,7 +1184,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     log_green "  - $(grabAppUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint"
     log_green "  - ${FOLDER}/${identifier}.blueprint"
 
-    eval $(sleep 120 && rm -R public/assets/extensions/blueprint/exports/${randstr} 2> /dev/null) &
+    eval $(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2> /dev/null) &
   else
     sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" > /dev/null
     log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
@@ -1217,9 +1219,9 @@ if [[ ( $2 == "-info" || $2 == "-f" ) ]]; then VCMD="y"
   fetchurl() { log_reset log_white $(grabAppUrl); }
   fetchlocale() { log_reset log_white $(grabAppLocale); }
   fetchtimezone() { log_reset log_white $(grabAppTimezone); }
-  fetchextensions() { log_reset log_white $(echo "$(<.blueprint/data/internal/db/installed_extensions)" | tr -cd ',' | wc -c | tr -d ' '); }
+  fetchextensions() { log_reset log_white $(echo "$(<.blueprint/extensions/blueprint/private/db/installed_extensions)" | tr -cd ',' | wc -c | tr -d ' '); }
   fetchdeveloper() { log_reset log_white $(if dbValidate "blueprint.developerEnabled"; then echo "true"; else echo "false"; fi;); }
-  fetchtelemetry() { log_reset log_white $(telemetrykey=$(cat .blueprint/data/internal/db/telemetry_id); if [[ $telemetrykey == "KEY_NOT_UPDATED" ]]; then echo "false"; else echo "true"; fi;); }
+  fetchtelemetry() { log_reset log_white $(telemetrykey=$(cat .blueprint/extensions/blueprint/private/db/telemetry_id); if [[ $telemetrykey == "KEY_NOT_UPDATED" ]]; then echo "false"; else echo "true"; fi;); }
   fetchnode() { log_reset log_white $(node -v); }
   fetchyarn() { log_reset log_white $(yarn -v); }
 

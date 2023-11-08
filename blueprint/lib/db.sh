@@ -3,7 +3,7 @@
 # This script has been created as part of the Blueprint source code
 # and may be intergrated directly into the core in the future.
 
-FLDR=$BLUEPRINT__FOLDER"/.blueprint/data/internal/db/database"
+FLDR=$BLUEPRINT__FOLDER"/.blueprint/extensions/blueprint/private/db/database"
 
 dbAdd() {
     # dbAdd "database.record";

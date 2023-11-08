@@ -30,7 +30,7 @@ class ExtensionsController extends Controller
     public function index(): View
     {
         // Onboarding check.
-        if($this->blueprint->fileRead("{$this->placeholder->folder()}/.blueprint/data/internal/db/onboarding") == "*blueprint*") { 
+        if($this->blueprint->fileRead("{$this->placeholder->folder()}/.blueprint/extensions/blueprint/private/db/onboarding") == "*blueprint*") { 
             $onboarding = true;
         } else {
             $onboarding = false;

@@ -4,4 +4,4 @@
 
 cd $1/.blueprint;
 
-cat data/internal/debug/logs.txt
+cat extensions/blueprint/private/debug/logs.txt

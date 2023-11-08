@@ -70,7 +70,7 @@
                             </li>
                             <li>
                                 <!-- The puzzle icon in the admin panel to manage and configure your installed extensions. -->
-                                <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if($blueprint->fileRead("&bp.folder&/.blueprint/data/internal/db/onboarding") == "true"){ echo "bx-flashing"; } ?>'></i></a></li>
+                                <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if($blueprint->fileRead("&bp.folder&/.blueprint/extensions/blueprint/private/db/onboarding") == "true"){ echo "bx-flashing"; } ?>'></i></a></li>
                             </li>
                             <li>
                                 <li><a href="{{ route('index') }}" data-toggle="tooltip" data-placement="bottom" title="Exit Admin Control"><i class="fa fa-server"></i></a></li>
@@ -172,12 +172,12 @@
 
                         // This might be further improved later.
 
-                        if($blueprint->fileRead("&bp.folder&/.blueprint/data/internal/db/onboarding") == "true") {
+                        if($blueprint->fileRead("&bp.folder&/.blueprint/extensions/blueprint/private/db/onboarding") == "true") {
                             echo "
                             <div class=\"notification\">
                             <p>Blueprint has now been installed, click the extension icon to take a look.</p>
                             </div>";
-                            $blueprint->fileWipe("&bp.folder&/.blueprint/data/internal/db/onboarding");
+                            $blueprint->fileWipe("&bp.folder&/.blueprint/extensions/blueprint/private/db/onboarding");
                         }
     
                         $notification = $blueprint->dbGet("blueprint", "notification:text");
