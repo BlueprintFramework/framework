@@ -57,8 +57,8 @@ tag[blue] {background-color:#288afb;}
 }
 
 
-.extension-btn-image {width:65px;height:auto;border-radius:3px;float: left;padding-right:10px;}
+.extension-btn-image {width:50px;height:50px;border-radius:3px;float: left;margin-right:10px;}
 .extension-btn-text {font-size: 20px;margin:0;text-align:left;}
-.extension-btn-version {font-size: 11px; text-align:left;margin:0;}
+.extension-btn-version {font-size: 11px;text-align:left;margin:0;}
 .extension-btn {background-color:#00000030;color:#cad1d8;border-color:#00000000;height:calc(65px + 14px);padding-top:7px;padding-bottom:7px;overflow:hidden;vertical-align:center;transition:background-color .2s;}
 .extension-btn:hover {background-color:#00000035;color:#cad1d8;border-color:#00000000;}
