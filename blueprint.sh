@@ -432,6 +432,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       website="http://$conf_info_website"
       conf_info_website=$website
     fi
+
+
+    # Change link icon depending on website url.
+    websiteiconclass="bx-link-external"
+    if [[ $website == *"://github.com/"*  ]] || [[ $website == *"://www.github.com/"*  ]] ||
+       [[ $website == *"://github.com"    ]] || [[ $website == *"://www.github.com"    ]]; then websiteiconclass="bx-git-branch";  fi
+    
+    if [[ $website == *"://discord.com/"* ]] || [[ $website == *"://www.discord.com/"* ]] ||
+       [[ $website == *"://discord.com"   ]] || [[ $website == *"://www.discord.com"   ]] ||
+       [[ $website == *"://discord.gg/"*  ]] || [[ $website == *"://www.discord.gg/"*  ]] ||
+       [[ $website == *"://discord.gg"    ]] || [[ $website == *"://www.discord.gg"    ]]; then websiteiconclass="bx-discord-alt"; fi
   fi
 
   if [[ $dev == true ]]; then
@@ -598,6 +609,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     sed -i "s~␀website␀~$website~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
     sed -i "s~<!--websitecomment␀ ~~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
     sed -i "s~ ␀websitecomment-->~~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
+    sed -i "s~␀weblinkicon␀~$websiteiconclass~g" ".blueprint/data/internal/build/extensions/admin.blade.php.bak"
   fi
 
   # Replace $identifier variables.
