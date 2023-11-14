@@ -441,13 +441,24 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
     # Change link icon depending on website url.
     websiteiconclass="bx-link-external"
+
+    # github.com
     if [[ $website == *"://github.com/"*  ]] || [[ $website == *"://www.github.com/"*  ]] ||
-       [[ $website == *"://github.com"    ]] || [[ $website == *"://www.github.com"    ]]; then websiteiconclass="bx-git-branch";  fi
-    
+       [[ $website == *"://github.com"    ]] || [[ $website == *"://www.github.com"    ]]; then websiteiconclass="bx-git-branch";   fi
+    # discord.com
     if [[ $website == *"://discord.com/"* ]] || [[ $website == *"://www.discord.com/"* ]] ||
        [[ $website == *"://discord.com"   ]] || [[ $website == *"://www.discord.com"   ]] ||
        [[ $website == *"://discord.gg/"*  ]] || [[ $website == *"://www.discord.gg/"*  ]] ||
-       [[ $website == *"://discord.gg"    ]] || [[ $website == *"://www.discord.gg"    ]]; then websiteiconclass="bx-discord-alt"; fi
+       [[ $website == *"://discord.gg"    ]] || [[ $website == *"://www.discord.gg"    ]]; then websiteiconclass="bxl-discord-alt"; fi
+    # patreon.com
+    if [[ $website == *"://patreon.com/"* ]] || [[ $website == *"://www.patreon.com/"* ]] ||
+       [[ $website == *"://patreon.com"   ]] || [[ $website == *"://www.patreon.com"   ]]; then websiteiconclass="bxl-patreon";     fi
+    # reddit.com
+    if [[ $website == *"://reddit.com/"*  ]] || [[ $website == *"://www.reddit.com/"*  ]] ||
+       [[ $website == *"://reddit.com"    ]] || [[ $website == *"://www.reddit.com"    ]]; then websiteiconclass="bxl-reddit";      fi
+    # trello.com
+    if [[ $website == *"://trello.com/"*  ]] || [[ $website == *"://www.trello.com/"*  ]] ||
+       [[ $website == *"://trello.com"    ]] || [[ $website == *"://www.trello.com"    ]]; then websiteiconclass="bxl-trello";      fi
   fi
 
   if [[ $dev == true ]]; then
