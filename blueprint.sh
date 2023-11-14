@@ -468,12 +468,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ ( $flags != *"ignorePlaceholders,"* ) && ( $flags != *"ignorePlaceholders" ) ]]; then
     # Prepare variables for placeholders
+    log_bright "[INFO] Preparing placeholders.."
     DIR=".blueprint/tmp/$n"
     INSTALLMODE="normal"
-    CORES=$(nproc --all)
-    if [[ $dev == true ]]; then
-      INSTALLMODE="developer"
-    fi
+    installation_timestamp=$(date +%s)
+    if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
+    EXTPUBDIR="$FOLDER/.blueprint/extensions/$identifier/public"
+    if [[ $data_public == "" ]]; then EXTPUBDIR="null"; fi
 
     if [[ ( $flags == *"ignoreAlphabetPlaceholders,"* ) || ( $flags == *"ignoreAlphabetPlaceholders" ) ]]; then
       SKIPAZPLACEHOLDERS=true
@@ -482,8 +483,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       SKIPAZPLACEHOLDERS=false
     fi
 
+
     log_bright log_bold "[INFO] Applying placeholders.."
-    installation_timestamp=$(date +%s)
     PLACE_PLACEHOLDERS() {
       local dir="$1"
       for file in "$dir"/*; do
@@ -495,6 +496,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           sed -i "s~\^#identifier#\^~$identifier~g" "$file"
           sed -i "s~\^#path#\^~$FOLDER~g" "$file"
           sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/extensions/$identifier/private~g" "$file"
+          sed -i "s~\^#publicpath#\^~$EXTPUBDIR~g" "$file"
           sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$file"
           sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file"
           sed -i "s~\^#timestamp#\^~$installation_timestamp~g" "$file"
@@ -506,6 +508,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             sed -i "s~__name__~$name~g" "$file"
             sed -i "s~__path__~$FOLDER~g" "$file"
             sed -i "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" "$file"
+            sed -i "s~__publicpath__~$EXTPUBDIR~g" "$file"
             sed -i "s~__installmode__~$INSTALLMODE~g" "$file"
             sed -i "s~__blueprintversion__~$VERSION~g" "$file"
             sed -i "s~__timestamp__~$installation_timestamp~g" "$file"
