@@ -285,13 +285,13 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] Updating route cache to include recent changes.."
     php artisan route:cache &> /dev/null 
 
-    # Sync some database values.
-    log_bright "[INFO] Syncing database values.."
-    php artisan bp:sync
-
     # Put application into production.
     log_bright "[INFO] Disable maintenance."
     php artisan up
+
+    # Sync some database values.
+    log_bright "[INFO] Syncing database values.."
+    php artisan bp:sync
 
     # Only show donate + success message if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
