@@ -483,6 +483,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     fi
 
     log_bright log_bold "[INFO] Applying placeholders.."
+    installation_timestamp=$(date +%s)
     PLACE_PLACEHOLDERS() {
       local dir="$1"
       for file in "$dir"/*; do
@@ -496,6 +497,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/extensions/$identifier/private~g" "$file"
           sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$file"
           sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file"
+          sed -i "s~\^#timestamp#\^~$installation_timestamp~g" "$file"
 
           if [[ $SKIPAZPLACEHOLDERS != true ]]; then
             sed -i "s~__version__~$version~g" "$file"
@@ -506,6 +508,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             sed -i "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" "$file"
             sed -i "s~__installmode__~$INSTALLMODE~g" "$file"
             sed -i "s~__blueprintversion__~$VERSION~g" "$file"
+            sed -i "s~__timestamp__~$installation_timestamp~g" "$file"
           fi
 
           log_bright "  - ${file}"
