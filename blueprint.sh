@@ -762,7 +762,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
       log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
       chmod +x ".blueprint/extensions/$identifier/private/install.sh"
-      # Run script while also parsing some useful variable for the install script to use.
+      # Run script while also parsing some useful variables for the install script to use.
       BLUEPRINT_DEVELOPER="$dev" BLUEPRINT_VERSION="$VERSION" bash ".blueprint/extensions/$identifier/private/install.sh"
       echo -e "\e[0m\x1b[0m\033[0m"
     fi
@@ -829,6 +829,14 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   log_blue "[INPUT] Are you sure you want to continue? Some extension files might not be removed as Blueprint does not keep track of them. (y/N)"
   read -r YN
   if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then log_bright "[INFO] Extension removal cancelled.";exit 1;fi
+
+  if [[ ( $flags == *"hasRemovalScript,"* ) || ( $flags == *"hasRemovalScript" ) ]]; then
+    log_yellow "[WARNING] This extension uses a custom removal script, proceed with caution."
+    chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
+    # Run script while also parsing some useful variables for the uninstall script to use.
+    BLUEPRINT_DEVELOPER="false" BLUEPRINT_VERSION="$VERSION" bash ".blueprint/extensions/$identifier/private/remove.sh"
+    echo -e "\e[0m\x1b[0m\033[0m"
+  fi
 
   # Remove admin button 
   log_bright "[INFO] Removing admin button.."
