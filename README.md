@@ -32,7 +32,7 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 * Common sense.
 
 **Installation:**
-> **Important**
+> [!IMPORTANT]
 > Blueprint doesn't mix well with other modifications, so if you already have any, [perform a panel update](https://pterodactyl.io/panel/1.0/updating.html) before moving on with this guide.
 
 <br/>
@@ -66,7 +66,7 @@ We've made some guides and documentation for extension development over on [GitB
 <br/>
 
 ## Extensions
-> **Note**
+> [!NOTE]
 > [Open a pull request](https://github.com/teamblueprint/main/pulls) on GitHub and add your extension here (in alphabetic order). To install an extension, upload your `something.blueprint` file to your Pterodactyl folder and run `blueprint -install something`.
 
 <br/>
