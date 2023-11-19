@@ -459,6 +459,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     # trello.com
     if [[ $website == *"://trello.com/"*  ]] || [[ $website == *"://www.trello.com/"*  ]] ||
        [[ $website == *"://trello.com"    ]] || [[ $website == *"://www.trello.com"    ]]; then websiteiconclass="bxl-trello";      fi
+    # reddit.com
+    if [[ $website == *"://reddit.com/"*  ]] || [[ $website == *"://www.reddit.com/"*  ]] ||
+       [[ $website == *"://reddit.com"    ]] || [[ $website == *"://www.reddit.com"    ]]; then websiteiconclass="bxl-reddit";      fi
   fi
 
   if [[ $dev == true ]]; then
