@@ -108,7 +108,7 @@ function log_escape
     done
     
     echo "$log_ECHOSWITCHES" "$result"
-    echo "$log_ECHOSWITCHES" "$result" >> .blueprint/extensions/blueprint/private/debug/logs.txt;
+    eval ("echo \"$log_ECHOSWITCHES\" \"$result\" >> .blueprint/extensions/blueprint/private/debug/logs.txt") &> /dev/null;
     echo -e "\n" >> .blueprint/extensions/blueprint/private/debug/logs.txt;
 }
 

@@ -248,8 +248,8 @@ if [[ $1 != "-bash" ]]; then
 
     # Clear view cache.
     log_bright "[INFO] Clearing view cache.."
-    php artisan view:clear
-    php artisan config:clear
+    php artisan view:clear &> /dev/null
+    php artisan config:clear &> /dev/null
 
     # Link filesystems.
     log_bright "[INFO] Linking filesystems.."
