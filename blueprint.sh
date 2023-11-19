@@ -442,26 +442,25 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     # Change link icon depending on website url.
     websiteiconclass="bx-link-external"
 
-    # github.com
+    # git
     if [[ $website == *"://github.com/"*  ]] || [[ $website == *"://www.github.com/"*  ]] ||
-       [[ $website == *"://github.com"    ]] || [[ $website == *"://www.github.com"    ]]; then websiteiconclass="bx-git-branch";   fi
-    # discord.com
+       [[ $website == *"://github.com"    ]] || [[ $website == *"://www.github.com"    ]] ||
+       [[ $website == *"://gitlab.com/"*  ]] || [[ $website == *"://www.gitlab.com/"*  ]] ||
+       [[ $website == *"://gitlab.com"    ]] || [[ $website == *"://www.gitlab.com"    ]]; then websiteiconclass="bx-git-branch";   fi
+    # discord
     if [[ $website == *"://discord.com/"* ]] || [[ $website == *"://www.discord.com/"* ]] ||
        [[ $website == *"://discord.com"   ]] || [[ $website == *"://www.discord.com"   ]] ||
        [[ $website == *"://discord.gg/"*  ]] || [[ $website == *"://www.discord.gg/"*  ]] ||
        [[ $website == *"://discord.gg"    ]] || [[ $website == *"://www.discord.gg"    ]]; then websiteiconclass="bxl-discord-alt"; fi
-    # patreon.com
+    # patreon
     if [[ $website == *"://patreon.com/"* ]] || [[ $website == *"://www.patreon.com/"* ]] ||
        [[ $website == *"://patreon.com"   ]] || [[ $website == *"://www.patreon.com"   ]]; then websiteiconclass="bxl-patreon";     fi
-    # reddit.com
+    # reddit
     if [[ $website == *"://reddit.com/"*  ]] || [[ $website == *"://www.reddit.com/"*  ]] ||
        [[ $website == *"://reddit.com"    ]] || [[ $website == *"://www.reddit.com"    ]]; then websiteiconclass="bxl-reddit";      fi
-    # trello.com
+    # trello
     if [[ $website == *"://trello.com/"*  ]] || [[ $website == *"://www.trello.com/"*  ]] ||
        [[ $website == *"://trello.com"    ]] || [[ $website == *"://www.trello.com"    ]]; then websiteiconclass="bxl-trello";      fi
-    # reddit.com
-    if [[ $website == *"://reddit.com/"*  ]] || [[ $website == *"://www.reddit.com/"*  ]] ||
-       [[ $website == *"://reddit.com"    ]] || [[ $website == *"://www.reddit.com"    ]]; then websiteiconclass="bxl-reddit";      fi
   fi
 
   if [[ $dev == true ]]; then
