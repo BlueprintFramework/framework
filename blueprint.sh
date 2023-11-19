@@ -1121,6 +1121,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   tnum=${ASKTEMPLATE}
   log_bright "[INFO] Downloading templates from 'teamblueprint/templates'.."
+  if [[ $(php artisan bp:latest) != "$VERSION" ]]; then log_yellow "[WARNING] Your Blueprint installation version is outdated, some templates might break or show random bugs."
   cd .blueprint/tmp
   git clone "https://github.com/teamblueprint/templates.git"
   cd ${FOLDER}/.blueprint
