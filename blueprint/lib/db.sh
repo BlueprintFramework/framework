@@ -5,13 +5,12 @@
 
 FLDR=$BLUEPRINT__FOLDER"/.blueprint/extensions/blueprint/private/db/database"
 
-dbAdd() {
-    # dbAdd "database.record";
-    echo "* ${1};" >> $FLDR
-}; dbValidate() {
-    # dbValidate "database.record";
-    grep -Fxq "* ${1};" $FLDR > /dev/null;
-}; dbRemove() {
-    # dbRemove "database.record";
-    sed -i "s/* ${1};//g" $FLDR > /dev/null;
-};
+
+# dbAdd "database.record"
+dbAdd() { echo "* ${1};" >> $FLDR }
+
+# dbValidate "database.record"
+dbValidate() { grep -Fxq "* ${1};" $FLDR > /dev/null }
+
+# dbRemove "database.record"
+dbRemove() { sed -i "s/* ${1};//g" $FLDR > /dev/null }
