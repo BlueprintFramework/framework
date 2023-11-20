@@ -1195,6 +1195,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   log_bright "[INFO] Exporting extension files located in '.blueprint/dev'."
 
   cd .blueprint
+  rm dev/.gitkeep 2> /dev/null
   eval $(parse_yaml dev/conf.yml conf_); identifier="${conf_info_identifier}"
   cp -R dev/* tmp/
   cd tmp
