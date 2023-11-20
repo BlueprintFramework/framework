@@ -100,7 +100,7 @@ function log_escape
 {
     local result="$1"
     until [ -z "${2:-}" ]; do
-	if ! [ $2 -ge 0 -a $2 -le 47 ] 2>/dev/null; then
+	if ! [ $2 -ge 0 -a $2 -le 47 ] 2> /dev/null; then
 	    echo "log_escape: argument \"$2\" is out of range" >&2 && return 1
 	fi
         result="${log_ESC}${2}m${result}${log_ESC}${log_RESET}m"
@@ -108,8 +108,10 @@ function log_escape
     done
     
     echo "$log_ECHOSWITCHES" "$result"
-    eval ("echo \"$log_ECHOSWITCHES\" \"$result\" >> .blueprint/extensions/blueprint/private/debug/logs.txt") &> /dev/null;
-    echo -e "\n" >> .blueprint/extensions/blueprint/private/debug/logs.txt;
+    if [[ -f "$FOLDER/.blueprint/extensions/blueprint/private/debug/logs.txt" ]]; then 
+        echo "$log_ECHOSWITCHES" "$result" >> .blueprint/extensions/blueprint/private/debug/logs.txt
+        echo -e "\n" >> .blueprint/extensions/blueprint/private/debug/logs.txt
+    fi
 }
 
 function log                 { log_layer $log_RESET "$@";           }
