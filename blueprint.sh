@@ -825,7 +825,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     log_yellow "[WARNING] This extension uses a custom removal script, proceed with caution."
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
     # Run script while also parsing some useful variables for the uninstall script to use.
-    BLUEPRINT_DEVELOPER="false" BLUEPRINT_VERSION="$VERSION" bash ".blueprint/extensions/$identifier/private/remove.sh"
+    BLUEPRINT_VERSION="$VERSION" bash ".blueprint/extensions/$identifier/private/remove.sh"
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
@@ -1196,7 +1196,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     log_bright "[INFO] Running custom extension export script.."
     chmod +x "${conf_data_directory}""/export.sh"
     # Run script while also parsing some useful variables for the export script to use.
-    BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" bash "${conf_data_directory}""/export.sh"
+    BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" BLUEPRINT_VERSION="$VERSION" bash "${conf_data_directory}""/export.sh"
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
