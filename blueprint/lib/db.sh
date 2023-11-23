@@ -7,10 +7,10 @@ FLDR=$BLUEPRINT__FOLDER"/.blueprint/extensions/blueprint/private/db/database"
 
 
 # dbAdd "database.record"
-dbAdd() { echo "* ${1};" >> $FLDR }
+dbAdd() { echo "* ${1};" >> $FLDR; }
 
 # dbValidate "database.record"
-dbValidate() { grep -Fxq "* ${1};" $FLDR > /dev/null }
+dbValidate() { grep -Fxq "* ${1};" $FLDR > /dev/null; }
 
 # dbRemove "database.record"
-dbRemove() { sed -i "s/* ${1};//g" $FLDR > /dev/null }
+dbRemove() { sed -i "s/* ${1};//g" $FLDR > /dev/null; }
