@@ -1185,9 +1185,14 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
 
   cd .blueprint || throw 'cdMissingDirectory'
   rm dev/.gitkeep 2> /dev/null
+
   eval "$(parse_yaml dev/conf.yml conf_)"; identifier="${conf_info_identifier}"
+
   cp -R dev/* tmp/
   cd tmp || throw 'cdMissingDirectory'
+
+  # do compilation crap
+
   zip -r extension.zip *
   cd ${FOLDER} || throw 'cdMissingDirectory'
   cp .blueprint/tmp/extension.zip ${identifier}.blueprint
