@@ -1192,6 +1192,13 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   cd tmp || throw 'cdMissingDirectory'
 
   # do compilation crap
+  if [[ ( $conf_info_flags == *"hasExportScript,"* ) || ( $conf_info_flags == *"hasExportScript" ) ]]; then
+    log_bright "[INFO] Running custom extension export script.."
+    chmod +x "${conf_data_directory}""/export.sh"
+    # Run script while also parsing some useful variables for the export script to use.
+    BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" bash "${conf_data_directory}""/export.sh"
+    echo -e "\e[0m\x1b[0m\033[0m"
+  fi
 
   zip -r extension.zip *
   cd ${FOLDER} || throw 'cdMissingDirectory'
