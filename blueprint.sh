@@ -64,7 +64,7 @@ export BLUEPRINT__VERSION=$VERSION
 export NODE_OPTIONS=--openssl-legacy-provider
 
 # Automatically navigate to the Pterodactyl directory when running the core.
-cd $FOLDER 
+cd $FOLDER || return
 
 # Import libraries.
 source .blueprint/lib/bash_colors.sh
@@ -73,12 +73,14 @@ source .blueprint/lib/db.sh
 source .blueprint/lib/telemetry.sh
 source .blueprint/lib/updateAdminCacheReminder.sh
 source .blueprint/lib/grabenv.sh
+source .blueprint/lib/throwError.sh
 if [[ ! -f ".blueprint/lib/bash_colors.sh" ]]; then              LIB__bash_colors="missing";              fi
 if [[ ! -f ".blueprint/lib/parse_yaml.sh" ]]; then               LIB__parse_yaml="missing";               fi
 if [[ ! -f ".blueprint/lib/db.sh" ]]; then                       LIB__db="missing";                       fi
 if [[ ! -f ".blueprint/lib/telemetry.sh" ]]; then                LIB__telemetry="missing";                fi
 if [[ ! -f ".blueprint/lib/updateAdminCacheReminder.sh" ]]; then LIB__updateAdminCacheReminder="missing"; fi
 if [[ ! -f ".blueprint/lib/grabenv.sh" ]]; then                  LIB__grabEnv="missing";                  fi
+if [[ ! -f ".blueprint/lib/throwError.sh" ]]; then               LIB__throwError="missing";               fi
 
 # Fallback to these functions if "bash_colors.sh" is missing
 if [[ $LIB__bash_colors == "missing" ]]; then
@@ -167,6 +169,7 @@ depend() {
   if [[ $LIB__telemetry                ]]; then DEPEND_MISSING=true; fi
   if [[ $LIB__updateAdminCacheReminder ]]; then DEPEND_MISSING=true; fi
   if [[ $LIB__grabEnv                  ]]; then DEPEND_MISSING=true; fi
+  if [[ $LIB__throwError               ]]; then DEPEND_MISSING=true; fi
 
   # Exit when missing dependencies.
   if [[ $DEPEND_MISSING == true ]]; then 
@@ -192,6 +195,7 @@ depend() {
     if [[ $LIB__telemetry                ]]; then log_red "  - \"internal:telemetry\" is not installed or detected.";                fi
     if [[ $LIB__updateAdminCacheReminder ]]; then log_red "  - \"internal:updateAdminCacheReminder\" is not installed or detected."; fi
     if [[ $LIB__grabEnv                  ]]; then log_red "  - \"internal:grabEnv\" is not installed or detected.";                  fi
+    if [[ $LIB__throwError               ]]; then log_red "  - \"internal:throwError\" is not installed or detected.";               fi
 
     exit 1
   fi
@@ -224,8 +228,8 @@ if [[ $1 != "-bash" ]]; then
 
     # Link directories.
     log_bright "[INFO] Linking directories.."
-    cd $FOLDER/public/extensions;        ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2> /dev/null; cd $FOLDER
-    cd $FOLDER/public/assets/extensions; ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets blueprint  2> /dev/null; cd $FOLDER
+    cd $FOLDER/public/extensions        || throwFatal 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2> /dev/null; cd $FOLDER || throwFatal 'cdMissingDirectory'
+    cd $FOLDER/public/assets/extensions || throwFatal 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets blueprint  2> /dev/null; cd $FOLDER || throwFatal 'cdMissingDirectory'
 
     # Update folder placeholder on PlaceholderService and admin layout.
     log_bright "[INFO] Updating folder placeholders.."
@@ -333,26 +337,26 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
     ZIP="${n}.zip"
     cp "$FILE" ".blueprint/tmp/$ZIP"
-    cd ".blueprint/tmp"
+    cd ".blueprint/tmp" || throwFatal 'cdMissingDirectory'
     unzip -o -qq "$ZIP"
     rm "$ZIP"
     if [[ ! -f "$n/*" ]]; then
-      cd ".."
+      cd ".." || throwFatal 'cdMissingDirectory'
       rm -R "tmp"
       mkdir -p "tmp"
-      cd "tmp"
+      cd "tmp" || throwFatal 'cdMissingDirectory'
 
       mkdir -p "./$n"
       cp "../../$FILE" "./$n/$ZIP"
-      cd "$n"
+      cd "$n" || throwFatal 'cdMissingDirectory'
       unzip -o -qq "$ZIP"
       rm "$ZIP"
-      cd ".."
+      cd ".." || throwFatal 'cdMissingDirectory'
     fi
   fi
 
   # Return to the Pterodactyl installation folder.
-  cd $FOLDER
+  cd $FOLDER || throwFatal 'cdMissingDirectory'
 
   # Get all strings from the conf.yml file and make them accessible as variables.
   if [[ ! -f ".blueprint/tmp/$n/conf.yml" ]]; then 
@@ -360,7 +364,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     rm -R ".blueprint/tmp/$n"
     quit_red "[FATAL] Could not find a conf.yml file."
   fi
-  eval $(parse_yaml .blueprint/tmp/$n/conf.yml conf_)
+
+  eval "$(parse_yaml .blueprint/tmp/$n/conf.yml conf_)"
 
   # Add aliases for config values to make working with them easier.
   name="$conf_info_name"
@@ -414,7 +419,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Detect if extension is already installed and prepare the upgrading process.
   if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"$identifier,"* ]]; then
     log_bright "[INFO] Extension appears to be installed already, reading variables.."
-    eval $(parse_yaml .blueprint/extensions/$identifier/private/.store/conf.yml old_)
+    eval "$(parse_yaml .blueprint/extensions/$identifier/private/.store/conf.yml old_)"
     DUPLICATE="y"
 
     if [[ ! -f ".blueprint/extensions/$identifier/private/.store/build/button.blade.php" ]]; then
@@ -554,7 +559,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $data_public != "" ]]; then
     log_bright "[INFO] Creating public directory.."
     mkdir -p ".blueprint/extensions/$identifier/public"
-    cd $FOLDER/public/extensions; ln -s -T $FOLDER/.blueprint/extensions/$identifier/public $identifier 2> /dev/null; cd $FOLDER
+    cd $FOLDER/public/extensions || throwFatal 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/$identifier/public $identifier 2> /dev/null; cd $FOLDER
     log_bright "[INFO] Placing public directory contents.."
     cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2> /dev/null
   fi
@@ -582,7 +587,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Link and create assets folder.
   mkdir .blueprint/extensions/$identifier/assets
-  cd $FOLDER/public/assets/extensions; ln -s -T $FOLDER/.blueprint/extensions/$identifier/assets $identifier 2> /dev/null; cd $FOLDER
+  cd $FOLDER/public/assets/extensions || throwFatal 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/$identifier/assets $identifier 2> /dev/null; cd $FOLDER || throwFatal 'cdMissingDirectory'
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
@@ -1121,12 +1126,12 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   tnum=${ASKTEMPLATE}
   log_bright "[INFO] Downloading templates from 'teamblueprint/templates'.."
   if [[ $(php artisan bp:latest) != "$VERSION" ]]; then log_yellow "[WARNING] Your Blueprint installation version is outdated, some templates might break or show random bugs."; fi
-  cd .blueprint/tmp
+  cd .blueprint/tmp || throwFatal 'cdMissingDirectory'
   git clone "https://github.com/teamblueprint/templates.git"
-  cd ${FOLDER}/.blueprint
+  cd ${FOLDER}/.blueprint || throwFatal 'cdMissingDirectory'
   cp -R tmp/templates/* extensions/blueprint/private/build/templates/
   rm -R tmp/templates
-  cd ${FOLDER}
+  cd ${FOLDER} || throwFatal 'cdMissingDirectory'
 
   eval $(parse_yaml .blueprint/extensions/blueprint/private/build/templates/${tnum}/TemplateConfiguration.yml t_);
 
@@ -1194,13 +1199,13 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
 
   log_bright "[INFO] Exporting extension files located in '.blueprint/dev'."
 
-  cd .blueprint
+  cd .blueprint || throwFatal 'cdMissingDirectory'
   rm dev/.gitkeep 2> /dev/null
-  eval $(parse_yaml dev/conf.yml conf_); identifier="${conf_info_identifier}"
+  eval "$(parse_yaml dev/conf.yml conf_)"; identifier="${conf_info_identifier}"
   cp -R dev/* tmp/
-  cd tmp
+  cd tmp || throwFatal 'cdMissingDirectory'
   zip -r extension.zip *
-  cd ${FOLDER}
+  cd ${FOLDER} || throwFatal 'cdMissingDirectory'
   cp .blueprint/tmp/extension.zip ${identifier}.blueprint
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
@@ -1276,7 +1281,7 @@ fi
 if [[ $2 == "-rerun-install" ]]; then VCMD="y"
   log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
   dbRemove "blueprint.setupFinished"
-  cd ${FOLDER}
+  cd ${FOLDER} || throwFatal 'cdMissingDirectory'
   bash blueprint.sh
 fi
 
