@@ -1120,7 +1120,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   tnum=${ASKTEMPLATE}
   log_bright "[INFO] Downloading templates from 'teamblueprint/templates'.."
-  if [[ $(php artisan bp:latest) != "$VERSION" ]]; then log_yellow "[WARNING] Your Blueprint installation version is outdated, some templates might break or show random bugs."
+  if [[ $(php artisan bp:latest) != "$VERSION" ]]; then log_yellow "[WARNING] Your Blueprint installation version is outdated, some templates might break or show random bugs."; fi
   cd .blueprint/tmp
   git clone "https://github.com/teamblueprint/templates.git"
   cd ${FOLDER}/.blueprint
@@ -1146,7 +1146,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     icnNUM=$(expr 1 + $RANDOM % 9)
     cp .blueprint/assets/defaultExtensionLogo${icnNUM}.jpg .blueprint/tmp/init/${t_template_files_icon}
     sed -i "s~␀icon␀~${t_template_files_icon}~g" .blueprint/tmp/init/conf.yml; #ICON
-  fi;
+  fi
 
   log_bright "[INFO] Applying core variables.."
   sed -i "s~␀version␀~${VERSION}~g" .blueprint/tmp/init/conf.yml #BLUEPRINT-VERSION
