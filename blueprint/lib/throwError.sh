@@ -10,9 +10,3 @@ function throw {
   log_red "[FATAL] $err"
   return 1
 }
-
-function warn {
-  if [[ $err == "" ]]; then err="$1"; fi
-  log_yellow "[WARNING] $err"
-  return 1
-}

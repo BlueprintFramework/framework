@@ -8,11 +8,8 @@
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="/var/www/pterodactyl" #;
 
-# If the fallback version below does not match your downloaded version, please let us know.
-  VER_FALLBACK="alpha-3ZX"
-
-# This will be automatically replaced by some marketplaces, if not, $VER_FALLBACK will be used as fallback.
-  PM_VERSION="([(pterodactylmarket_version)])"
+# If the version below does not match your downloaded version, please let us know.
+  VERSION="alpha-3ZX"
 
 
 
@@ -36,26 +33,13 @@ fi
 
 if [[ -d "$FOLDER/blueprint" ]]; then mv $FOLDER/blueprint $FOLDER/.blueprint; fi
 
-if [[ $PM_VERSION == "([(pterodactylmarket""_version)])" ]]; then
-  # This runs when the placeholder has not changed, indicating an issue with PterodactylMarket
-  # or Blueprint being installed from other sources.
+if [[ $VERSION != "" ]]; then
+  # This function makes sure some placeholders get replaced with the current Blueprint version.
   if [[ ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ]]; then
-    sed -E -i "s*&bp.version&*$VER_FALLBACK*g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*@version*$VER_FALLBACK*g" $FOLDER/.blueprint/extensions/blueprint/public/index.html
+    sed -E -i "s*&bp.version&*$VERSION*g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
+    sed -E -i "s*@version*$VERSION*g" $FOLDER/.blueprint/extensions/blueprint/public/index.html
     touch $FOLDER/.blueprint/extensions/blueprint/private/db/version
   fi
-  
-  VERSION=$VER_FALLBACK
-elif [[ $PM_VERSION != "([(pterodactylmarket""_version)])" ]]; then
-  # This runs in case it is possible to use the PterodactylMarket placeholder instead of the
-  # fallback version.
-  if [[ ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ]]; then
-    sed -E -i "s*&bp.version&*$PM_VERSION*g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*@version*$PM_VERSION*g" $FOLDER/.blueprint/extensions/blueprint/public/index.html
-    touch $FOLDER/.blueprint/extensions/blueprint/private/db/version
-  fi
-
-  VERSION=$PM_VERSION
 fi
 
 # Write environment variables.
