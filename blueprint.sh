@@ -570,7 +570,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # End creating data directory.
 
   # Link and create assets folder.
-  mkdir .blueprint/extensions/$identifier/assets
+  if [[ $DUPLICATE != "y" ]]; then
+    # Create assets folder if the extension is not updating.
+    mkdir .blueprint/extensions/$identifier/assets
+  fi
   cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/$identifier/assets $identifier 2> /dev/null; cd $FOLDER || throw 'cdMissingDirectory'
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
