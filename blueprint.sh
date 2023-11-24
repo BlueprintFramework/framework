@@ -126,6 +126,7 @@ fi
 
 # Function that exits the script after logging a "red" message.
 quit_red() { log_red "$1"; exit 1; }
+throw() { throwError "$1"; exit 1 }
 
 
 depend() {
