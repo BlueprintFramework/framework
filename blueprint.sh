@@ -1195,9 +1195,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   cp -R dev/* tmp/
   cd tmp || throw 'cdMissingDirectory'
 
-  # do compilation crap
   if [[ ( $conf_info_flags == *"hasExportScript,"* ) || ( $conf_info_flags == *"hasExportScript" ) ]]; then
-    log_yellow "[WARNING] This extension uses a custom export script, proceed with caution."
     chmod +x "${conf_data_directory}""/export.sh"
     # Run script while also parsing some useful variables for the export script to use.
     BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" BLUEPRINT_VERSION="$VERSION" bash "${conf_data_directory}""/export.sh"
