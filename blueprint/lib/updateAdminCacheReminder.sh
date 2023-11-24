@@ -11,3 +11,8 @@ updateCacheReminder() {
   sed -i "s~cacheOverlay-$oldClassName~cacheOverlay-$newClassName~g" .blueprint/extensions/blueprint/assets/misc/cacheOverlay-$newClassName.css
   echo "$newClassName" > .blueprint/extensions/blueprint/private/db/randomclassname
 }
+
+forceDisableCacheReminder() {
+  cd $BLUEPRINT__FOLDER
+  sed -i 's~ style="z-index:9998;~ style="display:none;z-index:9998;~g' resources/views/layouts/admin.blade.php
+}
