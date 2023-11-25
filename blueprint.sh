@@ -757,8 +757,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
       log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
       chmod +x ".blueprint/extensions/$identifier/private/install.sh"
+
       # Run script while also parsing some useful variables for the install script to use.
-      BLUEPRINT_DEVELOPER="$dev" BLUEPRINT_VERSION="$VERSION" bash ".blueprint/extensions/$identifier/private/install.sh"
+      EXTENSION_IDENTIFIER="$conf_info_identifier" \
+      EXTENSION_TARGET="$conf_info_target"         \
+      EXTENSION_VERSION="$conf_info_version"       \
+      PTERODACTYL_DIRECTORY="$FOLDER"              \
+      BLUEPRINT_VERSION="$VERSION"                 \
+      BLUEPRINT_DEVELOPER="$dev"                   \
+      bash ".blueprint/extensions/$identifier/private/install.sh"
+
       echo -e "\e[0m\x1b[0m\033[0m"
     fi
   else
@@ -828,8 +836,15 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ ( $flags == *"hasRemovalScript,"* ) || ( $flags == *"hasRemovalScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom removal script, proceed with caution."
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
+
     # Run script while also parsing some useful variables for the uninstall script to use.
-    BLUEPRINT_VERSION="$VERSION" bash ".blueprint/extensions/$identifier/private/remove.sh"
+    EXTENSION_IDENTIFIER="$conf_info_identifier" \
+    EXTENSION_TARGET="$conf_info_target"         \
+    EXTENSION_VERSION="$conf_info_version"       \
+    PTERODACTYL_DIRECTORY="$FOLDER"              \
+    BLUEPRINT_VERSION="$VERSION"                 \
+    bash ".blueprint/extensions/$identifier/private/remove.sh"
+    
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
@@ -1197,8 +1212,16 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
 
   if [[ ( $conf_info_flags == *"hasExportScript,"* ) || ( $conf_info_flags == *"hasExportScript" ) ]]; then
     chmod +x "${conf_data_directory}""/export.sh"
+
     # Run script while also parsing some useful variables for the export script to use.
-    BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" BLUEPRINT_VERSION="$VERSION" bash "${conf_data_directory}""/export.sh"
+    EXTENSION_IDENTIFIER="$conf_info_identifier"        \
+    EXTENSION_TARGET="$conf_info_target"                \
+    EXTENSION_VERSION="$conf_info_version"              \
+    PTERODACTYL_DIRECTORY="$FOLDER"                     \
+    BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" \
+    BLUEPRINT_VERSION="$VERSION"                        \
+    bash "${conf_data_directory}""/export.sh"
+
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
