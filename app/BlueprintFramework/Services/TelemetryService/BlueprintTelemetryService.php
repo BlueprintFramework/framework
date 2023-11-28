@@ -19,7 +19,7 @@ class BlueprintTelemetryService
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'http://data.ptero.shop:3481/send/'.$this->settings->get('blueprint::panel:id')."/".$event."/",
+      CURLOPT_URL => 'http://api.blueprint.zip:50000/send/'.$this->settings->get('blueprint::panel:id')."/".$event."/",
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ptero.shop
+# blueprint.zip
 # github.com/teamblueprint/main
 # prpl.wtf
 
@@ -202,7 +202,7 @@ if [[ $1 != "-bash" ]]; then
     if [[ $1 != "--post-upgrade" ]]; then
       log "  ██\n██  ██\n  ████\n"; # Blueprint "ascii" "logo".
       if [[ $DOCKER == "y" ]]; then
-        log_yellow "[WARNING] While running Blueprint with docker is supported, you may run into some issues. Report problems you find at ptero.shop/issue."
+        log_yellow "[WARNING] Docker is not officially supported by Blueprint and you will run into errors. Only continue if you know what you are doing."
       fi
     fi
 
@@ -283,9 +283,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Only show donate + success message if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
-      log_bright "[INFO] Blueprint is completely open source and free. Please consider supporting us on \"ptero.shop/donate\"."
-      sleep 2
-      log_green "\n\n[SUCCESS] Blueprint should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue."
+      log_green "\n\n[SUCCESS] Blueprint has finished it's installation process."
     fi
 
     dbAdd "blueprint.setupFinished"
@@ -779,11 +777,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $dev != true ]]; then
     if [[ $DUPLICATE == "y" ]]; then
-      log_green "\n\n[SUCCESS] $identifier should now be updated. If something didn't work as expected, please let us know at ptero.shop/issue."
+      log_green "\n\n[SUCCESS] $identifier should now be updated."
     else
-      log_green "\n\n[SUCCESS] $identifier should now be installed. If something didn't work as expected, please let us know at ptero.shop/issue."
+      log_green "\n\n[SUCCESS] $identifier should now be installed."
     fi
     sendTelemetry "FINISH_EXTENSION_INSTALLATION" > /dev/null
+  elif [[ $dev == true ]]; then
+    log_green "\n\n[SUCCESS] $identifier should now be built."
+    sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" > /dev/null
   fi
 fi
 
@@ -926,9 +927,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   log_bright "[INFO] Removing extension from installed extensions list.."
   sed -i "s~$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
 
-  sendTelemetry "FINISH_EXTENSION_REMOVAL" > /dev/null
-
   log_green "[SUCCESS] '$identifier' has been removed from your panel. Please note that some files might be left behind."
+  sendTelemetry "FINISH_EXTENSION_REMOVAL" > /dev/null
 fi
 
 
@@ -1186,8 +1186,6 @@ if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
   fi
   log_bright "[INFO] Installing development extension files.."
   blueprint -i test␀
-  log_green "[SUCCESS] Your extension has been built."
-  sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" > /dev/null
 fi
 
 

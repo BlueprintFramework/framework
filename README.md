@@ -1,7 +1,7 @@
 <h2><img src="https://i.imgur.com/nBYQ4Bl.png" style="height:30px;padding-right:1px"></img></h2>
 
 [Discord ➚](https://ptero.shop/community)\
-[Documentation ➚](https://ptero.shop/docs)
+[Documentation ➚](https://blueprint.zip/docs)
 
 [Introduction](#introduction)\
 [Installation](#installation)\
@@ -61,7 +61,7 @@ bash blueprint.sh
 <br/>
 
 ## Development
-We've made some guides and documentation for extension development over on [GitBook](https://ptero.shop/docs). We are adding more guides over time, don't hesitate to suggest a topic for future guides.
+We've made some guides and documentation for extension development over on [blueprint.zip](https://blueprint.zip/docs). We are adding more guides over time, don't hesitate to suggest a topic for future guides.
 
 <br/>
 
