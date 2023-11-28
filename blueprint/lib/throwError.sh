@@ -1,4 +1,7 @@
 #!/bin/bash
+# 
+# This script has been created as part of the Blueprint source code
+# and may be intergrated directly into the core in the future.
 
 source $BLUEPRINT__FOLDER/.blueprint/lib/bash_colors.sh
 
