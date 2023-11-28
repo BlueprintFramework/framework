@@ -98,4 +98,4 @@ We've made some guides and documentation for extension development over on [blue
 ## Related Links
 [**Pterodactyl**](https://pterodactyl.io/) is a free, open-source game server management panel built with PHP, React, and Go.\
 [**teamblueprint/templates**](https://github.com/teamblueprint/templates) is a repository with initialization templates for extension development.\
-[**teamblueprint/web**](https://github.com/teamblueprint/web) is our work-in-progress website and documentation revision.
+[**teamblueprint/web**](https://github.com/teamblueprint/web) is our website and documentation revision.
