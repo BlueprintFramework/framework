@@ -24,9 +24,8 @@ if [[ $_FOLDER != "" ]]; then
 fi
 
 # Check for panels that are using Docker.
-if [[ -f ".dockerenv" ]]; then
+if [[ -f "/.dockerenv" ]]; then
   DOCKER="y"
-  FOLDER="/var/www/html"
 else
   DOCKER="n"
 fi
@@ -1334,7 +1333,9 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     bash tools/update.sh ${FOLDER}
   fi
   chmod +x blueprint.sh
-  _FOLDER="${FOLDER}" bash blueprint.sh --post-upgrade
+  sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
+  mv $FOLDER/blueprint $FOLDER/.blueprint;
+  bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. Unexpected end of file (eof), command not found and syntax errors are expected behaviour."
   log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
   read -r YN4
