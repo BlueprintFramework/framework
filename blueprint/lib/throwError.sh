@@ -13,3 +13,10 @@ function throwError {
   log_red "[FATAL] $err"
   return 1
 }
+
+function throwByte {
+  # [  ^^] ello
+  if [[ $err == "" ]]; then err="$1"; fi
+  log_blue "[  " log_white "^^" log_blue "] $err"
+  return 1
+}
