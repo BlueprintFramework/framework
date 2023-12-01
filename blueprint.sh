@@ -1257,7 +1257,7 @@ if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
     quit_red "[FATAL] You do not have any development files."
   fi
 
-  log_blue "[INPUT] You are about to wipe all of your extension files, are you sure you want to continue? This cannot be undone. (y/N)"
+  log_blue "[INPUT] You are about to wipe all of your development files, are you sure you want to continue? This cannot be undone. (y/N)"
   read -r YN
   if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
 
