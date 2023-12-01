@@ -81,7 +81,8 @@ We've made some guides and documentation for extension development over on [blue
 [alipoyrazaydin](https://github.com/alipoyrazaydin) - contributor\
 [sp11rum](https://github.com/sp11rum) - contributor\
 [phedona](https://github.com/Phedona) - contributor\
-[codixer](https://github.com/Codixer) - contributor
+[codixer](https://github.com/Codixer) - contributor\
+[slimi1](https://github.com/Slimi1) - contributor
 
 <br/>
 
