@@ -48,8 +48,8 @@
     <body class="hold-transition skin-blue fixed sidebar-mini">
         <!-- Begin Blueprint cache-refresh requirement -->
         <div 
-          id="cacheOverlay-1"
-          class="cacheOverlay-1"
+          id="I0TWHOPKAB-1"
+          class="I0TWHOPKAB-1"
           style="
             position: fixed;
             bottom: 0px;
