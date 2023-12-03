@@ -38,6 +38,8 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
             <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+            <link rel="stylesheet" href="/assets/extensions/blueprint/admin.extensions.css">
+            <link rel="stylesheet" href="/assets/extensions/blueprint/blueprint.style.css">
 
             <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>

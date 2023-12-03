@@ -230,9 +230,9 @@ if [[ $1 != "-bash" ]]; then
 
     # Inject custom Blueprint css into Pterodactyl's admin panel.
     log_bright "[INFO] Modifying admin panel css."
-    sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);!!g" $FOLDER/public/themes/pterodactyl/css/pterodactyl.css
-    sed -i "s!/\* admin.css \*/!!g" $FOLDER/public/themes/pterodactyl/css/pterodactyl.css
-    sed -i '1i@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */' $FOLDER/public/themes/pterodactyl/css/pterodactyl.css
+    sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);!!g" $FOLDER/.blueprint/extensions/blueprint/assets/admin.extensions.css
+    sed -i "s!/\* admin.css \*/!!g" $FOLDER/.blueprint/extensions/blueprint/assets/admin.extensions.css
+    sed -i '1i@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */' $FOLDER/.blueprint/extensions/blueprint/assets/admin.extensions.css
 
     # Clear view cache.
     log_bright "[INFO] Clearing view cache.."
@@ -587,15 +587,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $admin_css != "" ]]; then
     log_bright "[INFO] Placing admin css.."
     updateCacheReminder
-    sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" "public/themes/pterodactyl/css/pterodactyl.css"
-    sed -i "s~/\* admin.css \*/~/\* admin.css \*/\n@import url(/assets/extensions/$identifier/admin.style.css);~g" "public/themes/pterodactyl/css/pterodactyl.css"
+    sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"
+    echo -e "@import url(/assets/extensions/$identifier/admin.style.css);" >> ".blueprint/extensions/blueprint/assets/admin.extensions.css"
     cp ".blueprint/tmp/$n/$admin_css" ".blueprint/extensions/$identifier/assets/admin.style.css"
   fi
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Placing dashboard css.."
     YARN="y"
     sed -i "s~@import url($identifier.css);~~g" "resources/scripts/css/extensions.css"
-    sed -i "s~/\* client.css \*/~/\* client.css \*/\n@import url($identifier.css);~g" "resources/scripts/css/extensions.css"
+    echo -e "@import url($identifier.css);" >> "resources/scripts/css/extensions.css"
     cp ".blueprint/tmp/$n/$dashboard_css" "resources/scripts/css/$identifier.css"
   fi
 
@@ -871,8 +871,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ $admin_css != "" ]]; then
     log_bright "[INFO] Removing admin css.."
     updateCacheReminder
-    sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" "public/themes/pterodactyl/css/pterodactyl.css"
-    sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" "public/themes/pterodactyl/css/pterodactyl.css"; #this removes changes made in older versions of blueprint
+    sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"
+    sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"; #this removes changes made in older versions of blueprint
   fi
 
   # Remove admin wrapper
