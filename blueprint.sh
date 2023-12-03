@@ -866,7 +866,6 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     log_bright "[INFO] Removing admin css.."
     updateCacheReminder
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"
-    sed -i "s~@import url(/assets/extensions/$identifier/$identifier.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"; #this removes changes made in older versions of blueprint
   fi
 
   # Remove admin wrapper
