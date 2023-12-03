@@ -49,7 +49,7 @@
         <!-- Begin Blueprint cache-refresh requirement -->
         <div 
           id="cacheOverlay-1"
-          class="cacheOverlay"
+          class="cacheOverlay-1"
           style="
             position: fixed;
             bottom: 0px;
