@@ -228,12 +228,6 @@ if [[ $1 != "-bash" ]]; then
     log_bright "[INFO] Enable maintenance."
     php artisan down
 
-    # Inject custom Blueprint css into Pterodactyl's admin panel.
-    log_bright "[INFO] Modifying admin panel css."
-    sed -i "s!@import url(/assets/extensions/blueprint/blueprint.style.css);!!g" $FOLDER/.blueprint/extensions/blueprint/assets/admin.extensions.css
-    sed -i "s!/\* admin.css \*/!!g" $FOLDER/.blueprint/extensions/blueprint/assets/admin.extensions.css
-    sed -i '1i@import url(/assets/extensions/blueprint/blueprint.style.css);\n/* admin.css */' $FOLDER/.blueprint/extensions/blueprint/assets/admin.extensions.css
-
     # Clear view cache.
     log_bright "[INFO] Clearing view cache.."
     php artisan view:clear &> /dev/null
