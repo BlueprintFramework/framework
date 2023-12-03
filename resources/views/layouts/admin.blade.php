@@ -48,24 +48,25 @@
     <body class="hold-transition skin-blue fixed sidebar-mini">
         <!-- Begin Blueprint cache-refresh requirement -->
         <div 
-  id="cacheOverlay-1"
-  style="
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    background: black;
-    color: white;
-    padding: 0px 10px;
-    width: 100vw;
-    z-index: 6000001;
-  "
->
-  <p style="font-size: 20px;">
-    <code style="background: none; border: none; color: white !important;">[<i style="margin-left:20px">#</i> <i style="margin-right:3px">#</i>]</code>
-    <code style="background: none; border: none;">Outdated stylesheets detected.</code>
-    <code style="background: none; border: none; float: right; margin-top: 5px;"><button style="background: none; border: none; color: blue;">Learn more</button></code>
-  </p>
-</div>
+          id="cacheOverlay-1"
+          class="cacheOverlay"
+          style="
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            background: rgb(23,23,23);
+            background: linear-gradient(180deg, rgba(23,23,23,1) 0%, rgba(8,8,8,1) 100%);
+            color: white;
+            padding: 0px 10px;
+            width: 100vw;
+            z-index: 6000001;
+            height: auto;"
+        >
+          <p style="font-size: 20px;">
+            <code style="background: none; border: none; color: white !important;">[<i style="margin-left:20px">.</i> <i style="margin-right:3px">.</i>]</code>
+            <code style="background: none; border: none;">Outdated stylesheets detected.</code>
+          </p>
+        </div>
         <!-- End Blueprint cache-refresh requirement -->
         <div class="wrapper">
             <header class="main-header">
