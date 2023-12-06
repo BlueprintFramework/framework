@@ -359,8 +359,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   admin_css="$conf_admin_css"; #(optional)
   admin_wrapper="$conf_admin_wrapper"; #(optional)
 
-  dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
   dashboard_css="$conf_dashboard_css"; #(optional)
+  dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
 
   data_directory="$conf_data_directory"; #(optional)
   data_public="$conf_data_public"; #(optional)
@@ -809,8 +809,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     admin_css="$conf_admin_css"; #(optional)
     admin_wrapper="$conf_admin_wrapper"; #(optional)
 
-    dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
     dashboard_css="$conf_dashboard_css"; #(optional)
+    dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
 
     data_directory="$conf_data_directory"; #(optional)
     data_public="$conf_data_public"; #(optional)
