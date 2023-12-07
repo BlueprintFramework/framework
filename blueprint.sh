@@ -1263,16 +1263,16 @@ fi
 
 # -info
 if [[ ( $2 == "-info" || $2 == "-f" ) ]]; then VCMD="y"
-  fetchversion() { log_reset log_white $VERSION; }
-  fetchfolder() { log_reset log_white $FOLDER; }
-  fetchurl() { log_reset log_white $(grabAppUrl); }
-  fetchlocale() { log_reset log_white $(grabAppLocale); }
-  fetchtimezone() { log_reset log_white $(grabAppTimezone); }
+  fetchversion() { if [[ $VERSION != "" ]]; then log_reset log_white $VERSION; else echo "none"; fi }
+  fetchfolder() { if [[ $FOLDER != "" ]]; then log_reset log_white $FOLDER; else echo "none"; fi }
+  fetchurl() { if [[ $(grabAppUrl) != "" ]]; then log_reset log_white $(grabAppUrl); else echo "none"; fi }
+  fetchlocale() { if [[ $(grabAppLocale) != "" ]]; log_reset log_white $(grabAppLocale); else echo "none"; fi }
+  fetchtimezone() { if [[ $(grabAppTimezone) != "" ]]; log_reset log_white $(grabAppTimezone); else echo "none"; fi }
   fetchextensions() { log_reset log_white $(echo "$(<.blueprint/extensions/blueprint/private/db/installed_extensions)" | tr -cd ',' | wc -c | tr -d ' '); }
   fetchdeveloper() { log_reset log_white $(if dbValidate "blueprint.developerEnabled"; then echo "true"; else echo "false"; fi;); }
   fetchtelemetry() { log_reset log_white $(telemetrykey=$(cat .blueprint/extensions/blueprint/private/db/telemetry_id); if [[ $telemetrykey == "KEY_NOT_UPDATED" ]]; then echo "false"; else echo "true"; fi;); }
-  fetchnode() { log_reset log_white $(node -v); }
-  fetchyarn() { log_reset log_white $(yarn -v); }
+  fetchnode() { if [[ $(node -v) != "" ]]; log_reset log_white $(node -v); else echo "none"; fi }
+  fetchyarn() { if [[ $(yarn -v) != "" ]]; log_reset log_white $(yarn -v); else echo "none"; fi }
 
   log_bright          " "
   log_blue log_bold   "    ⣿⣿    $(log_reset log_bold log_blue "Version:") $(fetchversion)"
