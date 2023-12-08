@@ -68,5 +68,5 @@
     </div>
   </div>
 
-  <img src="/assets/extensions/blueprint/byte.png" class="byte-img">
+  <p style="text-align: center"><img src="/assets/extensions/blueprint/byte.png" class="byte-img"></p>
 @endsection
