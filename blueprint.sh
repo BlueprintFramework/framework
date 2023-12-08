@@ -195,8 +195,7 @@ chmod u+x /usr/local/bin/blueprint > /dev/null
 
 if [[ $1 != "-bash" ]]; then
   if dbValidate "blueprint.setupFinished"; then
-    log_yellow "[WARNING] This command only works if you have yet to install Blueprint. Run 'blueprint (cmd) [arg]' instead."
-    exit 1
+    quit_red "[FATAL] This command only works if you have yet to install Blueprint. Run 'blueprint (cmd) [arg]' instead."
   else
     # Only run if Blueprint is not in the process of upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
