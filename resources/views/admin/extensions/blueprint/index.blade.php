@@ -68,5 +68,5 @@
     </div>
   </div>
 
-  <img src="/assets/extensions/blueprint/byte.png" style="width: 150px; opacity: .2">
+  <img src="/assets/extensions/blueprint/byte.png" class="byte-img">
 @endsection
