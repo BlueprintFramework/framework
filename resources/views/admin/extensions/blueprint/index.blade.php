@@ -67,4 +67,6 @@
       </form>
     </div>
   </div>
+
+  <img src="/assets/extensions/blueprint/byte.png" style="width: 150px; opacity: .2">
 @endsection
