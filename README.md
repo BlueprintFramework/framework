@@ -69,9 +69,7 @@ We've made some guides and documentation for extension development over on [blue
 > [!NOTE]
 > [Open a pull request](https://github.com/teamblueprint/web/pulls) on our website repository and add your extension to [`browse/:repository/repository.yml`](https://github.com/teamblueprint/web/blob/main/browse/%3Arepository/repository.yml) (in alphabetic order). To install an extension, upload your `something.blueprint` file to your Pterodactyl folder and run `blueprint -install something`.
 
-<br/>
-
-**Browse** free and paid themes and extensions on our website. [Find your next extension here.](https://blueprint.zip/browse)
+**Browse and find** free and paid themes and extensions on our website. [Find your next extension here.](https://blueprint.zip/browse)
 
 <br/>
 
