@@ -479,7 +479,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
     EXTPUBDIR="$FOLDER/.blueprint/extensions/$identifier/public"
     if [[ $data_public == "" ]]; then EXTPUBDIR="null"; fi
-    if ! $F_ignoreAlphabetPlaceholders; then log_bright "[INFO] Alphabet placeholders will be skipped due to the 'ignoreAlphabetPlaceholders' flag."; fi
+    if $F_ignoreAlphabetPlaceholders; then log_bright "[INFO] Alphabet placeholders will be skipped due to the 'ignoreAlphabetPlaceholders' flag."; fi
 
     log_bright log_bold "[INFO] Applying placeholders.."
     PLACE_PLACEHOLDERS() {
@@ -790,7 +790,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   chown -R www-data:www-data "$FOLDER/.blueprint/extensions/$identifier/private"
   chmod --silent -R +x ".blueprint/extensions/"* 2> /dev/null
 
-  if [[ ( ! $F_developerIgnoreInstallScript ) || ( $dev != true ) ]]; then
+  if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
     if $F_hasInstallScript; then
       log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
       chmod +x ".blueprint/extensions/$identifier/private/install.sh"
