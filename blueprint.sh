@@ -193,12 +193,14 @@ assignflags() {
   F_hasRemovalScript=false
   F_hasExportScript=false
   F_developerIgnoreInstallScript=false
+  F_developerIgnoreRebuild=false
   if [[ ( $flags == *"ignorePlaceholders,"*           ) || ( $flags == *"ignorePlaceholders"           ) ]]; then F_ignorePlaceholders=true           ;fi
   if [[ ( $flags == *"ignoreAlphabetPlaceholders,"*   ) || ( $flags == *"ignoreAlphabetPlaceholders"   ) ]]; then F_ignoreAlphabetPlaceholders=true   ;fi
   if [[ ( $flags == *"hasInstallScript,"*             ) || ( $flags == *"hasInstallScript"             ) ]]; then F_hasInstallScript=true             ;fi
   if [[ ( $flags == *"hasRemovalScript,"*             ) || ( $flags == *"hasRemovalScript"             ) ]]; then F_hasRemovalScript=true             ;fi
   if [[ ( $flags == *"hasExportScript,"*              ) || ( $flags == *"hasExportScript"              ) ]]; then F_hasExportScript=true              ;fi
   if [[ ( $flags == *"developerIgnoreInstallScript,"* ) || ( $flags == *"developerIgnoreInstallScript" ) ]]; then F_developerIgnoreInstallScript=true ;fi
+  if [[ ( $flags == *"developerIgnoreRebuild,"*       ) || ( $flags == *"developerIgnoreRebuild"       ) ]]; then F_developerIgnoreRebuild=true       ;fi
 }
 
 
@@ -762,8 +764,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   if [[ $YARN == "y" ]]; then 
-    log_bright "[INFO] Rebuilding panel.."
-    yarn run build:production
+    if [[ ( ! $F_developerIgnoreRebuild ) || ( $dev != true ) ]]; then
+      log_bright "[INFO] Rebuilding panel.."
+      yarn run build:production
+    else
+      log_yellow "[WARNING] Rebuilding skipped due to 'developerIgnoreRebuild' flag being present."
+    fi
   fi
 
   log_bright "[INFO] Updating route cache to include recent changes.."
