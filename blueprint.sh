@@ -366,6 +366,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   database_migrations="$conf_database_migrations"; #(optional)
 
+  
+  
+  # Assign variables for flags.
+  F_ignorePlaceholders=false
+  F_ignoreAlphabetPlaceholders=false
+  F_hasInstallScript=false
+  F_hasRemovalScript=false
+  F_hasExportScript=false
+  F_developerIgnoreInstallScript=false
+  if [[ ( $flags == *"ignorePlaceholders,"*           ) || ( $flags == *"ignorePlaceholders"           ) ]]; then F_ignorePlaceholders=true           ;fi
+  if [[ ( $flags == *"ignoreAlphabetPlaceholders,"*   ) || ( $flags == *"ignoreAlphabetPlaceholders"   ) ]]; then F_ignoreAlphabetPlaceholders=true   ;fi
+  if [[ ( $flags == *"hasInstallScript,"*             ) || ( $flags == *"hasInstallScript"             ) ]]; then F_hasInstallScript=true             ;fi
+  if [[ ( $flags == *"hasRemovalScript,"*             ) || ( $flags == *"hasRemovalScript"             ) ]]; then F_hasRemovalScript=true             ;fi
+  if [[ ( $flags == *"hasExportScript,"*              ) || ( $flags == *"hasExportScript"              ) ]]; then F_hasExportScript=true              ;fi
+  if [[ ( $flags == *"developerIgnoreInstallScript,"* ) || ( $flags == *"developerIgnoreInstallScript" ) ]]; then F_developerIgnoreInstallScript=true ;fi
 
   
   # "prevent" folder "escaping"
