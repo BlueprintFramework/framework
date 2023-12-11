@@ -366,6 +366,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   database_migrations="$conf_database_migrations"; #(optional)
 
+
+  
   # "prevent" folder "escaping"
   if [[ ( $icon                == "/"* ) || ( $icon                == "."* ) || ( $icon                == *"\n"* ) ]] ||
      [[ ( $admin_view          == "/"* ) || ( $admin_view          == "."* ) || ( $admin_view          == *"\n"* ) ]] ||
@@ -525,21 +527,19 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   
 
 
-  # Validate paths to files defined in conf.yml.
-
-  # (optional)
-  if [[ ( ! -f ".blueprint/tmp/$n/$icon"              ) && ( $icon != ""              ) ]]      # icon
-  || [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"  ) && ( $admin_controller != ""  ) ]]      # admin_controller
-  || [[ ( ! -f ".blueprint/tmp/$n/$admin_css"         ) && ( $admin_css != ""         ) ]]      # admin_css
-  || [[ ( ! -f ".blueprint/tmp/$n/$admin_wrapper"     ) && ( $admin_wrapper != ""     ) ]]      # admin_wrapper
-  || [[ ( ! -f ".blueprint/tmp/$n/$dashboard_css"     ) && ( $dashboard_css != ""     ) ]]      # dashboard_css
-  || [[ ( ! -f ".blueprint/tmp/$n/$dashboard_wrapper" ) && ( $dashboard_wrapper != "" ) ]];then # dashboard_wrapper 
-    EMPTYPATHS="y"
-  fi
-
-  # Throw error
-  if [[ $EMPTYPATHS == "y" ]]; then
-    rm -R ".blueprint/tmp/$n";
+  # Validate paths to files and directories defined in conf.yml.
+  log_bright "[INFO] Validating conf.yml file path values.."
+  if [[ ( ! -f ".blueprint/tmp/$n/$icon"              ) && ( ${icon} != ""              ) ]]      # file:   icon              (optional)
+  || [[ ( ! -f ".blueprint/tmp/$n/$admin_view"        )                                   ]]      # file:   admin_view
+  || [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"  ) && ( ${admin_controller} != ""  ) ]]      # file:   admin_controller  (optional)
+  || [[ ( ! -f ".blueprint/tmp/$n/$admin_css"         ) && ( ${admin_css} != ""         ) ]]      # file:   admin_css         (optional)
+  || [[ ( ! -f ".blueprint/tmp/$n/$admin_wrapper"     ) && ( ${admin_wrapper} != ""     ) ]]      # file:   admin_wrapper     (optional)
+  || [[ ( ! -f ".blueprint/tmp/$n/$dashboard_css"     ) && ( ${dashboard_css} != ""     ) ]]      # file:   dashboard_css     (optional)
+  || [[ ( ! -f ".blueprint/tmp/$n/$dashboard_wrapper" ) && ( ${dashboard_wrapper} != "" ) ]]      # file:   dashboard_wrapper (optional)
+  || [[ ( ! -d ".blueprint/tmp/$n/$data_directory"    ) && ( ${data_directory} != ""    ) ]]      # folder: data_directory    (optional)
+  || [[ ( ! -d ".blueprint/tmp/$n/$data_public"       ) && ( ${data_public} != ""       ) ]]      # folder: data_public       (optional)
+  || [[ ( ! -d ".blueprint/tmp/$n/$data_migrations"   ) && ( ${data_migrations} != ""   ) ]];then # folder: data_migrations   (optional)
+    rm -R ".blueprint/tmp/$n"
     throw 'confymlMissingFiles'
   fi
 
