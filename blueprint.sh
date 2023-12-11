@@ -556,6 +556,18 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     throw 'confymlMissingFiles'
   fi
 
+  # Validate custom script paths.
+  if [[ $F_hasInstallScript || $F_hasRemovalScript || $F_hasExportScript ]]; then
+    if [[ $data_directory == "" ]]; then rm -R ".blueprint/tmp/$n"; throw 'scriptsNoDataDir'; fi
+
+    if [[ $F_hasInstallScript ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/install.sh" ]] ||
+       [[ $F_hasRemovalScript ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/remove.sh"  ]] ||
+       [[ $F_hasExportScript  ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/export.sh"  ]]; then
+      rm -R ".blueprint/tmp/$n"
+      throw 'scriptsMissingFiles'
+    fi
+  fi
+
 
   if [[ $database_migrations != "" ]]; then
     log_bright "[INFO] Placing database migrations.."
