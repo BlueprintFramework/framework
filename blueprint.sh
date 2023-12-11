@@ -855,12 +855,12 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     quit_red "[FATAL] Backup conf.yml could not be found."
   fi
 
-  log_bright "[INFO] Checking dependencies.."
-  depend
-
   log_blue "[INPUT] Are you sure you want to continue? Some extension files might not be removed as Blueprint does not keep track of them. (y/N)"
   read -r YN
   if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then log_bright "[INFO] Extension removal cancelled.";exit 1;fi
+
+  log_bright "[INFO] Checking dependencies.."
+  depend
 
   # Assign variables to extension flags.
   log_bright "[INFO] Assigning variables to extension flags.."
