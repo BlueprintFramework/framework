@@ -557,7 +557,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   # Validate custom script paths.
-  if [[ $F_hasInstallScript || $F_hasRemovalScript || $F_hasExportScript ]]; then
+  if [[ $F_hasInstallScript == true || $F_hasRemovalScript == true || $F_hasExportScript == true ]]; then
     if [[ $data_directory == "" ]]; then rm -R ".blueprint/tmp/$n"; throw 'scriptsNoDataDir'; fi
 
     if [[ $F_hasInstallScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/install.sh" ]] ||
