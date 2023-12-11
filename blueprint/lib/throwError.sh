@@ -6,8 +6,11 @@
 source $BLUEPRINT__FOLDER/.blueprint/lib/bash_colors.sh
 
 function throwError {
-  if [[ $1 == "cdMissingDirectory" ]]; then err="Tried to navigate to a directory that does not exist, halting process."; fi
-  if [[ $1 == "confymlNotFound"    ]]; then err="Could not find a conf.yml file.";                                        fi
+  if [[ $1 == "cdMissingDirectory"  ]]; then err="Tried to navigate to a directory that does not exist, halting process.";fi
+  if [[ $1 == "confymlNotFound"     ]]; then err="Could not find a conf.yml file.";fi
+  if [[ $1 == "confymlMissingFiles" ]]; then err="Some paths in the extension's conf.yml point to nonexistent files.";fi
+  if [[ $1 == "scriptsMissingFiles" ]]; then err="Could not find install/remove/export script even though it's enabled.";fi
+  if [[ $1 == "scriptsNoPrivateDir" ]]; then err="Could not run extension's install/remove/export script as the extension does not have a data directory.";fi
 
   if [[ $err == "" ]]; then err="$1"; fi
   log_red "[FATAL] $err"
