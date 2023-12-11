@@ -522,9 +522,27 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $identifier =~ [a-z] ]]; then                                log_bright "[INFO] Identifier a-z checks passed."
   else rm -R ".blueprint/tmp/$n";                                     quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi
-  if [[ ( ! -f ".blueprint/tmp/$n/$icon" ) && ( $icon != "" ) ]]; then
-    rm -R ".blueprint/tmp/$n";                                        quit_red "[FATAL] The 'info_icon' path points to a file that does not exist."
+  
+
+
+  # Validate paths to files defined in conf.yml.
+
+  # (optional)
+  if [[ ( ! -f ".blueprint/tmp/$n/$icon"              ) && ( $icon != ""              ) ]]      # icon
+  || [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"  ) && ( $admin_controller != ""  ) ]]      # admin_controller
+  || [[ ( ! -f ".blueprint/tmp/$n/$admin_css"         ) && ( $admin_css != ""         ) ]]      # admin_css
+  || [[ ( ! -f ".blueprint/tmp/$n/$admin_wrapper"     ) && ( $admin_wrapper != ""     ) ]]      # admin_wrapper
+  || [[ ( ! -f ".blueprint/tmp/$n/$dashboard_css"     ) && ( $dashboard_css != ""     ) ]]      # dashboard_css
+  || [[ ( ! -f ".blueprint/tmp/$n/$dashboard_wrapper" ) && ( $dashboard_wrapper != "" ) ]];then # dashboard_wrapper 
+    EMPTYPATHS="y"
   fi
+
+  # Throw error
+  if [[ $EMPTYPATHS == "y" ]]; then
+    rm -R ".blueprint/tmp/$n";
+    throw 'confymlMissingFiles'
+  fi
+
 
   if [[ $database_migrations != "" ]]; then
     log_bright "[INFO] Placing database migrations.."
