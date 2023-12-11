@@ -560,9 +560,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $F_hasInstallScript || $F_hasRemovalScript || $F_hasExportScript ]]; then
     if [[ $data_directory == "" ]]; then rm -R ".blueprint/tmp/$n"; throw 'scriptsNoDataDir'; fi
 
-    if [[ $F_hasInstallScript ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/install.sh" ]] ||
-       [[ $F_hasRemovalScript ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/remove.sh"  ]] ||
-       [[ $F_hasExportScript  ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/export.sh"  ]]; then
+    if [[ $F_hasInstallScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/install.sh" ]] ||
+       [[ $F_hasRemovalScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/remove.sh"  ]] ||
+       [[ $F_hasExportScript  == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/export.sh"  ]]; then
       rm -R ".blueprint/tmp/$n"
       throw 'scriptsMissingFiles'
     fi
