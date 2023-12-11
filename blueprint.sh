@@ -185,6 +185,22 @@ depend() {
   fi
 }
 
+# Assign variables for extension flags.
+assignflags() {
+  F_ignorePlaceholders=false
+  F_ignoreAlphabetPlaceholders=false
+  F_hasInstallScript=false
+  F_hasRemovalScript=false
+  F_hasExportScript=false
+  F_developerIgnoreInstallScript=false
+  if [[ ( $flags == *"ignorePlaceholders,"*           ) || ( $flags == *"ignorePlaceholders"           ) ]]; then F_ignorePlaceholders=true           ;fi
+  if [[ ( $flags == *"ignoreAlphabetPlaceholders,"*   ) || ( $flags == *"ignoreAlphabetPlaceholders"   ) ]]; then F_ignoreAlphabetPlaceholders=true   ;fi
+  if [[ ( $flags == *"hasInstallScript,"*             ) || ( $flags == *"hasInstallScript"             ) ]]; then F_hasInstallScript=true             ;fi
+  if [[ ( $flags == *"hasRemovalScript,"*             ) || ( $flags == *"hasRemovalScript"             ) ]]; then F_hasRemovalScript=true             ;fi
+  if [[ ( $flags == *"hasExportScript,"*              ) || ( $flags == *"hasExportScript"              ) ]]; then F_hasExportScript=true              ;fi
+  if [[ ( $flags == *"developerIgnoreInstallScript,"* ) || ( $flags == *"developerIgnoreInstallScript" ) ]]; then F_developerIgnoreInstallScript=true ;fi
+}
+
 
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 touch /usr/local/bin/blueprint > /dev/null
@@ -365,23 +381,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   data_public="$conf_data_public"; #(optional)
 
   database_migrations="$conf_database_migrations"; #(optional)
-
-  
-  
-  # Assign variables for flags.
-  F_ignorePlaceholders=false
-  F_ignoreAlphabetPlaceholders=false
-  F_hasInstallScript=false
-  F_hasRemovalScript=false
-  F_hasExportScript=false
-  F_developerIgnoreInstallScript=false
-  if [[ ( $flags == *"ignorePlaceholders,"*           ) || ( $flags == *"ignorePlaceholders"           ) ]]; then F_ignorePlaceholders=true           ;fi
-  if [[ ( $flags == *"ignoreAlphabetPlaceholders,"*   ) || ( $flags == *"ignoreAlphabetPlaceholders"   ) ]]; then F_ignoreAlphabetPlaceholders=true   ;fi
-  if [[ ( $flags == *"hasInstallScript,"*             ) || ( $flags == *"hasInstallScript"             ) ]]; then F_hasInstallScript=true             ;fi
-  if [[ ( $flags == *"hasRemovalScript,"*             ) || ( $flags == *"hasRemovalScript"             ) ]]; then F_hasRemovalScript=true             ;fi
-  if [[ ( $flags == *"hasExportScript,"*              ) || ( $flags == *"hasExportScript"              ) ]]; then F_hasExportScript=true              ;fi
-  if [[ ( $flags == *"developerIgnoreInstallScript,"* ) || ( $flags == *"developerIgnoreInstallScript" ) ]]; then F_developerIgnoreInstallScript=true ;fi
-
   
   # "prevent" folder "escaping"
   if [[ ( $icon                == "/"* ) || ( $icon                == "."* ) || ( $icon                == *"\n"* ) ]] ||
@@ -427,6 +426,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       mkdir ".blueprint/extensions/$identifier/public"
     fi
   fi
+
+  # Assign variables to extension flags.
+  log_bright "[INFO] Assigning variables to extension flags.."
+  assignflags
 
   # Force http/https url scheme for extension website urls.
   if [[ $website != "" ]]; then
@@ -858,6 +861,10 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   log_blue "[INPUT] Are you sure you want to continue? Some extension files might not be removed as Blueprint does not keep track of them. (y/N)"
   read -r YN
   if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then log_bright "[INFO] Extension removal cancelled.";exit 1;fi
+
+  # Assign variables to extension flags.
+  log_bright "[INFO] Assigning variables to extension flags.."
+  assignflags
 
   if [[ ( $flags == *"hasRemovalScript,"* ) || ( $flags == *"hasRemovalScript" ) ]]; then
     log_yellow "[WARNING] This extension uses a custom removal script, proceed with caution."
