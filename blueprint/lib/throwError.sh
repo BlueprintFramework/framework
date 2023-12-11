@@ -10,7 +10,7 @@ function throwError {
   if [[ $1 == "confymlNotFound"     ]]; then err="Could not find a conf.yml file.";fi
   if [[ $1 == "confymlMissingFiles" ]]; then err="A conf.yml value is pointing to a file that does not exist.";fi
   if [[ $1 == "scriptsMissingFiles" ]]; then err="Could not find install/remove/export script even though it's enabled.";fi
-  if [[ $1 == "scriptsNoPrivateDir" ]]; then err="Could not run extension's install/remove/export script as the extension does not have a data directory.";fi
+  if [[ $1 == "scriptsNoDataDir"    ]]; then err="Could not run extension's install/remove/export script as the extension does not have a data directory.";fi
 
   if [[ $err == "" ]]; then err="$1"; fi
   log_red "[FATAL] $err"
