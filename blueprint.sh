@@ -468,7 +468,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     n=$identifier
   fi
 
-  if [[ ( $flags != *"ignorePlaceholders,"* ) && ( $flags != *"ignorePlaceholders" ) ]]; then
+  if ! $F_ignorePlaceholders; then
     # Prepare variables for placeholders
     log_bright "[INFO] Preparing placeholders.."
     DIR=".blueprint/tmp/$n"
@@ -477,14 +477,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
     EXTPUBDIR="$FOLDER/.blueprint/extensions/$identifier/public"
     if [[ $data_public == "" ]]; then EXTPUBDIR="null"; fi
-
-    if [[ ( $flags == *"ignoreAlphabetPlaceholders,"* ) || ( $flags == *"ignoreAlphabetPlaceholders" ) ]]; then
-      SKIPAZPLACEHOLDERS=true
-      log_bright "[INFO] Alphabet placeholders will be skipped due to the 'ignoreAlphabetPlaceholders' flag."
-    else
-      SKIPAZPLACEHOLDERS=false
-    fi
-
+    if ! $F_ignoreAlphabetPlaceholders; then log_bright "[INFO] Alphabet placeholders will be skipped due to the 'ignoreAlphabetPlaceholders' flag."; fi
 
     log_bright log_bold "[INFO] Applying placeholders.."
     PLACE_PLACEHOLDERS() {
@@ -503,7 +496,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file"
           sed -i "s~\^#timestamp#\^~$installation_timestamp~g" "$file"
 
-          if [[ $SKIPAZPLACEHOLDERS != true ]]; then
+          if ! $F_ignoreAlphabetPlaceholders; then
             sed -i "s~__version__~$version~g" "$file"
             sed -i "s~__author__~$author~g" "$file"
             sed -i "s~__identifier__~$identifier~g" "$file"
@@ -547,16 +540,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Validate paths to files and directories defined in conf.yml.
   log_bright "[INFO] Validating conf.yml file path values.."
-  if [[ ( ! -f ".blueprint/tmp/$n/$icon"              ) && ( ${icon} != ""              ) ]]      # file:   icon              (optional)
-  || [[ ( ! -f ".blueprint/tmp/$n/$admin_view"        )                                   ]]      # file:   admin_view
-  || [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"  ) && ( ${admin_controller} != ""  ) ]]      # file:   admin_controller  (optional)
-  || [[ ( ! -f ".blueprint/tmp/$n/$admin_css"         ) && ( ${admin_css} != ""         ) ]]      # file:   admin_css         (optional)
-  || [[ ( ! -f ".blueprint/tmp/$n/$admin_wrapper"     ) && ( ${admin_wrapper} != ""     ) ]]      # file:   admin_wrapper     (optional)
-  || [[ ( ! -f ".blueprint/tmp/$n/$dashboard_css"     ) && ( ${dashboard_css} != ""     ) ]]      # file:   dashboard_css     (optional)
-  || [[ ( ! -f ".blueprint/tmp/$n/$dashboard_wrapper" ) && ( ${dashboard_wrapper} != "" ) ]]      # file:   dashboard_wrapper (optional)
-  || [[ ( ! -d ".blueprint/tmp/$n/$data_directory"    ) && ( ${data_directory} != ""    ) ]]      # folder: data_directory    (optional)
-  || [[ ( ! -d ".blueprint/tmp/$n/$data_public"       ) && ( ${data_public} != ""       ) ]]      # folder: data_public       (optional)
-  || [[ ( ! -d ".blueprint/tmp/$n/$data_migrations"   ) && ( ${data_migrations} != ""   ) ]];then # folder: data_migrations   (optional)
+  if [[ ( ! -f ".blueprint/tmp/$n/$icon"              ) && ( ${icon} != ""              ) ]] ||    # file:   icon              (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_view"        )                                   ]] ||    # file:   admin_view
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"  ) && ( ${admin_controller} != ""  ) ]] ||    # file:   admin_controller  (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_css"         ) && ( ${admin_css} != ""         ) ]] ||    # file:   admin_css         (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_wrapper"     ) && ( ${admin_wrapper} != ""     ) ]] ||    # file:   admin_wrapper     (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_css"     ) && ( ${dashboard_css} != ""     ) ]] ||    # file:   dashboard_css     (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_wrapper" ) && ( ${dashboard_wrapper} != "" ) ]] ||    # file:   dashboard_wrapper (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$data_directory"    ) && ( ${data_directory} != ""    ) ]] ||    # folder: data_directory    (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$data_public"       ) && ( ${data_public} != ""       ) ]] ||    # folder: data_public       (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$data_migrations"   ) && ( ${data_migrations} != ""   ) ]];then  # folder: data_migrations   (optional)
     rm -R ".blueprint/tmp/$n"
     throw 'confymlMissingFiles'
   fi
@@ -779,8 +772,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   chown -R www-data:www-data "$FOLDER/.blueprint/extensions/$identifier/private"
   chmod --silent -R +x ".blueprint/extensions/"* 2> /dev/null
 
-  if [[ ( ( $flags != *"developerIgnoreInstallScript,"* ) && ( $flags != *"developerIgnoreInstallScript" ) ) || ( $dev != true ) ]]; then
-    if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
+  if [[ ( ! $F_developerIgnoreInstallScript ) || ( $dev != true ) ]]; then
+    if $F_hasInstallScript; then
       log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
       chmod +x ".blueprint/extensions/$identifier/private/install.sh"
 
@@ -866,7 +859,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   log_bright "[INFO] Assigning variables to extension flags.."
   assignflags
 
-  if [[ ( $flags == *"hasRemovalScript,"* ) || ( $flags == *"hasRemovalScript" ) ]]; then
+  if $F_hasRemovalScript; then
     log_yellow "[WARNING] This extension uses a custom removal script, proceed with caution."
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
 
@@ -1239,7 +1232,12 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   cp -R dev/* tmp/
   cd tmp || throw 'cdMissingDirectory'
 
-  if [[ ( $conf_info_flags == *"hasExportScript,"* ) || ( $conf_info_flags == *"hasExportScript" ) ]]; then
+  # Assign variables to extension flags.
+  flags="$conf_info_flags"
+  log_bright "[INFO] Assigning variables to extension flags.."
+  assignflags
+
+  if $F_hasExportScript; then
     chmod +x "${conf_data_directory}""/export.sh"
 
     # Run script while also parsing some useful variables for the export script to use.
