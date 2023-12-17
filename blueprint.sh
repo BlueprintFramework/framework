@@ -1272,7 +1272,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
 
   zip -r extension.zip *
   cd ${FOLDER} || throw 'cdMissingDirectory'
-  cp .blueprint/tmp/extension.zip ${identifier}.blueprint
+  cp .blueprint/tmp/extension.zip "${identifier}.blueprint"
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
 
