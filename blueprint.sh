@@ -104,14 +104,14 @@ if [[ "$1" == "-config" ]]; then
 
   # cTELEMETRY_ID
   # Update the telemetry id.
-  if [[ $cTELEMETRY_ID != "" ]]; then
+  if [[ "$cTELEMETRY_ID" != "" ]]; then
     echo "$cTELEMETRY_ID" > .blueprint/extensions/blueprint/private/db/telemetry_id
   fi
 
   # cDEVELOPER
   # Enable/Disable developer mode.
-  if [[ $cDEVELOPER != "" ]]; then
-    if [[ $cDEVELOPER == "true" ]]; then 
+  if [[ "$cDEVELOPER" != "" ]]; then
+    if [[ "$cDEVELOPER" == "true" ]]; then 
       dbAdd "blueprint.developerEnabled"
     else 
       dbRemove "blueprint.developerEnabled"
@@ -436,8 +436,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Force http/https url scheme for extension website urls.
   if [[ $website != "" ]]; then
     if [[ ( $website != "https://"* ) && ( $website != "http://"* ) ]]; then
-      website="http://$conf_info_website"
-      conf_info_website=$website
+      website="http://${conf_info_website}"
+      conf_info_website="${website}"
     fi
 
 
@@ -531,8 +531,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $admin_controller == "" ]]; then                             log_bright "[INFO] Admin controller field left blank, using default controller instead.."
     controller_type="default";else controller_type="custom";fi
   if [[ $admin_view == "" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] 'admin_view' is a required configuration option.";fi
-  if [[ $target != $VERSION ]]; then                              log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi
-  if [[ $identifier != $n ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi
+  if [[ $target != "$VERSION" ]]; then                              log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi
+  if [[ $identifier != "$n" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi
   if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi
 
   if [[ $identifier =~ [a-z] ]]; then                                log_bright "[INFO] Identifier a-z checks passed."
@@ -577,13 +577,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $data_public != "" ]]; then
     log_bright "[INFO] Creating public directory.."
     mkdir -p ".blueprint/extensions/$identifier/public"
-    cd $FOLDER/public/extensions || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/$identifier/public $identifier 2> /dev/null; cd $FOLDER
+    
+    cd $FOLDER/public/extensions || throw 'cdMissingDirectory'
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/public "$identifier" 2> /dev/null
+    cd $FOLDER || throw 'cdMissingDirectory'
+
     log_bright "[INFO] Placing public directory contents.."
     cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2> /dev/null
   fi
 
   cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak" 2> /dev/null
-  if [[ $admin_controller == "" ]]; then # use default controller when admin_controller is left blank
+  if [[ $controller_type == "default" ]]; then # use default controller when admin_controller is left blank
     cp ".blueprint/extensions/blueprint/private/build/extensions/controller.php" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak" 2> /dev/null
   fi
   cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" 2> /dev/null
@@ -606,9 +610,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Link and create assets folder.
   if [[ $DUPLICATE != "y" ]]; then
     # Create assets folder if the extension is not updating.
-    mkdir .blueprint/extensions/$identifier/assets
+    mkdir .blueprint/extensions/"$identifier"/assets
   fi
-  cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/$identifier/assets $identifier 2> /dev/null; cd $FOLDER || throw 'cdMissingDirectory'
+
+  cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'
+  ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$identifier" 2> /dev/null
+  cd $FOLDER || throw 'cdMissingDirectory'
+  
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
@@ -618,7 +626,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.jpg"
   fi;
   ICON="/assets/extensions/$identifier/icon.jpg"
-  CONTENT=$(cat .blueprint/tmp/$n/$admin_view)
+  CONTENT=$(cat .blueprint/tmp/"$n"/"$admin_view")
 
   if [[ $admin_css != "" ]]; then
     log_bright "[INFO] Placing admin css.."
@@ -666,7 +674,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   # Replace $identifier variables.
-  if [[ $admin_controller == "" ]]; then
+  if [[ $controller_type == "default" ]]; then
     sed -i "s~␀id␀~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak"
   fi
   sed -i "s~␀id␀~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
@@ -680,7 +688,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   ADMINVIEW_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak)
   ADMINROUTE_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/route.php.bak)
   ADMINBUTTON_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak)
-  if [[ $admin_controller == "" ]]; then
+  if [[ $controller_type == "default" ]]; then
     ADMINCONTROLLER_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/controller.php.bak)
   fi
   ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
@@ -688,29 +696,29 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Place admin extension view.
   mkdir -p "resources/views/admin/extensions/$identifier"
   touch "resources/views/admin/extensions/$identifier/index.blade.php"
-  echo $ADMINVIEW_RESULT > "resources/views/admin/extensions/$identifier/index.blade.php"
+  echo "$ADMINVIEW_RESULT" > "resources/views/admin/extensions/$identifier/index.blade.php"
 
   # Place admin extension view controller.
   mkdir -p "app/Http/Controllers/Admin/Extensions/$identifier"
   touch "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
-  if [[ $admin_controller == "" ]]; then
+  if [[ $controller_type == "default" ]]; then
     # Use custom view controller.
     touch "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
-    echo $ADMINCONTROLLER_RESULT > "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
+    echo "$ADMINCONTROLLER_RESULT" > "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   else
     # Use default extension controller.
-    cp .blueprint/tmp/$n/$admin_controller "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
+    cp .blueprint/tmp/"$n"/"$admin_controller" "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
     # Place admin route if extension is not updating.
     { echo "
     // $identifier:start";
-    echo $ADMINROUTE_RESULT;
-    echo // $identifier:stop; } >> "routes/admin.php"
+    echo "$ADMINROUTE_RESULT";
+    echo // "$identifier":stop; } >> "routes/admin.php"
   else
     # Replace old extensions page button if extension is updating.
-    OLDBUTTON_RESULT=$(<.blueprint/extensions/$identifier/private/.store/build/button.blade.php)
+    OLDBUTTON_RESULT=$(<.blueprint/extensions/"$identifier"/private/.store/build/button.blade.php)
     sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
   fi
   sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" "resources/views/admin/extensions.blade.php"
@@ -756,7 +764,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Remove temporary built files.
   log_bright "[INFO] Cleaning up temporary built files.."
   rm ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-  if [[ $admin_controller == "" ]]; then
+  if [[ $controller_type == "default" ]]; then
     rm ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak"
   fi
   rm ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
