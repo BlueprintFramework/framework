@@ -1186,11 +1186,11 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   rm -R tmp/templates
   cd ${FOLDER} || throw 'cdMissingDirectory'
 
-  eval $(parse_yaml .blueprint/extensions/blueprint/private/build/templates/${tnum}/TemplateConfiguration.yml t_);
+  eval $(parse_yaml .blueprint/extensions/blueprint/private/build/templates/"${tnum}"/TemplateConfiguration.yml t_);
 
   log_bright "[INFO] Copying template contents to the tmp directory.."
   mkdir -p .blueprint/tmp/init
-  cp -R .blueprint/extensions/blueprint/private/build/templates/${tnum}/contents/* .blueprint/tmp/init/
+  cp -R .blueprint/extensions/blueprint/private/build/templates/"${tnum}"/contents/* .blueprint/tmp/init/
 
   log_bright "[INFO] Applying variables.."
   sed -i "s~␀name␀~${ASKNAME}~g" .blueprint/tmp/init/conf.yml; #NAME
@@ -1199,10 +1199,10 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   sed -i "s~␀ver␀~${ASKVERSION}~g" .blueprint/tmp/init/conf.yml; #VERSION
   sed -i "s~␀author␀~${ASKAUTHOR}~g" .blueprint/tmp/init/conf.yml; #AUTHOR
 
-  if [[ ${t_template_files_icon} != "" ]]; then
+  if [[ "${t_template_files_icon}" != "" ]]; then
     log_bright "[INFO] Rolling (and applying) extension placeholder icon.."
     icnNUM=$(expr 1 + $RANDOM % 9)
-    cp .blueprint/assets/defaultExtensionLogo${icnNUM}.jpg .blueprint/tmp/init/${t_template_files_icon}
+    cp .blueprint/assets/defaultExtensionLogo"${icnNUM}".jpg .blueprint/tmp/init/"${t_template_files_icon}"
     sed -i "s~␀icon␀~${t_template_files_icon}~g" .blueprint/tmp/init/conf.yml; #ICON
   fi
 
@@ -1288,7 +1288,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     log_bright "[INFO] Generating download url.."
     randstr=${RANDOM}${RANDOM}${RANDOM}${RANDOM}${RANDOM}
     mkdir .blueprint/extensions/blueprint/assets/exports/${randstr}
-    cp ${identifier}.blueprint .blueprint/extensions/blueprint/assets/exports/${randstr}/${identifier}.blueprint
+    cp "${identifier}".blueprint .blueprint/extensions/blueprint/assets/exports/${randstr}/"${identifier}".blueprint
     log_bright "[INFO] Download url will expire after 2 minutes."
 
     sendTelemetry "EXPOSE_DEVELOPMENT_EXTENSION" > /dev/null
