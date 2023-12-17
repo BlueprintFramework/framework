@@ -4,7 +4,7 @@
 # and may be intergrated directly into the core in the future. 
 
 sendTelemetry() {
-  cd $BLUEPRINT__FOLDER
+  cd "${BLUEPRINT__FOLDER}" || exit
   key=$(cat .blueprint/extensions/blueprint/private/db/telemetry_id)
   if [[ $key == "KEY_NOT_UPDATED" ]]; then 
     exit 1

@@ -3,7 +3,7 @@
 # This script has been created as part of the Blueprint source code
 # and may be intergrated directly into the core in the future.
 
-source $BLUEPRINT__FOLDER/.blueprint/lib/bash_colors.sh
+source "${BLUEPRINT__FOLDER}/.blueprint/lib/bash_colors.sh"
 
 function throwError {
   if [[ $1 == "cdMissingDirectory"  ]]; then err="Tried to navigate to a directory that does not exist, halting process.";fi

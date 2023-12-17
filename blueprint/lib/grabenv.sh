@@ -11,7 +11,7 @@
 
 
 
-cd "${BLUEPRINT__FOLDER}"
+cd "${BLUEPRINT__FOLDER}" || exit
 env_file=".env"
 while IFS= read -r line; do
   if [[ $line == \#* ]]; then
@@ -26,7 +26,7 @@ while IFS= read -r line; do
   fi
 done < "$env_file"
 
-grabAppUrl()               { echo $APP_URL;      }
-grabAppDebug()             { echo $APP_DEBUG;    }
-grabAppTimezone()          { echo $APP_TIMEZONE; }
-grabAppLocale()            { echo $APP_LOCALE;   }
+grabAppUrl()               { echo "$APP_URL";      }
+grabAppDebug()             { echo "$APP_DEBUG";    }
+grabAppTimezone()          { echo "$APP_TIMEZONE"; }
+grabAppLocale()            { echo "$APP_LOCALE";   }
