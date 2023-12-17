@@ -23,7 +23,7 @@ if [[ $_FOLDER != "" ]]; then
   fi
 fi
 
-# Check for panels that are using Docker.
+# Check for panels that are using Docker, which should have better support in the future.
 if [[ -f "/.dockerenv" ]]; then
   DOCKER="y"
 else
