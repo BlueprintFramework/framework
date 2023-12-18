@@ -728,8 +728,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     log_bright "[INFO] Placing dashboard wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
       sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
-      sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/templates/wrapper.blade.php"
-      sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/templates/wrapper.blade.php"
+      sed -i "s~<!--␀$identifier:start␀-->\n~~g" "resources/views/templates/wrapper.blade.php"
+      sed -i "s~\n<!--␀$identifier:stop␀-->~~g" "resources/views/templates/wrapper.blade.php"
     fi
     touch ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
     cat <(echo "<!--␀$identifier:start␀-->") ".blueprint/tmp/$n/$dashboard_wrapper" > ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
@@ -744,8 +744,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     log_bright "[INFO] Placing admin wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
       sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
-      sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/layouts/admin.blade.php"
-      sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/layouts/admin.blade.php"
+      sed -i "s~\n<!--␀$identifier:start␀-->~~g" "resources/views/layouts/admin.blade.php"
+      sed -i "s~<!--␀$identifier:stop␀-->\n~~g" "resources/views/layouts/admin.blade.php"
     fi
     touch ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
     cat <(echo "<!--␀$identifier:start␀-->") ".blueprint/tmp/$n/$admin_wrapper" > ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
@@ -930,16 +930,16 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ $admin_wrapper != "" ]]; then 
     log_bright "[INFO] Removing admin wrapper.."
     sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
-    sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/layouts/admin.blade.php"
-    sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/layouts/admin.blade.php"
+    sed -i "s~<!--␀$identifier:start␀-->\n~~g" "resources/views/layouts/admin.blade.php"
+    sed -i "s~\n<!--␀$identifier:stop␀-->~~g" "resources/views/layouts/admin.blade.php"
   fi
 
   # Remove dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then 
     log_bright "[INFO] Removing dashboard wrapper.."
     sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
-    sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/templates/wrapper.blade.php"
-    sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/templates/wrapper.blade.php"
+    sed -i "s~<!--␀$identifier:start␀-->\n~~g" "resources/views/templates/wrapper.blade.php"
+    sed -i "s~\n<!--␀$identifier:stop␀-->~~g" "resources/views/templates/wrapper.blade.php"
   fi
 
   # Remove dashboard css
