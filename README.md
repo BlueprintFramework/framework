@@ -13,7 +13,7 @@
 <br/>
 
 ## Introduction
-**Blueprint** is an open-source extension framework/manager for Pterodactyl. Developers can create versatile, easy-to-install extensions that system administrators can install within minutes *(and sometimes even seconds!)*.
+**Blueprint** is an open-source extension framework/manager for Pterodactyl. Developers can create versatile, easy-to-install extensions that system administrators can install within minutes *(and sometimes even seconds!)* without having to custom-code compatibility across multiple panel modifications.
 
 We aim to introduce new developers to Blueprint with easy to understand guides, documentation, developer commands, community support and more.
 
