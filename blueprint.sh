@@ -50,23 +50,16 @@ export NODE_OPTIONS=--openssl-legacy-provider
 cd $FOLDER || return
 
 # Import libraries.
-source .blueprint/lib/bash_colors.sh
-source .blueprint/lib/parse_yaml.sh
-source .blueprint/lib/db.sh
-source .blueprint/lib/telemetry.sh
-source .blueprint/lib/updateAdminCacheReminder.sh
-source .blueprint/lib/grabenv.sh
-source .blueprint/lib/throwError.sh
-if [[ ! -f ".blueprint/lib/bash_colors.sh" ]]; then              LIB__bash_colors="missing";              fi
-if [[ ! -f ".blueprint/lib/parse_yaml.sh" ]]; then               LIB__parse_yaml="missing";               fi
-if [[ ! -f ".blueprint/lib/db.sh" ]]; then                       LIB__db="missing";                       fi
-if [[ ! -f ".blueprint/lib/telemetry.sh" ]]; then                LIB__telemetry="missing";                fi
-if [[ ! -f ".blueprint/lib/updateAdminCacheReminder.sh" ]]; then LIB__updateAdminCacheReminder="missing"; fi
-if [[ ! -f ".blueprint/lib/grabenv.sh" ]]; then                  LIB__grabEnv="missing";                  fi
-if [[ ! -f ".blueprint/lib/throwError.sh" ]]; then               LIB__throwError="missing";               fi
+source .blueprint/lib/bash_colors.sh              || missinglibs+="[bash_colors]"
+source .blueprint/lib/parse_yaml.sh               || missinglibs+="[parse_yaml]"
+source .blueprint/lib/db.sh                       || missinglibs+="[db]"
+source .blueprint/lib/telemetry.sh                || missinglibs+="[telemetry]"
+source .blueprint/lib/updateAdminCacheReminder.sh || missinglibs+="[updateAdminCacheReminder]"
+source .blueprint/lib/grabenv.sh                  || missinglibs+="[grabenv]"
+source .blueprint/lib/throwError.sh               || missinglibs+="[throwError]"
 
 # Fallback to these functions if "bash_colors.sh" is missing
-if [[ $LIB__bash_colors == "missing" ]]; then
+if [[ $missinglibs == *"[bash_colors]"* ]]; then
   log_reset() { echo -e "$1"; }
   log_reset_underline() { echo -e "$1"; }
   log_reset_reverse() { echo -e "$1"; }
@@ -133,53 +126,48 @@ depend() {
   nodeVer=$(node -v)
   if [[ $nodeVer != "v17."* ]] && [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then DEPEND_MISSING=true; fi
 
-  # Check for required dependencies.
-  if ! [ -x "$(command -v unzip)"                 ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v node)"                  ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v yarn)"                  ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v zip)"                   ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v curl)"                  ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v php)"                   ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v git)"                   ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v grep)"                  ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v sed)"                   ]; then DEPEND_MISSING=true; fi
-  if ! [ -x "$(command -v awk)"                   ]; then DEPEND_MISSING=true; fi
-  if   [[   "$(npm ls | grep "cross-env")" == "" ]]; then DEPEND_MISSING=true; fi
-
-  # Check for internal dependencies.
-  if [[ $LIB__bash_colors              ]]; then DEPEND_MISSING=true; fi
-  if [[ $LIB__parse_yaml               ]]; then DEPEND_MISSING=true; fi
-  if [[ $LIB__db                       ]]; then DEPEND_MISSING=true; fi
-  if [[ $LIB__telemetry                ]]; then DEPEND_MISSING=true; fi
-  if [[ $LIB__updateAdminCacheReminder ]]; then DEPEND_MISSING=true; fi
-  if [[ $LIB__grabEnv                  ]]; then DEPEND_MISSING=true; fi
-  if [[ $LIB__throwError               ]]; then DEPEND_MISSING=true; fi
+  # Check for required (both internal and external) dependencies.
+  if \
+  ! [ -x "$(command -v unzip)" ] ||                          # unzip
+  ! [ -x "$(command -v node)" ] ||                           # node
+  ! [ -x "$(command -v yarn)" ] ||                           # yarn
+  ! [ -x "$(command -v zip)" ] ||                            # zip
+  ! [ -x "$(command -v curl)" ] ||                           # curl
+  ! [ -x "$(command -v php)" ] ||                            # php
+  ! [ -x "$(command -v git)" ] ||                            # git
+  ! [ -x "$(command -v grep)" ] ||                           # grep
+  ! [ -x "$(command -v sed)" ] ||                            # sed
+  ! [ -x "$(command -v awk)" ] ||                            # awk
+  ! [ "$(ls "node_modules/"*"cross-env"* 2> /dev/null)" ] || # cross-env
+  [[ $missinglibs != "" ]]; then                             # internal
+    DEPEND_MISSING=true
+  fi
 
   # Exit when missing dependencies.
   if [[ $DEPEND_MISSING == true ]]; then 
     log_red log_bold "[FATAL] Blueprint found errors for the following dependencies:"
 
-    if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($(node -v)) is an unsupported version."; fi
+    if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($nodeVer) is an unsupported version."; fi
 
-    if ! [ -x "$(command -v unzip)"             ]; then log_red "  - \"unzip\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v node)"              ]; then log_red "  - \"node\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v yarn)"              ]; then log_red "  - \"yarn\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v zip)"               ]; then log_red "  - \"zip\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v curl)"              ]; then log_red "  - \"curl\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v php)"               ]; then log_red "  - \"php\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v git)"               ]; then log_red "  - \"git\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v grep)"              ]; then log_red "  - \"grep\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v sed)"               ]; then log_red "  - \"sed\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v awk)"               ]; then log_red "  - \"awk\" is not installed or detected.";       fi
-    if [[ "$(npm ls | grep "cross-env")" == "" ]]; then log_red "  - \"cross-env\" is not installed or detected."; fi
+    if ! [ -x "$(command -v unzip)"                          ]; then log_red "  - \"unzip\" is not installed or detected.";     fi
+    if ! [ -x "$(command -v node)"                           ]; then log_red "  - \"node\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v yarn)"                           ]; then log_red "  - \"yarn\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v zip)"                            ]; then log_red "  - \"zip\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v curl)"                           ]; then log_red "  - \"curl\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v php)"                            ]; then log_red "  - \"php\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v git)"                            ]; then log_red "  - \"git\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v grep)"                           ]; then log_red "  - \"grep\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v sed)"                            ]; then log_red "  - \"sed\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v awk)"                            ]; then log_red "  - \"awk\" is not installed or detected.";       fi
+    if ! [ "$(ls "node_modules/"*"cross-env"* 2> /dev/null)" ]; then log_red "  - \"cross-env\" is not installed or detected."; fi
 
-    if [[ $LIB__bash_colors              ]]; then log_red "  - \"internal:bash_colors\" is not installed or detected.";              fi
-    if [[ $LIB__parse_yaml               ]]; then log_red "  - \"internal:parse_yaml\" is not installed or detected.";               fi
-    if [[ $LIB__db                       ]]; then log_red "  - \"internal:db\" is not installed or detected.";                       fi
-    if [[ $LIB__telemetry                ]]; then log_red "  - \"internal:telemetry\" is not installed or detected.";                fi
-    if [[ $LIB__updateAdminCacheReminder ]]; then log_red "  - \"internal:updateAdminCacheReminder\" is not installed or detected."; fi
-    if [[ $LIB__grabEnv                  ]]; then log_red "  - \"internal:grabEnv\" is not installed or detected.";                  fi
-    if [[ $LIB__throwError               ]]; then log_red "  - \"internal:throwError\" is not installed or detected.";               fi
+    if [[ $missinglibs == *"[bash_colors]"*              ]]; then log_red "  - \"internal:bash_colors\" is not installed or detected.";              fi
+    if [[ $missinglibs == *"[parse_yaml]"*               ]]; then log_red "  - \"internal:parse_yaml\" is not installed or detected.";               fi
+    if [[ $missinglibs == *"[db]"*                       ]]; then log_red "  - \"internal:db\" is not installed or detected.";                       fi
+    if [[ $missinglibs == *"[telemetry]"*                ]]; then log_red "  - \"internal:telemetry\" is not installed or detected.";                fi
+    if [[ $missinglibs == *"[updateAdminCacheReminder]"* ]]; then log_red "  - \"internal:updateAdminCacheReminder\" is not installed or detected."; fi
+    if [[ $missinglibs == *"[grabEnv]"*                  ]]; then log_red "  - \"internal:grabEnv\" is not installed or detected.";                  fi
+    if [[ $missinglibs == *"[throwError]"*               ]]; then log_red "  - \"internal:throwError\" is not installed or detected.";               fi
 
     exit 1
   fi
@@ -986,7 +974,7 @@ fi
 # help, -help, --help,
 # h,    -h,    --h
 if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) || 
-      ( $2 == "h" )    || ( $2 == "-h" )    || ( $2 == "--h" )    ]]; then VCMD="y"
+      ( $2 == "h" )    || ( $2 == "-h" )    || ( $2 == "--h" )    || ( $2 == "" ) ]]; then VCMD="y"
 
   if dbValidate "blueprint.developerEnabled"; then
     help_dev_status=""
@@ -1013,6 +1001,7 @@ ${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
   
 \x1b[34;1mMisc\x1b[0m\x1b[34m
   -version             -v  returns the blueprint version
+  -help                -h  displays this menu
   -info                -f  show neofetch-like information about blueprint
   \x1b[0m
   
