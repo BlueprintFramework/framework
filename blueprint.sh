@@ -1367,38 +1367,49 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to upgrade unless you clear your .blueprint/dev folder."
   fi
 
-  if [[ $@ == *"dev"* ]]; then
+
+  # Confirmation question for developer upgrade.
+  if [[ $3 == "dev" ]]; then
     log_blue "[INPUT] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
-    read -r YN1
-    if [[ ( ${YN1} != "y"* ) && ( ${YN1} != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+    read -r YN
+    if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+    YN=""
   fi
+
+  # Confirmation question for both developer and stable upgrade.
   log_blue "[INPUT] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)"
-  read -r YN2
-  if [[ ( ${YN2} != "y"* ) && ( ${YN2} != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  read -r YN
+  if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  YN=""
+
+  # Last confirmation question for both developer and stable upgrade.
   log_blue "[INPUT] This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'."
-  read -r YN3
-  if [[ ${YN3} != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  read -r YN
+  if [[ ${YN} != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  YN=""
+
 
   log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine."
   cp blueprint.sh .blueprint.sh.bak
-  if [[ $@ == *" dev" ]]; then
-    bash tools/update.sh ${FOLDER} dev
-  else
-    bash tools/update.sh ${FOLDER}
-  fi
+  if [[ $3 == "dev" ]]; then  bash tools/update.sh ${FOLDER} dev
+  else                        bash tools/update.sh ${FOLDER}; fi
+
   chmod +x blueprint.sh
   sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
   mv $FOLDER/blueprint $FOLDER/.blueprint;
   bash blueprint.sh --post-upgrade
   log_bright "[INFO] Bash might spit out some errors from here on out. Unexpected end of file (eof), command not found and syntax errors are expected behaviour."
+
+  # Ask user if they'd like to migrate their database.
   log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
-  read -r YN4
-  if [[ ( ${YN4} == "y" ) || ( ${YN4} == "Y" ) || ( ${YN4} == "" ) ]]; then 
+  read -r YN
+  if [[ ( ${YN} == "y" ) || ( ${YN} == "Y" ) || ( ${YN} == "" ) ]]; then 
     log_bright "[INFO] Running database migrations.."
     php artisan migrate --force
   else
     log_bright "[INFO] Database migrations have been skipped."
   fi
+  YN=""
 
   # Post-upgrade checks.
   log_bright "[INFO] Running post-upgrade checks.."
