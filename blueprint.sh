@@ -385,15 +385,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   database_migrations="$conf_database_migrations"; #(optional)
   
   # "prevent" folder "escaping"
-  if [[ ( $icon                == "/"* ) || ( $icon                == "."* ) || ( $icon                == *"\n"* ) ]] ||
-     [[ ( $admin_view          == "/"* ) || ( $admin_view          == "."* ) || ( $admin_view          == *"\n"* ) ]] ||
-     [[ ( $admin_controller    == "/"* ) || ( $admin_controller    == "."* ) || ( $admin_controller    == *"\n"* ) ]] ||
-     [[ ( $admin_css           == "/"* ) || ( $admin_css           == "."* ) || ( $admin_css           == *"\n"* ) ]] ||
-     [[ ( $data_directory      == "/"* ) || ( $data_directory      == "."* ) || ( $data_directory      == *"\n"* ) ]] ||
-     [[ ( $data_public         == "/"* ) || ( $data_public         == "."* ) || ( $data_public         == *"\n"* ) ]] ||
-     [[ ( $database_migrations == "/"* ) || ( $database_migrations == "."* ) || ( $database_migrations == *"\n"* ) ]]; then
+  if [[ ( $icon                == "/"* ) || ( $icon                == *"/.."* ) || ( $icon                == *"../"* ) || ( $icon                == *"/../"* ) || ( $icon                == *"\n"* ) ]] ||
+     [[ ( $admin_view          == "/"* ) || ( $admin_view          == *"/.."* ) || ( $admin_view          == *"../"* ) || ( $admin_view          == *"/../"* ) || ( $admin_view          == *"\n"* ) ]] ||
+     [[ ( $admin_controller    == "/"* ) || ( $admin_controller    == *"/.."* ) || ( $admin_controller    == *"../"* ) || ( $admin_controller    == *"/../"* ) || ( $admin_controller    == *"\n"* ) ]] ||
+     [[ ( $admin_css           == "/"* ) || ( $admin_css           == *"/.."* ) || ( $admin_css           == *"../"* ) || ( $admin_css           == *"/../"* ) || ( $admin_css           == *"\n"* ) ]] ||
+     [[ ( $data_directory      == "/"* ) || ( $data_directory      == *"/.."* ) || ( $data_directory      == *"../"* ) || ( $data_directory      == *"/../"* ) || ( $data_directory      == *"\n"* ) ]] ||
+     [[ ( $data_public         == "/"* ) || ( $data_public         == *"/.."* ) || ( $data_public         == *"../"* ) || ( $data_public         == *"/../"* ) || ( $data_public         == *"\n"* ) ]] ||
+     [[ ( $database_migrations == "/"* ) || ( $database_migrations == *"/.."* ) || ( $database_migrations == *"../"* ) || ( $database_migrations == *"/../"* ) || ( $database_migrations == *"\n"* ) ]]; then
     rm -R ".blueprint/tmp/$n"
-    quit_red "[FATAL] File paths in conf.yml should not start with a slash, dot or have a linebreak."
+    quit_red "[FATAL] File paths must not escape the temporarily extension directory."
   fi
 
   # prevent potentional problems during installation due to wrongly defined folders
