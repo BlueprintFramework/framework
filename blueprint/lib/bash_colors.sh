@@ -112,7 +112,6 @@ function log_escape
     echo "$log_ECHOSWITCHES" "$result"
     if [[ -f "$FOLDER/.blueprint/extensions/blueprint/private/debug/logs.txt" ]]; then 
         echo "$log_ECHOSWITCHES" "$result" >> "$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
-        echo -e "\n" >> "$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
     fi
 }
 
@@ -166,6 +165,7 @@ function log_dump
 
     echo
     log_bold "    Code     Function           Variable"
+    # shellcheck disable=SC2016
     echo \
 '    0        log_reset          $log_RESET
     1        log_bold           $log_BOLD

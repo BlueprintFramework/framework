@@ -44,6 +44,7 @@ fi
 # Write environment variables.
 export BLUEPRINT__FOLDER=$FOLDER
 export BLUEPRINT__VERSION=$VERSION
+export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
 export NODE_OPTIONS=--openssl-legacy-provider
 
 # Automatically navigate to the Pterodactyl directory when running the core.
@@ -193,10 +194,10 @@ assignflags() {
 
 
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
-touch /usr/local/bin/blueprint > /dev/null
+touch /usr/local/bin/blueprint >> $BLUEPRINT__DEBUG
 echo -e "#!/bin/bash\nbash $FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint
-chmod u+x $FOLDER/blueprint.sh > /dev/null
-chmod u+x /usr/local/bin/blueprint > /dev/null
+chmod u+x $FOLDER/blueprint.sh >> $BLUEPRINT__DEBUG
+chmod u+x /usr/local/bin/blueprint >> $BLUEPRINT__DEBUG
 
 
 if [[ $1 != "-bash" ]]; then
@@ -217,8 +218,8 @@ if [[ $1 != "-bash" ]]; then
 
     # Link directories.
     log_bright "[INFO] Linking directories.."
-    cd $FOLDER/public/extensions        || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2> /dev/null; cd $FOLDER || throw 'cdMissingDirectory'
-    cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets blueprint  2> /dev/null; cd $FOLDER || throw 'cdMissingDirectory'
+    cd $FOLDER/public/extensions        || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || throw 'cdMissingDirectory'
+    cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || throw 'cdMissingDirectory'
 
     # Update folder placeholder on PlaceholderService and admin layout.
     log_bright "[INFO] Updating folder placeholders.."
@@ -231,16 +232,16 @@ if [[ $1 != "-bash" ]]; then
 
     # Put application into maintenance.
     log_bright "[INFO] Enable maintenance."
-    php artisan down
+    php artisan down &>> $BLUEPRINT__DEBUG
 
     # Clear view cache.
     log_bright "[INFO] Clearing view cache.."
-    php artisan view:clear &> /dev/null
-    php artisan config:clear &> /dev/null
+    php artisan view:clear &>> $BLUEPRINT__DEBUG
+    php artisan config:clear &>> $BLUEPRINT__DEBUG
 
     # Link filesystems.
     log_bright "[INFO] Linking filesystems.."
-    php artisan storage:link &> /dev/null 
+    php artisan storage:link &>> $BLUEPRINT__DEBUG 
 
     # Roll admin css refresh number.
     log_bright "[INFO] Rolling admin cache refresh class name."
@@ -270,11 +271,11 @@ if [[ $1 != "-bash" ]]; then
 
     # Clear route cache.
     log_bright "[INFO] Updating route cache to include recent changes.."
-    php artisan route:cache &> /dev/null 
+    php artisan route:cache &>> $BLUEPRINT__DEBUG 
 
     # Put application into production.
     log_bright "[INFO] Disable maintenance."
-    php artisan up
+    php artisan up &>> $BLUEPRINT__DEBUG
 
     # Sync some database values.
     log_bright "[INFO] Syncing database values.."
@@ -559,7 +560,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $database_migrations != "" ]]; then
     log_bright "[INFO] Placing database migrations.."
-    cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2> /dev/null
+    cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2>> $BLUEPRINT__DEBUG
   fi
 
   if [[ $data_public != "" ]]; then
@@ -567,19 +568,19 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     mkdir -p ".blueprint/extensions/$identifier/public"
     
     cd $FOLDER/public/extensions || throw 'cdMissingDirectory'
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/public "$identifier" 2> /dev/null
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/public "$identifier" 2>> $BLUEPRINT__DEBUG
     cd $FOLDER || throw 'cdMissingDirectory'
 
     log_bright "[INFO] Placing public directory contents.."
-    cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2> /dev/null
+    cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2>> $BLUEPRINT__DEBUG
   fi
 
-  cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak" 2> /dev/null
+  cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak" 2>> $BLUEPRINT__DEBUG
   if [[ $controller_type == "default" ]]; then # use default controller when admin_controller is left blank
-    cp ".blueprint/extensions/blueprint/private/build/extensions/controller.php" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak" 2> /dev/null
+    cp ".blueprint/extensions/blueprint/private/build/extensions/controller.php" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak" 2>> $BLUEPRINT__DEBUG
   fi
-  cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" 2> /dev/null
-  cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" 2> /dev/null
+  cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" 2>> $BLUEPRINT__DEBUG
+  cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" 2>> $BLUEPRINT__DEBUG
 
   # Start creating data directory.
   log_bright "[INFO] Creating data directory.."
@@ -602,7 +603,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'
-  ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$identifier" 2> /dev/null
+  ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$identifier" 2>> $BLUEPRINT__DEBUG
   cd $FOLDER || throw 'cdMissingDirectory'
   
   if [[ $icon == "" ]]; then
@@ -781,10 +782,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   log_bright "[INFO] Updating route cache to include recent changes.."
-  php artisan route:cache &> /dev/null
+  php artisan route:cache &>> $BLUEPRINT__DEBUG
 
   chown -R www-data:www-data "$FOLDER/.blueprint/extensions/$identifier/private"
-  chmod --silent -R +x ".blueprint/extensions/"* 2> /dev/null
+  chmod --silent -R +x ".blueprint/extensions/"* 2>> $BLUEPRINT__DEBUG
 
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
     if $F_hasInstallScript; then
@@ -817,10 +818,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     else
       log_green "\n\n[SUCCESS] $identifier should now be installed."
     fi
-    sendTelemetry "FINISH_EXTENSION_INSTALLATION" > /dev/null
+    sendTelemetry "FINISH_EXTENSION_INSTALLATION" >> $BLUEPRINT__DEBUG
   elif [[ $dev == true ]]; then
     log_green "\n\n[SUCCESS] $identifier should now be built."
-    sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" > /dev/null
+    sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
   fi
 fi
 
@@ -960,14 +961,14 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   fi
 
   log_bright "[INFO] Updating route cache to include recent changes.."
-  php artisan route:cache &> /dev/null
+  php artisan route:cache &>> $BLUEPRINT__DEBUG
   
   # Remove from installed list
   log_bright "[INFO] Removing extension from installed extensions list.."
   sed -i "s~$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
 
   log_green "[SUCCESS] '$identifier' has been removed from your panel. Please note that some files might be left behind."
-  sendTelemetry "FINISH_EXTENSION_REMOVAL" > /dev/null
+  sendTelemetry "FINISH_EXTENSION_REMOVAL" >> $BLUEPRINT__DEBUG
 fi
 
 
@@ -1003,6 +1004,7 @@ ${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
   -version             -v  returns the blueprint version
   -help                -h  displays this menu
   -info                -f  show neofetch-like information about blueprint
+  -debug [lines]           print given amount of debug lines
   \x1b[0m
   
 \x1b[34;1mAdvanced\x1b[0m\x1b[34m
@@ -1018,6 +1020,14 @@ if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then VCMD="y"
   echo -e ${VERSION}
 fi
 
+# -debug
+if [[ $2 == "-debug" ]]; then VCMD="y"
+  if [[ $3 -lt 1 ]]; then throw "debugLineCount"; fi
+  echo -e "\x1b[30;47;1m  --- DEBUG START ---  \x1b[0m"
+  echo -e "$(v="$(<.blueprint/extensions/blueprint/private/debug/logs.txt)";printf -- "$v"|tail -"$3")"
+  echo -e "\x1b[30;47;1m  ---  DEBUG END  ---  \x1b[0m"
+fi
+
 
 # -init
 if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
@@ -1031,7 +1041,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   ask_template() {
     log_blue "[INPUT] Initial Template:"
-    log_blue "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/repository' 2> /dev/null)"
+    log_blue "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/repository' 2>> $BLUEPRINT__DEBUG)"
     read -r ASKTEMPLATE
 
     REDO_TEMPLATE=false
@@ -1043,7 +1053,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     fi
 
     # Unknown template.
-    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/teamblueprint/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2> /dev/null)") == "404: Not Found" ]]; then 
+    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/teamblueprint/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2>> $BLUEPRINT__DEBUG)") == "404: Not Found" ]]; then 
       log_yellow "[WARNING] Unknown template, please choose a valid option."
       REDO_TEMPLATE=true
     fi
@@ -1088,7 +1098,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   
     # Identifier should be a-z.
     if [[ ${ASKIDENTIFIER} =~ [a-z] ]]; then
-      echo ok > /dev/null
+      echo ok >> $BLUEPRINT__DEBUG
     else 
       log_yellow "[WARNING] Identifier should only contain a-z characters."
       REDO_IDENTIFIER=true
@@ -1211,7 +1221,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   log_bright "[INFO] Wiping downloaded templates from disk.."
   rm -R .blueprint/extensions/blueprint/private/build/templates/*
 
-  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" > /dev/null
+  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
 
   log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/dev'."
 fi
@@ -1240,7 +1250,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   log_bright "[INFO] Exporting extension files located in '.blueprint/dev'."
 
   cd .blueprint || throw 'cdMissingDirectory'
-  rm dev/.gitkeep 2> /dev/null
+  rm dev/.gitkeep 2>> $BLUEPRINT__DEBUG
 
   eval "$(parse_yaml dev/conf.yml conf_)"; identifier="${conf_info_identifier}"
 
@@ -1280,14 +1290,14 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     cp "${identifier}".blueprint .blueprint/extensions/blueprint/assets/exports/${randstr}/"${identifier}".blueprint
     log_bright "[INFO] Download url will expire after 2 minutes."
 
-    sendTelemetry "EXPOSE_DEVELOPMENT_EXTENSION" > /dev/null
+    sendTelemetry "EXPOSE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
     log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
     log_green "  - $(grabAppUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint"
     log_green "  - ${FOLDER}/${identifier}.blueprint"
 
-    eval $(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2> /dev/null) &
+    eval $(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> $BLUEPRINT__DEBUG) &
   else
-    sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" > /dev/null
+    sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
     log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
     log_green "  - ${FOLDER}/${identifier}.blueprint"
   fi
@@ -1307,8 +1317,8 @@ if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
   if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
 
   log_bright "[INFO] Wiping development folder.."
-  rm -R .blueprint/dev/* 2> /dev/null
-  rm -R .blueprint/dev/.* 2> /dev/null
+  rm -R .blueprint/dev/* 2>> $BLUEPRINT__DEBUG
+  rm -R .blueprint/dev/.* 2>> $BLUEPRINT__DEBUG
 
   log_green "[SUCCESS] Your development files have been removed."
 fi
