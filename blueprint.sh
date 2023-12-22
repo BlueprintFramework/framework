@@ -358,7 +358,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     throw "confymlNotFound"
   fi
 
-  eval "$(parse_yaml .blueprint/tmp/$n/conf.yml conf_)"
+  eval "$(parse_yaml .blueprint/tmp/"${n}"/conf.yml conf_)"
 
   # Add aliases for config values to make working with them easier.
   name="$conf_info_name"
@@ -412,7 +412,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Detect if extension is already installed and prepare the upgrading process.
   if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"$identifier,"* ]]; then
     log_bright "[INFO] Extension appears to be installed already, reading variables.."
-    eval "$(parse_yaml .blueprint/extensions/$identifier/private/.store/conf.yml old_)"
+    eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/conf.yml old_)"
     DUPLICATE="y"
 
     if [[ ! -f ".blueprint/extensions/$identifier/private/.store/build/button.blade.php" ]]; then
@@ -1186,7 +1186,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   rm -R tmp/templates
   cd ${FOLDER} || throw 'cdMissingDirectory'
 
-  eval $(parse_yaml .blueprint/extensions/blueprint/private/build/templates/"${tnum}"/TemplateConfiguration.yml t_);
+  eval "$(parse_yaml .blueprint/extensions/blueprint/private/build/templates/"${tnum}"/TemplateConfiguration.yml t_)"
 
   log_bright "[INFO] Copying template contents to the tmp directory.."
   mkdir -p .blueprint/tmp/init
