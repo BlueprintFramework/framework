@@ -16,7 +16,7 @@
 # Allow non-default Pterodactyl installation folders.
 if [[ $_FOLDER != "" ]]; then
   if [[ ( ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ) && ( $FOLDER == "/var/www/pterodactyl" ) ]]; then
-    sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$_FOLDER\" #;|g" $_FOLDER/blueprint.sh
+    sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$_FOLDER\" #;|g" "$_FOLDER"/blueprint.sh
   else
     echo "Variable cannot be replaced right now."
     exit 1
@@ -296,7 +296,7 @@ fi
 
 # -i, -install
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
-  if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi
+  if [[ $(( $# - 2 )) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(( $# - 2 )).";fi
   if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then quit_red "[FATAL] Installing extensions located in paths outside of '$FOLDER' is not possible.";fi
 
   log_bright "[INFO] Checking dependencies.."
@@ -475,7 +475,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       local dir="$1"
       for file in "$dir"/*; do
         if [ -f "$file" ]; then
-          file=$(echo "$file" | sed "s~ ~\ ~g")
+          file=${file// /\\ }
           sed -i "s~\^#version#\^~$version~g" "$file"
           sed -i "s~\^#author#\^~$author~g" "$file"
           sed -i "s~\^#name#\^~$name~g" "$file"
@@ -609,7 +609,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
-    icnNUM=$(expr 1 + $RANDOM % 9)
+    icnNUM=$(( 1 + RANDOM % 9 ))
     cp ".blueprint/assets/defaultExtensionLogo$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.jpg"
   else
     cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.jpg"
@@ -827,7 +827,7 @@ fi
 
 # -r, -remove
 if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
-  if [[ $(expr $# - 2) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(expr $# - 2).";fi
+  if [[ $(( $# - 2 )) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(( $# - 2 )).";fi
   
   # Check if the extension is installed.
   if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$identifier,"* ]]; then
@@ -835,7 +835,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   fi
 
   if [[ -f ".blueprint/extensions/$3/private/.store/conf.yml" ]]; then 
-    eval $(parse_yaml ".blueprint/extensions/$3/private/.store/conf.yml" conf_)
+    eval "$(parse_yaml ".blueprint/extensions/$3/private/.store/conf.yml" conf_)"
     # Add aliases for config values to make working with them easier.
     name="$conf_info_name";    
     identifier="$conf_info_identifier"
@@ -1024,7 +1024,7 @@ fi
 if [[ $2 == "-debug" ]]; then VCMD="y"
   if [[ $3 -lt 1 ]]; then throw "debugLineCount"; fi
   echo -e "\x1b[30;47;1m  --- DEBUG START ---  \x1b[0m"
-  echo -e "$(v="$(<.blueprint/extensions/blueprint/private/debug/logs.txt)";printf -- "$v"|tail -"$3")"
+  echo -e "$(v="$(<.blueprint/extensions/blueprint/private/debug/logs.txt)";printf -- "%s" "$v"|tail -"$3")"
   echo -e "\x1b[30;47;1m  ---  DEBUG END  ---  \x1b[0m"
 fi
 
@@ -1200,7 +1200,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   if [[ "${t_template_files_icon}" != "" ]]; then
     log_bright "[INFO] Rolling (and applying) extension placeholder icon.."
-    icnNUM=$(expr 1 + $RANDOM % 9)
+    icnNUM=$(( 1 + RANDOM % 9 ))
     cp .blueprint/assets/defaultExtensionLogo"${icnNUM}".jpg .blueprint/tmp/init/"${t_template_files_icon}"
     sed -i "s~␀icon␀~${t_template_files_icon}~g" .blueprint/tmp/init/conf.yml; #ICON
   fi
@@ -1277,7 +1277,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
-  zip -r extension.zip *
+  zip -r extension.zip ./*
   cd ${FOLDER} || throw 'cdMissingDirectory'
   cp .blueprint/tmp/extension.zip "${identifier}.blueprint"
   rm -R .blueprint/tmp
@@ -1295,7 +1295,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     log_green "  - $(grabAppUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint"
     log_green "  - ${FOLDER}/${identifier}.blueprint"
 
-    eval $(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> $BLUEPRINT__DEBUG) &
+    eval "$(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> $BLUEPRINT__DEBUG)" &
   else
     sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
     log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
@@ -1327,14 +1327,14 @@ fi
 if [[ ( $2 == "-info" || $2 == "-f" ) ]]; then VCMD="y"
   fetchversion() { if [[ $VERSION != "" ]]; then log_reset log_white $VERSION; else echo "none"; fi }
   fetchfolder() { if [[ $FOLDER != "" ]]; then log_reset log_white $FOLDER; else echo "none"; fi }
-  fetchurl() { if [[ $(grabAppUrl) != "" ]]; then log_reset log_white $(grabAppUrl); else echo "none"; fi }
-  fetchlocale() { if [[ $(grabAppLocale) != "" ]]; then log_reset log_white $(grabAppLocale); else echo "none"; fi }
-  fetchtimezone() { if [[ $(grabAppTimezone) != "" ]]; then log_reset log_white $(grabAppTimezone); else echo "none"; fi }
-  fetchextensions() { log_reset log_white $(echo "$(<.blueprint/extensions/blueprint/private/db/installed_extensions)" | tr -cd ',' | wc -c | tr -d ' '); }
-  fetchdeveloper() { log_reset log_white $(if dbValidate "blueprint.developerEnabled"; then echo "true"; else echo "false"; fi;); }
-  fetchtelemetry() { log_reset log_white $(telemetrykey=$(cat .blueprint/extensions/blueprint/private/db/telemetry_id); if [[ $telemetrykey == "KEY_NOT_UPDATED" ]]; then echo "false"; else echo "true"; fi;); }
-  fetchnode() { if [[ $(node -v) != "" ]]; then log_reset log_white $(node -v); else echo "none"; fi }
-  fetchyarn() { if [[ $(yarn -v) != "" ]]; then log_reset log_white $(yarn -v); else echo "none"; fi }
+  fetchurl() { if [[ $(grabAppUrl) != "" ]]; then log_reset log_white "$(grabAppUrl)"; else echo "none"; fi }
+  fetchlocale() { if [[ $(grabAppLocale) != "" ]]; then log_reset log_white "$(grabAppLocale)"; else echo "none"; fi }
+  fetchtimezone() { if [[ $(grabAppTimezone) != "" ]]; then log_reset log_white "$(grabAppTimezone)"; else echo "none"; fi }
+  fetchextensions() { log_reset log_white "$(echo "$(<.blueprint/extensions/blueprint/private/db/installed_extensions)" | tr -cd ',' | wc -c | tr -d ' ')"; }
+  fetchdeveloper() { log_reset log_white "$(if dbValidate "blueprint.developerEnabled"; then echo "true"; else echo "false"; fi;)"; }
+  fetchtelemetry() { log_reset log_white "$(telemetrykey=$(cat .blueprint/extensions/blueprint/private/db/telemetry_id); if [[ $telemetrykey == "KEY_NOT_UPDATED" ]]; then echo "false"; else echo "true"; fi;)"; }
+  fetchnode() { if [[ $(node -v) != "" ]]; then log_reset log_white "$(node -v)"; else echo "none"; fi }
+  fetchyarn() { if [[ $(yarn -v) != "" ]]; then log_reset log_white "$(yarn -v)"; else echo "none"; fi }
 
   log_bright          " "
   log_blue log_bold   "    ⣿⣿    $(log_reset log_bold log_blue "Version:") $(fetchversion)"
