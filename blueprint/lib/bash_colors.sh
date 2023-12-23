@@ -6,7 +6,7 @@
 
 
 # Constants and functions for terminal colors.
-if [[ "$BASH_SOURCE" == "$0" ]]; then
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     is_script=true
     set -eu -o pipefail
 else
@@ -84,16 +84,16 @@ function log_layer
                 log_STACK=$ARG
             else
                 # if the argument is function, apply it
-                if [ -n "$ARG" ] && fn_exists $ARG; then
+                if [ -n "$ARG" ] && fn_exists "$ARG"; then
                     #continue to pass switches through recursion
-                    log_STACK=$($ARG "$log_STACK" $log_SWITCHES)
+                    log_STACK=$($ARG "$log_STACK" "$log_SWITCHES")
                 fi
             fi
         fi
     done
 
     # pass stack and color var to escape function
-    log_escape "$log_STACK" $1;
+    log_escape "$log_STACK" "$1";
 }
 
 # General function to wrap string with escape sequence(s).
@@ -102,7 +102,7 @@ function log_escape
 {
     local result="$1"
     until [ -z "${2:-}" ]; do
-	if ! [ "$2" -ge 0 -a "$2" -le 47 ] 2> /dev/null; then
+	if ! [ "$2" -ge 0 ] && [ "$2" -le 47 ] 2> /dev/null; then
 	    echo "log_escape: argument \"$2\" is out of range" >&2 && return 1
 	fi
         result="${log_ESC}${2}m${result}${log_ESC}${log_RESET}m"
@@ -115,34 +115,34 @@ function log_escape
     fi
 }
 
-function log                 { log_layer $log_RESET "$@";           }
-function log_reset           { log_layer $log_RESET "$@";           }
-function log_reset_underline { log_layer $log_RESET_UNDERLINE "$@"; }
-function log_reset_reverse   { log_layer $log_RESET_REVERSE "$@";   }
-function log_default         { log_layer $log_DEFAULT "$@";         }
-function log_defaultb        { log_layer $log_DEFAULTB "$@";        }
-function log_bold            { log_layer $log_BOLD "$@";            }
-function log_bright          { log_layer $log_BRIGHT "$@";          }
-function log_underscore      { log_layer $log_UNDERSCORE "$@";      }
-function log_reverse         { log_layer $log_REVERSE "$@";         }
-function log_black           { log_layer $log_BLACK "$@";           }
-function log_red             { log_layer $log_RED "$@";             }
-function log_green           { log_layer $log_GREEN "$@";           }
-function log_brown           { log_layer $log_BROWN "$@";           }
-function log_blue            { log_layer $log_BLUE "$@";            }
-function log_magenta         { log_layer $log_MAGENTA "$@";         }
-function log_cyan            { log_layer $log_CYAN "$@";            }
-function log_white           { log_layer $log_WHITE "$@";           }
-function log_yellow          { log_layer $log_YELLOW "\e[1;33]$@";  }
-function log_blackb          { log_layer $log_BLACKB "$@";          }
-function log_redb            { log_layer $log_REDB "$@";            }
-function log_greenb          { log_layer $log_GREENB "$@";          }
-function log_brownb          { log_layer $log_BROWNB "$@";          }
-function log_blueb           { log_layer $log_BLUEB "$@";           }
-function log_magentab        { log_layer $log_MAGENTAB "$@";        }
-function log_cyanb           { log_layer $log_CYANB "$@";           }
-function log_whiteb          { log_layer $log_WHITEB "$@";          }
-function log_yellowb         { log_layer $log_YELLOWB "\e[1;43]$@"; }
+function log                 { log_layer $log_RESET "$@";             }
+function log_reset           { log_layer $log_RESET "$@";             }
+function log_reset_underline { log_layer $log_RESET_UNDERLINE "$@";   }
+function log_reset_reverse   { log_layer $log_RESET_REVERSE "$@";     }
+function log_default         { log_layer $log_DEFAULT "$@";           }
+function log_defaultb        { log_layer $log_DEFAULTB "$@";          }
+function log_bold            { log_layer $log_BOLD "$@";              }
+function log_bright          { log_layer $log_BRIGHT "$@";            }
+function log_underscore      { log_layer $log_UNDERSCORE "$@";        }
+function log_reverse         { log_layer $log_REVERSE "$@";           }
+function log_black           { log_layer $log_BLACK "$@";             }
+function log_red             { log_layer $log_RED "$@";               }
+function log_green           { log_layer $log_GREEN "$@";             }
+function log_brown           { log_layer $log_BROWN "$@";             }
+function log_blue            { log_layer $log_BLUE "$@";              }
+function log_magenta         { log_layer $log_MAGENTA "$@";           }
+function log_cyan            { log_layer $log_CYAN "$@";              }
+function log_white           { log_layer $log_WHITE "$@";             }
+function log_yellow          { log_layer $log_YELLOW "\e[1;33]""$*";  }
+function log_blackb          { log_layer $log_BLACKB "$@";            }
+function log_redb            { log_layer $log_REDB "$@";              }
+function log_greenb          { log_layer $log_GREENB "$@";            }
+function log_brownb          { log_layer $log_BROWNB "$@";            }
+function log_blueb           { log_layer $log_BLUEB "$@";             }
+function log_magentab        { log_layer $log_MAGENTAB "$@";          }
+function log_cyanb           { log_layer $log_CYANB "$@";             }
+function log_whiteb          { log_layer $log_WHITEB "$@";            }
+function log_yellowb         { log_layer $log_YELLOWB "\e[1;43]""$*"; }
 
 # Outputs colors table
 function log_dump
