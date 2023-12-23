@@ -33,7 +33,7 @@ function parse_yaml {
     # awk 2: convert the formatted data to variable assignments
     ###############################################################################
 
-    "$(<"$1")" | \
+    < "$1" \
     awk -F"$fs" "{multi=0;
         if(match(\$0,/$sm\|$sm$/)){multi=1; sub(/$sm\|$sm$/,\"\");}
         if(match(\$0,/$sm>$sm$/)){multi=2; sub(/$sm>$sm$/,\"\");}
