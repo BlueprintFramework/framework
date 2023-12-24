@@ -5,4 +5,4 @@ body:
 - type: markdown
   attributes:
     value: |
-      Something isn't working.
+      Bug reports should only be used for reporting issues with how the software works, which you are also able to reproduce.
