@@ -1,0 +1,8 @@
+name: Bug Report
+description: Something isn't working quite right.
+labels: [bug]
+body:
+- type: markdown
+  attributes:
+    value: |
+      Something isn't working.
