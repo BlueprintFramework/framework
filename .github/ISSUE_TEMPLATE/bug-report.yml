@@ -5,4 +5,57 @@ body:
 - type: markdown
   attributes:
     value: |
-      Bug reports should only be used for reporting issues with how the software works, which you are also able to reproduce.
+      Bug reports should only be used for reporting issues with how the software works. For installation help or general support, please create a forum post in our [Discord community](https://discord.gg/RQQkdZQwEJ).
+
+- type: textarea      
+  attributes:
+    label: Current Behavior
+    description: Please provide a clear & concise description of the issue.
+  validations:
+    required: true
+
+- type: textarea      
+  attributes:
+    label: Expected Behavior
+    description: Please describe what you expected to happen.
+  validations:
+    required: true
+
+- type: textarea      
+  attributes:
+    label: Steps to Reproduce
+    description: Please be as detailed as possible when providing steps to reproduce, failure to provide steps will result in this issue being closed.
+  validations:
+    required: true
+
+- type: input
+  id: blueprint-version
+  attributes:
+    label: Blueprint Version
+    description: Version ID of your Blueprint installation. (`blueprint -v`)
+    placeholder: alpha-NLM
+  validations:
+    required: true
+
+- type: input
+  id: panel-version
+  attributes:
+    label: Panel Version
+    description: Version number of your Panel. (latest is not a version)
+    placeholder: 1.11.5
+  validations:
+    required: true
+
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please [search here](https://github.com/teamblueprint/main/issues) to see if an issue already exists for your problem.
+    options:
+    - label: I have searched the existing issues before opening this issue.
+      required: true
+    - label: I have provided all relevant details and tested my reproduction steps.
+      required: true
+    - label: I have checked to my best capabilities and believe this is a bug with the software, and not a configuration issue with my specific system.
+      required: true
+    - label: I have made sure to check that this bug is the fault of Blueprint and is not caused by stock Pterodactyl.
+      required: true
