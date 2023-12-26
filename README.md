@@ -6,8 +6,9 @@
 [**Installation** ➚](https://blueprint.zip/docs/?page=getting-started/Installation)
 
 [Introduction](#introduction)\
-[Contributors](#contributors)\
 [Screenshots](#screenshots)\
+[Sponsors](#sponsors)\
+[Contributors](#contributors)\
 [Related Links](#related-links)
 
 <br/>
@@ -21,6 +22,11 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 
 ## Screenshots
 ![screenshots](https://github.com/teamblueprint/main/assets/103201875/b4d6531c-98a6-45e6-ae10-bb007a0bdd60)
+
+<br/>
+
+## Sponsors
+~~Want your name, website or company listed here? [Sponsor **prplwtf** on GitHub](https://github.com/sponsors/prplwtf).~~
 
 <br/>
 
