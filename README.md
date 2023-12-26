@@ -26,7 +26,7 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 <br/>
 
 ## Sponsors
-~~Want your name, website or company listed here? [Sponsor **prplwtf** on GitHub](https://github.com/sponsors/prplwtf).~~
+Want your name, website or company listed here? [Sponsor **prplwtf** on GitHub](https://github.com/sponsors/prplwtf).
 
 <br/>
 
