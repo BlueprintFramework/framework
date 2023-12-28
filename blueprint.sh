@@ -367,6 +367,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   dashboard_css="$conf_dashboard_css"; #(optional)
   dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
+  dashboard_components="$conf_dashboard_components"; #(optional)
 
   data_directory="$conf_data_directory"; #(optional)
   data_public="$conf_data_public"; #(optional)
@@ -374,21 +375,28 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   database_migrations="$conf_database_migrations"; #(optional)
   
   # "prevent" folder "escaping"
-  if [[ ( $icon                == "/"* ) || ( $icon                == *"/.."* ) || ( $icon                == *"../"* ) || ( $icon                == *"/../"* ) || ( $icon                == *"\n"* ) ]] ||
-     [[ ( $admin_view          == "/"* ) || ( $admin_view          == *"/.."* ) || ( $admin_view          == *"../"* ) || ( $admin_view          == *"/../"* ) || ( $admin_view          == *"\n"* ) ]] ||
-     [[ ( $admin_controller    == "/"* ) || ( $admin_controller    == *"/.."* ) || ( $admin_controller    == *"../"* ) || ( $admin_controller    == *"/../"* ) || ( $admin_controller    == *"\n"* ) ]] ||
-     [[ ( $admin_css           == "/"* ) || ( $admin_css           == *"/.."* ) || ( $admin_css           == *"../"* ) || ( $admin_css           == *"/../"* ) || ( $admin_css           == *"\n"* ) ]] ||
-     [[ ( $data_directory      == "/"* ) || ( $data_directory      == *"/.."* ) || ( $data_directory      == *"../"* ) || ( $data_directory      == *"/../"* ) || ( $data_directory      == *"\n"* ) ]] ||
-     [[ ( $data_public         == "/"* ) || ( $data_public         == *"/.."* ) || ( $data_public         == *"../"* ) || ( $data_public         == *"/../"* ) || ( $data_public         == *"\n"* ) ]] ||
-     [[ ( $database_migrations == "/"* ) || ( $database_migrations == *"/.."* ) || ( $database_migrations == *"../"* ) || ( $database_migrations == *"/../"* ) || ( $database_migrations == *"\n"* ) ]]; then
+  if [[ ( $icon                 == "/"* ) || ( $icon                 == *"/.."* ) || ( $icon                 == *"../"* ) || ( $icon                 == *"/../"* ) || ( $icon                 == *"\n"* ) ]] ||
+     [[ ( $admin_view           == "/"* ) || ( $admin_view           == *"/.."* ) || ( $admin_view           == *"../"* ) || ( $admin_view           == *"/../"* ) || ( $admin_view           == *"\n"* ) ]] ||
+     [[ ( $admin_controller     == "/"* ) || ( $admin_controller     == *"/.."* ) || ( $admin_controller     == *"../"* ) || ( $admin_controller     == *"/../"* ) || ( $admin_controller     == *"\n"* ) ]] ||
+     [[ ( $admin_css            == "/"* ) || ( $admin_css            == *"/.."* ) || ( $admin_css            == *"../"* ) || ( $admin_css            == *"/../"* ) || ( $admin_css            == *"\n"* ) ]] ||
+     [[ ( $admin_wrapper        == "/"* ) || ( $admin_wrapper        == *"/.."* ) || ( $admin_wrapper        == *"../"* ) || ( $admin_wrapper        == *"/../"* ) || ( $admin_wrapper        == *"\n"* ) ]] ||
+     [[ ( $dashboard_css        == "/"* ) || ( $dashboard_css        == *"/.."* ) || ( $dashboard_css        == *"../"* ) || ( $dashboard_css        == *"/../"* ) || ( $dashboard_css        == *"\n"* ) ]] ||
+     [[ ( $dashboard_wrapper    == "/"* ) || ( $dashboard_wrapper    == *"/.."* ) || ( $dashboard_wrapper    == *"../"* ) || ( $dashboard_wrapper    == *"/../"* ) || ( $dashboard_wrapper    == *"\n"* ) ]] ||
+     [[ ( $dashboard_components == "/"* ) || ( $dashboard_components == *"/.."* ) || ( $dashboard_components == *"../"* ) || ( $dashboard_components == *"/../"* ) || ( $dashboard_components == *"\n"* ) ]] ||
+     [[ ( $data_directory       == "/"* ) || ( $data_directory       == *"/.."* ) || ( $data_directory       == *"../"* ) || ( $data_directory       == *"/../"* ) || ( $data_directory       == *"\n"* ) ]] ||
+     [[ ( $data_public          == "/"* ) || ( $data_public          == *"/.."* ) || ( $data_public          == *"../"* ) || ( $data_public          == *"/../"* ) || ( $data_public          == *"\n"* ) ]] ||
+     [[ ( $database_migrations  == "/"* ) || ( $database_migrations  == *"/.."* ) || ( $database_migrations  == *"../"* ) || ( $database_migrations  == *"/../"* ) || ( $database_migrations  == *"\n"* ) ]]; then
     rm -R ".blueprint/tmp/$n"
     quit_red "[FATAL] File paths must not escape the temporarily extension directory."
   fi
 
   # prevent potentional problems during installation due to wrongly defined folders
-  if [[ ( $data_directory == *"/" ) || ( $data_public == *"/" ) || ( $database_migrations == *"/" ) ]]; then
+  if [[ ( $dashboard_components == *"/" ) || 
+        ( $data_directory == *"/"       ) || 
+        ( $data_public == *"/"          ) || 
+        ( $database_migrations == *"/"  ) ]]; then
     rm -R ".blueprint/tmp/$n"
-    quit_red "[FATAL] Folder paths in conf.yml should not end with a slash."
+    quit_red "[FATAL] Directory paths in conf.yml should not end with a slash."
   fi
 
   # check if extension still has placeholder values
@@ -486,6 +494,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$file"
           sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file"
           sed -i "s~\^#timestamp#\^~$installation_timestamp~g" "$file"
+          sed -i "s~\^#components#\^~@/blueprint/extensions/$identifier~g" "$file"
 
           if ! $F_ignoreAlphabetPlaceholders; then
             sed -i "s~__version__~$version~g" "$file"
@@ -498,6 +507,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             sed -i "s~__installmode__~$INSTALLMODE~g" "$file"
             sed -i "s~__blueprintversion__~$VERSION~g" "$file"
             sed -i "s~__timestamp__~$installation_timestamp~g" "$file"
+            sed -i "s~__components__~@/blueprint/extensions/$identifier~g" "$file"
           fi
 
           log_bright "  - ${file}"
@@ -531,16 +541,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Validate paths to files and directories defined in conf.yml.
   log_bright "[INFO] Validating conf.yml file path values.."
-  if [[ ( ! -f ".blueprint/tmp/$n/$icon"              ) && ( ${icon} != ""              ) ]] ||    # file:   icon              (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$admin_view"        )                                   ]] ||    # file:   admin_view
-     [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"  ) && ( ${admin_controller} != ""  ) ]] ||    # file:   admin_controller  (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$admin_css"         ) && ( ${admin_css} != ""         ) ]] ||    # file:   admin_css         (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$admin_wrapper"     ) && ( ${admin_wrapper} != ""     ) ]] ||    # file:   admin_wrapper     (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_css"     ) && ( ${dashboard_css} != ""     ) ]] ||    # file:   dashboard_css     (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_wrapper" ) && ( ${dashboard_wrapper} != "" ) ]] ||    # file:   dashboard_wrapper (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$data_directory"    ) && ( ${data_directory} != ""    ) ]] ||    # folder: data_directory    (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$data_public"       ) && ( ${data_public} != ""       ) ]] ||    # folder: data_public       (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$data_migrations"   ) && ( ${data_migrations} != ""   ) ]];then  # folder: data_migrations   (optional)
+  if [[ ( ! -f ".blueprint/tmp/$n/$icon"                 ) && ( ${icon} != ""                 ) ]] ||    # file:   icon                 (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_view"           )                                      ]] ||    # file:   admin_view
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"     ) && ( ${admin_controller} != ""     ) ]] ||    # file:   admin_controller     (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_css"            ) && ( ${admin_css} != ""            ) ]] ||    # file:   admin_css            (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_wrapper"        ) && ( ${admin_wrapper} != ""        ) ]] ||    # file:   admin_wrapper        (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_css"        ) && ( ${dashboard_css} != ""        ) ]] ||    # file:   dashboard_css        (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_wrapper"    ) && ( ${dashboard_wrapper} != ""    ) ]] ||    # file:   dashboard_wrapper    (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$dashboard_components" ) && ( ${dashboard_components} != "" ) ]] ||    # folder: dashboard_components (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$data_directory"       ) && ( ${data_directory} != ""       ) ]] ||    # folder: data_directory       (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$data_public"          ) && ( ${data_public} != ""          ) ]] ||    # folder: data_public          (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$data_migrations"      ) && ( ${data_migrations} != ""      ) ]];then  # folder: data_migrations      (optional)
     rm -R ".blueprint/tmp/$n"
     throw 'confymlMissingFiles'
   fi
@@ -556,6 +567,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       throw 'scriptsMissingFiles'
     fi
   fi
+
+  # Throw error if component config does not exist.
+  if [[ ( $dashboard_components != "" ) && ( ! -f ".blueprint/tmp/$n/$dashboard_components/components.yml" ) ]]; then throw 'componentsMissingConfig'; fi
 
 
   if [[ $database_migrations != "" ]]; then
