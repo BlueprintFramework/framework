@@ -587,8 +587,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     log_bright "[INFO] Placing components directory contents.."
     cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> $BLUEPRINT__DEBUG
     if [[ -f ".blueprint/tmp/$n/$dashboard_components/components.yml" ]]; then
-      echo "${navigation.bar}"
+
+      # fetch component config
+      eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/components.yml comp_)"
+      
+      # assign variables to component items
+      extendNavigationBar="@/blueprint/extensions/${identifier}/${comp_extendNavigationBar}"
+      echo "${extendNavigationBar}"
+
     else
+      # warn about missing components.yml file
       log_yellow "[WARNING] Could not find '$dashboard_components/components.yml', React component extendability might be limited."
     fi
   fi
