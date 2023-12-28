@@ -592,8 +592,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/components.yml comp_)"
       
       # assign variables to component items
-      extendNavigationBar="@/blueprint/extensions/${identifier}/${comp_extendNavigationBar}"
-      echo "${extendNavigationBar}"
+      extendNavigationBarItems="@/blueprint/extensions/${identifier}/${comp_extendNavigationBarItems}"
+
+      sed -i "s~""/* blueprint/import */""~""/* blueprint/import */import ${identifier}Component from '$extendNavigationBarItems';""~g"
 
     else
       # warn about missing components.yml file
@@ -814,11 +815,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   if [[ $YARN == "y" ]]; then 
-    if [[ ( ! $F_developerIgnoreRebuild ) || ( $dev != true ) ]]; then
+    if [[ ( $F_developerIgnoreRebuild ) && ( $dev == true ) ]]; then
+      log_yellow "[WARNING] Rebuilding skipped due to 'developerIgnoreRebuild' flag being present."
+    else
       log_bright "[INFO] Rebuilding panel.."
       yarn run build:production
-    else
-      log_yellow "[WARNING] Rebuilding skipped due to 'developerIgnoreRebuild' flag being present."
     fi
   fi
 

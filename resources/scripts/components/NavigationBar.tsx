@@ -12,7 +12,7 @@ import http from '@/api/http';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import Avatar from '@/components/Avatar';
-import ExtendedNavigation from '@/blueprint/components/ExtendedNavigation'; // blueprint/ExtendedNavigation
+import BlueprintNavigationItems from '@/blueprint/components/NavigationBar/Items';
 
 const RightNavigation = styled.div`
     & > a,
@@ -74,7 +74,7 @@ export default () => {
                             </a>
                         </Tooltip>
                     )}
-                    <ExtendedNavigation />
+                    <BlueprintNavigationItems />
                     <Tooltip placement={'bottom'} content={'Account Settings'}>
                         <NavLink to={'/account'}>
                             <span className={'flex items-center w-5 h-5'}>

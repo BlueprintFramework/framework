@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
+/* blueprint/import */
 
 export default () => {
   return (
@@ -11,6 +12,7 @@ export default () => {
           <FontAwesomeIcon icon={faPuzzlePiece} />
         </div>
       </Tooltip>
+      {/* blueprint/react */}
     </>
   );
 };
