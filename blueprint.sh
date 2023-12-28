@@ -590,11 +590,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
       # fetch component config
       eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/components.yml comp_)"
-      
       # assign variables to component items
       extendNavigationBarItems="@/blueprint/extensions/${identifier}/${comp_extendNavigationBarItems}"
 
-      sed -i "s~""/* blueprint/import */""~""/* blueprint/import */import ${identifier}Component from '$extendNavigationBarItems';""~g"
+      im="/* blueprint/import */"
+      re="{/* blueprint/react */}"
+
+      sed -i "s~""$im""~""${im}import ${identifier}Component from '$extendNavigationBarItems';""~g"
+      sed -i "s~""$re""~""${re}<${identifier}Component />""~g"
 
     else
       # warn about missing components.yml file
