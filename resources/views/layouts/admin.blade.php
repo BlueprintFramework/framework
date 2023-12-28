@@ -195,10 +195,6 @@
                         // This might be further improved later.
 
                         if($blueprint->fileRead("&bp.folder&/.blueprint/extensions/blueprint/private/db/onboarding") == "true") {
-                            echo "
-                            <div class=\"notification\">
-                            <p>Blueprint has now been installed, click the extension icon to take a look.</p>
-                            </div>";
                             $blueprint->fileWipe("&bp.folder&/.blueprint/extensions/blueprint/private/db/onboarding");
                         }
     
