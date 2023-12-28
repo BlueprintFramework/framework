@@ -591,13 +591,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       # fetch component config
       eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/components.yml comp_)"
       # assign variables to component items
-      extendNavigationBarItems="@/blueprint/extensions/${identifier}/${comp_extendNavigationBarItems}"
+      extendNavigationBarItems="\@\/blueprint\/extensions\/${identifier}\/${comp_extendNavigationBarItems}"
 
-      im="/* blueprint/import */"
-      re="{/* blueprint/react */}"
+      im="\/\* blueprint\/import \*\/"
+      re="\{\/\* blueprint\/react \*\/\}"
+      co="resources/scripts/blueprint/components"
 
-      sed -i "s~""$im""~""${im}import ${identifier}Component from '$extendNavigationBarItems';""~g"
-      sed -i "s~""$re""~""${re}<${identifier}Component />""~g"
+      sed -i "s~""$im""~""${im}import ${identifier}Component from '$extendNavigationBarItems';""~g" $co/NavigationBar/Items.tsx
+      sed -i "s~""$re""~""${re}\<${identifier}Component \/\>""~g" $co/NavigationBar/Items.tsx
 
     else
       # warn about missing components.yml file
@@ -818,7 +819,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   if [[ $YARN == "y" ]]; then 
-    if [[ ( $F_developerIgnoreRebuild ) && ( $dev == true ) ]]; then
+    if [[ ( $F_developerIgnoreRebuild == true ) && ( $dev == true ) ]]; then
       log_yellow "[WARNING] Rebuilding skipped due to 'developerIgnoreRebuild' flag being present."
     else
       log_bright "[INFO] Rebuilding panel.."
