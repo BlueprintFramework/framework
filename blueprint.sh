@@ -591,14 +591,20 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       # fetch component config
       eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/components.yml comp_)"
       # assign variables to component items
-      extendNavigationBarItems="\@\/blueprint\/extensions\/${identifier}\/${comp_extendNavigationBarItems}"
+      extendNavigationBarItems="@/blueprint/extensions/${identifier}/${comp_extendNavigationBarItems}"
 
       im="\/\* blueprint\/import \*\/"
-      re="\{\/\* blueprint\/react \*\/\}"
+      re="{/\* blueprint\/react \*/}"
       co="resources/scripts/blueprint/components"
 
-      sed -i "s~""$im""~""${im}import ${identifier}Component from '$extendNavigationBarItems';""~g" $co/NavigationBar/Items.tsx
-      sed -i "s~""$re""~""${re}\<${identifier}Component \/\>""~g" $co/NavigationBar/Items.tsx
+      s="import ${identifier^}Component from '"
+      e="';"
+
+      sed -i "s~""${s}$extendNavigationBarItems${e}""~~g" $co/NavigationBar/Items.tsx
+      sed -i "s~""<${identifier^}Component />""~~g" $co/NavigationBar/Items.tsx
+
+      sed -i "s~""$im""~""${im}${s}$extendNavigationBarItems${e}""~g" $co/NavigationBar/Items.tsx
+      sed -i "s~""$re""~""${re}\<${identifier^}Component /\>""~g" $co/NavigationBar/Items.tsx
 
     else
       # warn about missing components.yml file
