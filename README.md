@@ -21,7 +21,8 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 <br/>
 
 ## Screenshots
-![screenshots](https://github.com/teamblueprint/main/assets/103201875/b4d6531c-98a6-45e6-ae10-bb007a0bdd60)
+![screenshots](https://github.com/teamblueprint/main/assets/103201875/cb66943e-a60e-44e5-afd4-90475b106244)
+
 
 <br/>
 
