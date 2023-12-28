@@ -494,7 +494,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$file"
           sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file"
           sed -i "s~\^#timestamp#\^~$installation_timestamp~g" "$file"
-          sed -i "s~\^#components#\^~@/blueprint/extensions/$identifier~g" "$file"
+          sed -i "s~\^#componentroot#\^~@/blueprint/extensions/$identifier~g" "$file"
 
           if ! $F_ignoreAlphabetPlaceholders; then
             sed -i "s~__version__~$version~g" "$file"
@@ -507,7 +507,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             sed -i "s~__installmode__~$INSTALLMODE~g" "$file"
             sed -i "s~__blueprintversion__~$VERSION~g" "$file"
             sed -i "s~__timestamp__~$installation_timestamp~g" "$file"
-            sed -i "s~__components__~@/blueprint/extensions/$identifier~g" "$file"
+            sed -i "s~__componentroot__~@/blueprint/extensions/$identifier~g" "$file"
           fi
 
           log_bright "  - ${file}"
@@ -568,15 +568,32 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     fi
   fi
 
-  # Throw error if component config does not exist.
-  if [[ ( $dashboard_components != "" ) && ( ! -f ".blueprint/tmp/$n/$dashboard_components/components.yml" ) ]]; then throw 'componentsMissingConfig'; fi
-
-
+  # Place database migrations.
   if [[ $database_migrations != "" ]]; then
     log_bright "[INFO] Placing database migrations.."
     cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2>> $BLUEPRINT__DEBUG
   fi
 
+  # Create, link and connect components directory.
+  if [[ $dashboard_components != "" ]]; then
+    YARN="y"
+    log_bright "[INFO] Creating components directory.."
+    mkdir -p ".blueprint/extensions/$identifier/components"
+    
+    cd $FOLDER/resources/scripts/blueprint/extensions || throw 'cdMissingDirectory'
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/components "$identifier" 2>> $BLUEPRINT__DEBUG
+    cd $FOLDER || throw 'cdMissingDirectory'
+
+    log_bright "[INFO] Placing components directory contents.."
+    cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> $BLUEPRINT__DEBUG
+    if [[ -f ".blueprint/tmp/$n/$dashboard_components/components.yml" ]]; then
+      echo "${navigation.bar}"
+    else
+      log_yellow "[WARNING] Could not find '$dashboard_components/components.yml', React component extendability might be limited."
+    fi
+  fi
+
+  # Create and link public directory.
   if [[ $data_public != "" ]]; then
     log_bright "[INFO] Creating public directory.."
     mkdir -p ".blueprint/extensions/$identifier/public"
@@ -589,12 +606,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2>> $BLUEPRINT__DEBUG
   fi
 
+  # Prepare build files.
   cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak" 2>> $BLUEPRINT__DEBUG
   if [[ $controller_type == "default" ]]; then # use default controller when admin_controller is left blank
     cp ".blueprint/extensions/blueprint/private/build/extensions/controller.php" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak" 2>> $BLUEPRINT__DEBUG
   fi
   cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" 2>> $BLUEPRINT__DEBUG
   cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" 2>> $BLUEPRINT__DEBUG
+
 
   # Start creating data directory.
   log_bright "[INFO] Creating data directory.."
@@ -610,12 +629,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
   # End creating data directory.
 
+
   # Link and create assets folder.
   if [[ $DUPLICATE != "y" ]]; then
     # Create assets folder if the extension is not updating.
     mkdir .blueprint/extensions/"$identifier"/assets
   fi
-
   cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'
   ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$identifier" 2>> $BLUEPRINT__DEBUG
   cd $FOLDER || throw 'cdMissingDirectory'
