@@ -12,7 +12,10 @@ import http from '@/api/http';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import Avatar from '@/components/Avatar';
-import BlueprintNavigationItems from '@/blueprint/components/NavigationBar/Items';
+
+import BeforeNavigation from '@/blueprint/components/Navigation/NavigationBar/BeforeNavigation';
+import AdditionalItems  from '@/blueprint/components/Navigation/NavigationBar/AdditionalItems';
+import AfterNavigation  from '@/blueprint/components/Navigation/NavigationBar/AfterNavigation';
 
 const RightNavigation = styled.div`
     & > a,
@@ -47,6 +50,7 @@ export default () => {
     };
 
     return (
+        <Before />
         <div className={'w-full bg-neutral-900 shadow-md overflow-x-auto'}>
             <SpinnerOverlay visible={isLoggingOut} />
             <div className={'mx-auto w-full flex items-center h-[3.5rem] max-w-[1200px]'}>
@@ -74,7 +78,7 @@ export default () => {
                             </a>
                         </Tooltip>
                     )}
-                    <BlueprintNavigationItems />
+                    <AdditionalItems />
                     <Tooltip placement={'bottom'} content={'Account Settings'}>
                         <NavLink to={'/account'}>
                             <span className={'flex items-center w-5 h-5'}>
@@ -90,5 +94,6 @@ export default () => {
                 </RightNavigation>
             </div>
         </div>
+        <After />
     );
 };

@@ -586,29 +586,38 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
     log_bright "[INFO] Placing components directory contents.."
     cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> $BLUEPRINT__DEBUG
-    if [[ -f ".blueprint/tmp/$n/$dashboard_components/components.yml" ]]; then
+    if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
 
       # fetch component config
-      eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/components.yml comp_)"
+      eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/Components.yml Components_)"
+
+      # define static variables to make stuff a bit easier
+      im="\/\* blueprint\/import \*\/"; re="{/\* blueprint\/react \*/}"; co="resources/scripts/blueprint/components"
+      s="import ${identifier^}Component from '"; e="';"
+
+      PLACE_REACT() {
+        if [[ ! $1 == "@/blueprint/extensions/${identifier}/" ]]; then
+          # remove components
+          sed -i "s~""${s}$1${e}""~~g" "$co"/"$2"
+          sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
+          # add components
+          sed -i "s~""$im""~""${im}${s}$1${e}""~g" "$co"/"$2"
+          sed -i "s~""$re""~""${re}\<${identifier^}Component /\>""~g" "$co"/"$2"
+        fi
+      }
+
       # assign variables to component items
-      extendNavigationBarItems="@/blueprint/extensions/${identifier}/${comp_extendNavigationBarItems}"
+      __Navigation_NavigationBar_BeforeNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_BeforeNavigation}"
+      __Navigation_NavigationBar_AdditionalItems="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AdditionalItems}"
+      __Navigation_NavigationBar_AfterNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AfterNavigation}"
 
-      im="\/\* blueprint\/import \*\/"
-      re="{/\* blueprint\/react \*/}"
-      co="resources/scripts/blueprint/components"
-
-      s="import ${identifier^}Component from '"
-      e="';"
-
-      sed -i "s~""${s}$extendNavigationBarItems${e}""~~g" $co/NavigationBar/Items.tsx
-      sed -i "s~""<${identifier^}Component />""~~g" $co/NavigationBar/Items.tsx
-
-      sed -i "s~""$im""~""${im}${s}$extendNavigationBarItems${e}""~g" $co/NavigationBar/Items.tsx
-      sed -i "s~""$re""~""${re}\<${identifier^}Component /\>""~g" $co/NavigationBar/Items.tsx
+      PLACE_REACT "$__Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
+      PLACE_REACT "$__Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
+      PLACE_REACT "$__Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx"
 
     else
       # warn about missing components.yml file
-      log_yellow "[WARNING] Could not find '$dashboard_components/components.yml', React component extendability might be limited."
+      log_yellow "[WARNING] Could not find '$dashboard_components/Components.yml', React component extendability might be limited."
     fi
   fi
 
