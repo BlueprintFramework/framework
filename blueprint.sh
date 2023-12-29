@@ -915,6 +915,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     dashboard_css="$conf_dashboard_css"; #(optional)
     dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
+    dashboard_components="$conf_dashboard_components"; #(optional)
 
     data_directory="$conf_data_directory"; #(optional)
     data_public="$conf_data_public"; #(optional)
@@ -997,6 +998,37 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     log_bright "[INFO] Removing dashboard css.."
     sed -i "s~@import url($identifier.css);~~g" "resources/scripts/blueprint/css/extensions.css"
     rm "resources/scripts/blueprint/css/imported/$identifier.css"
+    YARN="y"
+  fi
+
+  # Remove dashboard components
+  if [[ $dashboard_components != "" ]]; then
+    log_bright "[INFO] Removing dashboard components.."
+    rm $FOLDER/resources/scripts/blueprint/extensions/"$identifier"
+    # fetch component config
+    eval "$(parse_yaml .blueprint/extensions/"$identifier"/components/Components.yml Components_)"
+
+    # define static variables to make stuff a bit easier
+    im="\/\* blueprint\/import \*\/"; re="{/\* blueprint\/react \*/}"; co="resources/scripts/blueprint/components"
+    s="import ${identifier^}Component from '"; e="';"
+
+    REMOVE_REACT() {
+      if [[ ! $1 == "@/blueprint/extensions/${identifier}/" ]]; then
+        # remove components
+        sed -i "s~""${s}$1${e}""~~g" "$co"/"$2"
+        sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
+      fi
+    }
+
+    # assign variables to component items
+    __Navigation_NavigationBar_BeforeNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_BeforeNavigation}"
+    __Navigation_NavigationBar_AdditionalItems="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AdditionalItems}"
+    __Navigation_NavigationBar_AfterNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AfterNavigation}"
+
+    REMOVE_REACT "$__Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
+    REMOVE_REACT "$__Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
+    REMOVE_REACT "$__Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx"
+
     YARN="y"
   fi
 
