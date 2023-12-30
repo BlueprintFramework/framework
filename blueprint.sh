@@ -1125,6 +1125,7 @@ fi
 
 # -init
 if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
+  # Check for developer mode through the database library.
   if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
@@ -1323,6 +1324,7 @@ fi
 
 # -build
 if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
+  # Check for developer mode through the database library.
   if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
@@ -1335,6 +1337,7 @@ fi
 
 # -export
 if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
+  # Check for developer mode through the database library.
   if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
@@ -1400,6 +1403,7 @@ fi
 
 # -wipe
 if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
+  # Check for developer mode through the database library.
   if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
