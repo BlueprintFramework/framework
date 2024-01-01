@@ -13,13 +13,13 @@ class BlueprintPlaceholderService
 
   // version()
   public function version(): string {
-    $v = "&bp.version&";
+    $v = "::v";
     return $v;
   }
 
   // folder()
   public function folder(): string {
-    $v = "&bp.folder&";
+    $v = "::f";
     return $v;
   }
 
