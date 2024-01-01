@@ -35,8 +35,8 @@ if [[ -d "$FOLDER/blueprint" ]]; then mv $FOLDER/blueprint $FOLDER/.blueprint; f
 if [[ $VERSION != "" ]]; then
   # This function makes sure some placeholders get replaced with the current Blueprint version.
   if [[ ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ]]; then
-    sed -E -i "s*&bp.version&*$VERSION*g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*@version*$VERSION*g" $FOLDER/.blueprint/extensions/blueprint/public/index.html
+    sed -E -i "s*::v*$VERSION*g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
+    sed -E -i "s*::v*$VERSION*g" $FOLDER/.blueprint/extensions/blueprint/public/index.html
     touch $FOLDER/.blueprint/extensions/blueprint/private/db/version
   fi
 fi
@@ -223,8 +223,8 @@ if [[ $1 != "-bash" ]]; then
 
     # Update folder placeholder on PlaceholderService and admin layout.
     log_bright "[INFO] Updating folder placeholders.."
-    sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -i "s!&bp.folder&!$FOLDER!g" $FOLDER/resources/views/layouts/admin.blade.php
+    sed -i "s!::f!$FOLDER!g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
+    sed -i "s!::f!$FOLDER!g" $FOLDER/resources/views/layouts/admin.blade.php
 
     # Copy "Blueprint" extension page logo from assets.
     log_bright "[INFO] Copying Blueprint logo from assets.."
