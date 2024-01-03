@@ -14,6 +14,8 @@ function throwError {
   if [[ $1 == "debugLineCount"          ]]; then err="Provide the amount of debug lines to print as an argument, which must be greater than one (1).";fi
   if [[ $1 == "componentFileExtension"  ]]; then err="Defined component paths may not end with a file extension.";fi
   if [[ $1 == "missingComponentFiles"   ]]; then err="One or more components defined in 'Components.yml' could not be found.";fi
+  if [[ $1 == "componentEscape"         ]]; then err="Component file paths must not escape the temporarily extension directory.";fi
+  if [[ $1 == "pathsEscape"             ]]; then err="File paths must not escape the temporarily extension directory.";fi
 
   if [[ $err == "" ]]; then err="$1"; fi
   log_red "[FATAL] $err"
