@@ -597,12 +597,33 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
       PLACE_REACT() {
         if [[ ! $1 == "@/blueprint/extensions/${identifier}/" ]]; then
+
+          # validate file name
+          if [[ ${2} == *".tsx" ]] ||
+             [[ ${2} == *".ts"  ]] ||
+             [[ ${2} == *".jsx" ]] ||
+             [[ ${2} == *".js"  ]]; then 
+            rm -R ".blueprint/tmp/$n"
+            throw 'componentFileExtension'
+          fi
+
+          # validate path
+          if [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${2}.tsx" ]] &&
+             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${2}.ts"  ]] &&
+             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${2}.jsx" ]] &&
+             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${2}.js"  ]]; then 
+            rm -R ".blueprint/tmp/$n"
+            throw 'missingComponentFiles'
+          fi
+
+
+
           # remove components
-          sed -i "s~""${s}$1${e}""~~g" "$co"/"$2"
-          sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
+          sed -i "s~""${s}$1${e}""~~g" "$co"/"$3"
+          sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$3"
           # add components
-          sed -i "s~""$im""~""${im}${s}$1${e}""~g" "$co"/"$2"
-          sed -i "s~""$re""~""${re}\<${identifier^}Component /\>""~g" "$co"/"$2"
+          sed -i "s~""$im""~""${im}${s}$1${e}""~g" "$co"/"$3"
+          sed -i "s~""$re""~""${re}\<${identifier^}Component /\>""~g" "$co"/"$3"
         fi
       }
 
@@ -611,9 +632,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       __Navigation_NavigationBar_AdditionalItems="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AdditionalItems}"
       __Navigation_NavigationBar_AfterNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AfterNavigation}"
 
-      PLACE_REACT "$__Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
-      PLACE_REACT "$__Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
-      PLACE_REACT "$__Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx"
+      PLACE_REACT "$__Navigation_NavigationBar_BeforeNavigation" "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
+      PLACE_REACT "$__Navigation_NavigationBar_AdditionalItems" "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
+      PLACE_REACT "$__Navigation_NavigationBar_AfterNavigation" "$Components_Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx"
 
     else
       # warn about missing components.yml file
