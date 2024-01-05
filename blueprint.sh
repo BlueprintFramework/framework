@@ -596,7 +596,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       s="import ${identifier^}Component from '"; e="';"
 
       PLACE_REACT() {
-        if [[ ( $2 == "/"* ) || ( $2 == *"/.."* ) || ( $2 == *"../"* ) || ( $2 == *"/../"* ) || ( $2 == *"\n"* ) ]]; then rm -R ".blueprint/tmp/$n"; throw 'componentEscape'; fi
+        if [[ ( $2 == "/"* ) || ( $2 == *"/.."* ) || ( $2 == *"../"* ) || ( $2 == *"/../"* ) || ( $2 == *"\n"* ) || ( $2 == *"@"* ) || ( $2 == *"\\"* ) ]]; then rm -R ".blueprint/tmp/$n"; throw 'componentEscape'; fi
         if [[ ! $1 == "@/blueprint/extensions/${identifier}/" ]]; then
 
           # validate file name
