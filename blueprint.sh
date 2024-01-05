@@ -620,7 +620,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
 
           # remove components
-          sed -i "s~""${s}"*"${e}""~~g" "$co"/"$3"
+          sed -i "s~""${s}$1${e}""~~g" "$co"/"$3"
           sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$3"
           # add components
           sed -i "s~""$im""~""${im}${s}$1${e}""~g" "$co"/"$3"
@@ -689,7 +689,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   mkdir -p ".blueprint/extensions/$identifier/private/.store"
   
   log_bright "[INFO] Caching extension config inside of data directory.."
-  cp ".blueprint/tmp/$n/conf.yml" ".blueprint/extensions/$identifier/private/.store/conf.yml"; #backup conf.yml
+  cp ".blueprint/tmp/$n/conf.yml" ".blueprint/extensions/$identifier/private/.store/conf.yml" #backup conf.yml
+  if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
+    cp ".blueprint/tmp/$n/$dashboard_components/Components.yml" ".blueprint/extensions/$identifier/private/.store/Components.yml" #backup Components.yml
+  fi
   
   if [[ $data_directory != "" ]]; then
     log_bright "[INFO] Placing private directory contents.."
