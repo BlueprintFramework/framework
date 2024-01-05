@@ -635,6 +635,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
       __Server_Terminal_BeforeContent="@/blueprint/extensions/${identifier}/${Components_Server_Terminal_BeforeContent}"
       __Server_Terminal_AfterContent="@/blueprint/extensions/${identifier}/${Components_Server_Terminal_AfterContent}"
+      __Server_Files_Browse_BeforeContent="@/blueprint/extensions/${identifier}/${Components_Server_Files_Browse_BeforeContent}"
+      __Server_Files_Browse_FileButtons="@/blueprint/extensions/${identifier}/${Components_Server_Files_Browse_FileButtons}"
+      __Server_Files_Browse_AfterContent="@/blueprint/extensions/${identifier}/${Components_Server_Files_Browse_AfterContent}"
+      __Server_Files_Edit_BeforeEdit="@/blueprint/extensions/${identifier}/${Components_Server_Files_Edit_BeforeEdit}"
+      __Server_Files_Edit_AfterEdit="@/blueprint/extensions/${identifier}/${Components_Server_Files_Edit_AfterEdit}"
 
 
       # place component items
@@ -644,6 +649,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
       PLACE_REACT "$__Server_Terminal_BeforeContent" "$Components_Server_Terminal_BeforeContent" "Server/Terminal/BeforeContent.tsx"
       PLACE_REACT "$__Server_Terminal_AfterContent" "$Components_Server_Terminal_AfterContent" "Server/Terminal/AfterContent.tsx"
+      PLACE_REACT "$__Server_Files_Browse_BeforeContent" "$Components_Server_Files_Browse_BeforeContent" "Server/Files/Browse/BeforeContent.tsx"
+      PLACE_REACT "$__Server_Files_Browse_FileButtons" "$Components_Server_Files_Browse_FileButtons" "Server/Files/Browse/FileButtons.tsx"
+      PLACE_REACT "$__Server_Files_Browse_AfterContent" "$Components_Server_Files_Browse_AfterContent" "Server/Files/Browse/AfterContent.tsx"
+      PLACE_REACT "$__Server_Files_Edit_BeforeEdit" "$Components_Server_Files_Edit_BeforeEdit" "Server/Files/Edit/BeforeEdit.tsx"
+      PLACE_REACT "$__Server_Files_Edit_AfterEdit" "$Components_Server_Files_Edit_AfterEdit" "Server/Files/AfterEdit.tsx"
 
     else
       # warn about missing components.yml file
