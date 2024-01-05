@@ -620,7 +620,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
 
           # remove components
-          sed -i "s~""${s}$1${e}""~~g" "$co"/"$3"
+          sed -i "s~""${s}"*"${e}""~~g" "$co"/"$3"
           sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$3"
           # add components
           sed -i "s~""$im""~""${im}${s}$1${e}""~g" "$co"/"$3"
