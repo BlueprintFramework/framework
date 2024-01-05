@@ -633,9 +633,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       __Navigation_NavigationBar_AdditionalItems="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AdditionalItems}"
       __Navigation_NavigationBar_AfterNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AfterNavigation}"
 
+      __Server_Terminal_BeforeContent="@/blueprint/extensions/${identifier}/${Components_Server_Terminal_BeforeContent}"
+      __Server_Terminal_AfterContent="@/blueprint/extensions/${identifier}/${Components_Server_Terminal_AfterContent}"
+
+
+      # place component items
       PLACE_REACT "$__Navigation_NavigationBar_BeforeNavigation" "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
       PLACE_REACT "$__Navigation_NavigationBar_AdditionalItems" "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
       PLACE_REACT "$__Navigation_NavigationBar_AfterNavigation" "$Components_Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx"
+
+      PLACE_REACT "$__Server_Terminal_BeforeContent" "$Components_Server_Terminal_BeforeContent" "Server/Terminal/BeforeContent.tsx"
+      PLACE_REACT "$__Server_Terminal_AfterContent" "$Components_Server_Terminal_AfterContent" "Server/Terminal/AfterContent.tsx"
 
     else
       # warn about missing components.yml file
