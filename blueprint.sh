@@ -710,8 +710,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Placing dashboard css.."
     YARN="y"
-    sed -i "s~@import url($identifier.css);~~g" "resources/scripts/blueprint/css/extensions.css"
-    echo -e "@import url($identifier.css);" >> "resources/scripts/blueprint/css/extensions.css"
+    sed -i "s~@import url(./imported/$identifier.css);~~g" "resources/scripts/blueprint/css/extensions.css"
+    echo -e "@import url(./imported/$identifier.css);" >> "resources/scripts/blueprint/css/extensions.css"
     cp ".blueprint/tmp/$n/$dashboard_css" "resources/scripts/blueprint/css/imported/$identifier.css"
   fi
 
@@ -1018,7 +1018,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Remove dashboard css
   if [[ $dashboard_css != "" ]]; then
     log_bright "[INFO] Removing dashboard css.."
-    sed -i "s~@import url($identifier.css);~~g" "resources/scripts/blueprint/css/extensions.css"
+    sed -i "s~@import url(./imported/$identifier.css);~~g" "resources/scripts/blueprint/css/extensions.css"
     rm "resources/scripts/blueprint/css/imported/$identifier.css"
     YARN="y"
   fi
