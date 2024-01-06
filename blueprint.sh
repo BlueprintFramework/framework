@@ -590,74 +590,64 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
       # fetch component config
       eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/Components.yml Components_)"
+      if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Components.yml OldComponents_)"; fi
 
       # define static variables to make stuff a bit easier
       im="\/\* blueprint\/import \*\/"; re="{/\* blueprint\/react \*/}"; co="resources/scripts/blueprint/components"
       s="import ${identifier^}Component from '"; e="';"
 
       PLACE_REACT() {
-        if [[ ( $2 == "/"* ) || ( $2 == *"/.."* ) || ( $2 == *"../"* ) || ( $2 == *"/../"* ) || ( $2 == *"\n"* ) || ( $2 == *"@"* ) || ( $2 == *"\\"* ) ]]; then rm -R ".blueprint/tmp/$n"; throw 'componentEscape'; fi
-        if [[ ! $1 == "@/blueprint/extensions/${identifier}/" ]]; then
+        if [[ ( $1 == "/"* ) || ( $1 == *"/.."* ) || ( $1 == *"../"* ) || ( $1 == *"/../"* ) || ( $1 == *"\n"* ) || ( $1 == *"@"* ) || ( $1 == *"\\"* ) ]]; then rm -R ".blueprint/tmp/$n"; throw 'componentEscape'; fi
+        if [[ $3 != "$1" ]]; then
+          # remove old components
+          sed -i "s~""${s}@/blueprint/extensions/${identifier}/$3${e}""~~g" "$co"/"$2"
+          sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
+        fi
+        if [[ ! $1 == "" ]]; then
 
           # validate file name
-          if [[ ${2} == *".tsx" ]] ||
-             [[ ${2} == *".ts"  ]] ||
-             [[ ${2} == *".jsx" ]] ||
-             [[ ${2} == *".js"  ]]; then 
+          if [[ ${1} == *".tsx" ]] ||
+             [[ ${1} == *".ts"  ]] ||
+             [[ ${1} == *".jsx" ]] ||
+             [[ ${1} == *".js"  ]]; then 
             rm -R ".blueprint/tmp/$n"
             throw 'componentFileExtension'
           fi
 
           # validate path
-          if [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${2}.tsx" ]] &&
-             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${2}.ts"  ]] &&
-             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${2}.jsx" ]] &&
-             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${2}.js"  ]]; then 
+          if [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.tsx" ]] &&
+             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.ts"  ]] &&
+             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.jsx" ]] &&
+             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.js"  ]]; then 
             rm -R ".blueprint/tmp/$n"
             throw 'missingComponentFiles'
           fi
 
-
-
           # remove components
-          sed -i "s~""${s}$1${e}""~~g" "$co"/"$3"
-          sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$3"
+          sed -i "s~""${s}@/blueprint/extensions/${identifier}/$1${e}""~~g" "$co"/"$2"
+          sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
           # add components
-          sed -i "s~""$im""~""${im}${s}$1${e}""~g" "$co"/"$3"
-          sed -i "s~""$re""~""${re}\<${identifier^}Component /\>""~g" "$co"/"$3"
+          sed -i "s~""$im""~""${im}${s}@/blueprint/extensions/${identifier}/$1${e}""~g" "$co"/"$2"
+          sed -i "s~""$re""~""${re}\<${identifier^}Component /\>""~g" "$co"/"$2"
         fi
       }
 
-      # assign variables to component items
-      __Navigation_NavigationBar_BeforeNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_BeforeNavigation}"
-      __Navigation_NavigationBar_AdditionalItems="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AdditionalItems}"
-      __Navigation_NavigationBar_AfterNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AfterNavigation}"
-
-      __Server_Terminal_BeforeContent="@/blueprint/extensions/${identifier}/${Components_Server_Terminal_BeforeContent}"
-      __Server_Terminal_AfterContent="@/blueprint/extensions/${identifier}/${Components_Server_Terminal_AfterContent}"
-      __Server_Files_Browse_BeforeContent="@/blueprint/extensions/${identifier}/${Components_Server_Files_Browse_BeforeContent}"
-      __Server_Files_Browse_FileButtons="@/blueprint/extensions/${identifier}/${Components_Server_Files_Browse_FileButtons}"
-      __Server_Files_Browse_AfterContent="@/blueprint/extensions/${identifier}/${Components_Server_Files_Browse_AfterContent}"
-      __Server_Files_Edit_BeforeEdit="@/blueprint/extensions/${identifier}/${Components_Server_Files_Edit_BeforeEdit}"
-      __Server_Files_Edit_AfterEdit="@/blueprint/extensions/${identifier}/${Components_Server_Files_Edit_AfterEdit}"
-
-
       # place component items
-      PLACE_REACT "$__Navigation_NavigationBar_BeforeNavigation" "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
-      PLACE_REACT "$__Navigation_NavigationBar_AdditionalItems" "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
-      PLACE_REACT "$__Navigation_NavigationBar_AfterNavigation" "$Components_Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx"
+      PLACE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx" "$OldComponents_Navigation_NavigationBar_BeforeNavigation"
+      PLACE_REACT "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx" "$OldComponents_Navigation_NavigationBar_AdditionalItems"
+      PLACE_REACT "$Components_Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx" "$OldComponents_Navigation_NavigationBar_AfterNavigation"
 
-      PLACE_REACT "$__Server_Terminal_BeforeContent" "$Components_Server_Terminal_BeforeContent" "Server/Terminal/BeforeContent.tsx"
-      PLACE_REACT "$__Server_Terminal_AfterContent" "$Components_Server_Terminal_AfterContent" "Server/Terminal/AfterContent.tsx"
-      PLACE_REACT "$__Server_Files_Browse_BeforeContent" "$Components_Server_Files_Browse_BeforeContent" "Server/Files/Browse/BeforeContent.tsx"
-      PLACE_REACT "$__Server_Files_Browse_FileButtons" "$Components_Server_Files_Browse_FileButtons" "Server/Files/Browse/FileButtons.tsx"
-      PLACE_REACT "$__Server_Files_Browse_AfterContent" "$Components_Server_Files_Browse_AfterContent" "Server/Files/Browse/AfterContent.tsx"
-      PLACE_REACT "$__Server_Files_Edit_BeforeEdit" "$Components_Server_Files_Edit_BeforeEdit" "Server/Files/Edit/BeforeEdit.tsx"
-      PLACE_REACT "$__Server_Files_Edit_AfterEdit" "$Components_Server_Files_Edit_AfterEdit" "Server/Files/AfterEdit.tsx"
+      PLACE_REACT "$Components_Server_Terminal_BeforeContent" "Server/Terminal/BeforeContent.tsx" "$OldComponents_Server_Terminal_BeforeContent"
+      PLACE_REACT "$Components_Server_Terminal_AfterContent" "Server/Terminal/AfterContent.tsx" "$OldComponents_Server_Terminal_AfterContent"
+      PLACE_REACT "$Components_Server_Files_Browse_BeforeContent" "Server/Files/Browse/BeforeContent.tsx" "$OldComponents_Server_Files_Browse_BeforeContent"
+      PLACE_REACT "$Components_Server_Files_Browse_FileButtons" "Server/Files/Browse/FileButtons.tsx" "$OldComponents_Server_Files_Browse_FileButtons"
+      PLACE_REACT "$Components_Server_Files_Browse_AfterContent" "Server/Files/Browse/AfterContent.tsx" "$OldComponents_Server_Files_Browse_AfterContent"
+      PLACE_REACT "$Components_Server_Files_Edit_BeforeEdit" "Server/Files/Edit/BeforeEdit.tsx" "$OldComponents_Server_Files_Edit_BeforeEdit"
+      PLACE_REACT "$Components_Server_Files_Edit_AfterEdit" "Server/Files/Edit/AfterEdit.tsx" "$OldComponents_Server_Files_Edit_AfterEdit"
 
     else
       # warn about missing components.yml file
-      log_yellow "[WARNING] Could not find '$dashboard_components/Components.yml', React component extendability might be limited."
+      log_yellow "[WARNING] Could not find '$dashboard_components/Components.yml', component extendability might be limited."
     fi
   fi
 
@@ -1056,21 +1046,25 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     s="import ${identifier^}Component from '"; e="';"
 
     REMOVE_REACT() {
-      if [[ ! $1 == "@/blueprint/extensions/${identifier}/" ]]; then
+      if [[ ! $1 == "" ]]; then
         # remove components
-        sed -i "s~""${s}$1${e}""~~g" "$co"/"$2"
+        sed -i "s~""${s}@/blueprint/extensions/${identifier}/$1${e}""~~g" "$co"/"$2"
         sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
       fi
     }
 
-    # assign variables to component items
-    __Navigation_NavigationBar_BeforeNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_BeforeNavigation}"
-    __Navigation_NavigationBar_AdditionalItems="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AdditionalItems}"
-    __Navigation_NavigationBar_AfterNavigation="@/blueprint/extensions/${identifier}/${Components_Navigation_NavigationBar_AfterNavigation}"
+    # remove component items
+    REMOVE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
+    REMOVE_REACT "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
+    REMOVE_REACT "$Components_Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx"
 
-    REMOVE_REACT "$__Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
-    REMOVE_REACT "$__Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
-    REMOVE_REACT "$__Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx"
+    REMOVE_REACT "$Components_Server_Terminal_BeforeContent" "Server/Terminal/BeforeContent.tsx"
+    REMOVE_REACT "$Components_Server_Terminal_AfterContent" "Server/Terminal/AfterContent.tsx"
+    REMOVE_REACT "$Components_Server_Files_Browse_BeforeContent" "Server/Files/Browse/BeforeContent.tsx"
+    REMOVE_REACT "$Components_Server_Files_Browse_FileButtons" "Server/Files/Browse/FileButtons.tsx"
+    REMOVE_REACT "$Components_Server_Files_Browse_AfterContent" "Server/Files/Browse/AfterContent.tsx"
+    REMOVE_REACT "$Components_Server_Files_Edit_BeforeEdit" "Server/Files/Edit/BeforeEdit.tsx"
+    REMOVE_REACT "$Components_Server_Files_Edit_AfterEdit" "Server/Files/Edit/AfterEdit.tsx"
 
     YARN="y"
   fi
