@@ -21,10 +21,9 @@ import ConflictStateRenderer from '@/components/server/ConflictStateRenderer';
 import PermissionRoute from '@/components/elements/PermissionRoute';
 import routes from '@/routers/routes';
 
-import BeforeSubNavigation    from '@/blueprint/components/Navigation/SubNavigation/BeforeSubNavigation';
-import AdditionalServerItems  from '@/blueprint/components/Navigation/SubNavigation/AdditionalServerItems';
-import AfterSubNavigation     from '@/blueprint/components/Navigation/SubNavigation/AfterSubNavigation';
-import AdditionalServerRoutes from '@/blueprint/components/Navigation/Routes/AdditionalServerRoutes';
+import BeforeSubNavigation   from '@/blueprint/components/Navigation/SubNavigation/BeforeSubNavigation';
+import AdditionalServerItems from '@/blueprint/components/Navigation/SubNavigation/AdditionalServerItems';
+import AfterSubNavigation    from '@/blueprint/components/Navigation/SubNavigation/AfterSubNavigation';
 
 export default () => {
     const match = useRouteMatch<{ id: string }>();
@@ -124,7 +123,6 @@ export default () => {
                                             </Spinner.Suspense>
                                         </PermissionRoute>
                                     ))}
-                                    <AdditionalServerRoutes />
                                     <Route path={'*'} component={NotFound} />
                                 </Switch>
                             </TransitionRouter>

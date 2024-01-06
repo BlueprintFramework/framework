@@ -9,10 +9,9 @@ import { useLocation } from 'react-router';
 import Spinner from '@/components/elements/Spinner';
 import routes from '@/routers/routes';
 
-import BeforeSubNavigation       from '@/blueprint/components/Navigation/SubNavigation/BeforeSubNavigation';
-import AdditionalAccountItems    from '@/blueprint/components/Navigation/SubNavigation/AdditionalAccountItems';
-import AfterSubNavigation        from '@/blueprint/components/Navigation/SubNavigation/AfterSubNavigation';
-import AdditionalDashboardRoutes from '@/blueprint/components/Navigation/Routes/AdditionalDashboardRoutes';
+import BeforeSubNavigation      from '@/blueprint/components/Navigation/SubNavigation/BeforeSubNavigation';
+import AdditionalAccountItems   from '@/blueprint/components/Navigation/SubNavigation/AdditionalAccountItems';
+import AfterSubNavigation       from '@/blueprint/components/Navigation/SubNavigation/AfterSubNavigation';
 
 export default () => {
     const location = useLocation();
@@ -47,7 +46,6 @@ export default () => {
                                 <Component />
                             </Route>
                         ))}
-                        <AdditionalDashboardRoutes />
                         <Route path={'*'}>
                             <NotFound />
                         </Route>

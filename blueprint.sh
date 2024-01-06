@@ -644,10 +644,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       PLACE_REACT "$Components_Navigation_SubNavigation_AdditionalServerItems" "Navigation/SubNavigation/AdditionalServerItems.tsx" "$OldComponents_Navigation_SubNavigation_AdditionalServerItems"
       PLACE_REACT "$Components_Navigation_SubNavigation_AdditionalAccountItems" "Navigation/SubNavigation/AdditionalAccountItems.tsx" "$OldComponents_Navigation_SubNavigation_AdditionalAccountItems"
       PLACE_REACT "$Components_Navigation_SubNavigation_AfterSubNavigation" "Navigation/SubNavigation/AfterSubNavigation.tsx" "$OldComponents_Navigation_SubNavigation_AfterSubNavigation"
-      PLACE_REACT "$Components_Navigation_Routes_AdditionalDashboardRoutes" "Navigation/Routes/AdditionalDashboardRoutes.tsx" "$OldComponents_Navigation_Routes_AdditionalDashboardRoutes"
-      PLACE_REACT "$Components_Navigation_Routes_AdditionalServerRoutes" "Navigation/Routes/AdditionalServerRoutes.tsx" "$OldComponents_Navigation_Routes_AdditionalServerRoutes"
-      PLACE_REACT "$Components_Navigation_Routes_AdditionalGuestRoutes" "Navigation/Routes/AdditionalGuestRoutes.tsx" "$OldComponents_Navigation_Routes_AdditionalGuestRoutes"
-
 
       # dashboard
       PLACE_REACT "$Components_Dashboard_ServerRow_BeforeEntryName" "Dashboard/ServerRow/BeforeEntryName.tsx" "$OldComponents_Dashboard_ServerRow_BeforeEntryName"
@@ -1123,9 +1119,6 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     REMOVE_REACT "$Components_Navigation_SubNavigation_AdditionalServerItems" "Navigation/SubNavigation/AdditionalServerItems.tsx"
     REMOVE_REACT "$Components_Navigation_SubNavigation_AdditionalAccountItems" "Navigation/SubNavigation/AdditionalAccountItems.tsx"
     REMOVE_REACT "$Components_Navigation_SubNavigation_AfterSubNavigation" "Navigation/SubNavigation/AfterSubNavigation.tsx"
-    REMOVE_REACT "$Components_Navigation_Routes_AdditionalDashboardRoutes" "Navigation/Routes/AdditionalDashboardRoutes.tsx"
-    REMOVE_REACT "$Components_Navigation_Routes_AdditionalServerRoutes" "Navigation/Routes/AdditionalServerRoutes.tsx"
-    REMOVE_REACT "$Components_Navigation_Routes_AdditionalGuestRoutes" "Navigation/Routes/AdditionalGuestRoutes.tsx"
 
 
     # dashboard
