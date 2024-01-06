@@ -640,6 +640,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       PLACE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx" "$OldComponents_Navigation_NavigationBar_BeforeNavigation"
       PLACE_REACT "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx" "$OldComponents_Navigation_NavigationBar_AdditionalItems"
       PLACE_REACT "$Components_Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx" "$OldComponents_Navigation_NavigationBar_AfterNavigation"
+      PLACE_REACT "$Components_Navigation_SubNavigation_BeforeSubNavigation" "Navigation/SubNavigation/BeforeSubNavigation.tsx" "$OldComponents_Navigation_SubNavigation_BeforeSubNavigation"
+      PLACE_REACT "$Components_Navigation_SubNavigation_AdditionalServerItems" "Navigation/SubNavigation/AdditionalServerItems.tsx" "$OldComponents_Navigation_SubNavigation_AdditionalServerItems"
+      PLACE_REACT "$Components_Navigation_SubNavigation_AdditionalAccountItems" "Navigation/SubNavigation/AdditionalAccountItems.tsx" "$OldComponents_Navigation_SubNavigation_AdditionalAccountItems"
+      PLACE_REACT "$Components_Navigation_SubNavigation_AfterSubNavigation" "Navigation/SubNavigation/AfterSubNavigation.tsx" "$OldComponents_Navigation_SubNavigation_AfterSubNavigation"
+      PLACE_REACT "$Components_Navigation_Routes_AdditionalDashboardRoutes" "Navigation/Routes/AdditionalDashboardRoutes.tsx" "$OldComponents_Navigation_Routes_AdditionalDashboardRoutes"
+      PLACE_REACT "$Components_Navigation_Routes_AdditionalServerRoutes" "Navigation/Routes/AdditionalServerRoutes.tsx" "$OldComponents_Navigation_Routes_AdditionalServerRoutes"
+      PLACE_REACT "$Components_Navigation_Routes_AdditionalGuestRoutes" "Navigation/Routes/AdditionalGuestRoutes.tsx" "$OldComponents_Navigation_Routes_AdditionalGuestRoutes"
 
 
       # dashboard
@@ -1112,6 +1119,13 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     REMOVE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
     REMOVE_REACT "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
     REMOVE_REACT "$Components_Navigation_NavigationBar_AfterNavigation" "Navigation/NavigationBar/AfterNavigation.tsx"
+    REMOVE_REACT "$Components_Navigation_SubNavigation_BeforeSubNavigation" "Navigation/SubNavigation/BeforeSubNavigation.tsx"
+    REMOVE_REACT "$Components_Navigation_SubNavigation_AdditionalServerItems" "Navigation/SubNavigation/AdditionalServerItems.tsx"
+    REMOVE_REACT "$Components_Navigation_SubNavigation_AdditionalAccountItems" "Navigation/SubNavigation/AdditionalAccountItems.tsx"
+    REMOVE_REACT "$Components_Navigation_SubNavigation_AfterSubNavigation" "Navigation/SubNavigation/AfterSubNavigation.tsx"
+    REMOVE_REACT "$Components_Navigation_Routes_AdditionalDashboardRoutes" "Navigation/Routes/AdditionalDashboardRoutes.tsx"
+    REMOVE_REACT "$Components_Navigation_Routes_AdditionalServerRoutes" "Navigation/Routes/AdditionalServerRoutes.tsx"
+    REMOVE_REACT "$Components_Navigation_Routes_AdditionalGuestRoutes" "Navigation/Routes/AdditionalGuestRoutes.tsx"
 
 
     # dashboard
