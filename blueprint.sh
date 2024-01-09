@@ -141,6 +141,7 @@ depend() {
   ! [ -x "$(command -v awk)" ] ||                            # awk
   ! [ "$(ls "node_modules/"*"cross-env"* 2> /dev/null)" ] || # cross-env
   ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ] || # webpack
+  ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ] || # react
   [[ $missinglibs != "" ]]; then                             # internal
     DEPEND_MISSING=true
   fi
@@ -163,6 +164,7 @@ depend() {
     if ! [ -x "$(command -v awk)"                            ]; then log_red "  - \"awk\" is not installed or detected.";       fi
     if ! [ "$(ls "node_modules/"*"cross-env"* 2> /dev/null)" ]; then log_red "  - \"cross-env\" is not installed or detected."; fi
     if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ]; then log_red "  - \"webpack\" is not installed or detected.";   fi
+    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ]; then log_red "  - \"react\" is not installed or detected.";     fi
 
     if [[ $missinglibs == *"[bash_colors]"*              ]]; then log_red "  - \"internal:bash_colors\" is not installed or detected.";              fi
     if [[ $missinglibs == *"[parse_yaml]"*               ]]; then log_red "  - \"internal:parse_yaml\" is not installed or detected.";               fi
