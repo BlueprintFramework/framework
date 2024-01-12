@@ -446,24 +446,31 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     websiteiconclass="bx-link-external"
 
     # git
-    if [[ $website == *"://github.com/"*  ]] || [[ $website == *"://www.github.com/"*  ]] ||
-       [[ $website == *"://github.com"    ]] || [[ $website == *"://www.github.com"    ]] ||
-       [[ $website == *"://gitlab.com/"*  ]] || [[ $website == *"://www.gitlab.com/"*  ]] ||
-       [[ $website == *"://gitlab.com"    ]] || [[ $website == *"://www.gitlab.com"    ]]; then websiteiconclass="bx-git-branch";   fi
+    if [[ $website == *"://github.com/"*        ]] || [[ $website == *"://www.github.com/"*        ]] ||
+       [[ $website == *"://github.com"          ]] || [[ $website == *"://www.github.com"          ]] ||
+       [[ $website == *"://gitlab.com/"*        ]] || [[ $website == *"://www.gitlab.com/"*        ]] ||
+       [[ $website == *"://gitlab.com"          ]] || [[ $website == *"://www.gitlab.com"          ]]; then websiteiconclass="bx-git-branch";fi
+    # marketplaces
+    if [[ $website == *"://sourcexchange.net/"* ]] || [[ $website == *"://www.sourcexchange.net/"* ]] ||
+       [[ $website == *"://sourcexchange.net"   ]] || [[ $website == *"://www.sourcexchange.net"   ]] ||
+       [[ $website == *"://builtbybit.com/"*    ]] || [[ $website == *"://www.builtbybit.com/"*    ]] ||
+       [[ $website == *"://builtbybit.com"      ]] || [[ $website == *"://www.builtbybit.com"      ]] ||
+       [[ $website == *"://builtbyb.it/"*       ]] || [[ $website == *"://www.builtbyb.it/"*       ]] ||
+       [[ $website == *"://builtbyb.it"         ]] || [[ $website == *"://www.builtbyb.it"         ]]; then websiteiconclass="bx-store";fi
     # discord
-    if [[ $website == *"://discord.com/"* ]] || [[ $website == *"://www.discord.com/"* ]] ||
-       [[ $website == *"://discord.com"   ]] || [[ $website == *"://www.discord.com"   ]] ||
-       [[ $website == *"://discord.gg/"*  ]] || [[ $website == *"://www.discord.gg/"*  ]] ||
-       [[ $website == *"://discord.gg"    ]] || [[ $website == *"://www.discord.gg"    ]]; then websiteiconclass="bxl-discord-alt"; fi
+    if [[ $website == *"://discord.com/"*       ]] || [[ $website == *"://www.discord.com/"*       ]] ||
+       [[ $website == *"://discord.com"         ]] || [[ $website == *"://www.discord.com"         ]] ||
+       [[ $website == *"://discord.gg/"*        ]] || [[ $website == *"://www.discord.gg/"*        ]] ||
+       [[ $website == *"://discord.gg"          ]] || [[ $website == *"://www.discord.gg"          ]]; then websiteiconclass="bxl-discord-alt";fi
     # patreon
-    if [[ $website == *"://patreon.com/"* ]] || [[ $website == *"://www.patreon.com/"* ]] ||
-       [[ $website == *"://patreon.com"   ]] || [[ $website == *"://www.patreon.com"   ]]; then websiteiconclass="bxl-patreon";     fi
+    if [[ $website == *"://patreon.com/"*       ]] || [[ $website == *"://www.patreon.com/"*       ]] ||
+       [[ $website == *"://patreon.com"         ]] || [[ $website == *"://www.patreon.com"         ]]; then websiteiconclass="bxl-patreon";fi
     # reddit
-    if [[ $website == *"://reddit.com/"*  ]] || [[ $website == *"://www.reddit.com/"*  ]] ||
-       [[ $website == *"://reddit.com"    ]] || [[ $website == *"://www.reddit.com"    ]]; then websiteiconclass="bxl-reddit";      fi
+    if [[ $website == *"://reddit.com/"*        ]] || [[ $website == *"://www.reddit.com/"*        ]] ||
+       [[ $website == *"://reddit.com"          ]] || [[ $website == *"://www.reddit.com"          ]]; then websiteiconclass="bxl-reddit";fi
     # trello
-    if [[ $website == *"://trello.com/"*  ]] || [[ $website == *"://www.trello.com/"*  ]] ||
-       [[ $website == *"://trello.com"    ]] || [[ $website == *"://www.trello.com"    ]]; then websiteiconclass="bxl-trello";      fi
+    if [[ $website == *"://trello.com/"*        ]] || [[ $website == *"://www.trello.com/"*        ]] ||
+       [[ $website == *"://trello.com"          ]] || [[ $website == *"://www.trello.com"          ]]; then websiteiconclass="bxl-trello";fi
   fi
 
   if [[ $dev == true ]]; then
