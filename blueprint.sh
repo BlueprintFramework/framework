@@ -118,7 +118,6 @@ fi
 
 
 # Function that exits the script after logging a "red" message.
-quit_red() { log_red "$1"; exit 1; }
 throw() { throwError "$1"; exit 1; }
 
 
@@ -214,7 +213,7 @@ if [[ $1 != "-bash" ]]; then
     if [[ $1 != "--post-upgrade" ]]; then
       log "  ██\n██  ██\n  ████\n"; # Blueprint "ascii" "logo".
       if [[ $DOCKER == "y" ]]; then
-        log_yellow "[WARNING] Docker is not officially supported by Blueprint and you will run into errors. Only continue if you know what you are doing."
+        PRINT WARNING "Docker is untested and you might run into issues."
       fi
     fi
 
@@ -293,8 +292,8 @@ fi
 
 # -i, -install
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
-  if [[ $(( $# - 2 )) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(( $# - 2 )).";fi
-  if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then quit_red "[FATAL] Installing extensions located in paths outside of '$FOLDER' is not possible.";fi
+  if [[ $(( $# - 2 )) != 1 ]]; then PRINT FATAL "Expected 1 argument but got $(( $# - 2 )).";return;fi
+  if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";return;fi
 
   PRINT INFO "Searching and validating framework dependencies.."
   # Check if required programs are installed
@@ -311,8 +310,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     dev=false
     n="$3"
     FILE="${n}.blueprint"
-    if [[ ( $FILE == *".blueprint.blueprint" ) && ( $n == *".blueprint" ) ]]; then quit_red "[FATAL] Argument one in '-install' must not end with '.blueprint'."; fi
-    if [[ ! -f "$FILE" ]]; then quit_red "[FATAL] $FILE could not be found.";fi
+    if [[ ( $FILE == *".blueprint.blueprint" ) && ( $n == *".blueprint" ) ]]; then quit_red "[FATAL] Argument one in '-install' must not end with '.blueprint'.";return; fi
+    if [[ ! -f "$FILE" ]]; then quit_red "[FATAL] $FILE could not be found.";return;fi
 
     ZIP="${n}.zip"
     cp "$FILE" ".blueprint/tmp/$ZIP"
@@ -394,6 +393,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         ( $database_migrations == *"/"  ) ]]; then
     rm -R ".blueprint/tmp/$n"
     quit_red "[FATAL] Directory paths in conf.yml should not end with a slash."
+    return
   fi
 
   # check if extension still has placeholder values
@@ -401,6 +401,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
      [[ ( $version == "␀ver␀"  ) || ( $target     == "␀version␀"    ) || ( $author      == "␀author␀"      ) ]]; then
     rm -R ".blueprint/tmp/$n"
     quit_red "[FATAL] Some conf.yml options should be replaced automatically by Blueprint when using \"-init\", but that did not happen. Please verify you have the correct information in your conf.yml and then try again."
+    return
   fi
 
   # Detect if extension is already installed and prepare the upgrading process.
@@ -412,6 +413,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     if [[ ! -f ".blueprint/extensions/$identifier/private/.store/build/button.blade.php" ]]; then
       rm -R ".blueprint/tmp/$n"
       quit_red "[FATAL] Upgrading extension has failed due to missing essential .store files."
+      return
     fi
 
     # Clean up some old extension files.
@@ -524,22 +526,22 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     PLACE_PLACEHOLDERS "$DIR"
   else log_bright "[INFO] Placeholders will be skipped due to the 'ignorePlaceholders' flag."; fi
 
-  if [[ $name == "" ]]; then rm -R ".blueprint/tmp/$n";               quit_red "[FATAL] 'info_name' is a required configuration option.";fi
-  if [[ $identifier == "" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] 'info_identifier' is a required configuration option.";fi
-  if [[ $description == "" ]]; then rm -R ".blueprint/tmp/$n";        quit_red "[FATAL] 'info_description' is a required configuration option.";fi
-  if [[ $version == "" ]]; then rm -R ".blueprint/tmp/$n";            quit_red "[FATAL] 'info_version' is a required configuration option.";fi
-  if [[ $target == "" ]]; then rm -R ".blueprint/tmp/$n";             quit_red "[FATAL] 'info_target' is a required configuration option.";fi
+  if [[ $name == "" ]]; then rm -R ".blueprint/tmp/$n";               quit_red "[FATAL] 'info_name' is a required configuration option.";return;fi
+  if [[ $identifier == "" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] 'info_identifier' is a required configuration option.";return;fi
+  if [[ $description == "" ]]; then rm -R ".blueprint/tmp/$n";        quit_red "[FATAL] 'info_description' is a required configuration option.";return;fi
+  if [[ $version == "" ]]; then rm -R ".blueprint/tmp/$n";            quit_red "[FATAL] 'info_version' is a required configuration option.";return;fi
+  if [[ $target == "" ]]; then rm -R ".blueprint/tmp/$n";             quit_red "[FATAL] 'info_target' is a required configuration option.";return;fi
 
-  if [[ $icon == "" ]]; then                                      log_yellow "[WARNING] This extension does not come with an icon, consider adding one.";fi
+  if [[ $icon == "" ]]; then                                      log_yellow "[WARNING] This extension does not come with an icon, consider adding one.";return;fi
   if [[ $admin_controller == "" ]]; then                             log_bright "[INFO] Admin controller field left blank, using default controller instead.."
     controller_type="default";else controller_type="custom";fi
   if [[ $admin_view == "" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] 'admin_view' is a required configuration option.";fi
-  if [[ $target != "$VERSION" ]]; then                              log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";fi
+  if [[ $target != "$VERSION" ]]; then                              log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";return;fi
   if [[ $identifier != "$n" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi
   if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi
 
   if [[ $identifier =~ [a-z] ]]; then                                log_bright "[INFO] Identifier a-z checks passed."
-  else rm -R ".blueprint/tmp/$n";                                     quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";fi
+  else rm -R ".blueprint/tmp/$n";                                     quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";return;fi
   
 
 
