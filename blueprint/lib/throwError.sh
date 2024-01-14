@@ -4,6 +4,7 @@
 # and may be intergrated directly into the core in the future.
 
 source "${BLUEPRINT__FOLDER}/.blueprint/lib/bash_colors.sh"
+source "${BLUEPRINT__FOLDER}/.blueprint/lib/logFormat.sh"
 
 function throwError {
   if [[ $1 == "cdMissingDirectory"      ]]; then err="Tried to navigate to a directory that does not exist, halting process.";fi
@@ -18,7 +19,7 @@ function throwError {
   if [[ $1 == "pathsEscape"             ]]; then err="File paths must not escape the temporarily extension directory.";fi
 
   if [[ $err == "" ]]; then err="$1"; fi
-  log_red "[FATAL] $err"
+  PRINT FATAL "$err"
   return 1
 }
                                  

@@ -58,6 +58,7 @@ source .blueprint/lib/telemetry.sh                || missinglibs+="[telemetry]"
 source .blueprint/lib/updateAdminCacheReminder.sh || missinglibs+="[updateAdminCacheReminder]"
 source .blueprint/lib/grabenv.sh                  || missinglibs+="[grabenv]"
 source .blueprint/lib/throwError.sh               || missinglibs+="[throwError]"
+source .blueprint/lib/logFormat.sh                || missinglibs+="[logFormat]"
 
 # Fallback to these functions if "bash_colors.sh" is missing
 if [[ $missinglibs == *"[bash_colors]"* ]]; then
@@ -89,7 +90,6 @@ if [[ $missinglibs == *"[bash_colors]"* ]]; then
   log_whiteb() { echo -e "$1"; }
   log_yellowb() { echo -e "$1"; }
 fi
-
 
 
 # -config
@@ -148,31 +148,32 @@ depend() {
 
   # Exit when missing dependencies.
   if [[ $DEPEND_MISSING == true ]]; then 
-    log_red log_bold "[FATAL] Blueprint found errors for the following dependencies:"
+    PRINT FATAL "Some framework dependencies are not installed or detected."
 
     if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($nodeVer) is an unsupported version."; fi
 
-    if ! [ -x "$(command -v unzip)"                          ]; then log_red "  - \"unzip\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v node)"                           ]; then log_red "  - \"node\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v yarn)"                           ]; then log_red "  - \"yarn\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v zip)"                            ]; then log_red "  - \"zip\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v curl)"                           ]; then log_red "  - \"curl\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v php)"                            ]; then log_red "  - \"php\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v git)"                            ]; then log_red "  - \"git\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v grep)"                           ]; then log_red "  - \"grep\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v sed)"                            ]; then log_red "  - \"sed\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v awk)"                            ]; then log_red "  - \"awk\" is not installed or detected.";       fi
-    if ! [ "$(ls "node_modules/"*"cross-env"* 2> /dev/null)" ]; then log_red "  - \"cross-env\" is not installed or detected."; fi
-    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ]; then log_red "  - \"webpack\" is not installed or detected.";   fi
-    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ]; then log_red "  - \"react\" is not installed or detected.";     fi
+    if ! [ -x "$(command -v unzip)"                          ]; then PRINT FATAL "Required dependency \"unzip\" is not installed or detected.";     fi
+    if ! [ -x "$(command -v node)"                           ]; then PRINT FATAL "Required dependency \"node\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v yarn)"                           ]; then PRINT FATAL "Required dependency \"yarn\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v zip)"                            ]; then PRINT FATAL "Required dependency \"zip\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v curl)"                           ]; then PRINT FATAL "Required dependency \"curl\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v php)"                            ]; then PRINT FATAL "Required dependency \"php\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v git)"                            ]; then PRINT FATAL "Required dependency \"git\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v grep)"                           ]; then PRINT FATAL "Required dependency \"grep\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v sed)"                            ]; then PRINT FATAL "Required dependency \"sed\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v awk)"                            ]; then PRINT FATAL "Required dependency \"awk\" is not installed or detected.";       fi
+    if ! [ "$(ls "node_modules/"*"cross-env"* 2> /dev/null)" ]; then PRINT FATAL "Required dependency \"cross-env\" is not installed or detected."; fi
+    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ]; then PRINT FATAL "Required dependency \"webpack\" is not installed or detected.";   fi
+    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ]; then PRINT FATAL "Required dependency \"react\" is not installed or detected.";     fi
 
-    if [[ $missinglibs == *"[bash_colors]"*              ]]; then log_red "  - \"internal:bash_colors\" is not installed or detected.";              fi
-    if [[ $missinglibs == *"[parse_yaml]"*               ]]; then log_red "  - \"internal:parse_yaml\" is not installed or detected.";               fi
-    if [[ $missinglibs == *"[db]"*                       ]]; then log_red "  - \"internal:db\" is not installed or detected.";                       fi
-    if [[ $missinglibs == *"[telemetry]"*                ]]; then log_red "  - \"internal:telemetry\" is not installed or detected.";                fi
-    if [[ $missinglibs == *"[updateAdminCacheReminder]"* ]]; then log_red "  - \"internal:updateAdminCacheReminder\" is not installed or detected."; fi
-    if [[ $missinglibs == *"[grabEnv]"*                  ]]; then log_red "  - \"internal:grabEnv\" is not installed or detected.";                  fi
-    if [[ $missinglibs == *"[throwError]"*               ]]; then log_red "  - \"internal:throwError\" is not installed or detected.";               fi
+    if [[ $missinglibs == *"[bash_colors]"*              ]]; then PRINT FATAL "Required internal dependency \"internal:bash_colors\" is not installed or detected.";              fi
+    if [[ $missinglibs == *"[parse_yaml]"*               ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected.";               fi
+    if [[ $missinglibs == *"[db]"*                       ]]; then PRINT FATAL "Required internal dependency \"internal:db\" is not installed or detected.";                       fi
+    if [[ $missinglibs == *"[telemetry]"*                ]]; then PRINT FATAL "Required internal dependency \"internal:telemetry\" is not installed or detected.";                fi
+    if [[ $missinglibs == *"[updateAdminCacheReminder]"* ]]; then PRINT FATAL "Required internal dependency \"internal:updateAdminCacheReminder\" is not installed or detected."; fi
+    if [[ $missinglibs == *"[grabEnv]"*                  ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";                  fi
+    if [[ $missinglibs == *"[throwError]"*               ]]; then PRINT FATAL "Required internal dependency \"internal:throwError\" is not installed or detected.";               fi
+    if [[ $missinglibs == *"[logFormat]"*                ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";                fi
 
     exit 1
   fi
@@ -206,7 +207,8 @@ chmod u+x /usr/local/bin/blueprint >> $BLUEPRINT__DEBUG
 
 if [[ $1 != "-bash" ]]; then
   if dbValidate "blueprint.setupFinished"; then
-    quit_red "[FATAL] This command only works if you have yet to install Blueprint. Run 'blueprint (cmd) [arg]' instead."
+    PRINT FATAL "Installation process has already been finished before, consider using the 'blueprint' command."
+    exit 1
   else
     # Only run if Blueprint is not in the process of upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
@@ -216,78 +218,69 @@ if [[ $1 != "-bash" ]]; then
       fi
     fi
 
-    log_bright "[INFO] Checking dependencies.."
+    PRINT INFO "Searching and validating framework dependencies.."
     # Check if required programs are installed
     depend
 
     # Link directories.
-    log_bright "[INFO] Linking directories.."
+    PRINT INFO "Linking directories and filesystems.."
     cd $FOLDER/public/extensions        || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || throw 'cdMissingDirectory'
     cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || throw 'cdMissingDirectory'
+    php artisan storage:link &>> $BLUEPRINT__DEBUG 
 
+    PRINT INFO "Replacing internal placeholders.."
     # Update folder placeholder on PlaceholderService and admin layout.
-    log_bright "[INFO] Updating folder placeholders.."
     sed -i "s!::f!$FOLDER!g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
     sed -i "s!::f!$FOLDER!g" $FOLDER/resources/views/layouts/admin.blade.php
-
     # Copy "Blueprint" extension page logo from assets.
-    log_bright "[INFO] Copying Blueprint logo from assets.."
     cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg
 
     # Put application into maintenance.
-    log_bright "[INFO] Enable maintenance."
+    PRINT INFO "Put application into maintenance mode."
     php artisan down &>> $BLUEPRINT__DEBUG
 
     # Clear view cache.
-    log_bright "[INFO] Clearing view cache.."
-    php artisan view:clear &>> $BLUEPRINT__DEBUG
-    php artisan config:clear &>> $BLUEPRINT__DEBUG
-
-    # Link filesystems.
-    log_bright "[INFO] Linking filesystems.."
-    php artisan storage:link &>> $BLUEPRINT__DEBUG 
-
-    # Roll admin css refresh number.
-    log_bright "[INFO] Rolling admin cache refresh class name."
+    PRINT INFO "Clearing view, config and route cache.."
+    {
+      php artisan view:clear
+      php artisan config:clear
+      php artisan route:cache
+    } &>> $BLUEPRINT__DEBUG 
     updateCacheReminder
 
     # Run migrations if Blueprint is not upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
-      log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
+      PRINT INPUT "Would you like to migrate your database? (Y/n)"
       read -r YN
       if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
-        log_bright "[INFO] Running database migrations.."
+        PRINT INFO "Running database migrations.."
         php artisan migrate --force
       else
-        log_bright "[INFO] Database migrations have been skipped."
+        PRINT INFO "Database migrations have been skipped."
       fi
     fi
 
     # Make sure all files have correct permissions.
-    log_bright "[INFO] Changing file ownership to www-data.."
+    PRINT INFO "Changing Pterodactyl file ownership to 'www-data'.."
     chown -R www-data:www-data $FOLDER/* &
     chown -R www-data:www-data $FOLDER/.blueprint/* &
     wait
 
     # Rebuild panel assets.
-    log_bright "[INFO] Rebuilding panel assets.."
+    PRINT INFO "Rebuilding panel assets.."
     yarn run build:production
 
-    # Clear route cache.
-    log_bright "[INFO] Updating route cache to include recent changes.."
-    php artisan route:cache &>> $BLUEPRINT__DEBUG 
-
     # Put application into production.
-    log_bright "[INFO] Disable maintenance."
+    PRINT INFO "Put application into production."
     php artisan up &>> $BLUEPRINT__DEBUG
 
     # Sync some database values.
-    log_bright "[INFO] Syncing database values.."
+    PRINT INFO "Syncing Blueprint-related database values.."
     php artisan bp:sync
 
-    # Only show donate + success message if Blueprint is not upgrading.
+    # Finish installation
     if [[ $1 != "--post-upgrade" ]]; then
-      log_green "\n\n[SUCCESS] Blueprint has finished it's installation process."
+      PRINT SUCCESS "Blueprint has finished it's installation process and should be installed."
     fi
 
     dbAdd "blueprint.setupFinished"
@@ -303,7 +296,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $(( $# - 2 )) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(( $# - 2 )).";fi
   if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then quit_red "[FATAL] Installing extensions located in paths outside of '$FOLDER' is not possible.";fi
 
-  log_bright "[INFO] Checking dependencies.."
+  PRINT INFO "Searching and validating framework dependencies.."
   # Check if required programs are installed
   depend
 
@@ -1027,7 +1020,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   read -r YN
   if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then log_bright "[INFO] Extension removal cancelled.";exit 1;fi
 
-  log_bright "[INFO] Checking dependencies.."
+  PRINT INFO "Searching and validating framework dependencies.."
   depend
 
   # Assign variables to extension flags.
