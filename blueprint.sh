@@ -526,22 +526,22 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     PLACE_PLACEHOLDERS "$DIR"
   else log_bright "[INFO] Placeholders will be skipped due to the 'ignorePlaceholders' flag."; fi
 
-  if [[ $name == "" ]]; then rm -R ".blueprint/tmp/$n";               quit_red "[FATAL] 'info_name' is a required configuration option.";return;fi
-  if [[ $identifier == "" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] 'info_identifier' is a required configuration option.";return;fi
-  if [[ $description == "" ]]; then rm -R ".blueprint/tmp/$n";        quit_red "[FATAL] 'info_description' is a required configuration option.";return;fi
-  if [[ $version == "" ]]; then rm -R ".blueprint/tmp/$n";            quit_red "[FATAL] 'info_version' is a required configuration option.";return;fi
-  if [[ $target == "" ]]; then rm -R ".blueprint/tmp/$n";             quit_red "[FATAL] 'info_target' is a required configuration option.";return;fi
-
-  if [[ $icon == "" ]]; then                                      log_yellow "[WARNING] This extension does not come with an icon, consider adding one.";return;fi
-  if [[ $admin_controller == "" ]]; then                             log_bright "[INFO] Admin controller field left blank, using default controller instead.."
+  if [[ $name == "" ]]; then rm -R ".blueprint/tmp/$n";                 quit_red "[FATAL] 'info_name' is a required configuration option.";return;fi
+  if [[ $identifier == "" ]]; then rm -R ".blueprint/tmp/$n";           quit_red "[FATAL] 'info_identifier' is a required configuration option.";return;fi
+  if [[ $description == "" ]]; then rm -R ".blueprint/tmp/$n";          quit_red "[FATAL] 'info_description' is a required configuration option.";return;fi
+  if [[ $version == "" ]]; then rm -R ".blueprint/tmp/$n";              quit_red "[FATAL] 'info_version' is a required configuration option.";return;fi
+  if [[ $target == "" ]]; then rm -R ".blueprint/tmp/$n";               quit_red "[FATAL] 'info_target' is a required configuration option.";return;fi
+  
+  if [[ $icon == "" ]]; then                                        log_yellow "[WARNING] This extension does not come with an icon, consider adding one.";return;fi
+  if [[ $admin_controller == "" ]]; then                               log_bright "[INFO] Admin controller field left blank, using default controller instead.."
     controller_type="default";else controller_type="custom";fi
-  if [[ $admin_view == "" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] 'admin_view' is a required configuration option.";fi
+  if [[ $admin_view == "" ]]; then rm -R ".blueprint/tmp/$n";           quit_red "[FATAL] 'admin_view' is a required configuration option.";return;fi
   if [[ $target != "$VERSION" ]]; then                              log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";return;fi
-  if [[ $identifier != "$n" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";fi
-  if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";fi
+  if [[ $identifier != "$n" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";return;fi
+  if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";  quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";return;fi
 
-  if [[ $identifier =~ [a-z] ]]; then                                log_bright "[INFO] Identifier a-z checks passed."
-  else rm -R ".blueprint/tmp/$n";                                     quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";return;fi
+  if [[ $identifier =~ [a-z] ]]; then                                  log_bright "[INFO] Identifier a-z checks passed."
+  else rm -R ".blueprint/tmp/$n";                                       quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";return;fi
   
 
 
