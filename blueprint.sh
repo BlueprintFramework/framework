@@ -19,7 +19,7 @@ if [[ $_FOLDER != "" ]]; then
     sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$_FOLDER\" #;|g" "$_FOLDER"/blueprint.sh
   else
     echo "Variable cannot be replaced right now."
-    exit 1
+    exit 2
   fi
 fi
 
@@ -113,7 +113,7 @@ if [[ "$1" == "-config" ]]; then
   fi
 
   echo .
-  exit 1
+  exit 0
 fi
 
 
@@ -207,7 +207,7 @@ chmod u+x /usr/local/bin/blueprint >> $BLUEPRINT__DEBUG
 if [[ $1 != "-bash" ]]; then
   if dbValidate "blueprint.setupFinished"; then
     PRINT FATAL "Installation process has already been finished before, consider using the 'blueprint' command."
-    exit 1
+    exit 2
   else
     # Only run if Blueprint is not in the process of upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
@@ -279,7 +279,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Finish installation
     if [[ $1 != "--post-upgrade" ]]; then
-      PRINT SUCCESS "Blueprint has finished it's installation process and should be installed."
+      PRINT SUCCESS "Blueprint has completed it's installation process."
     fi
 
     dbAdd "blueprint.setupFinished"
@@ -292,8 +292,8 @@ fi
 
 # -i, -install
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
-  if [[ $(( $# - 2 )) != 1 ]]; then PRINT FATAL "Expected 1 argument but got $(( $# - 2 )).";return;fi
-  if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";return;fi
+  if [[ $(( $# - 2 )) != 1 ]]; then PRINT FATAL "Expected 1 argument but got $(( $# - 2 )).";exit 2;fi
+  if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";exit 2;fi
 
   PRINT INFO "Searching and validating framework dependencies.."
   # Check if required programs are installed
@@ -310,8 +310,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     dev=false
     n="$3"
     FILE="${n}.blueprint"
-    if [[ ( $FILE == *".blueprint.blueprint" ) && ( $n == *".blueprint" ) ]]; then quit_red "[FATAL] Argument one in '-install' must not end with '.blueprint'.";return; fi
-    if [[ ! -f "$FILE" ]]; then quit_red "[FATAL] $FILE could not be found.";return;fi
+    if [[ ( $FILE == *".blueprint.blueprint" ) && ( $n == *".blueprint" ) ]]; then PRINT FATAL "Argument one in '-install' must not end with '.blueprint'.";exit 2; fi
+    if [[ ! -f "$FILE" ]]; then PRINT FATAL "$FILE could not be found or detected.";exit 2;fi
 
     ZIP="${n}.zip"
     cp "$FILE" ".blueprint/tmp/$ZIP"
@@ -392,32 +392,31 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         ( $data_public == *"/"          ) || 
         ( $database_migrations == *"/"  ) ]]; then
     rm -R ".blueprint/tmp/$n"
-    quit_red "[FATAL] Directory paths in conf.yml should not end with a slash."
-    return
+    PRINT FATAL "Directory paths in conf.yml should not end with a slash."
+    exit 1
   fi
 
   # check if extension still has placeholder values
   if [[ ( $name    == "␀name␀" ) || ( $identifier == "␀identifier␀" ) || ( $description == "␀description␀" ) ]] ||
      [[ ( $version == "␀ver␀"  ) || ( $target     == "␀version␀"    ) || ( $author      == "␀author␀"      ) ]]; then
     rm -R ".blueprint/tmp/$n"
-    quit_red "[FATAL] Some conf.yml options should be replaced automatically by Blueprint when using \"-init\", but that did not happen. Please verify you have the correct information in your conf.yml and then try again."
-    return
+    PRINT FATAL "Extension contains placeholder values which need to be replaced."
+    exit 1
   fi
 
   # Detect if extension is already installed and prepare the upgrading process.
   if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"$identifier,"* ]]; then
-    log_bright "[INFO] Extension appears to be installed already, reading variables.."
+    PRINT INFO "Switching to update process as extension has already been installed."
     eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/conf.yml old_)"
     DUPLICATE="y"
 
     if [[ ! -f ".blueprint/extensions/$identifier/private/.store/build/button.blade.php" ]]; then
       rm -R ".blueprint/tmp/$n"
-      quit_red "[FATAL] Upgrading extension has failed due to missing essential .store files."
-      return
+      PRINT FATAL "Upgrading extension has failed due to missing essential .store files."
+      exit 1
     fi
 
     # Clean up some old extension files.
-    log_bright "[INFO] Cleaning up old extension files.."
     if [[ $old_data_public != "" ]]; then
       # Clean up old public folder.
       rm -R ".blueprint/extensions/$identifier/public"
@@ -426,7 +425,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   # Assign variables to extension flags.
-  log_bright "[INFO] Assigning variables to extension flags.."
+  PRINT INFO "Reading and assigning extension flags.."
   assignflags
 
   # Force http/https url scheme for extension website urls.
@@ -475,16 +474,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if ! $F_ignorePlaceholders; then
     # Prepare variables for placeholders
-    log_bright "[INFO] Preparing placeholders.."
+    PRINT INFO "Writing extension placeholders.."
     DIR=".blueprint/tmp/$n"
     INSTALLMODE="normal"
     installation_timestamp=$(date +%s)
     if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
     EXTPUBDIR="$FOLDER/.blueprint/extensions/$identifier/public"
     if [[ $data_public == "" ]]; then EXTPUBDIR="null"; fi
-    if $F_ignoreAlphabetPlaceholders; then log_bright "[INFO] Alphabet placeholders will be skipped due to the 'ignoreAlphabetPlaceholders' flag."; fi
 
-    log_bright log_bold "[INFO] Applying placeholders.."
     PLACE_PLACEHOLDERS() {
       local dir="$1"
       for file in "$dir"/*; do
@@ -515,8 +512,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             sed -i "s~__timestamp__~$installation_timestamp~g" "$file"
             sed -i "s~__componentroot__~@/blueprint/extensions/$identifier~g" "$file"
           fi
-
-          log_bright "  - ${file}"
         elif [ -d "$file" ]; then
           PLACE_PLACEHOLDERS "$file"
         fi
@@ -524,29 +519,22 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     }
 
     PLACE_PLACEHOLDERS "$DIR"
-  else log_bright "[INFO] Placeholders will be skipped due to the 'ignorePlaceholders' flag."; fi
+  fi
 
-  if [[ $name == "" ]]; then rm -R ".blueprint/tmp/$n";                 quit_red "[FATAL] 'info_name' is a required configuration option.";return;fi
-  if [[ $identifier == "" ]]; then rm -R ".blueprint/tmp/$n";           quit_red "[FATAL] 'info_identifier' is a required configuration option.";return;fi
-  if [[ $description == "" ]]; then rm -R ".blueprint/tmp/$n";          quit_red "[FATAL] 'info_description' is a required configuration option.";return;fi
-  if [[ $version == "" ]]; then rm -R ".blueprint/tmp/$n";              quit_red "[FATAL] 'info_version' is a required configuration option.";return;fi
-  if [[ $target == "" ]]; then rm -R ".blueprint/tmp/$n";               quit_red "[FATAL] 'info_target' is a required configuration option.";return;fi
+  if [[ $name == "" ]]; then rm -R ".blueprint/tmp/$n";                 PRINT FATAL "'info_name' is a required configuration option.";exit 1;fi
+  if [[ $identifier == "" ]]; then rm -R ".blueprint/tmp/$n";           PRINT FATAL "'info_identifier' is a required configuration option.";exit 1;fi
+  if [[ $description == "" ]]; then rm -R ".blueprint/tmp/$n";          PRINT FATAL "'info_description' is a required configuration option.";exit 1;fi
+  if [[ $version == "" ]]; then rm -R ".blueprint/tmp/$n";              PRINT FATAL "'info_version' is a required configuration option.";exit 1;fi
+  if [[ $target == "" ]]; then rm -R ".blueprint/tmp/$n";               PRINT FATAL "'info_target' is a required configuration option.";exit 1;fi
+  if [[ $admin_view == "" ]]; then rm -R ".blueprint/tmp/$n";           PRINT FATAL "'admin_view' is a required configuration option.";exit 1;fi
   
-  if [[ $icon == "" ]]; then                                        log_yellow "[WARNING] This extension does not come with an icon, consider adding one.";return;fi
-  if [[ $admin_controller == "" ]]; then                               log_bright "[INFO] Admin controller field left blank, using default controller instead.."
-    controller_type="default";else controller_type="custom";fi
-  if [[ $admin_view == "" ]]; then rm -R ".blueprint/tmp/$n";           quit_red "[FATAL] 'admin_view' is a required configuration option.";return;fi
-  if [[ $target != "$VERSION" ]]; then                              log_yellow "[WARNING] This extension is built for version $target, but your version is $VERSION.";return;fi
-  if [[ $identifier != "$n" ]]; then rm -R ".blueprint/tmp/$n";         quit_red "[FATAL] The extension file name must be the same as your identifier. (example: identifier.blueprint)";return;fi
-  if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";  quit_red "[FATAL] Extensions can not have the identifier 'blueprint'.";return;fi
-
-  if [[ $identifier =~ [a-z] ]]; then                                  log_bright "[INFO] Identifier a-z checks passed."
-  else rm -R ".blueprint/tmp/$n";                                       quit_red "[FATAL] The extension identifier should be lowercase and only contain characters a-z.";return;fi
-  
-
+  if [[ $icon == "" ]]; then                                            PRINT WARNING "This extension does not come with an icon, consider adding one.";fi
+  if [[ $target != "$VERSION" ]]; then                                  PRINT WARNING "This extension is built for version $target, but your version is $VERSION.";fi
+  if [[ $identifier != "$n" ]]; then rm -R ".blueprint/tmp/$n";         PRINT FATAL "Extension file name must be the same as your identifier. (example: identifier.blueprint)";exit 1;fi
+  if ! [[ $identifier =~ [a-z] ]]; then rm -R ".blueprint/tmp/$n";      PRINT FATAL "Extension identifier should be lowercase and only contain characters a-z.";exit 1;fi
+  if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";  PRINT FATAL "Extensions can not have the identifier 'blueprint'.";exit 1;fi
 
   # Validate paths to files and directories defined in conf.yml.
-  log_bright "[INFO] Validating conf.yml file path values.."
   if [[ ( ! -f ".blueprint/tmp/$n/$icon"                 ) && ( ${icon} != ""                 ) ]] ||    # file:   icon                 (optional)
      [[ ( ! -f ".blueprint/tmp/$n/$admin_view"           )                                      ]] ||    # file:   admin_view
      [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"     ) && ( ${admin_controller} != ""     ) ]] ||    # file:   admin_controller     (optional)
@@ -576,21 +564,20 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Place database migrations.
   if [[ $database_migrations != "" ]]; then
-    log_bright "[INFO] Placing database migrations.."
+    PRINT INFO "Cloning database migration files.."
     cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2>> $BLUEPRINT__DEBUG
   fi
 
   # Create, link and connect components directory.
   if [[ $dashboard_components != "" ]]; then
     YARN="y"
-    log_bright "[INFO] Creating components directory.."
+    PRINT INFO "Cloning and linking components directory.."
     mkdir -p ".blueprint/extensions/$identifier/components"
     
     cd $FOLDER/resources/scripts/blueprint/extensions || throw 'cdMissingDirectory'
     ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/components "$identifier" 2>> $BLUEPRINT__DEBUG
     cd $FOLDER || throw 'cdMissingDirectory'
 
-    log_bright "[INFO] Placing components directory contents.."
     cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> $BLUEPRINT__DEBUG
     if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
 
@@ -707,13 +694,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
     else
       # warn about missing components.yml file
-      log_yellow "[WARNING] Could not find '$dashboard_components/Components.yml', component extendability might be limited."
+      PRINT WARNING "Could not find '$dashboard_components/Components.yml', component extendability might be limited."
     fi
   fi
 
   # Create and link public directory.
   if [[ $data_public != "" ]]; then
-    log_bright "[INFO] Creating public directory.."
+    PRINT INFO "Cloning and linking public directory.."
     mkdir -p ".blueprint/extensions/$identifier/public"
     
     cd $FOLDER/public/extensions || throw 'cdMissingDirectory'
@@ -722,6 +709,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
     log_bright "[INFO] Placing public directory contents.."
     cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2>> $BLUEPRINT__DEBUG
+  fi
+
+  if [[ $admin_controller == "" ]]; then
+    controller_type="default"
+  else 
+    controller_type="custom"
   fi
 
   # Prepare build files.
@@ -1026,7 +1019,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   depend
 
   # Assign variables to extension flags.
-  log_bright "[INFO] Assigning variables to extension flags.."
+  PRINT INFO "Reading and assigning extension flags.."
   assignflags
 
   if $F_hasRemovalScript; then
@@ -1278,7 +1271,7 @@ fi
 # -init
 if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   # Check for developer mode through the database library.
-  if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
+  if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
 
   # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
   # until you wipe the contents of the .blueprint/dev directory.
@@ -1477,12 +1470,13 @@ fi
 # -build
 if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
   # Check for developer mode through the database library.
-  if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
+  if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    quit_red "[FATAL] You do not have any development files."
+    PRINT FATAL "You do not have any development files."
+    exit 2
   fi
-  log_bright "[INFO] Installing development extension files.."
+  PRINT INFO "Starting developer extension installation.."
   blueprint -i test␀
 fi
 
@@ -1490,13 +1484,14 @@ fi
 # -export
 if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   # Check for developer mode through the database library.
-  if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
+  if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    quit_red "[FATAL] You do not have any development files."
+    PRINT FATAL "You do not have any development files."
+    exit 2
   fi
 
-  log_bright "[INFO] Exporting extension files located in '.blueprint/dev'."
+  PRINT INFO "Start packaging extension.."
 
   cd .blueprint || throw 'cdMissingDirectory'
   rm dev/.gitkeep 2>> $BLUEPRINT__DEBUG
@@ -1508,7 +1503,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
 
   # Assign variables to extension flags.
   flags="$conf_info_flags"
-  log_bright "[INFO] Assigning variables to extension flags.."
+  PRINT INFO "Reading and assigning extension flags.."
   assignflags
 
   if $F_hasExportScript; then
@@ -1556,7 +1551,7 @@ fi
 # -wipe
 if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
   # Check for developer mode through the database library.
-  if ! dbValidate "blueprint.developerEnabled"; then quit_red "[FATAL] Developer mode is not enabled."; fi
+  if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     quit_red "[FATAL] You do not have any development files."
@@ -1647,7 +1642,6 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
   mv $FOLDER/blueprint $FOLDER/.blueprint;
   bash blueprint.sh --post-upgrade
-  log_bright "[INFO] Bash might spit out some errors from here on out. Unexpected end of file (eof), command not found and syntax errors are expected behaviour."
 
   # Ask user if they'd like to migrate their database.
   log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
