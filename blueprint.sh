@@ -238,8 +238,8 @@ if [[ $1 != "-bash" ]]; then
     PRINT INFO "Put application into maintenance mode."
     php artisan down &>> $BLUEPRINT__DEBUG
 
-    # Clear view cache.
-    PRINT INFO "Clearing view, config and route cache.."
+    # Flush cache.
+    PRINT INFO "Flushing view, config and route cache.."
     {
       php artisan view:clear
       php artisan config:clear
@@ -707,7 +707,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/public "$identifier" 2>> $BLUEPRINT__DEBUG
     cd $FOLDER || throw 'cdMissingDirectory'
 
-    log_bright "[INFO] Placing public directory contents.."
     cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2>> $BLUEPRINT__DEBUG
   fi
 
@@ -727,24 +726,22 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
 
   # Start creating data directory.
-  log_bright "[INFO] Creating data directory.."
+  PRINT INFO "Cloning and linking private directory.."
   mkdir -p ".blueprint/extensions/$identifier/private"
   mkdir -p ".blueprint/extensions/$identifier/private/.store"
   
-  log_bright "[INFO] Caching extension config inside of data directory.."
+  if [[ $data_directory != "" ]]; then cp -R ".blueprint/tmp/$n/$data_directory/"* ".blueprint/extensions/$identifier/private/"; fi
+
   cp ".blueprint/tmp/$n/conf.yml" ".blueprint/extensions/$identifier/private/.store/conf.yml" #backup conf.yml
   if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
     cp ".blueprint/tmp/$n/$dashboard_components/Components.yml" ".blueprint/extensions/$identifier/private/.store/Components.yml" #backup Components.yml
   fi
   
-  if [[ $data_directory != "" ]]; then
-    log_bright "[INFO] Placing private directory contents.."
-    cp -R ".blueprint/tmp/$n/$data_directory/"* ".blueprint/extensions/$identifier/private/"
-  fi
   # End creating data directory.
 
 
-  # Link and create assets folder.
+  # Link and create assets folder
+  PRINT INFO "Linking and writing assets directory.."
   if [[ $DUPLICATE != "y" ]]; then
     # Create assets folder if the extension is not updating.
     mkdir .blueprint/extensions/"$identifier"/assets
@@ -765,26 +762,26 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   CONTENT=$(cat .blueprint/tmp/"$n"/"$admin_view")
 
   if [[ $admin_css != "" ]]; then
-    log_bright "[INFO] Placing admin css.."
+    PRINT INFO "Cloning and linking admin css.."
     updateCacheReminder
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"
     echo -e "@import url(/assets/extensions/$identifier/admin.style.css);" >> ".blueprint/extensions/blueprint/assets/admin.extensions.css"
     cp ".blueprint/tmp/$n/$admin_css" ".blueprint/extensions/$identifier/assets/admin.style.css"
   fi
   if [[ $dashboard_css != "" ]]; then
-    log_bright "[INFO] Placing dashboard css.."
+    PRINT INFO "Cloning and linking dashboard css.."
     YARN="y"
     sed -i "s~@import url(./imported/$identifier.css);~~g" "resources/scripts/blueprint/css/extensions.css"
     echo -e "@import url(./imported/$identifier.css);" >> "resources/scripts/blueprint/css/extensions.css"
     cp ".blueprint/tmp/$n/$dashboard_css" "resources/scripts/blueprint/css/imported/$identifier.css"
   fi
 
-  if [[ $name == *"~"* ]]; then        log_yellow "[WARNING] 'name' contains '~' and may result in an error.";fi
-  if [[ $description == *"~"* ]]; then log_yellow "[WARNING] 'description' contains '~' and may result in an error.";fi
-  if [[ $version == *"~"* ]]; then     log_yellow "[WARNING] 'version' contains '~' and may result in an error.";fi
-  if [[ $CONTENT == *"~"* ]]; then     log_yellow "[WARNING] 'CONTENT' contains '~' and may result in an error.";fi
-  if [[ $ICON == *"~"* ]]; then        log_yellow "[WARNING] 'ICON' contains '~' and may result in an error.";fi
-  if [[ $identifier == *"~"* ]]; then  log_yellow "[WARNING] 'identifier' contains '~' and may result in an error.";fi
+  if [[ $name == *"~"* ]]; then        PRINT WARNING "'name' contains '~' and may result in an error.";fi
+  if [[ $description == *"~"* ]]; then PRINT WARNING "'description' contains '~' and may result in an error.";fi
+  if [[ $version == *"~"* ]]; then     PRINT WARNING "'version' contains '~' and may result in an error.";fi
+  if [[ $CONTENT == *"~"* ]]; then     PRINT WARNING "'CONTENT' contains '~' and may result in an error.";fi
+  if [[ $ICON == *"~"* ]]; then        PRINT WARNING "'ICON' contains '~' and may result in an error.";fi
+  if [[ $identifier == *"~"* ]]; then  PRINT WARNING "'identifier' contains '~' and may result in an error.";fi
 
   # Replace $name variables.
   sed -i "s~␀title␀~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
@@ -830,11 +827,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
 
   # Place admin extension view.
+  PRINT INFO "Cloning admin view.."
   mkdir -p "resources/views/admin/extensions/$identifier"
   touch "resources/views/admin/extensions/$identifier/index.blade.php"
   echo "$ADMINVIEW_RESULT" > "resources/views/admin/extensions/$identifier/index.blade.php"
 
   # Place admin extension view controller.
+  PRINT INFO "Cloning admin controller.."
   mkdir -p "app/Http/Controllers/Admin/Extensions/$identifier"
   touch "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   if [[ $controller_type == "default" ]]; then
@@ -848,6 +847,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ $DUPLICATE != "y" ]]; then
     # Place admin route if extension is not updating.
+    PRINT INFO "Editing admin routes.."
     { echo "
     // $identifier:start";
     echo "$ADMINROUTE_RESULT";
@@ -861,7 +861,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
-    log_bright "[INFO] Placing dashboard wrapper.."
+    PRINT INFO "Cloning and injecting dashboard wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
       sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
       sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/templates/wrapper.blade.php"
@@ -877,7 +877,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Place admin wrapper
   if [[ $admin_wrapper != "" ]]; then
-    log_bright "[INFO] Placing admin wrapper.."
+    PRINT INFO "Cloning and injecting admin wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
       sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
       sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/layouts/admin.blade.php"
@@ -892,51 +892,52 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   # Create backup of generated values.
-  log_bright "[INFO] Backing up (some) build files.."
   mkdir -p ".blueprint/extensions/$identifier/private/.store/build"
   cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" ".blueprint/extensions/$identifier/private/.store/build/button.blade.php"
   cp ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" ".blueprint/extensions/$identifier/private/.store/build/route.php"
 
   # Remove temporary built files.
-  log_bright "[INFO] Cleaning up temporary built files.."
+  PRINT INFO "Cleaning up build files.."
   rm ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
   if [[ $controller_type == "default" ]]; then
     rm ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak"
   fi
   rm ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
   rm ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
-  log_bright "[INFO] Cleaning up temp files.."
   rm -R ".blueprint/tmp/$n"
 
   if [[ $database_migrations != "" ]]; then
-    log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
+    PRINT INPUT "Would you like to migrate your database? (Y/n)"
     read -r YN
     if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
-      log_bright "[INFO] Running database migrations.."
+      PRINT INFO "Running database migrations.."
       php artisan migrate --force
     else
-      log_bright "[INFO] Database migrations have been skipped."
+      PRINT INFO "Database migrations have been skipped."
     fi
   fi
 
   if [[ $YARN == "y" ]]; then 
-    if [[ ( $F_developerIgnoreRebuild == true ) && ( $dev == true ) ]]; then
-      log_yellow "[WARNING] Rebuilding skipped due to 'developerIgnoreRebuild' flag being present."
-    else
-      log_bright "[INFO] Rebuilding panel.."
+    if ! [[ ( $F_developerIgnoreRebuild == true ) && ( $dev == true ) ]]; then
+      PRINT INFO "Rebuilding panel assets.."
       yarn run build:production
     fi
   fi
 
-  log_bright "[INFO] Updating route cache to include recent changes.."
-  php artisan route:cache &>> $BLUEPRINT__DEBUG
+  # Flush cache.
+  PRINT INFO "Flushing view, config and route cache.."
+  {
+    php artisan view:clear
+    php artisan config:clear
+    php artisan route:cache
+  } &>> $BLUEPRINT__DEBUG 
 
   chown -R www-data:www-data "$FOLDER/.blueprint/extensions/$identifier/private"
   chmod --silent -R +x ".blueprint/extensions/"* 2>> $BLUEPRINT__DEBUG
 
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
     if $F_hasInstallScript; then
-      log_yellow "[WARNING] This extension uses a custom installation script, proceed with caution."
+      PRINT WARNING "Extension runs a custom installation script, proceed with caution."
       chmod +x ".blueprint/extensions/$identifier/private/install.sh"
 
       # Run script while also parsing some useful variables for the install script to use.
@@ -950,24 +951,22 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
       echo -e "\e[0m\x1b[0m\033[0m"
     fi
-  else
-    log_bright "[INFO] Custom installation scripts will be skipped on developer commands due to the 'developerIgnoreInstallScript' flag."
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
+    PRINT INFO "Add '$identifier' to installed extensions list.."
     echo "${identifier}," >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
-    log_bright "[INFO] Added '$identifier' to the list of installed extensions."
   fi
 
   if [[ $dev != true ]]; then
     if [[ $DUPLICATE == "y" ]]; then
-      log_green "\n\n[SUCCESS] $identifier should now be updated."
+      PRINT SUCCESS "$identifier has been updated."
     else
-      log_green "\n\n[SUCCESS] $identifier should now be installed."
+      PRINT SUCCESS "$identifier has been installed."
     fi
     sendTelemetry "FINISH_EXTENSION_INSTALLATION" >> $BLUEPRINT__DEBUG
   elif [[ $dev == true ]]; then
-    log_green "\n\n[SUCCESS] $identifier should now be built."
+    PRINT SUCCESS "$identifier has been built."
     sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
   fi
 fi
@@ -1199,8 +1198,13 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     yarn run build:production
   fi
 
-  log_bright "[INFO] Updating route cache to include recent changes.."
-  php artisan route:cache &>> $BLUEPRINT__DEBUG
+  # Flush cache.
+  PRINT INFO "Flushing view, config and route cache.."
+  {
+    php artisan view:clear
+    php artisan config:clear
+    php artisan route:cache
+  } &>> $BLUEPRINT__DEBUG 
   
   # Remove from installed list
   log_bright "[INFO] Removing extension from installed extensions list.."
@@ -1644,13 +1648,13 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   bash blueprint.sh --post-upgrade
 
   # Ask user if they'd like to migrate their database.
-  log_blue "[INPUT] Do you want to migrate your database? (Y/n)"
+  PRINT INPUT "Would you like to migrate your database? (Y/n)"
   read -r YN
-  if [[ ( ${YN} == "y" ) || ( ${YN} == "Y" ) || ( ${YN} == "" ) ]]; then 
-    log_bright "[INFO] Running database migrations.."
+  if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
+    PRINT INFO "Running database migrations.."
     php artisan migrate --force
   else
-    log_bright "[INFO] Database migrations have been skipped."
+    PRINT INFO "Database migrations have been skipped."
   fi
   YN=""
 
