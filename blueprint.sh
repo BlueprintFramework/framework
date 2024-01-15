@@ -124,7 +124,13 @@ throw() { throwError "$1"; exit 1; }
 depend() {
   # Check for incorrect node version.
   nodeVer=$(node -v)
-  if [[ $nodeVer != "v17."* ]] && [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then DEPEND_MISSING=true; fi
+  if [[ $nodeVer != "v17."* ]] \
+  && [[ $nodeVer != "v18."* ]] \
+  && [[ $nodeVer != "v19."* ]] \
+  && [[ $nodeVer != "v20."* ]] \
+  && [[ $nodeVer != "v21."* ]]; then 
+    DEPEND_MISSING=true
+  fi
 
   # Check for required (both internal and external) dependencies.
   if \
@@ -149,7 +155,12 @@ depend() {
   if [[ $DEPEND_MISSING == true ]]; then 
     PRINT FATAL "Some framework dependencies are not installed or detected."
 
-    if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then PRINT FATAL "Required dependency \"node\" is using an unsupported version."; fi
+    if [[ $nodeVer != "v18."* ]] \
+    && [[ $nodeVer != "v19."* ]] \
+    && [[ $nodeVer != "v20."* ]] \
+    && [[ $nodeVer != "v21."* ]]; then 
+      PRINT FATAL "Required dependency \"node\" is using an unsupported version."
+    fi
 
     if ! [ -x "$(command -v unzip)"                          ]; then PRINT FATAL "Required dependency \"unzip\" is not installed or detected.";     fi
     if ! [ -x "$(command -v node)"                           ]; then PRINT FATAL "Required dependency \"node\" is not installed or detected.";      fi
@@ -1306,7 +1317,8 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
   # until you wipe the contents of the .blueprint/dev directory.
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to initialize another extension unless you clear your .blueprint/dev folder."
+    PRINT FATAL "Development directory contains files. To protect you against accidental data loss, you are unable to initialize another extension unless you clear the '.blueprint/dev' folder."
+    exit 2
   fi
 
   ask_template() {
@@ -1503,7 +1515,7 @@ if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
   if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    PRINT FATAL "You do not have any development files."
+    PRINT FATAL "Development directory is empty."
     exit 2
   fi
   PRINT INFO "Starting developer extension installation.."
@@ -1517,7 +1529,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    PRINT FATAL "You do not have any development files."
+    PRINT FATAL "Development directory is empty."
     exit 2
   fi
 
@@ -1558,22 +1570,18 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   mkdir -p .blueprint/tmp
 
   if [[ $3 == "expose"* ]]; then 
-    log_bright "[INFO] Generating download url.."
+    PRINT INFO "Generating download url.. (expires after 2 minutes)"
     randstr=${RANDOM}${RANDOM}${RANDOM}${RANDOM}${RANDOM}
     mkdir .blueprint/extensions/blueprint/assets/exports/${randstr}
     cp "${identifier}".blueprint .blueprint/extensions/blueprint/assets/exports/${randstr}/"${identifier}".blueprint
-    log_bright "[INFO] Download url will expire after 2 minutes."
 
     sendTelemetry "EXPOSE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
-    log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
-    log_green "  - $(grabAppUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint"
-    log_green "  - ${FOLDER}/${identifier}.blueprint"
+    PRINT SUCCESS "Extension has been exported to '$(grabAppUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint' and '${FOLDER}/${identifier}.blueprint'."
 
     eval "$(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> $BLUEPRINT__DEBUG)" &
   else
     sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
-    log_green log_bold "\n[SUCCESS] Your extension has been exported successfully."
-    log_green "  - ${FOLDER}/${identifier}.blueprint"
+    PRINT SUCCESS "Extension has been exported to '${FOLDER}/${identifier}.blueprint'."
   fi
 fi
 
@@ -1584,18 +1592,18 @@ if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
   if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
 
   if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    quit_red "[FATAL] You do not have any development files."
+    PRINT FATAL "Development directory is empty."
   fi
 
-  log_blue "[INPUT] You are about to wipe all of your development files, are you sure you want to continue? This cannot be undone. (y/N)"
+  PRINT INPUT "You are about to wipe all of your development files, are you sure you want to continue? This cannot be undone. (y/N)"
   read -r YN
-  if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then log_bright "[INFO] Development files removal cancelled.";exit 1;fi
+  if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then PRINT INFO "Development files removal cancelled.";exit 1;fi
 
-  log_bright "[INFO] Wiping development folder.."
+  PRINT INFO "Clearing development folder.."
   rm -R .blueprint/dev/* 2>> $BLUEPRINT__DEBUG
   rm -R .blueprint/dev/.* 2>> $BLUEPRINT__DEBUG
 
-  log_green "[SUCCESS] Your development files have been removed."
+  PRINT SUCCESS "Development folder has been cleared."
 fi
 
 # -info
@@ -1627,7 +1635,7 @@ fi
 
 # -rerun-install
 if [[ $2 == "-rerun-install" ]]; then VCMD="y"
-  log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
+  PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
   dbRemove "blueprint.setupFinished"
   cd ${FOLDER} || throw 'cdMissingDirectory'
   bash blueprint.sh
@@ -1635,35 +1643,38 @@ fi
 
 # -upgrade
 if [[ $2 == "-upgrade" ]]; then VCMD="y"
-  log_yellow "[WARNING] This is an advanced feature, only proceed if you know what you are doing.\n"
+  PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
 
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    quit_red "[FATAL] Your development directory contains files. To protect you against accidental data loss, you are unable to upgrade unless you clear your .blueprint/dev folder."
+    PRINT FATAL "Development directory contains files. To protect you against accidental data loss, you are unable to upgrade unless you clear the '.blueprint/dev' folder."
+    exit 2
   fi
 
 
   # Confirmation question for developer upgrade.
   if [[ $3 == "dev" ]]; then
-    log_blue "[INPUT] Upgrading to the latest dev build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
+    PRINT INPUT "Upgrading to the latest development build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
     read -r YN
-    if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+    if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
     YN=""
   fi
 
   # Confirmation question for both developer and stable upgrade.
-  log_blue "[INPUT] Upgrading will wipe your .blueprint folder and will overwrite your extensions. Continue? (y/N)"
+  PRINT INPUT "Upgrading will wipe your .blueprint folder and will deactivate all active extensions. Continue? (y/N)"
   read -r YN
-  if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
   YN=""
 
   # Last confirmation question for both developer and stable upgrade.
-  log_blue "[INPUT] This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'."
+  PRINT INPUT "This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'."
   read -r YN
-  if [[ ${YN} != "continue" ]]; then log_bright "[INFO] Upgrade cancelled.";exit 1;fi
+  if [[ ${YN} != "continue" ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
   YN=""
 
 
-  log_bright "[INFO] Blueprint is upgrading.. Please do not turn off your machine."
+  if [[ $3 == "dev" ]]; then PRINT INFO "Fetching and pulling latest commit.."
+  else                       PRINT INFO "Fetching and pulling latest release.."; fi
+
   cp blueprint.sh .blueprint.sh.bak
   if [[ $3 == "dev" ]]; then  bash tools/update.sh ${FOLDER} dev
   else                        bash tools/update.sh ${FOLDER}; fi
@@ -1685,30 +1696,30 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   YN=""
 
   # Post-upgrade checks.
-  log_bright "[INFO] Running post-upgrade checks.."
+  PRINT INFO "Validating update.."
   score=0
 
   if dbValidate "blueprint.setupFinished"; then
     score=$((score+1))
   else
-    log_yellow "[WARNING] 'blueprint.setupFinished' could not be found."
+    PRINT WARNING "'blueprint.setupFinished' could not be detected or found."
   fi
 
   # Finalize upgrade.
   if [[ ${score} == 1 ]]; then
-    log_green "[SUCCESS] Blueprint has upgraded successfully."
+    PRINT SUCCESS "Upgrade finished."
     rm .blueprint.sh.bak
-    exit 1
+    exit 0 # success
   elif [[ ${score} == 0 ]]; then
-    log_red "[FATAL] All checks have failed."
+    PRINT FATAL "All checks have failed. The 'blueprint.sh' file has been reverted."
     rm blueprint.sh
     mv .blueprint.sh.bak blueprint.sh
-    exit 1
+    exit 1 # error
   else
-    log_yellow "[WARNING] Some post-upgrade checks have failed."
+    PRINT FATAL "Some checks have failed. The 'blueprint.sh' file has been reverted."
     rm blueprint.sh
     mv .blueprint.sh.bak blueprint.sh
-    exit 1
+    exit 1 # error
   fi
 fi
 
@@ -1718,4 +1729,5 @@ fi
 if [[ ${VCMD} != "y" && $1 == "-bash" ]]; then
   # This is logged as a "fatal" error since it's something that is making Blueprint run unsuccessfully.
   quit_red "[FATAL] '$2' is not a valid command or argument. Use argument '-help' for a list of commands."
+  exit 1
 fi
