@@ -4,7 +4,8 @@
 # and uses the same license as the rest of the codebase.
 
 PRINT() {
-  DATE=$(date +"%Y-%m-%d %H:%M:%S")
+  DATE=$(date +"%H:%M:%S")
+  DATEDEBUG=$(date +"%Y-%m-%d %H:%M:%S")
   TYPE="$1"
   MESSAGE="$2"
 
@@ -18,6 +19,6 @@ PRINT() {
   if [[ $TYPE == "SUCCESS" ]]; then PRIMARY=$(tput setaf 2); fi
   if [[ $TYPE == "INPUT"   ]]; then PRIMARY=$(tput setaf 5); fi
 
-  echo -e "${BOLD}${SECONDARY}$DATE${RESET} ${PRIMARY}[${TYPE}]${RESET} $MESSAGE"
-  echo -e "${BOLD}${SECONDARY}$DATE${RESET} ${PRIMARY}[${TYPE}]${RESET} $MESSAGE" >> "$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
+  echo -e "${BOLD}${SECONDARY}$DATE${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE"
+  echo -e "${BOLD}${SECONDARY}$DATEDEBUG${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE" >> "$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
 }
