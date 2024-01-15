@@ -1,7 +1,7 @@
 #!/bin/bash
 # 
 # This script has been created as part of the Blueprint source code
-# and may be intergrated directly into the core in the future.
+# and uses the same license as the rest of the codebase.
 
 PRINT() {
   DATE=$(date +"%Y-%m-%d %H:%M:%S")
@@ -10,7 +10,7 @@ PRINT() {
 
   BOLD=$(tput bold)
   RESET=$(tput sgr0)
-  SECONDARY=$(tput setaf 6) # cyan
+  SECONDARY="\033[2m"
 
   if [[ $TYPE == "INFO"    ]]; then PRIMARY=$(tput setaf 4); fi
   if [[ $TYPE == "WARNING" ]]; then PRIMARY=$(tput setaf 3); fi
