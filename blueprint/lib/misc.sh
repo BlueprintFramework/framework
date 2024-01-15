@@ -1,8 +1,30 @@
 #!/bin/bash
-#
+# 
 # This script has been created as part of the Blueprint source code
 # and uses the same license as the rest of the codebase.
 
+
+# === DATABASE ===
+FLDR=".blueprint/extensions/blueprint/private/db/database"
+# dbAdd "database.record"
+dbAdd() { echo "* ${1};" >> $FLDR; }
+# dbValidate "database.record"
+dbValidate() { grep -Fxq "* ${1};" $FLDR > /dev/null; }
+# dbRemove "database.record"
+dbRemove() { sed -i "s/* ${1};//g" $FLDR > /dev/null; }
+
+
+# === TELEMETRY ===
+sendTelemetry() {
+  cd "${BLUEPRINT__FOLDER}" || exit
+  key=$(cat .blueprint/extensions/blueprint/private/db/telemetry_id)
+  if [[ $key == "KEY_NOT_UPDATED" ]]; then 
+    exit 1
+  fi
+  curl --location --silent "http://api.blueprint.zip:50000/send/$key/$1" > /dev/null
+}
+
+# === CACHEREMINDER ===
 updateCacheReminder() {
   cd "${BLUEPRINT__FOLDER}" || exit
   # Overwrite previous adminCacheReminderHider with the default one.
