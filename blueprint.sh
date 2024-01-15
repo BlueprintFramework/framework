@@ -53,12 +53,9 @@ cd $FOLDER || return
 # Import libraries.
 source .blueprint/lib/bash_colors.sh              || missinglibs+="[bash_colors]"
 source .blueprint/lib/parse_yaml.sh               || missinglibs+="[parse_yaml]"
-source .blueprint/lib/db.sh                       || missinglibs+="[db]"
-source .blueprint/lib/telemetry.sh                || missinglibs+="[telemetry]"
-source .blueprint/lib/updateAdminCacheReminder.sh || missinglibs+="[updateAdminCacheReminder]"
 source .blueprint/lib/grabenv.sh                  || missinglibs+="[grabenv]"
-source .blueprint/lib/throwError.sh               || missinglibs+="[throwError]"
 source .blueprint/lib/logFormat.sh                || missinglibs+="[logFormat]"
+source .blueprint/lib/misc.sh                     || missinglibs+="[misc]"
 
 # Fallback to these functions if "bash_colors.sh" is missing
 if [[ $missinglibs == *"[bash_colors]"* ]]; then
@@ -116,9 +113,7 @@ if [[ "$1" == "-config" ]]; then
   exit 0
 fi
 
-
-# Function that exits the script after logging a "red" message.
-throw() { throwError "$1"; exit 1; }
+cdhalt() { PRINT FATAL "Attempted navigation into nonexistent directory, halting process."; exit 1; }
 
 
 depend() {
@@ -178,12 +173,9 @@ depend() {
 
     if [[ $missinglibs == *"[bash_colors]"*              ]]; then PRINT FATAL "Required internal dependency \"internal:bash_colors\" is not installed or detected.";              fi
     if [[ $missinglibs == *"[parse_yaml]"*               ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected.";               fi
-    if [[ $missinglibs == *"[db]"*                       ]]; then PRINT FATAL "Required internal dependency \"internal:db\" is not installed or detected.";                       fi
-    if [[ $missinglibs == *"[telemetry]"*                ]]; then PRINT FATAL "Required internal dependency \"internal:telemetry\" is not installed or detected.";                fi
-    if [[ $missinglibs == *"[updateAdminCacheReminder]"* ]]; then PRINT FATAL "Required internal dependency \"internal:updateAdminCacheReminder\" is not installed or detected."; fi
     if [[ $missinglibs == *"[grabEnv]"*                  ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";                  fi
-    if [[ $missinglibs == *"[throwError]"*               ]]; then PRINT FATAL "Required internal dependency \"internal:throwError\" is not installed or detected.";               fi
     if [[ $missinglibs == *"[logFormat]"*                ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";                fi
+    if [[ $missinglibs == *"[misc]"*                     ]]; then PRINT FATAL "Required internal dependency \"internal:misc\" is not installed or detected.";                     fi
 
     exit 1
   fi
@@ -234,8 +226,8 @@ if [[ $1 != "-bash" ]]; then
 
     # Link directories.
     PRINT INFO "Linking directories and filesystems.."
-    cd $FOLDER/public/extensions        || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || throw 'cdMissingDirectory'
-    cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'; ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || throw 'cdMissingDirectory'
+    cd $FOLDER/public/extensions        || cdhalt; ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || cdhalt
+    cd $FOLDER/public/assets/extensions || cdhalt; ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || cdhalt
     php artisan storage:link &>> $BLUEPRINT__DEBUG 
 
     PRINT INFO "Replacing internal placeholders.."
@@ -326,26 +318,26 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
     ZIP="${n}.zip"
     cp "$FILE" ".blueprint/tmp/$ZIP"
-    cd ".blueprint/tmp" || throw 'cdMissingDirectory'
+    cd ".blueprint/tmp" || cdhalt
     unzip -o -qq "$ZIP"
     rm "$ZIP"
     if [[ ! -f "$n/*" ]]; then
-      cd ".." || throw 'cdMissingDirectory'
+      cd ".." || cdhalt
       rm -R "tmp"
       mkdir -p "tmp"
-      cd "tmp" || throw 'cdMissingDirectory'
+      cd "tmp" || cdhalt
 
       mkdir -p "./$n"
       cp "../../$FILE" "./$n/$ZIP"
-      cd "$n" || throw 'cdMissingDirectory'
+      cd "$n" || cdhalt
       unzip -o -qq "$ZIP"
       rm "$ZIP"
-      cd ".." || throw 'cdMissingDirectory'
+      cd ".." || cdhalt
     fi
   fi
 
   # Return to the Pterodactyl installation folder.
-  cd $FOLDER || throw 'cdMissingDirectory'
+  cd $FOLDER || cdhalt
 
   # Get all strings from the conf.yml file and make them accessible as variables.
   if [[ ! -f ".blueprint/tmp/$n/conf.yml" ]]; then 
@@ -566,13 +558,18 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Validate custom script paths.
   if [[ $F_hasInstallScript == true || $F_hasRemovalScript == true || $F_hasExportScript == true ]]; then
-    if [[ $data_directory == "" ]]; then rm -R ".blueprint/tmp/$n"; throw 'scriptsNoDataDir'; fi
+    if [[ $data_directory == "" ]]; then
+      rm -R ".blueprint/tmp/$n"
+      PRINT FATAL "Install/Remove/Export script requires private folder to be enabled."
+      exit 1
+    fi
 
     if [[ $F_hasInstallScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/install.sh" ]] ||
        [[ $F_hasRemovalScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/remove.sh"  ]] ||
        [[ $F_hasExportScript  == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/export.sh"  ]]; then
       rm -R ".blueprint/tmp/$n"
-      throw 'scriptsMissingFiles'
+      PRINT FATAL "Install/Remove/Export script could not be found or detected, even though enabled."
+      exit 1
     fi
   fi
 
@@ -588,9 +585,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     PRINT INFO "Cloning and linking components directory.."
     mkdir -p ".blueprint/extensions/$identifier/components"
     
-    cd $FOLDER/resources/scripts/blueprint/extensions || throw 'cdMissingDirectory'
+    cd $FOLDER/resources/scripts/blueprint/extensions || cdhalt
     ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/components "$identifier" 2>> $BLUEPRINT__DEBUG
-    cd $FOLDER || throw 'cdMissingDirectory'
+    cd $FOLDER || cdhalt
 
     cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> $BLUEPRINT__DEBUG
     if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
@@ -732,9 +729,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     PRINT INFO "Cloning and linking public directory.."
     mkdir -p ".blueprint/extensions/$identifier/public"
     
-    cd $FOLDER/public/extensions || throw 'cdMissingDirectory'
+    cd $FOLDER/public/extensions || cdhalt
     ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/public "$identifier" 2>> $BLUEPRINT__DEBUG
-    cd $FOLDER || throw 'cdMissingDirectory'
+    cd $FOLDER || cdhalt
 
     cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2>> $BLUEPRINT__DEBUG
   fi
@@ -775,9 +772,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     # Create assets folder if the extension is not updating.
     mkdir .blueprint/extensions/"$identifier"/assets
   fi
-  cd $FOLDER/public/assets/extensions || throw 'cdMissingDirectory'
+  cd $FOLDER/public/assets/extensions || cdhalt
   ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$identifier" 2>> $BLUEPRINT__DEBUG
-  cd $FOLDER || throw 'cdMissingDirectory'
+  cd $FOLDER || cdhalt
   
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
@@ -1322,21 +1319,21 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   fi
 
   ask_template() {
-    log_blue "[INPUT] Initial Template:"
-    log_blue "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/repository' 2>> $BLUEPRINT__DEBUG)"
+    PRINT INPUT "Initial Template:"
+    echo -e "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/repository' 2>> $BLUEPRINT__DEBUG)"
     read -r ASKTEMPLATE
 
     REDO_TEMPLATE=false
 
     # Template should not be empty
     if [[ ${ASKTEMPLATE} == "" ]]; then 
-      log_yellow "[WARNING] Template should not be empty."
+      PRINT WARNING "Template should not be empty."
       REDO_TEMPLATE=true
     fi
 
     # Unknown template.
     if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/teamblueprint/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2>> $BLUEPRINT__DEBUG)") == "404: Not Found" ]]; then 
-      log_yellow "[WARNING] Unknown template, please choose a valid option."
+      PRINT WARNING "Unknown template, please choose a valid option."
       REDO_TEMPLATE=true
     fi
 
@@ -1348,14 +1345,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_name() {
-    log_blue "[INPUT] Name (Generic Extension):"
+    PRINT INPUT "Name [SpaceInvaders]:"
     read -r ASKNAME
 
     REDO_NAME=false
 
     # Name should not be empty
     if [[ ${ASKNAME} == "" ]]; then 
-      log_yellow "[WARNING] Name should not be empty."
+      PRINT WARNING "Name should not be empty."
       REDO_NAME=true
     fi
 
@@ -1367,22 +1364,20 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_identifier() {
-    log_blue "[INPUT] Identifier (genericextension):"
+    PRINT INPUT "Identifier [spaceinvaders]:"
     read -r ASKIDENTIFIER
 
     REDO_IDENTIFIER=false
 
     # Identifier should not be empty
     if [[ ${ASKIDENTIFIER} == "" ]]; then
-      log_yellow "[WARNING] Identifier should not be empty."
+      PRINT WARNING "Identifier should not be empty."
       REDO_IDENTIFIER=true
     fi
   
     # Identifier should be a-z.
-    if [[ ${ASKIDENTIFIER} =~ [a-z] ]]; then
-      echo ok >> $BLUEPRINT__DEBUG
-    else 
-      log_yellow "[WARNING] Identifier should only contain a-z characters."
+    if ! [[ ${ASKIDENTIFIER} =~ [a-z] ]]; then
+      PRINT WARNING "Identifier should only contain a-z characters."
       REDO_IDENTIFIER=true
     fi
 
@@ -1394,14 +1389,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_description() {
-    log_blue "[INPUT] Description (My awesome description):"
+    PRINT INPUT "Description [Shoot down space aliens!]:"
     read -r ASKDESCRIPTION
 
     REDO_DESCRIPTION=false
 
     # Description should not be empty
     if [[ ${ASKDESCRIPTION} == "" ]]; then
-      log_yellow "[WARNING] Description should not be empty."
+      PRINT WARNING "Description should not be empty."
       REDO_DESCRIPTION=true
     fi
 
@@ -1413,14 +1408,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_version() {
-    log_blue "[INPUT] Version (indev):"
+    PRINT INPUT "Version [1.0]:"
     read -r ASKVERSION
 
     REDO_VERSION=false
 
     # Version should not be empty
     if [[ ${ASKVERSION} == "" ]]; then
-      log_yellow "[WARNING] Version should not be empty."
+      PRINT WARNING "Version should not be empty."
       REDO_VERSION=true
     fi
 
@@ -1432,7 +1427,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_author() {
-    PRINT INPUT "Author (prplwtf):"
+    PRINT INPUT "Author [byte]:"
     read -r ASKAUTHOR
 
     REDO_AUTHOR=false
@@ -1458,54 +1453,48 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   ask_author
 
   tnum=${ASKTEMPLATE}
-  log_bright "[INFO] Downloading templates from 'teamblueprint/templates'.."
-  if [[ $(php artisan bp:latest) != "$VERSION" ]]; then log_yellow "[WARNING] Your Blueprint installation version is outdated, some templates might break or show random bugs."; fi
-  cd .blueprint/tmp || throw 'cdMissingDirectory'
+  PRINT INFO "Fetching templates.."
+  if [[ $(php artisan bp:latest) != "$VERSION" ]]; then PRINT WARNING "Installed Blueprint version is not latest, you might run into compatibility issues."; fi
+  cd .blueprint/tmp || cdhalt
   git clone "https://github.com/teamblueprint/templates.git"
-  cd ${FOLDER}/.blueprint || throw 'cdMissingDirectory'
+  cd ${FOLDER}/.blueprint || cdhalt
   cp -R tmp/templates/* extensions/blueprint/private/build/templates/
   rm -R tmp/templates
-  cd ${FOLDER} || throw 'cdMissingDirectory'
+  cd ${FOLDER} || cdhalt
 
   eval "$(parse_yaml .blueprint/extensions/blueprint/private/build/templates/"${tnum}"/TemplateConfiguration.yml t_)"
 
-  log_bright "[INFO] Copying template contents to the tmp directory.."
+  PRINT INFO "Building template.."
   mkdir -p .blueprint/tmp/init
   cp -R .blueprint/extensions/blueprint/private/build/templates/"${tnum}"/contents/* .blueprint/tmp/init/
 
-  log_bright "[INFO] Applying variables.."
   sed -i "s~␀name␀~${ASKNAME}~g" .blueprint/tmp/init/conf.yml; #NAME
   sed -i "s~␀identifier␀~${ASKIDENTIFIER}~g" .blueprint/tmp/init/conf.yml; #IDENTIFIER
   sed -i "s~␀description␀~${ASKDESCRIPTION}~g" .blueprint/tmp/init/conf.yml; #DESCRIPTION
   sed -i "s~␀ver␀~${ASKVERSION}~g" .blueprint/tmp/init/conf.yml; #VERSION
   sed -i "s~␀author␀~${ASKAUTHOR}~g" .blueprint/tmp/init/conf.yml; #AUTHOR
+  sed -i "s~␀version␀~${VERSION}~g" .blueprint/tmp/init/conf.yml #BLUEPRINT-VERSION
 
   if [[ "${t_template_files_icon}" != "" ]]; then
-    log_bright "[INFO] Rolling (and applying) extension placeholder icon.."
     icnNUM=$(( 1 + RANDOM % 9 ))
     cp .blueprint/assets/defaultExtensionLogo"${icnNUM}".jpg .blueprint/tmp/init/"${t_template_files_icon}"
     sed -i "s~␀icon␀~${t_template_files_icon}~g" .blueprint/tmp/init/conf.yml; #ICON
   fi
 
-  log_bright "[INFO] Applying core variables.."
-  sed -i "s~␀version␀~${VERSION}~g" .blueprint/tmp/init/conf.yml #BLUEPRINT-VERSION
-
   # Return files to folder.
-  log_bright "[INFO] Copying output to extension development directory."
   cp -R .blueprint/tmp/init/* .blueprint/dev/
 
   # Remove tmp files.
-  log_bright "[INFO] Purging contents of tmp folder."
+  PRINT INFO "Cleaning up build files.."
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
 
   # Wipe templates from disk.
-  log_bright "[INFO] Wiping downloaded templates from disk.."
   rm -R .blueprint/extensions/blueprint/private/build/templates/*
 
   sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
 
-  log_green "[SUCCESS] Your extension files have been generated and exported to '.blueprint/dev'."
+  PRINT SUCCESS "Extension files initialized and exported to '.blueprint/dev'."
 fi
 
 
@@ -1535,13 +1524,13 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
 
   PRINT INFO "Start packaging extension.."
 
-  cd .blueprint || throw 'cdMissingDirectory'
+  cd .blueprint || cdhalt
   rm dev/.gitkeep 2>> $BLUEPRINT__DEBUG
 
   eval "$(parse_yaml dev/conf.yml conf_)"; identifier="${conf_info_identifier}"
 
   cp -R dev/* tmp/
-  cd tmp || throw 'cdMissingDirectory'
+  cd tmp || cdhalt
 
   # Assign variables to extension flags.
   flags="$conf_info_flags"
@@ -1564,7 +1553,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   fi
 
   zip -r extension.zip ./*
-  cd ${FOLDER} || throw 'cdMissingDirectory'
+  cd ${FOLDER} || cdhalt
   cp .blueprint/tmp/extension.zip "${identifier}.blueprint"
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
@@ -1637,7 +1626,7 @@ fi
 if [[ $2 == "-rerun-install" ]]; then VCMD="y"
   PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
   dbRemove "blueprint.setupFinished"
-  cd ${FOLDER} || throw 'cdMissingDirectory'
+  cd ${FOLDER} || cdhalt
   bash blueprint.sh
 fi
 
@@ -1728,6 +1717,6 @@ fi
 # When the users attempts to run an invalid command.
 if [[ ${VCMD} != "y" && $1 == "-bash" ]]; then
   # This is logged as a "fatal" error since it's something that is making Blueprint run unsuccessfully.
-  quit_red "[FATAL] '$2' is not a valid command or argument. Use argument '-help' for a list of commands."
+  PRINT FATAL "'$2' is not a valid command or argument. Use argument '-help' for a list of commands."
   exit 1
 fi
