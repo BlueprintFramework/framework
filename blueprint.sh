@@ -1432,14 +1432,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_author() {
-    log_blue "[INPUT] Author (prplwtf):"
+    PRINT INPUT "Author (prplwtf):"
     read -r ASKAUTHOR
 
     REDO_AUTHOR=false
 
     # Author should not be empty
     if [[ ${ASKAUTHOR} == "" ]]; then
-      log_yellow "[WARNING] Author should not be empty."
+      PRINT WARNING "Author should not be empty."
       REDO_AUTHOR=true
     fi
 
