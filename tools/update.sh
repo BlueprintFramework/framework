@@ -3,7 +3,7 @@
 # $1     Pterodactyl directory (pterodactyl)
 # $2     Dev release (dev)
 
-cd $1/tools/tmp;
+cd "$1/tools/tmp" || exit;
 
 if [[ $2 != "dev" ]]; then
   LOCATION=$(curl -s https://api.github.com/repos/teamblueprint/main/releases/latest \
@@ -11,15 +11,15 @@ if [[ $2 != "dev" ]]; then
 | awk '{ print $2 }' \
 | sed 's/,$//'       \
 | sed 's/"//g' )     \
-; curl -L -o main.zip $LOCATION
+; curl -L -o main.zip "$LOCATION"
 
   unzip main.zip;
   rm main.zip;
-  mv * main;
+  mv ./* main;
 else
   git clone https://github.com/teamblueprint/main.git;
 fi;
 
-cp -R main/* $1/;
+cp -R main/* "$1"/;
 rm -R main;
-rm -R $1/.blueprint;
+rm -R "$1"/.blueprint;
