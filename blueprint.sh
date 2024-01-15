@@ -149,7 +149,7 @@ depend() {
   if [[ $DEPEND_MISSING == true ]]; then 
     PRINT FATAL "Some framework dependencies are not installed or detected."
 
-    if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then log_red "  - \"node\" ($nodeVer) is an unsupported version."; fi
+    if [[ $nodeVer != "v18."* ]] && [[ $nodeVer != "v19."* ]] && [[ $nodeVer != "v20."* ]] && [[ $nodeVer != "v21."* ]]; then PRINT FATAL "Required dependency \"node\" is using an unsupported version."; fi
 
     if ! [ -x "$(command -v unzip)"                          ]; then PRINT FATAL "Required dependency \"unzip\" is not installed or detected.";     fi
     if ! [ -x "$(command -v node)"                           ]; then PRINT FATAL "Required dependency \"node\" is not installed or detected.";      fi
@@ -340,7 +340,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ ! -f ".blueprint/tmp/$n/conf.yml" ]]; then 
     # Quit if the extension doesn't have a conf.yml file.
     rm -R ".blueprint/tmp/$n"
-    throw "confymlNotFound"
+    PRINT FATAL "Extension configuration file not found or detected."
+    exit 1
   fi
 
   eval "$(parse_yaml .blueprint/tmp/"${n}"/conf.yml conf_)"
@@ -383,7 +384,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
      [[ ( $data_public          == "/"* ) || ( $data_public          == *"/.."* ) || ( $data_public          == *"../"* ) || ( $data_public          == *"/../"* ) || ( $data_public          == *"\n"* ) ]] ||
      [[ ( $database_migrations  == "/"* ) || ( $database_migrations  == *"/.."* ) || ( $database_migrations  == *"../"* ) || ( $database_migrations  == *"/../"* ) || ( $database_migrations  == *"\n"* ) ]]; then
     rm -R ".blueprint/tmp/$n"
-    throw "pathsEscape"
+    PRINT FATAL "Config file paths cannot escape the extension bundle."
+    exit 1
   fi
 
   # prevent potentional problems during installation due to wrongly defined folders
@@ -547,7 +549,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
      [[ ( ! -d ".blueprint/tmp/$n/$data_public"          ) && ( ${data_public} != ""          ) ]] ||    # folder: data_public          (optional)
      [[ ( ! -d ".blueprint/tmp/$n/$data_migrations"      ) && ( ${data_migrations} != ""      ) ]];then  # folder: data_migrations      (optional)
     rm -R ".blueprint/tmp/$n"
-    throw 'confymlMissingFiles'
+    PRINT FATAL "Extension configuration points towards one or more files that do not exist."
+    exit 1
   fi
 
   # Validate custom script paths.
@@ -590,7 +593,20 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       s="import ${identifier^}Component from '"; e="';"
 
       PLACE_REACT() {
-        if [[ ( $1 == "/"* ) || ( $1 == *"/.."* ) || ( $1 == *"../"* ) || ( $1 == *"/../"* ) || ( $1 == *"\n"* ) || ( $1 == *"@"* ) || ( $1 == *"\\"* ) ]]; then rm -R ".blueprint/tmp/$n"; throw 'componentEscape'; fi
+        if [[ 
+          ( $1 == "/"* ) || 
+          ( $1 == *"/.."* ) || 
+          ( $1 == *"../"* ) || 
+          ( $1 == *"/../"* ) || 
+          ( $1 == *"\n"* ) || 
+          ( $1 == *"@"* ) || 
+          ( $1 == *"\\"* )
+        ]]; then 
+          rm -R ".blueprint/tmp/$n"
+          PRINT FATAL "Component file paths cannot escape the components folder."
+          exit 1
+        fi
+
         if [[ $3 != "$1" ]]; then
           # remove old components
           sed -i "s~""${s}@/blueprint/extensions/${identifier}/$3${e}""~~g" "$co"/"$2"
@@ -604,7 +620,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
              [[ ${1} == *".jsx" ]] ||
              [[ ${1} == *".js"  ]]; then 
             rm -R ".blueprint/tmp/$n"
-            throw 'componentFileExtension'
+            PRINT FATAL "Component paths may not end with a file extension."
+            exit 1
           fi
 
           # validate path
@@ -613,7 +630,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
              [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.jsx" ]] &&
              [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.js"  ]]; then 
             rm -R ".blueprint/tmp/$n"
-            throw 'missingComponentFiles'
+            PRINT FATAL "Components configuration points towards one or more files that do not exist."
+            exit 1
           fi
 
           # remove components
@@ -896,7 +914,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" ".blueprint/extensions/$identifier/private/.store/build/button.blade.php"
   cp ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" ".blueprint/extensions/$identifier/private/.store/build/route.php"
 
-  # Remove temporary built files.
+  # Remove temporary build files.
   PRINT INFO "Cleaning up build files.."
   rm ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
   if [[ $controller_type == "default" ]]; then
@@ -937,7 +955,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
     if $F_hasInstallScript; then
-      PRINT WARNING "Extension runs a custom installation script, proceed with caution."
+      PRINT WARNING "Extension uses a custom installation script, proceed with caution."
       chmod +x ".blueprint/extensions/$identifier/private/install.sh"
 
       # Run script while also parsing some useful variables for the install script to use.
@@ -954,7 +972,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
-    PRINT INFO "Add '$identifier' to installed extensions list.."
+    PRINT INFO "Adding '$identifier' to active extensions list.."
     echo "${identifier}," >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
   fi
 
@@ -969,15 +987,18 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     PRINT SUCCESS "$identifier has been built."
     sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
   fi
+
+  exit 0 # success
 fi
 
 # -r, -remove
 if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
-  if [[ $(( $# - 2 )) != 1 ]]; then quit_red "[FATAL] Expected 1 argument but got $(( $# - 2 )).";fi
+  if [[ $(( $# - 2 )) != 1 ]]; then PRINT FATAL "Expected 1 argument but got $(( $# - 2 )).";exit 2;fi
   
   # Check if the extension is installed.
-  if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$identifier,"* ]]; then
-    quit_red "[FATAL] '$3' is not installed."
+  if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$3,"* ]]; then
+    PRINT FATAL "'$3' is not installed or detected."
+    exit 2
   fi
 
   if [[ -f ".blueprint/extensions/$3/private/.store/conf.yml" ]]; then 
@@ -1007,12 +1028,14 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     database_migrations="$conf_database_migrations"; #(optional)
   else 
-    quit_red "[FATAL] Backup conf.yml could not be found."
+    PRINT FATAL "Backup conf.yml could not be found."
+    PRINT FATAL "Extension configuration file not found or detected."
+    exit 1
   fi
 
-  log_blue "[INPUT] Are you sure you want to continue? Some extension files might not be removed as Blueprint does not keep track of them. (y/N)"
+  PRINT INPUT "Do you want to proceed with this transaction? Some files might not be removed properly. (y/N)"
   read -r YN
-  if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then log_bright "[INFO] Extension removal cancelled.";exit 1;fi
+  if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then PRINT INFO "Extension removal cancelled.";exit 1;fi
 
   PRINT INFO "Searching and validating framework dependencies.."
   depend
@@ -1022,7 +1045,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   assignflags
 
   if $F_hasRemovalScript; then
-    log_yellow "[WARNING] This extension uses a custom removal script, proceed with caution."
+    PRINT WARNING "Extension uses a custom removal script, proceed with caution."
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
 
     # Run script while also parsing some useful variables for the uninstall script to use.
@@ -1037,34 +1060,34 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   fi
 
   # Remove admin button 
-  log_bright "[INFO] Removing admin button.."
+  PRINT INFO "Editing 'extensions' admin page.."
   OLDBUTTON_RESULT=$(cat ".blueprint/extensions/$identifier/private/.store/build/button.blade.php")
   sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
 
   # Remove admin routes
-  log_bright "[INFO] Removing admin routes.."
+  PRINT INFO "Removing admin routes.."
   sed -n -i "/\/\/ $identifier:start/{p; :a; N; /\/\/ $identifier:stop/!ba; s/.*\n//}; p" "routes/admin.php"
   sed -i "s~// $identifier:start~~g" "routes/admin.php"
   sed -i "s~// $identifier:stop~~g" "routes/admin.php"
   
   # Remove admin view
-  log_bright "[INFO] Removing admin view.."
-  rm -R "resources/views/admin/extensions/$identifier"
+  PRINT INFO "Removing admin view directory.."
+  rm -r "resources/views/admin/extensions/$identifier"
 
   # Remove admin controller
-  log_bright "[INFO] Removing admin controller.."
-  rm -R "app/Http/Controllers/Admin/Extensions/$identifier"
+  PRINT INFO "Removing admin controller directory.."
+  rm -r "app/Http/Controllers/Admin/Extensions/$identifier"
 
   # Remove admin css
   if [[ $admin_css != "" ]]; then
-    log_bright "[INFO] Removing admin css.."
+    PRINT INFO "Removing and unlinking admin css.."
     updateCacheReminder
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"
   fi
 
   # Remove admin wrapper
   if [[ $admin_wrapper != "" ]]; then 
-    log_bright "[INFO] Removing admin wrapper.."
+    PRINT INFO "Removing admin wrapper.."
     sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
     sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/layouts/admin.blade.php"
     sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/layouts/admin.blade.php"
@@ -1072,7 +1095,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then 
-    log_bright "[INFO] Removing dashboard wrapper.."
+    PRINT INFO "Removing dashboard wrapper.."
     sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
     sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/templates/wrapper.blade.php"
     sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/templates/wrapper.blade.php"
@@ -1080,7 +1103,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove dashboard css
   if [[ $dashboard_css != "" ]]; then
-    log_bright "[INFO] Removing dashboard css.."
+    PRINT INFO "Removing and unlinking dashboard css.."
     sed -i "s~@import url(./imported/$identifier.css);~~g" "resources/scripts/blueprint/css/extensions.css"
     rm "resources/scripts/blueprint/css/imported/$identifier.css"
     YARN="y"
@@ -1088,8 +1111,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove dashboard components
   if [[ $dashboard_components != "" ]]; then
-    log_bright "[INFO] Removing dashboard components.."
-    rm $FOLDER/resources/scripts/blueprint/extensions/"$identifier"
+    PRINT INFO "Removing and unlinking dashboard components.."
+    rm -r $FOLDER/.blueprint/extensions/"$identifier"/components
+    rm -r $FOLDER/resources/scripts/blueprint/extensions/"$identifier"
     # fetch component config
     eval "$(parse_yaml .blueprint/extensions/"$identifier"/components/Components.yml Components_)"
 
@@ -1176,25 +1200,25 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     YARN="y"
   fi
 
+  # Remove private folder
+  PRINT INFO "Removing and unlinking private folder.."
+  rm -R ".blueprint/extensions/$identifier/private"
+
   # Remove public folder
   if [[ $data_public != "" ]]; then 
-    log_bright "[INFO] Removing public folder.."
+    PRINT INFO "Removing and unlinking public folder.."
     rm -R ".blueprint/extensions/$identifier/public"
     rm -R "public/extensions/$identifier"
-  fi
+  fi  
 
   # Remove assets folder
-  log_bright "[INFO] Removing assets.."
+  PRINT INFO "Removing and unlinking assets folder.."
   rm -R ".blueprint/extensions/$identifier/assets"
   rm -R "public/assets/extensions/$identifier"
 
-  # Remove data folder
-  log_bright "[INFO] Removing data folder.."
-  rm -R ".blueprint/extensions/$identifier/private"
-
   # Rebuild panel
   if [[ $YARN == "y" ]]; then
-    log_bright "[INFO] Rebuilding panel assets.."
+    PRINT INFO "Rebuilding panel assets.."
     yarn run build:production
   fi
 
@@ -1207,11 +1231,13 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   } &>> $BLUEPRINT__DEBUG 
   
   # Remove from installed list
-  log_bright "[INFO] Removing extension from installed extensions list.."
+  PRINT INFO "Removing '$identifier' from active extensions list.."
   sed -i "s~$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
 
-  log_green "[SUCCESS] '$identifier' has been removed from your panel. Please note that some files might be left behind."
+  PRINT SUCCESS "'$identifier' has been removed."
   sendTelemetry "FINISH_EXTENSION_REMOVAL" >> $BLUEPRINT__DEBUG
+
+  exit 0 # success
 fi
 
 
@@ -1265,7 +1291,7 @@ fi
 
 # -debug
 if [[ $2 == "-debug" ]]; then VCMD="y"
-  if [[ $3 -lt 1 ]]; then throw "debugLineCount"; fi
+  if [[ $3 -lt 1 ]]; then PRINT FATAL "Provide the amount of debug lines to print as an argument, which must be greater than one (1)."; exit 2; fi
   echo -e "\x1b[30;47;1m  --- DEBUG START ---  \x1b[0m"
   echo -e "$(v="$(<.blueprint/extensions/blueprint/private/debug/logs.txt)";printf -- "%s" "$v"|tail -"$3")"
   echo -e "\x1b[30;47;1m  ---  DEBUG END  ---  \x1b[0m"
