@@ -1319,7 +1319,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   fi
 
   ask_template() {
-    PRINT INPUT "Initial Template:"
+    PRINT INPUT "Choose an extension template:"
     echo -e "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/repository' 2>> $BLUEPRINT__DEBUG)"
     read -r ASKTEMPLATE
 
