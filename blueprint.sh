@@ -1690,7 +1690,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   rm -r main
   rm -r "$FOLDER"/.blueprint
   cd $FOLDER || cdhalt
-  rm -r tmp
+  rm -r "$FOLDER"/.tmp
 
   chmod +x blueprint.sh
   sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
