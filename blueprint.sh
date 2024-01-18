@@ -1666,8 +1666,31 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   else                       PRINT INFO "Fetching and pulling latest release.."; fi
 
   cp blueprint.sh .blueprint.sh.bak
-  if [[ $3 == "dev" ]]; then  bash tools/update.sh ${FOLDER} dev
-  else                        bash tools/update.sh ${FOLDER}; fi
+
+  mkdir $FOLDER/.tmp
+  cd $FOLDER/.tmp || cdhalt
+  if [[ $3 == "dev" ]]; then
+    # download latest commit
+    git clone https://github.com/teamblueprint/main.git
+  else
+    # download latest release
+    LOCATION=$(curl -s https://api.github.com/repos/teamblueprint/main/releases/latest \
+  | grep "zipball_url" \
+  | awk '{ print $2 }' \
+  | sed 's/,$//'       \
+  | sed 's/"//g' )     \
+  ; curl -L -o main.zip "$LOCATION"
+
+    unzip main.zip
+    rm main.zip
+    mv ./* main
+  fi
+
+  cp -r main/* "$FOLDER"/
+  rm -r main
+  rm -r "$FOLDER"/.blueprint
+  cd $FOLDER || cdhalt
+  rm -r tmp
 
   chmod +x blueprint.sh
   sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
