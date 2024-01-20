@@ -1598,29 +1598,29 @@ fi
 
 # -info
 if [[ ( $2 == "-info" || $2 == "-f" ) ]]; then VCMD="y"
-  fetchversion() { if [[ $VERSION != "" ]]; then log_reset log_white $VERSION; else echo "none"; fi }
-  fetchfolder() { if [[ $FOLDER != "" ]]; then log_reset log_white $FOLDER; else echo "none"; fi }
-  fetchurl() { if [[ $(grabAppUrl) != "" ]]; then log_reset log_white "$(grabAppUrl)"; else echo "none"; fi }
-  fetchlocale() { if [[ $(grabAppLocale) != "" ]]; then log_reset log_white "$(grabAppLocale)"; else echo "none"; fi }
-  fetchtimezone() { if [[ $(grabAppTimezone) != "" ]]; then log_reset log_white "$(grabAppTimezone)"; else echo "none"; fi }
-  fetchextensions() { log_reset log_white "$(echo "$(<.blueprint/extensions/blueprint/private/db/installed_extensions)" | tr -cd ',' | wc -c | tr -d ' ')"; }
-  fetchdeveloper() { log_reset log_white "$(if dbValidate "blueprint.developerEnabled"; then echo "true"; else echo "false"; fi;)"; }
-  fetchtelemetry() { log_reset log_white "$(telemetrykey=$(cat .blueprint/extensions/blueprint/private/db/telemetry_id); if [[ $telemetrykey == "KEY_NOT_UPDATED" ]]; then echo "false"; else echo "true"; fi;)"; }
-  fetchnode() { if [[ $(node -v) != "" ]]; then log_reset log_white "$(node -v)"; else echo "none"; fi }
-  fetchyarn() { if [[ $(yarn -v) != "" ]]; then log_reset log_white "$(yarn -v)"; else echo "none"; fi }
+  fetchversion()    { printf "\x1b[0m\x1b[37m"; if [[ $VERSION != "" ]]; then echo $VERSION; else echo "none"; fi }
+  fetchfolder()     { printf "\x1b[0m\x1b[37m"; if [[ $FOLDER != "" ]]; then echo $FOLDER; else echo "none"; fi }
+  fetchurl()        { printf "\x1b[0m\x1b[37m"; if [[ $(grabAppUrl) != "" ]]; then grabAppUrl; else echo "none"; fi }
+  fetchlocale()     { printf "\x1b[0m\x1b[37m"; if [[ $(grabAppLocale) != "" ]]; then grabAppLocale; else echo "none"; fi }
+  fetchtimezone()   { printf "\x1b[0m\x1b[37m"; if [[ $(grabAppTimezone) != "" ]]; then grabAppTimezone; else echo "none"; fi }
+  fetchextensions() { printf "\x1b[0m\x1b[37m"; tr -cd ',' <.blueprint/extensions/blueprint/private/db/installed_extensions | wc -c | tr -d ' '; }
+  fetchdeveloper()  { printf "\x1b[0m\x1b[37m"; if dbValidate "blueprint.developerEnabled"; then echo "true"; else echo "false"; fi; }
+  fetchtelemetry()  { printf "\x1b[0m\x1b[37m"; if [[ $(cat .blueprint/extensions/blueprint/private/db/telemetry_id) == "KEY_NOT_UPDATED" ]]; then echo "false"; else echo "true"; fi; }
+  fetchnode()       { printf "\x1b[0m\x1b[37m"; if [[ $(node -v) != "" ]]; then node -v; else echo "none"; fi }
+  fetchyarn()       { printf "\x1b[0m\x1b[37m"; if [[ $(yarn -v) != "" ]]; then yarn -v; else echo "none"; fi }
 
-  log_bright          " "
-  log_blue log_bold   "    ⣿⣿    $(log_reset log_bold log_blue "Version:") $(fetchversion)"
-  log_blue log_bold   "  ⣿⣿  ⣿⣿  $(log_reset log_bold log_blue "Folder:") $(fetchfolder)"
-  log_blue log_bold   "    ⣿⣿⣿⣿  $(log_reset log_bold log_blue "URL:") $(fetchurl)"
-  log_blue            "          $(log_reset log_bold log_blue "Locale:") $(fetchlocale)"
-  log_blue            "          $(log_reset log_bold log_blue "Timezone:") $(fetchtimezone)"
-  log_blue            "          $(log_reset log_bold log_blue "Extensions:") $(fetchextensions)"
-  log_blue            "          $(log_reset log_bold log_blue "Developer:") $(fetchdeveloper)"
-  log_blue            "          $(log_reset log_bold log_blue "Telemetry:") $(fetchtelemetry)"
-  log_blue            "          $(log_reset log_bold log_blue "Node:") $(fetchnode)"
-  log_blue            "          $(log_reset log_bold log_blue "Yarn:") $(fetchyarn)"
-  log_bright " "
+  echo    " "
+  echo -e "\x1b[34;1m    ⣿⣿    Version: $(fetchversion)"
+  echo -e "\x1b[34;1m  ⣿⣿  ⣿⣿  Folder: $(fetchfolder)"
+  echo -e "\x1b[34;1m    ⣿⣿⣿⣿  URL: $(fetchurl)"
+  echo -e "\x1b[34;1m          Locale: $(fetchlocale)"
+  echo -e "\x1b[34;1m          Timezone: $(fetchtimezone)"
+  echo -e "\x1b[34;1m          Extensions: $(fetchextensions)"
+  echo -e "\x1b[34;1m          Developer: $(fetchdeveloper)"
+  echo -e "\x1b[34;1m          Telemetry: $(fetchtelemetry)"
+  echo -e "\x1b[34;1m          Node: $(fetchnode)"
+  echo -e "\x1b[34;1m          Yarn: $(fetchyarn)"
+  echo -e "\x1b[0m"
 fi
 
 # -rerun-install
