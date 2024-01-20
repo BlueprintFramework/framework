@@ -51,42 +51,10 @@ export NODE_OPTIONS=--openssl-legacy-provider
 cd $FOLDER || return
 
 # Import libraries.
-source .blueprint/lib/bash_colors.sh              || missinglibs+="[bash_colors]"
 source .blueprint/lib/parse_yaml.sh               || missinglibs+="[parse_yaml]"
 source .blueprint/lib/grabenv.sh                  || missinglibs+="[grabenv]"
 source .blueprint/lib/logFormat.sh                || missinglibs+="[logFormat]"
 source .blueprint/lib/misc.sh                     || missinglibs+="[misc]"
-
-# Fallback to these functions if "bash_colors.sh" is missing
-if [[ $missinglibs == *"[bash_colors]"* ]]; then
-  log_reset() { echo -e "$1"; }
-  log_reset_underline() { echo -e "$1"; }
-  log_reset_reverse() { echo -e "$1"; }
-  log_default() { echo -e "$1"; }
-  log_defaultb () { echo -e "$1"; }
-  log_bold() { echo -e "$1"; }
-  log_bright() { echo -e "$1"; }
-  log_underscore() { echo -e "$1"; }
-  log_reverse() { echo -e "$1"; }
-  log_black() { echo -e "$1"; }
-  log_red() { echo -e "$1"; }
-  log_green() { echo -e "$1"; }
-  log_brown() { echo -e "$1"; }
-  log_blue() { echo -e "$1"; }
-  log_magenta() { echo -e "$1"; }
-  log_cyan() { echo -e "$1"; }
-  log_white() { echo -e "$1"; }
-  log_yellow() { echo -e "$1"; }
-  log_blackb() { echo -e "$1"; }
-  log_redb() { echo -e "$1"; }
-  log_greenb() { echo -e "$1"; }
-  log_brownb() { echo -e "$1"; }
-  log_blueb() { echo -e "$1"; }
-  log_magentab() { echo -e "$1"; }
-  log_cyanb() { echo -e "$1"; }
-  log_whiteb() { echo -e "$1"; }
-  log_yellowb() { echo -e "$1"; }
-fi
 
 
 # -config
@@ -171,7 +139,6 @@ depend() {
     if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ]; then PRINT FATAL "Required dependency \"webpack\" is not installed or detected.";   fi
     if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ]; then PRINT FATAL "Required dependency \"react\" is not installed or detected.";     fi
 
-    if [[ $missinglibs == *"[bash_colors]"*              ]]; then PRINT FATAL "Required internal dependency \"internal:bash_colors\" is not installed or detected.";              fi
     if [[ $missinglibs == *"[parse_yaml]"*               ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected.";               fi
     if [[ $missinglibs == *"[grabEnv]"*                  ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";                  fi
     if [[ $missinglibs == *"[logFormat]"*                ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";                fi
