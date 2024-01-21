@@ -21,6 +21,7 @@ import ConflictStateRenderer from '@/components/server/ConflictStateRenderer';
 import PermissionRoute from '@/components/elements/PermissionRoute';
 import routes from '@/routers/routes';
 
+import BlueprintRouter       from '@/blueprint/extends/routers/ServerRouter';
 import BeforeSubNavigation   from '@/blueprint/components/Navigation/SubNavigation/BeforeSubNavigation';
 import AdditionalServerItems from '@/blueprint/components/Navigation/SubNavigation/AdditionalServerItems';
 import AfterSubNavigation    from '@/blueprint/components/Navigation/SubNavigation/AfterSubNavigation';
