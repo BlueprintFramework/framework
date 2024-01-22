@@ -4,9 +4,9 @@ import PageContentBlock from '@/components/elements/PageContentBlock';
 const ExampleContainer = () => {
     return (
       <PageContentBlock title={'Example'}>
-              <>
-                  <p>hello</p>
-              </>
+        <>
+          <p>hello</p>
+        </>
       </PageContentBlock>
     );
 };
