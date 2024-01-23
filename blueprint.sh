@@ -746,7 +746,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
-    icnNUM=$(( 1 + RANDOM % 9 ))
+    icnNUM=$(( 1 + RANDOM % 5 ))
     cp ".blueprint/assets/defaultExtensionLogo$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.jpg"
   else
     cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.jpg"
@@ -1441,12 +1441,6 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   sed -i "s~␀ver␀~${ASKVERSION}~g" .blueprint/tmp/init/conf.yml; #VERSION
   sed -i "s~␀author␀~${ASKAUTHOR}~g" .blueprint/tmp/init/conf.yml; #AUTHOR
   sed -i "s~␀version␀~${VERSION}~g" .blueprint/tmp/init/conf.yml #BLUEPRINT-VERSION
-
-  if [[ "${t_template_files_icon}" != "" ]]; then
-    icnNUM=$(( 1 + RANDOM % 9 ))
-    cp .blueprint/assets/defaultExtensionLogo"${icnNUM}".jpg .blueprint/tmp/init/"${t_template_files_icon}"
-    sed -i "s~␀icon␀~${t_template_files_icon}~g" .blueprint/tmp/init/conf.yml; #ICON
-  fi
 
   # Return files to folder.
   cp -R .blueprint/tmp/init/* .blueprint/dev/
