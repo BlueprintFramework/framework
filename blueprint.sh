@@ -693,54 +693,82 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         for parent in $Components_Navigation_Routes_; do
           parent="${parent}_"
           for child in ${!parent}; do
-
             # Route name
-            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Name" ]]; then
-              echo "[NAME] ${child} ${!child}"
-              COMPONENTS_ROUTE_NAME="${!child}"
-            fi
-
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Name" ]]; then COMPONENTS_ROUTE_NAME="${!child}"; fi
             # Route path
-            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Path" ]]; then
-              echo "[PATH] ${child} ${!child}"
-              COMPONENTS_ROUTE_PATH="${!child}"
-            fi
-
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Path" ]]; then COMPONENTS_ROUTE_PATH="${!child}"; fi
             # Route type
-            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Type" ]]; then
-              echo "[TYPE] ${child} ${!child}"
-              COMPONENTS_ROUTE_TYPE="${!child}"
-            fi
-
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Type" ]]; then COMPONENTS_ROUTE_TYPE="${!child}"; fi
             # Route component
-            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Component" ]]; then
-              echo "[COMPONENT] ${child} ${!child}"
-              COMPONENTS_ROUTE_COMP="${!child}"
-            fi
-
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Component" ]]; then COMPONENTS_ROUTE_COMP="${!child}"; fi
           done
 
-          echo "
-          [NAME] $COMPONENTS_ROUTE_NAME
-          [PATH] $COMPONENTS_ROUTE_PATH
-          [TYPE] $COMPONENTS_ROUTE_TYPE
-          [COMP] $COMPONENTS_ROUTE_COMP
-          "
+          # Route identifier
+          COMPONENTS_ROUTE_IDEN=$(tr -dc '[:lower:]' < /dev/urandom | fold -w 10 | head -n 1)
+          COMPONENTS_ROUTE_IDEN="${COMPONENTS_ROUTE_IDEN^}"
+
+          echo -e "NAME: $COMPONENTS_ROUTE_NAME\nPATH: $COMPONENTS_ROUTE_PATH\nTYPE: $COMPONENTS_ROUTE_TYPE\nCOMP: $COMPONENTS_ROUTE_COMP\nIDEN: $COMPONENTS_ROUTE_IDEN" >> $BLUEPRINT__DEBUG
+
+
+          # Return error if type is not defined correctly.
+          if [[ ( $COMPONENTS_ROUTE_TYPE != "server" ) && ( $COMPONENTS_ROUTE_TYPE != "account" ) ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Navigation route types can only be either 'server' or 'account'."
+            exit 1
+          fi
+
+          # Prevent escaping components folder.
+          if [[ 
+            ( ${COMPONENTS_ROUTE_COMP} == "/"* ) || 
+            ( ${COMPONENTS_ROUTE_COMP} == *"/.."* ) || 
+            ( ${COMPONENTS_ROUTE_COMP} == *"../"* ) || 
+            ( ${COMPONENTS_ROUTE_COMP} == *"/../"* ) || 
+            ( ${COMPONENTS_ROUTE_COMP} == *"\n"* ) || 
+            ( ${COMPONENTS_ROUTE_COMP} == *"@"* ) || 
+            ( ${COMPONENTS_ROUTE_COMP} == *"\\"* )
+          ]]; then 
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Navigation route component paths may not escape the components directory."
+            exit 1
+          fi
+
+          # Validate file names for route components.
+          if [[ ${COMPONENTS_ROUTE_COMP} == *".tsx" ]] ||
+             [[ ${COMPONENTS_ROUTE_COMP} == *".ts"  ]] ||
+             [[ ${COMPONENTS_ROUTE_COMP} == *".jsx" ]] ||
+             [[ ${COMPONENTS_ROUTE_COMP} == *".js"  ]]; then 
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Navigation route component paths may not end with a file extension."
+            exit 1
+          fi
+
+          # Return error if identifier is generated incorrectly.
+          if [[ $COMPONENTS_ROUTE_IDEN == "" ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Failed to generate extension navigation route identifier, halting process."
+            exit 1
+          fi
 
           # Return error if routes are defined incorrectly.
           if [[ $COMPONENTS_ROUTE_NAME == "" ]] \
           || [[ $COMPONENTS_ROUTE_PATH == "" ]] \
           || [[ $COMPONENTS_ROUTE_TYPE == "" ]] \
           || [[ $COMPONENTS_ROUTE_COMP == "" ]]; then
-            PRINT FATAL "One or more custom routes appear to have undefined fields, expect errors."
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "One or more extension navigation routes appear to have undefined fields."
             exit 1
           fi
+
+
+          # apply routes..
+
 
           # Clear variables after doing all route stuff for a defined route.
           COMPONENTS_ROUTE_NAME=""
           COMPONENTS_ROUTE_PATH=""
           COMPONENTS_ROUTE_TYPE=""
           COMPONENTS_ROUTE_COMP=""
+          COMPONENTS_ROUTE_IDEN=""
         done
       fi
     else
