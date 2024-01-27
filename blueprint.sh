@@ -685,6 +685,64 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       PLACE_REACT "$Components_Account_SSH_BeforeContent" "Account/SSH/BeforeContent.tsx" "$OldComponents_Account_SSH_BeforeContent"
       PLACE_REACT "$Components_Account_SSH_AfterContent" "Account/SSH/AfterContent.tsx" "$OldComponents_Account_SSH_AfterContent"
 
+
+      # Place custom extension routes.
+      if [[ $Components_Navigation_Routes_ != "" ]]; then
+        PRINT INFO "Linking navigation routes.."
+
+        for parent in $Components_Navigation_Routes_; do
+          parent="${parent}_"
+          for child in ${!parent}; do
+
+            # Route name
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Name" ]]; then
+              echo "[NAME] ${child} ${!child}"
+              COMPONENTS_ROUTE_NAME="${!child}"
+            fi
+
+            # Route path
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Path" ]]; then
+              echo "[PATH] ${child} ${!child}"
+              COMPONENTS_ROUTE_PATH="${!child}"
+            fi
+
+            # Route type
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Type" ]]; then
+              echo "[TYPE] ${child} ${!child}"
+              COMPONENTS_ROUTE_TYPE="${!child}"
+            fi
+
+            # Route component
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Component" ]]; then
+              echo "[COMPONENT] ${child} ${!child}"
+              COMPONENTS_ROUTE_COMP="${!child}"
+            fi
+
+          done
+
+          echo "
+          [NAME] $COMPONENTS_ROUTE_NAME
+          [PATH] $COMPONENTS_ROUTE_PATH
+          [TYPE] $COMPONENTS_ROUTE_TYPE
+          [COMP] $COMPONENTS_ROUTE_COMP
+          "
+
+          # Return error if routes are defined incorrectly.
+          if [[ $COMPONENTS_ROUTE_NAME == "" ]] \
+          || [[ $COMPONENTS_ROUTE_PATH == "" ]] \
+          || [[ $COMPONENTS_ROUTE_TYPE == "" ]] \
+          || [[ $COMPONENTS_ROUTE_COMP == "" ]]; then
+            PRINT FATAL "One or more custom routes appear to have undefined fields, expect errors."
+            exit 1
+          fi
+
+          # Clear variables after doing all route stuff for a defined route.
+          COMPONENTS_ROUTE_NAME=""
+          COMPONENTS_ROUTE_PATH=""
+          COMPONENTS_ROUTE_TYPE=""
+          COMPONENTS_ROUTE_COMP=""
+        done
+      fi
     else
       # warn about missing components.yml file
       PRINT WARNING "Could not find '$dashboard_components/Components.yml', component extendability might be limited."

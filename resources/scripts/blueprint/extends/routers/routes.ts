@@ -1,5 +1,6 @@
 import React from 'react';
 
+/* blueprint/import */
 import ExampleContainer from './ExampleComponent';
 
 interface ExtendedRouteDefinition {
@@ -8,11 +9,9 @@ interface ExtendedRouteDefinition {
   component: React.ComponentType;
   exact?: boolean;
 }
-
 interface ExtendedServerRouteDefinition extends ExtendedRouteDefinition {
   permission: string | string[] | null;
 }
-
 interface Routes {
   account: ExtendedRouteDefinition[];
   server: ExtendedServerRouteDefinition[];
@@ -25,6 +24,7 @@ export default {
       name: 'Example',
       component: ExampleContainer,
     },
+    {/* routes/account */}
   ],
   server: [
     {
@@ -33,5 +33,6 @@ export default {
       name: 'Example',
       component: ExampleContainer,
     },
+    {/* routes/server */}
   ],
 } as Routes;
