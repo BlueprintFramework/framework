@@ -761,7 +761,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
 
           # apply routes..
-
+          if [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
+            # copy build file
+            cp .blueprint/extensions/blueprint/private/build/extensions/clientServerRoute .blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak
+          elif [[ $COMPONENTS_ROUTE_TYPE == "account" ]]; then
+            # copy build file
+            cp .blueprint/extensions/blueprint/private/build/extensions/clientAccountRoute .blueprint/extensions/blueprint/private/build/extensions/clientAccountRoute.bak
+          fi 
 
           # Clear variables after doing all route stuff for a defined route.
           COMPONENTS_ROUTE_NAME=""
