@@ -1,7 +1,6 @@
 import React from 'react';
 
 /* blueprint/import */
-import ExampleContainer from './ExampleComponent';
 
 interface ExtendedRouteDefinition {
   path: string;
@@ -19,20 +18,9 @@ interface Routes {
 
 export default {
   account: [
-    {
-      path: '/example',
-      name: 'Example',
-      component: ExampleContainer,
-    },
     {/* routes/account */}
   ],
   server: [
-    {
-      path: '/example',
-      permission: null,
-      name: 'Example',
-      component: ExampleContainer,
-    },
     {/* routes/server */}
   ],
 } as Routes;

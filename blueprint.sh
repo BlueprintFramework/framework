@@ -562,14 +562,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       sed -i "s/\/\* ${identifier^}ImportStart \*\/.*\/\* ${identifier^}ImportEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~/\* ${identifier^}ImportStart \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-
       # Account routes
-      sed -i "/{\/\* ${identifier^}AccountRouteStart \*\/}/,/{\/\* ${identifier^}AccountRouteEnd \*\/}/d" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s/{\/\* ${identifier^}AccountRouteStart \*\/}.*{\/\* ${identifier^}AccountRouteEnd \*\/}//" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}AccountRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}AccountRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-
       # Server routes
-      sed -i "/{\/\* ${identifier^}ServerRouteStart \*\/}/,/{\/\* ${identifier^}ServerRouteEnd \*\/}/d" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s/{\/\* ${identifier^}ServerRouteStart \*\/}.*{\/\* ${identifier^}ServerRouteEnd \*\/}//" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}ServerRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}ServerRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
     fi
@@ -1241,8 +1239,6 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Remove dashboard components
   if [[ $dashboard_components != "" ]]; then
     PRINT INFO "Removing and unlinking dashboard components.."
-    rm -r $FOLDER/.blueprint/extensions/"$identifier"/components
-    rm -r $FOLDER/resources/scripts/blueprint/extensions/"$identifier"
     # fetch component config
     eval "$(parse_yaml .blueprint/extensions/"$identifier"/components/Components.yml Components_)"
 
@@ -1326,21 +1322,23 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     REMOVE_REACT "$Components_Account_SSH_BeforeContent" "Account/SSH/BeforeContent.tsx"
     REMOVE_REACT "$Components_Account_SSH_AfterContent" "Account/SSH/AfterContent.tsx"
 
+    rm -r $FOLDER/.blueprint/extensions/"$identifier"/components
+    rm -r $FOLDER/resources/scripts/blueprint/extensions/"$identifier"
     YARN="y"
   fi
 
   # Remove custom routes
   PRINT INFO "Unlinking navigation routes.."
   # Route import
-  sed -n -i "/\/\* ${identifier^}ImportStart \*\//{p; :a; N; /\/\* ${identifier^}ImportEnd \*\//!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s/\/\* ${identifier^}ImportStart \*\/.*\/\* ${identifier^}ImportEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
   sed -i "s~/\* ${identifier^}ImportStart \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
   sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
   # Account routes
-  sed -n -i "/\{\/\* ${identifier^}AccountRouteStart \*\/\}/{p; :a; N; /\{\/\* ${identifier^}AccountRouteEnd \*\/\}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s/{\/\* ${identifier^}AccountRouteStart \*\/}.*{\/\* ${identifier^}AccountRouteEnd \*\/}//" "resources/scripts/blueprint/extends/routers/routes.ts"
   sed -i "s~{/\* ${identifier^}AccountRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
   sed -i "s~{/\* ${identifier^}AccountRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
   # Server routes
-  sed -n -i "/\{\/\* ${identifier^}ServerRouteStart \*\/\}/{p; :a; N; /\{\/\* ${identifier^}ServerRouteEnd \*\/\}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s/{\/\* ${identifier^}ServerRouteStart \*\/}.*{\/\* ${identifier^}ServerRouteEnd \*\/}//" "resources/scripts/blueprint/extends/routers/routes.ts"
   sed -i "s~{/\* ${identifier^}ServerRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
   sed -i "s~{/\* ${identifier^}ServerRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
@@ -1359,6 +1357,10 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   PRINT INFO "Removing and unlinking assets folder.."
   rm -R ".blueprint/extensions/$identifier/assets"
   rm -R "public/assets/extensions/$identifier"
+
+  # Remove extension directory
+  PRINT INFO "Removing extension folder.."
+  rm -R ".blueprint/extensions/$identifier"
 
   # Rebuild panel
   if [[ $YARN == "y" ]]; then
