@@ -700,9 +700,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           cp ".blueprint/extensions/blueprint/private/build/extensions/routes/serverRouteConstructor" "$ServerRouteConstructor"
         } 2>> $BLUEPRINT__DEBUG
 
-        sed "s~[id^]~${identifier^}~g" $ImportConstructor
-        sed "s~[id^]~${identifier^}~g" $AccountRouteConstructor
-        sed "s~[id^]~${identifier^}~g" $ServerRouteConstructor
+        sed -i "s~\[id\^]~${identifier^}~g" $ImportConstructor
+        sed -i "s~\[id\^]~${identifier^}~g" $AccountRouteConstructor
+        sed -i "s~\[id\^]~${identifier^}~g" $ServerRouteConstructor
 
         for parent in $Components_Navigation_Routes_; do
           parent="${parent}_"
@@ -780,15 +780,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, },"
 
-            sed "s~/* [import] */~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
-            sed "s~{/* [routes] */}~{/* [routes] */}""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
+            sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
+            sed -i "s~{/\* \[routes] \*/}~{/* [routes] */}""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
           elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # Server routes
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, permission: null, },"
 
-            sed -i "s~/* [import] */~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
-            sed -i "s~{/* [routes] */}~{/* [routes] */}""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
+            sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
+            sed -i "s~{/\* \[routes] \*/}~{/* [routes] */}""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
           fi 
 
           # Clear variables after doing all route stuff for a defined route.
@@ -802,9 +802,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           COMPONENTS_ROUTE_IDEN=""
         done
 
-        echo -e "$(<$ImportConstructor)"
-        echo -e "$(<$AccountRouteConstructor)"
-        echo -e "$(<$ServerRouteConstructor)"
+        echo -e "$(<$ImportConstructor)\n"
+        echo -e "$(<$AccountRouteConstructor)\n"
+        echo -e "$(<$ServerRouteConstructor)\n"
 
         {
           rm "$ImportConstructor"
