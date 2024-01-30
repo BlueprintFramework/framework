@@ -839,10 +839,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
         # Fix line breaks.
         sed -i 's/\001/\n/g' "resources/scripts/blueprint/extends/routers/routes.ts"
-
-        echo -e "$(<$ImportConstructor)\n"
-        echo -e "$(<$AccountRouteConstructor)\n"
-        echo -e "$(<$ServerRouteConstructor)\n"
+        
         {
           rm "$ImportConstructor"
           rm "$AccountRouteConstructor"
