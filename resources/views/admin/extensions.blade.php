@@ -25,7 +25,7 @@
       </a>
     </div>
 
-    <!-- [entry-placeholder] -->
+    <!-- [entryplaceholder] -->
 
   @else 
     

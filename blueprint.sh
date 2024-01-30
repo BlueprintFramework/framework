@@ -946,7 +946,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     OLDBUTTON_RESULT=$(<.blueprint/extensions/"$identifier"/private/.store/build/button.blade.php)
     sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
   fi
-  sed -i "s~<!-- [entry-placeholder] -->~$ADMINBUTTON_RESULT\n<!-- [entry-placeholder] -->~g" "resources/views/admin/extensions.blade.php"
+  sed -i "s~<!-- [entryplaceholder] -->~$ADMINBUTTON_RESULT\n<!-- [entryplaceholder] -->~g" "resources/views/admin/extensions.blade.php"
 
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
