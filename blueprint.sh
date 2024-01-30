@@ -690,20 +690,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       if [[ $Components_Navigation_Routes_ != "" ]]; then
         PRINT INFO "Linking navigation routes.."
 
-        AccountImportConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/account/importConstructor.bak"
-        ServerImportConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/server/importConstructor.bak"
-        AccountRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/account/routeConstructor.bak"
-        ServerRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/server/routeConstructor.bak"
+        ImportConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/importConstructor.bak"
+        AccountRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/accountRouteConstructor.bak"
+        ServerRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/serverRouteConstructor.bak"
         
         {
-          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/account/importConstructor" "$AccountImportConstructor"
-          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/server/importConstructor" "$ServerImportConstructor"
-          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/account/routeConstructor" "$AccountRouteConstructor"
-          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/server/routeConstructor" "$ServerRouteConstructor"
+          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/importConstructor" "$ImportConstructor"
+          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/accountRouteConstructor" "$AccountRouteConstructor"
+          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/serverRouteConstructor" "$ServerRouteConstructor"
         } 2>> $BLUEPRINT__DEBUG
 
-        sed -i "s~\[id\^\]~${identifier^}~g" $AccountImportConstructor
-        sed -i "s~\[id\^\]~${identifier^}~g" $ServerImportConstructor
+        sed -i "s~\[id\^\]~${identifier^}~g" $ImportConstructor
         sed -i "s~\[id\^\]~${identifier^}~g" $AccountRouteConstructor
         sed -i "s~\[id\^\]~${identifier^}~g" $ServerRouteConstructor
 
@@ -780,17 +777,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           # Apply routes.
           if [[ $COMPONENTS_ROUTE_TYPE == "account" ]]; then
             # Account routes
-            COMPONENTS_IMPORT="import $COMPONENTS_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
+            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, },"
 
-            sed -i "s~\/\* \[import\] \*\/~\/\* \[import\] \*\/""$COMPONENTS_IMPORT""~g" $AccountImportConstructor
+            sed -i "s~\/\* \[import\] \*\/~\/\* \[import\] \*\/""$COMPONENTS_IMPORT""~g" $ImportConstructor
             sed -i "s~\{\/\* \[routes\] \*\/\}~\{\/\* \[routes\] \*\/\}""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
           elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # Server routes
-            COMPONENTS_IMPORT="import $COMPONENTS_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
+            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, permission: null, },"
 
-            sed -i "s~\/\* \[import\] \*\/~\/\* \[import\] \*\/""$COMPONENTS_IMPORT""~g" $ServerImportConstructor
+            sed -i "s~\/\* \[import\] \*\/~\/\* \[import\] \*\/""$COMPONENTS_IMPORT""~g" $ImportConstructor
             sed -i "s~\{\/\* \[routes\] \*\/\}~\{\/\* \[routes\] \*\/\}""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
           fi 
 
@@ -805,14 +802,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           COMPONENTS_ROUTE_IDEN=""
         done
 
-        echo -e "$(<$AccountImportConstructor)"
-        echo -e "$(<$ServerImportConstructor)"
+        echo -e "$(<$ImportConstructor)"
         echo -e "$(<$AccountRouteConstructor)"
         echo -e "$(<$ServerRouteConstructor)"
 
         {
-          rm "$AccountImportConstructor"
-          rm "$ServerImportConstructor"
+          rm "$ImportConstructor"
           rm "$AccountRouteConstructor"
           rm "$ServerRouteConstructor"
         } 2>> $BLUEPRINT__DEBUG
