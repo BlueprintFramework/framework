@@ -827,7 +827,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
     cp ".blueprint/tmp/$n/$dashboard_components/Components.yml" ".blueprint/extensions/$identifier/private/.store/Components.yml" #backup Components.yml
   fi
-  
   # End creating data directory.
 
 
@@ -875,34 +874,33 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $identifier == *"~"* ]]; then  PRINT WARNING "'identifier' contains '~' and may result in an error.";fi
 
   # Replace $name variables.
-  sed -i "s~␀title␀~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-  sed -i "s~␀name␀~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-  sed -i "s~␀name␀~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
+  sed -i "s~[name]~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  sed -i "s~[name]~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
 
   # Replace $description variables.
-  sed -i "s~␀description␀~$description~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  sed -i "s~[description]~$description~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
 
   # Replace $version variables.
-  sed -i "s~␀version␀~$version~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-  sed -i "s~␀version␀~$version~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
+  sed -i "s~[version]~$version~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  sed -i "s~[version]~$version~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
 
   # Replace $ICON variables.
-  sed -i "s~␀icon␀~$ICON~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  sed -i "s~[icon]~$ICON~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
 
   # Replace $website variables.
   if [[ $website != "" ]]; then
-    sed -i "s~␀website␀~$website~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-    sed -i "s~<!--websitecomment␀ ~~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-    sed -i "s~ ␀websitecomment-->~~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-    sed -i "s~␀weblinkicon␀~$websiteiconclass~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+    sed -i "s~[website]~$website~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+    sed -i "s~<!--[web] ~~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+    sed -i "s~ [web]-->~~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+    sed -i "s~[webicon]~$websiteiconclass~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
   fi
 
   # Replace $identifier variables.
   if [[ $controller_type == "default" ]]; then
-    sed -i "s~␀id␀~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak"
+    sed -i "s~[id]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak"
   fi
-  sed -i "s~␀id␀~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
-  sed -i "s~␀id␀~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
+  sed -i "s~[id]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
+  sed -i "s~[id]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
 
   # Place extension admin view content into template.
   echo -e "$CONTENT\n@endsection" >> ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
@@ -948,7 +946,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     OLDBUTTON_RESULT=$(<.blueprint/extensions/"$identifier"/private/.store/build/button.blade.php)
     sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
   fi
-  sed -i "s~<!--␀replace␀-->~$ADMINBUTTON_RESULT\n<!--␀replace␀-->~g" "resources/views/admin/extensions.blade.php"
+  sed -i "s~<!-- [entry-placeholder] -->~$ADMINBUTTON_RESULT\n<!-- [entry-placeholder] -->~g" "resources/views/admin/extensions.blade.php"
 
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
