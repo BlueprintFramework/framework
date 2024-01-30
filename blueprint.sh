@@ -805,6 +805,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           COMPONENTS_ROUTE_IDEN=""
         done
 
+        echo -e "$(<$AccountImportConstructor)"
+        echo -e "$(<$ServerImportConstructor)"
+        echo -e "$(<$AccountRouteConstructor)"
+        echo -e "$(<$ServerRouteConstructor)"
+
         {
           rm "$AccountImportConstructor"
           rm "$ServerImportConstructor"
