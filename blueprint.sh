@@ -773,6 +773,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             exit 1
           fi
 
+          # Validate file path.
+          if [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${COMPONENTS_ROUTE_COMP}.tsx" ]] &&
+             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${COMPONENTS_ROUTE_COMP}.ts"  ]] &&
+             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${COMPONENTS_ROUTE_COMP}.jsx" ]] &&
+             [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${COMPONENTS_ROUTE_COMP}.js"  ]]; then 
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Navigation route configuration points towards one or more components that do not exist."
+            exit 1
+          fi
+
           # Return error if identifier is generated incorrectly.
           if [[ $COMPONENTS_ROUTE_IDEN == "" ]]; then
             rm -R ".blueprint/tmp/$n"
