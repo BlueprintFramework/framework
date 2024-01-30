@@ -34,7 +34,7 @@ Want your name, website or company listed here? [Sponsor **prplwtf** on GitHub](
 ## Contributors
 [**prplwtf**](https://github.com/prplwtf) - creator and maintainer\
 [**ahwxorg**](https://github.com/ahwxorg) - contributor\
-[alipoyrazaydin](https://github.com/alipoyrazaydin) - contributor\
+[hustea](https://github.com/hustea) - contributor\
 [sp11rum](https://github.com/sp11rum) - contributor\
 [phedona](https://github.com/Phedona) - contributor\
 [codixer](https://github.com/Codixer) - contributor\
