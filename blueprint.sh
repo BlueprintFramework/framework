@@ -556,6 +556,24 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/components "$identifier" 2>> $BLUEPRINT__DEBUG
     cd $FOLDER || cdhalt
 
+    # Remove custom routes to prevent duplicates.
+    if [[ $DUPLICATE == "y" ]]; then
+      # Route import
+      sed -n -i "/\/\* ${identifier^}ImportStart \*\//{p; :a; N; /\/\* ${identifier^}ImportEnd \*\//!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~/\* ${identifier^}ImportStart \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+
+      # Account routes
+      sed -n -i "/\{\/\* ${identifier^}AccountRouteStart \*\/\}/{p; :a; N; /\{\/\* ${identifier^}AccountRouteEnd \*\/\}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~{/\* ${identifier^}AccountRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~{/\* ${identifier^}AccountRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+
+      # Server routes
+      sed -n -i "/\{\/\* ${identifier^}ServerRouteStart \*\/\}/{p; :a; N; /\{\/\* ${identifier^}ServerRouteEnd \*\/\}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~{/\* ${identifier^}ServerRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~{/\* ${identifier^}ServerRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+    fi
+
     cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> $BLUEPRINT__DEBUG
     if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
 
@@ -684,6 +702,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
       PLACE_REACT "$Components_Account_SSH_BeforeContent" "Account/SSH/BeforeContent.tsx" "$OldComponents_Account_SSH_BeforeContent"
       PLACE_REACT "$Components_Account_SSH_AfterContent" "Account/SSH/AfterContent.tsx" "$OldComponents_Account_SSH_AfterContent"
+
 
 
       # Place custom extension routes.
