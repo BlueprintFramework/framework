@@ -825,11 +825,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         sed -i "s~{/\* \[routes] \*/}~~g" $AccountRouteConstructor
         sed -i "s~{/\* \[routes] \*/}~~g" $ServerRouteConstructor
 
-        echo -e "$(<$ImportConstructor)\n"
-        echo -e "$(<$AccountRouteConstructor)\n"
-        echo -e "$(<$ServerRouteConstructor)\n"
+        sed -i "s~/\* blueprint/import \*/~/* blueprint/import */$(<$ImportConstructor)" "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i "s~{/\* routes/account \*/}~{/* routes/account */}$(<$AccountRouteConstructor)" "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i "s~{/\* routes/server \*/}~{/* routes/server */}$(<$ServerRouteConstructor)" "resources/scripts/blueprint/extends/routers/routes.ts"
 
         {
+          echo -e "$(<$ImportConstructor)\n"
+          echo -e "$(<$AccountRouteConstructor)\n"
+          echo -e "$(<$ServerRouteConstructor)\n"
+
           rm "$ImportConstructor"
           rm "$AccountRouteConstructor"
           rm "$ServerRouteConstructor"
@@ -1322,6 +1326,21 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     YARN="y"
   fi
+
+  # Remove custom routes
+  PRINT INFO "Unlinking navigation routes.."
+  # Route import
+  sed -n -i "/\/\* ${identifier^}ImportStart \*\//{p; :a; N; /\/\* ${identifier^}ImportEnd \*\//!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~/\* ${identifier^}ImportStart \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  # Account routes
+  sed -n -i "/\{\/\* ${identifier^}AccountRouteStart \*\/\}/{p; :a; N; /\{\/\* ${identifier^}AccountRouteEnd \*\/\}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~{/\* ${identifier^}AccountRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~{/\* ${identifier^}AccountRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  # Server routes
+  sed -n -i "/\{\/\* ${identifier^}ServerRouteStart \*\/\}/{p; :a; N; /\{\/\* ${identifier^}ServerRouteEnd \*\/\}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~{/\* ${identifier^}ServerRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~{/\* ${identifier^}ServerRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
   # Remove private folder
   PRINT INFO "Removing and unlinking private folder.."
