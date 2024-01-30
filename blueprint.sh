@@ -705,7 +705,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
           # Route identifier
           COMPONENTS_ROUTE_IDEN=$(tr -dc '[:lower:]' < /dev/urandom | fold -w 10 | head -n 1)
-          COMPONENTS_ROUTE_IDEN="${COMPONENTS_ROUTE_IDEN^}"
+          COMPONENTS_ROUTE_IDEN="${identifier^}${COMPONENTS_ROUTE_IDEN^}"
 
           echo -e "NAME: $COMPONENTS_ROUTE_NAME\nPATH: $COMPONENTS_ROUTE_PATH\nTYPE: $COMPONENTS_ROUTE_TYPE\nCOMP: $COMPONENTS_ROUTE_COMP\nIDEN: $COMPONENTS_ROUTE_IDEN" >> $BLUEPRINT__DEBUG
 
@@ -764,6 +764,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           if [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # copy build file
             cp .blueprint/extensions/blueprint/private/build/extensions/clientServerRoute .blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak
+
+            sed -i "s~\[id\]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak"
+            sed -i "s~\[path\]~$COMPONENTS_ROUTE_PATH~g" ".blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak"
+            sed -i "s~\[name\]~$COMPONENTS_ROUTE_NAME~g" ".blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak"
+            sed -i "s~\[iden\]~$COMPONENTS_ROUTE_IDEN~g" ".blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak"
+
+            im="\/\* blueprint\/import \*\/"; re="{/\* blueprint\/react \*/}"; co="resources/scripts/blueprint/components"
+            s="import ${COMPONENTS_ROUTE_IDEN} from '"; e="';"
+            
+            sed -i "s~""$im""~""${im}${s}@/blueprint/extensions/${identifier}/$1${e}""~g" "$co"/"$2"
 
             # remove copied build file
             rm .blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak
