@@ -564,12 +564,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
       # Account routes
-      sed -n -i "/\{\/\* ${identifier^}AccountRouteStart \*\/\}/{p; :a; N; /\{\/\* ${identifier^}AccountRouteEnd \*\/\}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -n -i "/{\/\* ${identifier^}AccountRouteStart \*\/}/{p; :a; N; /{\/\* ${identifier^}AccountRouteEnd \*\/}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}AccountRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}AccountRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
       # Server routes
-      sed -n -i "/\{\/\* ${identifier^}ServerRouteStart \*\/\}/{p; :a; N; /\{\/\* ${identifier^}ServerRouteEnd \*\/\}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -n -i "/{\/\* ${identifier^}ServerRouteStart \*\/}/{p; :a; N; /{\/\* ${identifier^}ServerRouteEnd \*\/}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}ServerRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}ServerRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
     fi
@@ -719,9 +719,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           cp ".blueprint/extensions/blueprint/private/build/extensions/routes/serverRouteConstructor" "$ServerRouteConstructor"
         } 2>> $BLUEPRINT__DEBUG
 
-        sed -i "s~\[id\^]~${identifier^}~g" $ImportConstructor
-        sed -i "s~\[id\^]~${identifier^}~g" $AccountRouteConstructor
-        sed -i "s~\[id\^]~${identifier^}~g" $ServerRouteConstructor
+        sed -i "s~\[id\^]~""${identifier^}""~g" $ImportConstructor
+        sed -i "s~\[id\^]~""${identifier^}""~g" $AccountRouteConstructor
+        sed -i "s~\[id\^]~""${identifier^}""~g" $ServerRouteConstructor
 
         for parent in $Components_Navigation_Routes_; do
           parent="${parent}_"
@@ -825,15 +825,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         sed -i "s~{/\* \[routes] \*/}~~g" $AccountRouteConstructor
         sed -i "s~{/\* \[routes] \*/}~~g" $ServerRouteConstructor
 
-        sed -i "s~/\* blueprint/import \*/~/* blueprint/import */$(<$ImportConstructor)" "resources/scripts/blueprint/extends/routers/routes.ts"
-        sed -i "s~{/\* routes/account \*/}~{/* routes/account */}$(<$AccountRouteConstructor)" "resources/scripts/blueprint/extends/routers/routes.ts"
-        sed -i "s~{/\* routes/server \*/}~{/* routes/server */}$(<$ServerRouteConstructor)" "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i "s~\/\* blueprint\/import \*\/~/* blueprint/import */""$(tr '\n' '\001' <${ImportConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i "s~{\/\* routes/account \*\/}~{/* routes/account */}""$(tr '\n' '\001' <${AccountRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i "s~{\/\* routes/server \*\/}~{/* routes/server */}""$(tr '\n' '\001' <${ServerRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
+        # Fix line breaks.
+        sed -i 's/\001/\n/g' "resources/scripts/blueprint/extends/routers/routes.ts"
+
+        echo -e "$(<$ImportConstructor)\n"
+        echo -e "$(<$AccountRouteConstructor)\n"
+        echo -e "$(<$ServerRouteConstructor)\n"
         {
-          echo -e "$(<$ImportConstructor)\n"
-          echo -e "$(<$AccountRouteConstructor)\n"
-          echo -e "$(<$ServerRouteConstructor)\n"
-
           rm "$ImportConstructor"
           rm "$AccountRouteConstructor"
           rm "$ServerRouteConstructor"
