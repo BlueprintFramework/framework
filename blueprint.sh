@@ -690,6 +690,23 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       if [[ $Components_Navigation_Routes_ != "" ]]; then
         PRINT INFO "Linking navigation routes.."
 
+        AccountImportConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/account/importConstructor.bak"
+        ServerImportConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/server/importConstructor.bak"
+        AccountRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/account/routeConstructor.bak"
+        ServerRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/server/routeConstructor.bak"
+        
+        {
+          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/account/importConstructor" "$AccountImportConstructor"
+          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/server/importConstructor" "$ServerImportConstructor"
+          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/account/routeConstructor" "$AccountRouteConstructor"
+          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/server/routeConstructor" "$ServerRouteConstructor"
+        } 2>> $BLUEPRINT__DEBUG
+
+        sed -i "s~\[id\^\]~${identifier^}~g" $AccountImportConstructor
+        sed -i "s~\[id\^\]~${identifier^}~g" $ServerImportConstructor
+        sed -i "s~\[id\^\]~${identifier^}~g" $AccountRouteConstructor
+        sed -i "s~\[id\^\]~${identifier^}~g" $ServerRouteConstructor
+
         for parent in $Components_Navigation_Routes_; do
           parent="${parent}_"
           for child in ${!parent}; do
@@ -760,38 +777,40 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           fi
 
 
-          # apply routes..
-          if [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
-            # copy build file
-            cp .blueprint/extensions/blueprint/private/build/extensions/clientServerRoute .blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak
+          # Apply routes.
+          if [[ $COMPONENTS_ROUTE_TYPE == "account" ]]; then
+            # Account routes
+            COMPONENTS_IMPORT="import $COMPONENTS_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
+            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, },"
 
-            sed -i "s~\[id\]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak"
-            sed -i "s~\[path\]~$COMPONENTS_ROUTE_PATH~g" ".blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak"
-            sed -i "s~\[name\]~$COMPONENTS_ROUTE_NAME~g" ".blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak"
-            sed -i "s~\[iden\]~$COMPONENTS_ROUTE_IDEN~g" ".blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak"
+            sed -i "s~\/\* \[import\] \*\/~\/\* \[import\] \*\/""$COMPONENTS_IMPORT""~g" $AccountImportConstructor
+            sed -i "s~\{\/\* \[routes\] \*\/\}~\{\/\* \[routes\] \*\/\}""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
+          elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
+            # Server routes
+            COMPONENTS_IMPORT="import $COMPONENTS_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
+            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, permission: null, },"
 
-            im="\/\* blueprint\/import \*\/"; re="{/\* blueprint\/react \*/}"; co="resources/scripts/blueprint/components"
-            s="import ${COMPONENTS_ROUTE_IDEN} from '"; e="';"
-            
-            sed -i "s~""$im""~""${im}${s}@/blueprint/extensions/${identifier}/$1${e}""~g" "$co"/"$2"
-
-            # remove copied build file
-            rm .blueprint/extensions/blueprint/private/build/extensions/clientServerRoute.bak
-          elif [[ $COMPONENTS_ROUTE_TYPE == "account" ]]; then
-            # copy build file
-            cp .blueprint/extensions/blueprint/private/build/extensions/clientAccountRoute .blueprint/extensions/blueprint/private/build/extensions/clientAccountRoute.bak
-
-            # remove copied build file
-            rm .blueprint/extensions/blueprint/private/build/extensions/clientAccountRoute.bak
+            sed -i "s~\/\* \[import\] \*\/~\/\* \[import\] \*\/""$COMPONENTS_IMPORT""~g" $ServerImportConstructor
+            sed -i "s~\{\/\* \[routes\] \*\/\}~\{\/\* \[routes\] \*\/\}""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
           fi 
 
           # Clear variables after doing all route stuff for a defined route.
+          COMPONENTS_ROUTE=""
+          COMPONENTS_IMPORT=""
+
           COMPONENTS_ROUTE_NAME=""
           COMPONENTS_ROUTE_PATH=""
           COMPONENTS_ROUTE_TYPE=""
           COMPONENTS_ROUTE_COMP=""
           COMPONENTS_ROUTE_IDEN=""
         done
+
+        {
+          rm "$AccountImportConstructor"
+          rm "$ServerImportConstructor"
+          rm "$AccountRouteConstructor"
+          rm "$ServerRouteConstructor"
+        } 2>> $BLUEPRINT__DEBUG
       fi
     else
       # warn about missing components.yml file
