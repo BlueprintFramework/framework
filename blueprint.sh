@@ -777,14 +777,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           # Apply routes.
           if [[ $COMPONENTS_ROUTE_TYPE == "account" ]]; then
             # Account routes
-            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
+            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
             sed -i "s~{/\* \[routes] \*/}~{/* [routes] */}""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
           elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # Server routes
-            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_COMP';"
+            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, permission: null, },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
@@ -801,6 +801,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           COMPONENTS_ROUTE_COMP=""
           COMPONENTS_ROUTE_IDEN=""
         done
+
+        sed -i "s~/\* \[import] \*/~~g" $ImportConstructor
+        sed -i "s~{/\* \[routes] \*/}~~g" $AccountRouteConstructor
+        sed -i "s~{/\* \[routes] \*/}~~g" $ServerRouteConstructor
 
         echo -e "$(<$ImportConstructor)\n"
         echo -e "$(<$AccountRouteConstructor)\n"
