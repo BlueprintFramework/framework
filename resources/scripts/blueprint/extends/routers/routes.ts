@@ -18,9 +18,9 @@ interface Routes {
 
 export default {
   account: [
-    {/* routes/account */}
+    /* routes/account */
   ],
   server: [
-    {/* routes/server */}
+    /* routes/server */
   ],
 } as Routes;

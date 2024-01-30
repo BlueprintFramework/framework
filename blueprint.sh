@@ -563,13 +563,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       sed -i "s~/\* ${identifier^}ImportStart \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       # Account routes
-      sed -i "s/{\/\* ${identifier^}AccountRouteStart \*\/}.*{\/\* ${identifier^}AccountRouteEnd \*\/}//" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~{/\* ${identifier^}AccountRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~{/\* ${identifier^}AccountRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s/\/\* ${identifier^}AccountRouteStart \*\/.*\/\* ${identifier^}AccountRouteEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~/\* ${identifier^}AccountRouteStart \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~/\* ${identifier^}AccountRouteEnd \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       # Server routes
-      sed -i "s/{\/\* ${identifier^}ServerRouteStart \*\/}.*{\/\* ${identifier^}ServerRouteEnd \*\/}//" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~{/\* ${identifier^}ServerRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~{/\* ${identifier^}ServerRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s/\/\* ${identifier^}ServerRouteStart \*\/.*\/\* ${identifier^}ServerRouteEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~/\* ${identifier^}ServerRouteStart \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s~/\* ${identifier^}ServerRouteEnd \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
     fi
 
     cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> $BLUEPRINT__DEBUG
@@ -808,14 +808,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
-            sed -i "s~{/\* \[routes] \*/}~{/* [routes] */}""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
+            sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
           elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # Server routes
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, permission: null, },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
-            sed -i "s~{/\* \[routes] \*/}~{/* [routes] */}""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
+            sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
           fi 
 
           # Clear variables after doing all route stuff for a defined route.
@@ -834,11 +834,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         sed -i "s~{/\* \[routes] \*/}~~g" $ServerRouteConstructor
 
         sed -i "s~\/\* blueprint\/import \*\/~/* blueprint/import */""$(tr '\n' '\001' <${ImportConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-        sed -i "s~{\/\* routes/account \*\/}~{/* routes/account */}""$(tr '\n' '\001' <${AccountRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-        sed -i "s~{\/\* routes/server \*\/}~{/* routes/server */}""$(tr '\n' '\001' <${ServerRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i "s~\/\* routes/account \*\/~/* routes/account */""$(tr '\n' '\001' <${AccountRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i "s~\/\* routes/server \*\/~/* routes/server */""$(tr '\n' '\001' <${ServerRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
         # Fix line breaks.
-        sed -i 's/\001/\n/g' "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i "s/\001/\n/g" "resources/scripts/blueprint/extends/routers/routes.ts"
         
         {
           rm "$ImportConstructor"
@@ -1341,13 +1341,13 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   sed -i "s~/\* ${identifier^}ImportStart \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
   sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
   # Account routes
-  sed -i "s/{\/\* ${identifier^}AccountRouteStart \*\/}.*{\/\* ${identifier^}AccountRouteEnd \*\/}//" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~{/\* ${identifier^}AccountRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~{/\* ${identifier^}AccountRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s/\/\* ${identifier^}AccountRouteStart \*\/.*\/\* ${identifier^}AccountRouteEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~/\* ${identifier^}AccountRouteStart \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~/\* ${identifier^}AccountRouteEnd \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
   # Server routes
-  sed -i "s/{\/\* ${identifier^}ServerRouteStart \*\/}.*{\/\* ${identifier^}ServerRouteEnd \*\/}//" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~{/\* ${identifier^}ServerRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~{/\* ${identifier^}ServerRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s/\/\* ${identifier^}ServerRouteStart \*\/.*\/\* ${identifier^}ServerRouteEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~/\* ${identifier^}ServerRouteStart \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i "s~/\* ${identifier^}ServerRouteEnd \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
   # Remove private folder
   PRINT INFO "Removing and unlinking private folder.."
