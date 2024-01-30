@@ -559,17 +559,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     # Remove custom routes to prevent duplicates.
     if [[ $DUPLICATE == "y" ]]; then
       # Route import
-      sed -n -i "/\/\* ${identifier^}ImportStart \*\//{p; :a; N; /\/\* ${identifier^}ImportEnd \*\//!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "s/\/\* ${identifier^}ImportStart \*\/.*\/\* ${identifier^}ImportEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~/\* ${identifier^}ImportStart \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
       # Account routes
-      sed -n -i "/{\/\* ${identifier^}AccountRouteStart \*\/}/{p; :a; N; /{\/\* ${identifier^}AccountRouteEnd \*\/}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "/{\/\* ${identifier^}AccountRouteStart \*\/}/,/{\/\* ${identifier^}AccountRouteEnd \*\/}/d" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}AccountRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}AccountRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
       # Server routes
-      sed -n -i "/{\/\* ${identifier^}ServerRouteStart \*\/}/{p; :a; N; /{\/\* ${identifier^}ServerRouteEnd \*\/}/!ba; s/.*\n//}; p" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i "/{\/\* ${identifier^}ServerRouteStart \*\/}/,/{\/\* ${identifier^}ServerRouteEnd \*\/}/d" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}ServerRouteStart \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
       sed -i "s~{/\* ${identifier^}ServerRouteEnd \*/}~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
     fi
