@@ -260,6 +260,49 @@ if [[ $1 != "-bash" ]]; then
 fi
 
 
+# help, -help, --help,
+# h,    -h,    --h
+if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) || 
+      ( $2 == "h" )    || ( $2 == "-h" )    || ( $2 == "--h" )    || ( $2 == "" ) ]]; then VCMD="y"
+
+  if dbValidate "blueprint.developerEnabled"; then
+    help_dev_status=""
+    help_dev_primary="\e[34;1m"
+    help_dev_secondary="\e[34m"
+  else 
+    help_dev_status=" (disabled)"
+    help_dev_primary="\x1b[2;1m"
+    help_dev_secondary="\x1b[2m"
+  fi
+
+  echo -e "
+\x1b[34;1mExtensions\x1b[0m\x1b[34m
+  -install [name]      -i  install/update a blueprint extension
+  -remove [name]       -r  remove a blueprint extension
+  \x1b[0m
+  
+${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
+  -init                -I  initialize development files
+  -build               -b  install/update your development files
+  -export (expose)     -e  export/download your development files
+  -wipe                -w  remove your development files
+  \x1b[0m
+  
+\x1b[34;1mMisc\x1b[0m\x1b[34m
+  -version             -v  returns the blueprint version
+  -help                -h  displays this menu
+  -info                -f  show neofetch-like information about blueprint
+  -debug [lines]           print given amount of debug lines
+  \x1b[0m
+  
+\x1b[34;1mAdvanced\x1b[0m\x1b[34m
+  -upgrade (dev)           update/reset to a newer/development version
+  -rerun-install           rerun the blueprint installation script
+  \x1b[0m
+  "
+fi
+
+
 # -i, -install
 if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $(( $# - 2 )) != 1 ]]; then PRINT FATAL "Expected 1 argument but got $(( $# - 2 )).";exit 2;fi
@@ -632,11 +675,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
           fi
 
           # remove components
-          sed -i "s~""${s}@/blueprint/extensions/${identifier}/$1${e}""~~g" "$co"/"$2"
-          sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
+          sed -i \
+            -e "s~""${s}@/blueprint/extensions/${identifier}/$1${e}""~~g" \
+            -e "s~""<${identifier^}Component />""~~g" \
+            "$co"/"$2"
           # add components
-          sed -i "s~""$im""~""${im}${s}@/blueprint/extensions/${identifier}/$1${e}""~g" "$co"/"$2"
-          sed -i "s~""$re""~""${re}\<${identifier^}Component /\>""~g" "$co"/"$2"
+          sed -i \
+            -e "s~""$im""~""${im}${s}@/blueprint/extensions/${identifier}/$1${e}""~g" \
+            -e "s~""$re""~""${re}\<${identifier^}Component /\>""~g" \
+            "$co"/"$2"
         fi
       }
 
@@ -839,9 +886,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         sed -i "s~/\* \[routes] \*/~~g" $AccountRouteConstructor
         sed -i "s~/\* \[routes] \*/~~g" $ServerRouteConstructor
 
-        sed -i "s~\/\* blueprint\/import \*\/~/* blueprint/import */""$(tr '\n' '\001' <${ImportConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-        sed -i "s~\/\* routes/account \*\/~/* routes/account */""$(tr '\n' '\001' <${AccountRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-        sed -i "s~\/\* routes/server \*\/~/* routes/server */""$(tr '\n' '\001' <${ServerRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i \
+          -e "s~\/\* blueprint\/import \*\/~/* blueprint/import */""$(tr '\n' '\001' <${ImportConstructor})""~g" \
+          -e "s~\/\* routes/account \*\/~/* routes/account */""$(tr '\n' '\001' <${AccountRouteConstructor})""~g" \
+          -e "s~\/\* routes/server \*\/~/* routes/server */""$(tr '\n' '\001' <${ServerRouteConstructor})""~g" \
+          "resources/scripts/blueprint/extends/routers/routes.ts"
 
         # Fix line breaks by removing all of them.
         sed -i -E "s~~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
@@ -878,13 +927,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Prepare build files.
   AdminControllerConstructor=".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"
-  AdminBuildConstructor=".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  AdminBladeConstructor=".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
   AdminRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
   AdminButtonConstructor=".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
 
   {
     if [[ $controller_type == "default" ]]; then cp ".blueprint/extensions/blueprint/private/build/extensions/controller.build" "$AdminControllerConstructor"; fi
-    cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" "$AdminBuildConstructor"
+    cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" "$AdminBladeConstructor"
     cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" "$AdminRouteConstructor"
     cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php" "$AdminButtonConstructor"
   } 2>> $BLUEPRINT__DEBUG;
@@ -948,45 +997,43 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   if [[ $ICON == *"~"* ]]; then        PRINT WARNING "'ICON' contains '~' and may result in an error.";fi
   if [[ $identifier == *"~"* ]]; then  PRINT WARNING "'identifier' contains '~' and may result in an error.";fi
 
-  # Replace $name variables.
-  sed -i "s~\[name\]~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-  sed -i "s~\[name\]~$name~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
+  # Construct admin button
+  sed -i \
+    -e "s~\[name\]~$name~g" \
+    -e "s~\[version\]~$version~g" \
+    -e "s~\[id\]~$identifier~g" \
+    "$AdminButtonConstructor"
 
-  # Replace $description variables.
-  sed -i "s~\[description\]~$description~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-
-  # Replace $version variables.
-  sed -i "s~\[version\]~$version~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-  sed -i "s~\[version\]~$version~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
-
-  # Replace $ICON variables.
-  sed -i "s~\[icon\]~$ICON~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-
-  # Replace $website variables.
+  # Construct admin view
+  sed -i \
+    -e "s~\[name\]~$name~g" \
+    -e "s~\[description\]~$description~g" \
+    -e "s~\[version\]~$version~g" \
+    -e "s~\[icon\]~$ICON~g" \
+    "$AdminBladeConstructor"
   if [[ $website != "" ]]; then
-    sed -i "s~\[website\]~$website~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-    sed -i "s~<!--\[web\] ~~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-    sed -i "s~ \[web\]-->~~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-    sed -i "s~\[webicon\]~$websiteiconclass~g" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+    sed -i \
+      -e "s~\[website\]~$website~g" \
+      -e "s~<!--\[web\] ~~g" \
+      -e "s~ \[web\]-->~~g" \
+      -e "s~\[webicon\]~$websiteiconclass~g" \
+      "$AdminBladeConstructor"
   fi
+  echo -e "$CONTENT\n@endsection" >> "$AdminBladeConstructor"
 
-  # Replace $identifier variables.
-  if [[ $controller_type == "default" ]]; then
-    sed -i "s~\[id\]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"
-  fi
-  sed -i "s~\[id\]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
-  sed -i "s~\[id\]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
+  # Construct admin route
+  sed -i "s~\[id\]~$identifier~g" "$AdminRouteConstructor"
 
-  # Place extension admin view content into template.
-  echo -e "$CONTENT\n@endsection" >> ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  # Construct admin controller
+  if [[ $controller_type == "default" ]]; then sed -i "s~\[id\]~$identifier~g" "$AdminControllerConstructor"; fi
 
 
   # Read final results.
-  ADMINVIEW_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak)
-  ADMINROUTE_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/route.php.bak)
-  ADMINBUTTON_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak)
+  ADMINVIEW_RESULT=$(<"$AdminBladeConstructor")
+  ADMINROUTE_RESULT=$(<"$AdminRouteConstructor")
+  ADMINBUTTON_RESULT=$(<"$AdminButtonConstructor")
   if [[ $controller_type == "default" ]]; then
-    ADMINCONTROLLER_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/controller.build.bak)
+    ADMINCONTROLLER_RESULT=$(<"$AdminControllerConstructor")
   fi
   ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
 
@@ -1064,9 +1111,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   PRINT INFO "Cleaning up build files.."
   if [[ $controller_type == "default" ]]; then rm ".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"; fi
   rm \
-    ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak" \
-    ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" \
-    ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
+    "$AdminBladeConstructor" \
+    "$AdminRouteConstructor" \
+    "$AdminButtonConstructor"
   rm -R ".blueprint/tmp/$n"
 
   if [[ $database_migrations != "" ]]; then
@@ -1212,8 +1259,10 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Remove admin routes
   PRINT INFO "Removing admin routes.."
   sed -n -i "/\/\/ $identifier:start/{p; :a; N; /\/\/ $identifier:stop/!ba; s/.*\n//}; p" "routes/admin.php"
-  sed -i "s~// $identifier:start~~g" "routes/admin.php"
-  sed -i "s~// $identifier:stop~~g" "routes/admin.php"
+  sed -i \
+    -e "s~// $identifier:start~~g" \
+    -e "s~// $identifier:stop~~g" \
+    "routes/admin.php"
   
   # Remove admin view
   PRINT INFO "Removing admin view directory.."
@@ -1234,16 +1283,20 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ $admin_wrapper != "" ]]; then 
     PRINT INFO "Removing admin wrapper.."
     sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
-    sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/layouts/admin.blade.php"
-    sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/layouts/admin.blade.php"
+    sed -i \
+      -e "s~<!--␀$identifier:start␀-->~~g" \
+      -e "s~<!--␀$identifier:stop␀-->~~g" \
+      "resources/views/layouts/admin.blade.php"
   fi
 
   # Remove dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then 
     PRINT INFO "Removing dashboard wrapper.."
     sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
-    sed -i "s~<!--␀$identifier:start␀-->~~g" "resources/views/templates/wrapper.blade.php"
-    sed -i "s~<!--␀$identifier:stop␀-->~~g" "resources/views/templates/wrapper.blade.php"
+    sed -i \
+      -e "s~<!--␀$identifier:start␀-->~~g" \
+      -e "s~<!--␀$identifier:stop␀-->~~g" \
+      "resources/views/templates/wrapper.blade.php"
   fi
 
   # Remove dashboard css
@@ -1267,8 +1320,10 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     REMOVE_REACT() {
       if [[ ! $1 == "" ]]; then
         # remove components
-        sed -i "s~""${s}@/blueprint/extensions/${identifier}/$1${e}""~~g" "$co"/"$2"
-        sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
+        sed -i \
+          -e "s~""${s}@/blueprint/extensions/${identifier}/$1${e}""~~g" \
+          -e "s~""<${identifier^}Component />""~~g" \
+          "$co"/"$2"
       fi
     }
 
@@ -1347,18 +1402,20 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove custom routes
   PRINT INFO "Unlinking navigation routes.."
-  # Route import
-  sed -i "s/\/\* ${identifier^}ImportStart \*\/.*\/\* ${identifier^}ImportEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~/\* ${identifier^}ImportStart \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-  # Account routes
-  sed -i "s/\/\* ${identifier^}AccountRouteStart \*\/.*\/\* ${identifier^}AccountRouteEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~/\* ${identifier^}AccountRouteStart \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~/\* ${identifier^}AccountRouteEnd \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-  # Server routes
-  sed -i "s/\/\* ${identifier^}ServerRouteStart \*\/.*\/\* ${identifier^}ServerRouteEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~/\* ${identifier^}ServerRouteStart \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-  sed -i "s~/\* ${identifier^}ServerRouteEnd \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+  sed -i \
+    -e "s/\/\* ${identifier^}ImportStart \*\/.*\/\* ${identifier^}ImportEnd \*\///" \
+    -e "s~/\* ${identifier^}ImportStart \*/~~g" \
+    -e "s~/\* ${identifier^}ImportEnd \*/~~g" \
+    \
+    -e "s/\/\* ${identifier^}AccountRouteStart \*\/.*\/\* ${identifier^}AccountRouteEnd \*\///" \
+    -e "s~/\* ${identifier^}AccountRouteStart \*~~g" \
+    -e "s~/\* ${identifier^}AccountRouteEnd \*~~g" \
+    \
+    -e "s/\/\* ${identifier^}ServerRouteStart \*\/.*\/\* ${identifier^}ServerRouteEnd \*\///" \
+    -e "s~/\* ${identifier^}ServerRouteStart \*~~g" \
+    -e "s~/\* ${identifier^}ServerRouteEnd \*~~g" \
+    \
+    "resources/scripts/blueprint/extends/routers/routes.ts"
 
   # Remove private folder
   PRINT INFO "Removing and unlinking private folder.."
@@ -1367,14 +1424,16 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Remove public folder
   if [[ $data_public != "" ]]; then 
     PRINT INFO "Removing and unlinking public folder.."
-    rm -R ".blueprint/extensions/$identifier/public"
-    rm -R "public/extensions/$identifier"
+    rm -R \
+      ".blueprint/extensions/$identifier/public" \
+      "public/extensions/$identifier"
   fi  
 
   # Remove assets folder
   PRINT INFO "Removing and unlinking assets folder.."
-  rm -R ".blueprint/extensions/$identifier/assets"
-  rm -R "public/assets/extensions/$identifier"
+  rm -R \
+    ".blueprint/extensions/$identifier/assets" \
+    "public/assets/extensions/$identifier"
 
   # Remove extension directory
   PRINT INFO "Removing extension folder.."
@@ -1405,53 +1464,11 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 fi
 
 
-# help, -help, --help,
-# h,    -h,    --h
-if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) || 
-      ( $2 == "h" )    || ( $2 == "-h" )    || ( $2 == "--h" )    || ( $2 == "" ) ]]; then VCMD="y"
-
-  if dbValidate "blueprint.developerEnabled"; then
-    help_dev_status=""
-    help_dev_primary="\e[34;1m"
-    help_dev_secondary="\e[34m"
-  else 
-    help_dev_status=" (disabled)"
-    help_dev_primary="\x1b[2;1m"
-    help_dev_secondary="\x1b[2m"
-  fi
-
-  echo -e "
-\x1b[34;1mExtensions\x1b[0m\x1b[34m
-  -install [name]      -i  install/update a blueprint extension
-  -remove [name]       -r  remove a blueprint extension
-  \x1b[0m
-  
-${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
-  -init                -I  initialize development files
-  -build               -b  install/update your development files
-  -export (expose)     -e  export/download your development files
-  -wipe                -w  remove your development files
-  \x1b[0m
-  
-\x1b[34;1mMisc\x1b[0m\x1b[34m
-  -version             -v  returns the blueprint version
-  -help                -h  displays this menu
-  -info                -f  show neofetch-like information about blueprint
-  -debug [lines]           print given amount of debug lines
-  \x1b[0m
-  
-\x1b[34;1mAdvanced\x1b[0m\x1b[34m
-  -upgrade (dev)           update/reset to a newer/development version
-  -rerun-install           rerun the blueprint installation script
-  \x1b[0m
-  "
-fi
-
-
 # -v, -version
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then VCMD="y"
   echo -e ${VERSION}
 fi
+
 
 # -debug
 if [[ $2 == "-debug" ]]; then VCMD="y"
@@ -1624,27 +1641,28 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   mkdir -p .blueprint/tmp/init
   cp -R .blueprint/extensions/blueprint/private/build/templates/"${tnum}"/contents/* .blueprint/tmp/init/
 
-  sed -i "s~␀name␀~${ASKNAME}~g" .blueprint/tmp/init/conf.yml; #NAME
-  sed -i "s~␀identifier␀~${ASKIDENTIFIER}~g" .blueprint/tmp/init/conf.yml; #IDENTIFIER
-  sed -i "s~␀description␀~${ASKDESCRIPTION}~g" .blueprint/tmp/init/conf.yml; #DESCRIPTION
-  sed -i "s~␀ver␀~${ASKVERSION}~g" .blueprint/tmp/init/conf.yml; #VERSION
-  sed -i "s~␀author␀~${ASKAUTHOR}~g" .blueprint/tmp/init/conf.yml; #AUTHOR
-  sed -i "s~␀version␀~${VERSION}~g" .blueprint/tmp/init/conf.yml #BLUEPRINT-VERSION
+  sed -i \
+    -e "s~␀name␀~${ASKNAME}~g" \
+    -e "s~␀identifier␀~${ASKIDENTIFIER}~g" \
+    -e "s~␀description␀~${ASKDESCRIPTION}~g" \
+    -e "s~␀ver␀~${ASKVERSION}~g" \
+    -e "s~␀author␀~${ASKAUTHOR}~g" \
+    -e "s~␀version␀~${VERSION}~g" \
+    ".blueprint/tmp/init/conf.yml"
 
   # Return files to folder.
   cp -R .blueprint/tmp/init/* .blueprint/dev/
 
   # Remove tmp files.
   PRINT INFO "Cleaning up build files.."
-  rm -R .blueprint/tmp
+  rm -R \
+    ".blueprint/tmp" \
+    ".blueprint/extensions/blueprint/private/build/templates/"*
   mkdir -p .blueprint/tmp
-
-  # Wipe templates from disk.
-  rm -R .blueprint/extensions/blueprint/private/build/templates/*
 
   sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
 
-  PRINT SUCCESS "Extension files initialized and exported to '.blueprint/dev'."
+  PRINT SUCCESS "Extension files initialized and imported to '.blueprint/dev'."
 fi
 
 
@@ -1679,7 +1697,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
 
   eval "$(parse_yaml dev/conf.yml conf_)"; identifier="${conf_info_identifier}"
 
-  cp -R dev/* tmp/
+  cp -r dev/* tmp/
   cd tmp || cdhalt
 
   # Assign variables to extension flags.
@@ -1740,11 +1758,14 @@ if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
   if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then PRINT INFO "Development files removal cancelled.";exit 1;fi
 
   PRINT INFO "Clearing development folder.."
-  rm -R .blueprint/dev/* 2>> $BLUEPRINT__DEBUG
-  rm -R .blueprint/dev/.* 2>> $BLUEPRINT__DEBUG
+  rm -R \
+    .blueprint/dev/* \
+    .blueprint/dev/.* \
+    2>> $BLUEPRINT__DEBUG
 
   PRINT SUCCESS "Development folder has been cleared."
 fi
+
 
 # -info
 if [[ ( $2 == "-info" || $2 == "-f" ) ]]; then VCMD="y"
@@ -1773,6 +1794,7 @@ if [[ ( $2 == "-info" || $2 == "-f" ) ]]; then VCMD="y"
   echo -e "\x1b[0m"
 fi
 
+
 # -rerun-install
 if [[ $2 == "-rerun-install" ]]; then VCMD="y"
   PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
@@ -1780,6 +1802,7 @@ if [[ $2 == "-rerun-install" ]]; then VCMD="y"
   cd ${FOLDER} || cdhalt
   bash blueprint.sh
 fi
+
 
 # -upgrade
 if [[ $2 == "-upgrade" ]]; then VCMD="y"
@@ -1837,10 +1860,11 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   fi
 
   cp -r main/* "$FOLDER"/
-  rm -r main
-  rm -r "$FOLDER"/.blueprint
+  rm -r  \
+    "main" \
+    "$FOLDER"/.blueprint \
+    "$FOLDER"/.tmp
   cd $FOLDER || cdhalt
-  rm -r "$FOLDER"/.tmp
 
   chmod +x blueprint.sh
   sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
@@ -1862,11 +1886,8 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   PRINT INFO "Validating update.."
   score=0
 
-  if dbValidate "blueprint.setupFinished"; then
-    score=$((score+1))
-  else
-    PRINT WARNING "'blueprint.setupFinished' could not be detected or found."
-  fi
+  if dbValidate "blueprint.setupFinished"; then score=$((score+1))
+  else PRINT WARNING "'blueprint.setupFinished' could not be detected or found."; fi
 
   # Finalize upgrade.
   if [[ ${score} == 1 ]]; then
