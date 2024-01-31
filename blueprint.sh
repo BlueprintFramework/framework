@@ -830,8 +830,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         done
 
         sed -i "s~/\* \[import] \*/~~g" $ImportConstructor
-        sed -i "s~{/\* \[routes] \*/}~~g" $AccountRouteConstructor
-        sed -i "s~{/\* \[routes] \*/}~~g" $ServerRouteConstructor
+        sed -i "s~/\* \[routes] \*/~~g" $AccountRouteConstructor
+        sed -i "s~/\* \[routes] \*/~~g" $ServerRouteConstructor
 
         sed -i "s~\/\* blueprint\/import \*\/~/* blueprint/import */""$(tr '\n' '\001' <${ImportConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
         sed -i "s~\/\* routes/account \*\/~/* routes/account */""$(tr '\n' '\001' <${AccountRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
