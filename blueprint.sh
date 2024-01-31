@@ -873,7 +873,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   # Prepare build files.
   cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak" 2>> $BLUEPRINT__DEBUG
   if [[ $controller_type == "default" ]]; then # use default controller when admin_controller is left blank
-    cp ".blueprint/extensions/blueprint/private/build/extensions/controller.php" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak" 2>> $BLUEPRINT__DEBUG
+    cp ".blueprint/extensions/blueprint/private/build/extensions/controller.build" ".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak" 2>> $BLUEPRINT__DEBUG
   fi
   cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" 2>> $BLUEPRINT__DEBUG
   cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" 2>> $BLUEPRINT__DEBUG
@@ -960,7 +960,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Replace $identifier variables.
   if [[ $controller_type == "default" ]]; then
-    sed -i "s~\[id\]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak"
+    sed -i "s~\[id\]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"
   fi
   sed -i "s~\[id\]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
   sed -i "s~\[id\]~$identifier~g" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
@@ -974,7 +974,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   ADMINROUTE_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/route.php.bak)
   ADMINBUTTON_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak)
   if [[ $controller_type == "default" ]]; then
-    ADMINCONTROLLER_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/controller.php.bak)
+    ADMINCONTROLLER_RESULT=$(<.blueprint/extensions/blueprint/private/build/extensions/controller.build.bak)
   fi
   ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
 
@@ -1052,7 +1052,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   PRINT INFO "Cleaning up build files.."
   rm ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
   if [[ $controller_type == "default" ]]; then
-    rm ".blueprint/extensions/blueprint/private/build/extensions/controller.php.bak"
+    rm ".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"
   fi
   rm ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
   rm ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
