@@ -459,30 +459,34 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
       for file in "$dir"/*; do
         if [ -f "$file" ]; then
           file=${file// /\\ }
-          sed -i "s~\^#version#\^~$version~g" "$file"
-          sed -i "s~\^#author#\^~$author~g" "$file"
-          sed -i "s~\^#name#\^~$name~g" "$file"
-          sed -i "s~\^#identifier#\^~$identifier~g" "$file"
-          sed -i "s~\^#path#\^~$FOLDER~g" "$file"
-          sed -i "s~\^#datapath#\^~$FOLDER/.blueprint/extensions/$identifier/private~g" "$file"
-          sed -i "s~\^#publicpath#\^~$EXTPUBDIR~g" "$file"
-          sed -i "s~\^#installmode#\^~$INSTALLMODE~g" "$file"
-          sed -i "s~\^#blueprintversion#\^~$VERSION~g" "$file"
-          sed -i "s~\^#timestamp#\^~$installation_timestamp~g" "$file"
-          sed -i "s~\^#componentroot#\^~@/blueprint/extensions/$identifier~g" "$file"
+          sed -i \
+            -e "s~\^#version#\^~$version~g" \
+            -e "s~\^#author#\^~$author~g" \
+            -e "s~\^#name#\^~$name~g" \
+            -e "s~\^#identifier#\^~$identifier~g" \
+            -e "s~\^#path#\^~$FOLDER~g" \
+            -e "s~\^#datapath#\^~$FOLDER/.blueprint/extensions/$identifier/private~g" \
+            -e "s~\^#publicpath#\^~$EXTPUBDIR~g" \
+            -e "s~\^#installmode#\^~$INSTALLMODE~g" \
+            -e "s~\^#blueprintversion#\^~$VERSION~g" \
+            -e "s~\^#timestamp#\^~$installation_timestamp~g" \
+            -e "s~\^#componentroot#\^~@/blueprint/extensions/$identifier~g" \
+            "$file"
 
           if ! $F_ignoreAlphabetPlaceholders; then
-            sed -i "s~__version__~$version~g" "$file"
-            sed -i "s~__author__~$author~g" "$file"
-            sed -i "s~__identifier__~$identifier~g" "$file"
-            sed -i "s~__name__~$name~g" "$file"
-            sed -i "s~__path__~$FOLDER~g" "$file"
-            sed -i "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" "$file"
-            sed -i "s~__publicpath__~$EXTPUBDIR~g" "$file"
-            sed -i "s~__installmode__~$INSTALLMODE~g" "$file"
-            sed -i "s~__blueprintversion__~$VERSION~g" "$file"
-            sed -i "s~__timestamp__~$installation_timestamp~g" "$file"
-            sed -i "s~__componentroot__~@/blueprint/extensions/$identifier~g" "$file"
+            sed -i \
+              -e "s~__version__~$version~g" \
+              -e "s~__author__~$author~g" \
+              -e "s~__identifier__~$identifier~g" \
+              -e "s~__name__~$name~g" \
+              -e "s~__path__~$FOLDER~g" \
+              -e "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" \
+              -e "s~__publicpath__~$EXTPUBDIR~g" \
+              -e "s~__installmode__~$INSTALLMODE~g" \
+              -e "s~__blueprintversion__~$VERSION~g" \
+              -e "s~__timestamp__~$installation_timestamp~g" \
+              -e "s~__componentroot__~@/blueprint/extensions/$identifier~g" \
+              "$file"
           fi
         elif [ -d "$file" ]; then
           PLACE_PLACEHOLDERS "$file"
@@ -558,18 +562,20 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
     # Remove custom routes to prevent duplicates.
     if [[ $DUPLICATE == "y" ]]; then
-      # Route import
-      sed -i "s/\/\* ${identifier^}ImportStart \*\/.*\/\* ${identifier^}ImportEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~/\* ${identifier^}ImportStart \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~/\* ${identifier^}ImportEnd \*/~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-      # Account routes
-      sed -i "s/\/\* ${identifier^}AccountRouteStart \*\/.*\/\* ${identifier^}AccountRouteEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~/\* ${identifier^}AccountRouteStart \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~/\* ${identifier^}AccountRouteEnd \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-      # Server routes
-      sed -i "s/\/\* ${identifier^}ServerRouteStart \*\/.*\/\* ${identifier^}ServerRouteEnd \*\///" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~/\* ${identifier^}ServerRouteStart \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
-      sed -i "s~/\* ${identifier^}ServerRouteEnd \*~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+      sed -i \
+        -e "s/\/\* ${identifier^}ImportStart \*\/.*\/\* ${identifier^}ImportEnd \*\///" \
+        -e "s~/\* ${identifier^}ImportStart \*/~~g" \
+        -e "s~/\* ${identifier^}ImportEnd \*/~~g" \
+        \
+        -e "s/\/\* ${identifier^}AccountRouteStart \*\/.*\/\* ${identifier^}AccountRouteEnd \*\///" \
+        -e "s~/\* ${identifier^}AccountRouteStart \*~~g" \
+        -e "s~/\* ${identifier^}AccountRouteEnd \*~~g" \
+        \
+        -e "s/\/\* ${identifier^}ServerRouteStart \*\/.*\/\* ${identifier^}ServerRouteEnd \*\///" \
+        -e "s~/\* ${identifier^}ServerRouteStart \*~~g" \
+        -e "s~/\* ${identifier^}ServerRouteEnd \*~~g" \
+        \
+        "resources/scripts/blueprint/extends/routers/routes.ts"
     fi
 
     cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> $BLUEPRINT__DEBUG
@@ -837,8 +843,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         sed -i "s~\/\* routes/account \*\/~/* routes/account */""$(tr '\n' '\001' <${AccountRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
         sed -i "s~\/\* routes/server \*\/~/* routes/server */""$(tr '\n' '\001' <${ServerRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
-        # Fix line breaks.
-        sed -i -E "s~~\n~g" "resources/scripts/blueprint/extends/routers/routes.ts"
+        # Fix line breaks by removing all of them.
+        sed -i -E "s~~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
         
         {
           rm "$ImportConstructor"
@@ -871,18 +877,24 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   # Prepare build files.
-  cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak" 2>> $BLUEPRINT__DEBUG
-  if [[ $controller_type == "default" ]]; then # use default controller when admin_controller is left blank
-    cp ".blueprint/extensions/blueprint/private/build/extensions/controller.build" ".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak" 2>> $BLUEPRINT__DEBUG
-  fi
-  cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" 2>> $BLUEPRINT__DEBUG
-  cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php" ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" 2>> $BLUEPRINT__DEBUG
+  AdminControllerConstructor=".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"
+  AdminBuildConstructor=".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
+  AdminRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
+  AdminButtonConstructor=".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
+
+  {
+    if [[ $controller_type == "default" ]]; then cp ".blueprint/extensions/blueprint/private/build/extensions/controller.build" "$AdminControllerConstructor"; fi
+    cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" "$AdminBuildConstructor"
+    cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" "$AdminRouteConstructor"
+    cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php" "$AdminButtonConstructor"
+  } 2>> $BLUEPRINT__DEBUG;
 
 
   # Start creating data directory.
   PRINT INFO "Cloning and linking private directory.."
-  mkdir -p ".blueprint/extensions/$identifier/private"
-  mkdir -p ".blueprint/extensions/$identifier/private/.store"
+  mkdir -p \
+    ".blueprint/extensions/$identifier/private" \
+    ".blueprint/extensions/$identifier/private/.store"
   
   if [[ $data_directory != "" ]]; then cp -R ".blueprint/tmp/$n/$data_directory/"* ".blueprint/extensions/$identifier/private/"; fi
 
@@ -1050,12 +1062,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # Remove temporary build files.
   PRINT INFO "Cleaning up build files.."
-  rm ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-  if [[ $controller_type == "default" ]]; then
-    rm ".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"
-  fi
-  rm ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
-  rm ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
+  if [[ $controller_type == "default" ]]; then rm ".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"; fi
+  rm \
+    ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak" \
+    ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" \
+    ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
   rm -R ".blueprint/tmp/$n"
 
   if [[ $database_migrations != "" ]]; then
