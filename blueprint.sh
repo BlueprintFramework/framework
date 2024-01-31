@@ -838,7 +838,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         sed -i "s~\/\* routes/server \*\/~/* routes/server */""$(tr '\n' '\001' <${ServerRouteConstructor})""~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
         # Fix line breaks.
-        sed -i "s/\001/\n/g" "resources/scripts/blueprint/extends/routers/routes.ts"
+        sed -i -E "s~~\n~g" "resources/scripts/blueprint/extends/routers/routes.ts"
         
         {
           rm "$ImportConstructor"
