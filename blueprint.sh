@@ -51,10 +51,10 @@ export NODE_OPTIONS=--openssl-legacy-provider
 cd $FOLDER || return
 
 # Import libraries.
-source .blueprint/lib/parse_yaml.sh               || missinglibs+="[parse_yaml]"
-source .blueprint/lib/grabenv.sh                  || missinglibs+="[grabenv]"
-source .blueprint/lib/logFormat.sh                || missinglibs+="[logFormat]"
-source .blueprint/lib/misc.sh                     || missinglibs+="[misc]"
+source .blueprint/lib/parse_yaml.sh || missinglibs+="[parse_yaml]"
+source .blueprint/lib/grabenv.sh    || missinglibs+="[grabenv]"
+source .blueprint/lib/logFormat.sh  || missinglibs+="[logFormat]"
+source .blueprint/lib/misc.sh       || missinglibs+="[misc]"
 
 
 # -config
@@ -168,10 +168,13 @@ assignflags() {
 
 
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
-touch /usr/local/bin/blueprint >> $BLUEPRINT__DEBUG
+{
+  touch /usr/local/bin/blueprint
+  chmod u+x \
+    $FOLDER/blueprint.sh \
+    /usr/local/bin/blueprint
+} >> $BLUEPRINT__DEBUG
 echo -e "#!/bin/bash\nbash $FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint
-chmod u+x $FOLDER/blueprint.sh >> $BLUEPRINT__DEBUG
-chmod u+x /usr/local/bin/blueprint >> $BLUEPRINT__DEBUG
 
 
 if [[ $1 != "-bash" ]]; then
@@ -231,9 +234,15 @@ if [[ $1 != "-bash" ]]; then
 
     # Make sure all files have correct permissions.
     PRINT INFO "Changing Pterodactyl file ownership to 'www-data'.."
-    chown -R www-data:www-data $FOLDER/* &
-    chown -R www-data:www-data $FOLDER/.blueprint/* &
-    wait
+    chown -R www-data:www-data \
+      $FOLDER/.blueprint/* \
+      $FOLDER/app/* \
+      $FOLDER/config/* \
+      $FOLDER/database/* \
+      $FOLDER/public/* \
+      $FOLDER/resources/* \
+      $FOLDER/routes/* \
+      $FOLDER/storage/*
 
     # Rebuild panel assets.
     PRINT INFO "Rebuilding panel assets.."
@@ -440,8 +449,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   # Assign variables to extension flags.
-  PRINT INFO "Reading and assigning extension flags.."
-  assignflags
+  if [[ $flags != "" ]]; then
+    PRINT INFO "Reading and assigning extension flags.."
+    assignflags
+  fi
 
   # Force http/https url scheme for extension website urls.
   if [[ $website != "" ]]; then
@@ -515,7 +526,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             -e "s~\^#timestamp#\^~$installation_timestamp~g" \
             -e "s~\^#componentroot#\^~@/blueprint/extensions/$identifier~g" \
             "$file"
-
           if ! $F_ignoreAlphabetPlaceholders; then
             sed -i \
               -e "s~__version__~$version~g" \
@@ -536,7 +546,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
         fi
       done
     }
-
     PLACE_PLACEHOLDERS "$DIR"
   fi
 
@@ -674,13 +683,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
             exit 1
           fi
 
-          # remove components
+          # Purge and add components.
           sed -i \
             -e "s~""${s}@/blueprint/extensions/${identifier}/$1${e}""~~g" \
             -e "s~""<${identifier^}Component />""~~g" \
-            "$co"/"$2"
-          # add components
-          sed -i \
+            \
             -e "s~""$im""~""${im}${s}@/blueprint/extensions/${identifier}/$1${e}""~g" \
             -e "s~""$re""~""${re}\<${identifier^}Component /\>""~g" \
             "$co"/"$2"
