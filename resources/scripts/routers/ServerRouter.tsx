@@ -69,8 +69,8 @@ export default () => {
                 <>
                     <CSSTransition timeout={150} classNames={'fade'} appear in>
                         <SubNavigation>
+                            <BeforeSubNavigation />
                             <div>
-                                <BeforeSubNavigation />
                                 <NavigationLinks />
                                 <AdditionalServerItems />
                                 {rootAdmin && (
@@ -79,8 +79,8 @@ export default () => {
                                         <FontAwesomeIcon icon={faExternalLinkAlt} />
                                     </a>
                                 )}
-                                <AfterSubNavigation />
                             </div>
+                            <AfterSubNavigation />
                         </SubNavigation>
                     </CSSTransition>
                     <InstallListener />

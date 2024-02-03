@@ -4,7 +4,7 @@ import React from 'react';
 
 interface ExtendedRouteDefinition { path: string; name: string | undefined; component: React.ComponentType; exact?: boolean; }
 interface ExtendedServerRouteDefinition extends ExtendedRouteDefinition { permission: string | string[] | null; }
-interface Routes { account: ExtendedRouteDefinition[]; server: ExtendedServerRouteDefinition[]; }
+interface ExtendedRoutes { account: ExtendedRouteDefinition[]; server: ExtendedServerRouteDefinition[]; }
 
 export default {
   account: [
@@ -13,4 +13,4 @@ export default {
   server: [
     /* routes/server */
   ],
-} as Routes;
+} as ExtendedRoutes;
