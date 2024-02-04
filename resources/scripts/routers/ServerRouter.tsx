@@ -17,7 +17,7 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router';
 import ConflictStateRenderer from '@/components/server/ConflictStateRenderer';
 
-import { NavigationLinks, NavigationRouter } from '@/blueprint/extends/routers/DashboardRouter';
+import { NavigationLinks, NavigationRouter } from '@/blueprint/extends/routers/ServerRouter';
 import BeforeSubNavigation                   from '@/blueprint/components/Navigation/SubNavigation/BeforeSubNavigation';
 import AdditionalServerItems                 from '@/blueprint/components/Navigation/SubNavigation/AdditionalServerItems';
 import AfterSubNavigation                    from '@/blueprint/components/Navigation/SubNavigation/AfterSubNavigation';
@@ -86,13 +86,7 @@ export default () => {
                     <InstallListener />
                     <TransferListener />
                     <WebsocketHandler />
-                    {inConflictState && (!rootAdmin || (rootAdmin && !location.pathname.endsWith(`/server/${id}`))) ? (
-                        <ConflictStateRenderer />
-                    ) : (
-                        <ErrorBoundary>
-                            <NavigationRouter />
-                        </ErrorBoundary>
-                    )}
+                    <NavigationRouter />
                 </>
             )}
         </React.Fragment>
