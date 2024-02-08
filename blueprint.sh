@@ -323,7 +323,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
 
   # The following code does some magic to allow for extensions with a
   # different root folder structure than expected by Blueprint.
-  if [[ $3 == "test␀" ]]; then
+  if [[ $3 == "[developer-build]" ]]; then
     dev=true
     n="dev"
     mkdir -p ".blueprint/tmp/dev"
@@ -1688,7 +1688,7 @@ if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
     exit 2
   fi
   PRINT INFO "Starting developer extension installation.."
-  blueprint -i test␀
+  blueprint -i "[developer-build]"
 fi
 
 
