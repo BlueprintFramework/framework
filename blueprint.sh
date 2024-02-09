@@ -421,8 +421,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
   fi
 
   # check if extension still has placeholder values
-  if [[ ( $name    == "␀name␀" ) || ( $identifier == "␀identifier␀" ) || ( $description == "␀description␀" ) ]] \
-  || [[ ( $version == "␀ver␀"  ) || ( $target     == "␀version␀"    ) || ( $author      == "␀author␀"      ) ]]; then
+  if [[ ( $name    == "[name]" ) || ( $identifier == "[identifier]" ) || ( $description == "[description]" ) ]] \
+  || [[ ( $version == "[ver]"  ) || ( $target     == "[version]"    ) || ( $author      == "[author]"      ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Extension contains placeholder values which need to be replaced."
     exit 1
@@ -1293,20 +1293,20 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Remove admin wrapper
   if [[ $admin_wrapper != "" ]]; then 
     PRINT INFO "Removing admin wrapper.."
-    sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
+    sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
     sed -i \
-      -e "s~<!--␀$identifier:start␀-->~~g" \
-      -e "s~<!--␀$identifier:stop␀-->~~g" \
+      -e "s~<!--@$identifier:s@-->~~g" \
+      -e "s~<!--@$identifier:e@-->~~g" \
       "resources/views/layouts/admin.blade.php"
   fi
 
   # Remove dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then 
     PRINT INFO "Removing dashboard wrapper.."
-    sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
+    sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
     sed -i \
-      -e "s~<!--␀$identifier:start␀-->~~g" \
-      -e "s~<!--␀$identifier:stop␀-->~~g" \
+      -e "s~<!--@$identifier:s@-->~~g" \
+      -e "s~<!--@$identifier:e@-->~~g" \
       "resources/views/templates/wrapper.blade.php"
   fi
 
@@ -1660,6 +1660,12 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     -e "s~␀ver␀~${ASKVERSION}~g" \
     -e "s~␀author␀~${ASKAUTHOR}~g" \
     -e "s~␀version␀~${VERSION}~g" \
+    -e "s~\[name\]~${ASKNAME}~g" \
+    -e "s~\[identifier\]~${ASKIDENTIFIER}~g" \
+    -e "s~\[description\]~${ASKDESCRIPTION}~g" \
+    -e "s~\[ver\]~${ASKVERSION}~g" \
+    -e "s~\[author\]~${ASKAUTHOR}~g" \
+    -e "s~\[version\]~${VERSION}~g" \
     ".blueprint/tmp/init/conf.yml"
 
   # Return files to folder.
