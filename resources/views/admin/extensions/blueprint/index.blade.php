@@ -30,7 +30,7 @@
 
     </div>
     <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-      <form action="" method="POST">
+      <form action="" method="POST" autocomplete="off">
         <div class="box">
           <div class="box-header with-border">
           <h3 class="box-title"><i class='bx bxs-cog' style='margin-right:5px;'></i>Configuration</h3>
