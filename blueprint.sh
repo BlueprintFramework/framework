@@ -1510,7 +1510,6 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     PRINT INPUT "Choose an extension template:"
     echo -e "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/repository' 2>> $BLUEPRINT__DEBUG)"
     read -r ASKTEMPLATE
-
     REDO_TEMPLATE=false
 
     # Template should not be empty
@@ -1518,24 +1517,19 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
       PRINT WARNING "Template should not be empty."
       REDO_TEMPLATE=true
     fi
-
     # Unknown template.
     if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/teamblueprint/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2>> $BLUEPRINT__DEBUG)") == "404: Not Found" ]]; then 
       PRINT WARNING "Unknown template, please choose a valid option."
       REDO_TEMPLATE=true
     fi
 
-    if [[ ${REDO_TEMPLATE} == true ]]; then
-      # Ask again if response does not pass validation.
-      ASKTEMPLATE=""
-      ask_template
-    fi
+    # Ask again if response does not pass validation.
+    if [[ ${REDO_TEMPLATE} == true ]]; then ASKTEMPLATE=""; ask_template; fi
   }
 
   ask_name() {
     PRINT INPUT "Name [SpaceInvaders]:"
     read -r ASKNAME
-
     REDO_NAME=false
 
     # Name should not be empty
@@ -1544,17 +1538,13 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
       REDO_NAME=true
     fi
 
-    if [[ ${REDO_NAME} == true ]]; then
-      # Ask again if response does not pass validation.
-      ASKNAME=""
-      ask_name
-    fi
+    # Ask again if response does not pass validation.
+    if [[ ${REDO_NAME} == true ]]; then ASKNAME=""; ask_name; fi
   }
 
   ask_identifier() {
     PRINT INPUT "Identifier [spaceinvaders]:"
     read -r ASKIDENTIFIER
-
     REDO_IDENTIFIER=false
 
     # Identifier should not be empty
@@ -1562,24 +1552,19 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
       PRINT WARNING "Identifier should not be empty."
       REDO_IDENTIFIER=true
     fi
-  
     # Identifier should be a-z.
     if ! [[ ${ASKIDENTIFIER} =~ [a-z] ]]; then
       PRINT WARNING "Identifier should only contain a-z characters."
       REDO_IDENTIFIER=true
     fi
 
-    if [[ ${REDO_IDENTIFIER} == true ]]; then
-      # Ask again if response does not pass validation.
-      ASKIDENTIFIER=""
-      ask_identifier
-    fi
+    # Ask again if response does not pass validation.
+    if [[ ${REDO_IDENTIFIER} == true ]]; then ASKIDENTIFIER=""; ask_identifier; fi
   }
 
   ask_description() {
     PRINT INPUT "Description [Shoot down space aliens!]:"
     read -r ASKDESCRIPTION
-
     REDO_DESCRIPTION=false
 
     # Description should not be empty
@@ -1587,18 +1572,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
       PRINT WARNING "Description should not be empty."
       REDO_DESCRIPTION=true
     fi
-
-    if [[ ${REDO_DESCRIPTION} == true ]]; then
-      # Ask again if response does not pass validation.
-      ASKDESCRIPTION=""
-      ask_description
-    fi
+    
+    # Ask again if response does not pass validation.
+    if [[ ${REDO_DESCRIPTION} == true ]]; then ASKDESCRIPTION=""; ask_description; fi
   }
 
   ask_version() {
     PRINT INPUT "Version [1.0]:"
     read -r ASKVERSION
-
     REDO_VERSION=false
 
     # Version should not be empty
@@ -1607,17 +1588,13 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
       REDO_VERSION=true
     fi
 
-    if [[ ${REDO_VERSION} == true ]]; then
-      # Ask again if response does not pass validation.
-      ASKVERSION=""
-      ask_version
-    fi
+    # Ask again if response does not pass validation.
+    if [[ ${REDO_VERSION} == true ]]; then ASKVERSION=""; ask_version; fi
   }
 
   ask_author() {
     PRINT INPUT "Author [byte]:"
     read -r ASKAUTHOR
-
     REDO_AUTHOR=false
 
     # Author should not be empty
@@ -1625,12 +1602,9 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
       PRINT WARNING "Author should not be empty."
       REDO_AUTHOR=true
     fi
-
-    if [[ ${REDO_AUTHOR} == true ]]; then
-      # Ask again if response does not pass validation.
-      ASKAUTHOR=""
-      ask_author
-    fi
+    
+    # Ask again if response does not pass validation.
+    if [[ ${REDO_AUTHOR} == true ]]; then ASKAUTHOR=""; ask_author; fi
   }
 
   ask_template
