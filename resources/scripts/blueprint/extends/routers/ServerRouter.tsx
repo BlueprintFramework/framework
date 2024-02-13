@@ -75,6 +75,7 @@ export const NavigationRouter = () => {
       <TransitionRouter>
         <Switch location={location}>
 
+          {/* Pterodactyl routes */}
           {routes.server.map(({ path, permission, component: Component }) => (
             <PermissionRoute key={path} permission={permission} path={to(path)} exact>
               <Spinner.Suspense>
@@ -83,6 +84,7 @@ export const NavigationRouter = () => {
             </PermissionRoute>
           ))}
 
+          {/* Blueprint routes */}
           {blueprintRoutes.server.map(({ path, permission, component: Component }) => (
             <PermissionRoute key={path} permission={permission} path={to(path)} exact>
               <Spinner.Suspense>
