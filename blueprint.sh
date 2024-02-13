@@ -217,6 +217,7 @@ if [[ $1 != "-bash" ]]; then
       php artisan view:clear
       php artisan config:clear
       php artisan route:cache
+      php artisan cache:clear
     } &>> $BLUEPRINT__DEBUG 
     updateCacheReminder
 
@@ -1151,6 +1152,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
     php artisan view:clear
     php artisan config:clear
     php artisan route:cache
+    php artisan cache:clear
   } &>> $BLUEPRINT__DEBUG 
 
   chown -R www-data:www-data "$FOLDER/.blueprint/extensions/$identifier/private"
@@ -1463,6 +1465,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     php artisan view:clear
     php artisan config:clear
     php artisan route:cache
+    php artisan cache:clear
   } &>> $BLUEPRINT__DEBUG 
   
   # Remove from installed list
