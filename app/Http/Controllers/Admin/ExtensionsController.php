@@ -12,36 +12,35 @@ use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdm
 
 class ExtensionsController extends Controller
 {
-    /**
-     * ExtensionsController constructor.
-     */
-    public function __construct(
-        private SoftwareVersionService $version,
-        private ViewFactory $view,
-        private BlueprintVariableService $bp,
-        private BlueprintExtensionLibrary $blueprint,
-        private BlueprintPlaceholderService $placeholder)
-    {
-    }
+  /**
+   * ExtensionsController constructor.
+   */
+  public function __construct(
+    private SoftwareVersionService $version,
+    private ViewFactory $view,
+    private BlueprintVariableService $bp,
+    private BlueprintExtensionLibrary $blueprint,
+    private BlueprintPlaceholderService $placeholder)
+  {
+  }
 
-    /**
-     * Return the admin index view.
-     */
-    public function index(): View
-    {
-        // Onboarding check.
-        if($this->blueprint->fileRead("{$this->placeholder->folder()}/.blueprint/extensions/blueprint/private/db/onboarding") == "*blueprint*") { 
-            $onboarding = true;
-        } else {
-            $onboarding = false;
-        }
-        return $this->view->make('admin.extensions', [
-            'version' => $this->version,
-            'bp' => $this->bp,
-            'blueprint' => $this->blueprint,
-            'root' => "/admin/extensions",
-
-            'onboarding' => $onboarding
-        ]);
+  /**
+   * Return the admin index view.
+   */
+  public function index(): View
+  {
+    // Onboarding check.
+    if($this->blueprint->fileRead("{$this->placeholder->folder()}/.blueprint/extensions/blueprint/private/db/onboarding") == "*blueprint*") { 
+      $onboarding = true;
+    } else {
+      $onboarding = false;
     }
+    return $this->view->make('admin.extensions', [
+      'version' => $this->version,
+      'bp' => $this->bp,
+      'blueprint' => $this->blueprint,
+      'onboarding' => $onboarding,
+      'root' => "/admin/extensions",
+    ]);
+  }
 }
