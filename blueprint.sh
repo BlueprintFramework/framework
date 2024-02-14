@@ -1070,7 +1070,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     { echo "
     // $identifier:start";
     echo "$ADMINROUTE_RESULT";
-    echo // "$identifier":stop; } >> "routes/admin.php"
+    echo // "$identifier":stop; } >> "routes/blueprint.php"
   else
     # Replace old extensions page button if extension is updating.
     OLDBUTTON_RESULT=$(<.blueprint/extensions/"$identifier"/private/.store/build/button.blade.php)
@@ -1273,11 +1273,11 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove admin routes
   PRINT INFO "Removing admin routes.."
-  sed -n -i "/\/\/ $identifier:start/{p; :a; N; /\/\/ $identifier:stop/!ba; s/.*\n//}; p" "routes/admin.php"
+  sed -n -i "/\/\/ $identifier:start/{p; :a; N; /\/\/ $identifier:stop/!ba; s/.*\n//}; p" "routes/blueprint.php"
   sed -i \
     -e "s~// $identifier:start~~g" \
     -e "s~// $identifier:stop~~g" \
-    "routes/admin.php"
+    "routes/blueprint.php"
   
   # Remove admin view
   PRINT INFO "Removing admin view directory.."
