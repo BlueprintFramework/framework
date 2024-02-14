@@ -21,7 +21,7 @@
       <!-- Overview -->
       <div class="box @if($versionLatest != $bp->version()) box-danger @else box-info @endif">
         <div class="box-header with-border">
-          <h3 class="box-title"><i class='bx bxs-shapes' style='margin-right:5px;'></i></i>Overview</h3>
+          <h3 class="box-title"><i class='bx bxs-shapes'></i> Overview</h3>
         </div>
         <div class="box-body">
           <p>You are currently using version <code>{{ $bp->version() }}</code>@if($versionLatest != $bp->version()) which is outdated. @else. @endif</p>
@@ -33,7 +33,7 @@
       <form action="" method="POST" autocomplete="off">
         <div class="box">
           <div class="box-header with-border">
-          <h3 class="box-title"><i class='bx bxs-cog' style='margin-right:5px;'></i>Configuration</h3>
+          <h3 class="box-title"><i class='bx bxs-cog'></i> Configuration</h3>
         </div>
         <div class="box-body">
           <div class="row">
