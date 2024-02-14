@@ -1082,17 +1082,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $dashboard_wrapper != "" ]]; then
     PRINT INFO "Cloning and injecting dashboard wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
-      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
+      sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/templates/wrapper.blade.php"
       sed -i \
-        -e "s~<!--␀$identifier:start␀-->~~g" \
-        -e "s~<!--␀$identifier:stop␀-->~~g" \
+        -e "s~<!--@$identifier:s@-->~~g" \
+        -e "s~<!--@$identifier:e@-->~~g" \
         "resources/views/templates/wrapper.blade.php"
     fi
     touch ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
-    cat <(echo "<!--␀$identifier:start␀-->") ".blueprint/tmp/$n/$dashboard_wrapper" > ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
+    cat <(echo "<!--@$identifier:s@-->") ".blueprint/tmp/$n/$dashboard_wrapper" > ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
     cp ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$dashboard_wrapper"
     rm ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
-    echo -e "\n<!--␀$identifier:stop␀-->" >> ".blueprint/tmp/$n/$dashboard_wrapper"
+    echo -e "\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$dashboard_wrapper"
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" "resources/views/templates/wrapper.blade.php"
   fi
 
@@ -1100,17 +1100,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $admin_wrapper != "" ]]; then
     PRINT INFO "Cloning and injecting admin wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
-      sed -n -i "/<!--␀$identifier:start␀-->/{p; :a; N; /<!--␀$identifier:stop␀-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
+      sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/layouts/admin.blade.php"
       sed -i \
-        -e "s~<!--␀$identifier:start␀-->~~g" \
-        -e "s~<!--␀$identifier:stop␀-->~~g" \
+        -e "s~<!--@$identifier:s@-->~~g" \
+        -e "s~<!--@$identifier:e@-->~~g" \
         "resources/views/layouts/admin.blade.php"
     fi
     touch ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
-    cat <(echo "<!--␀$identifier:start␀-->") ".blueprint/tmp/$n/$admin_wrapper" > ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
+    cat <(echo "<!--@$identifier:s@-->") ".blueprint/tmp/$n/$admin_wrapper" > ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
     cp ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$admin_wrapper"
     rm ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
-    echo -e "\n<!--␀$identifier:stop␀-->" >> ".blueprint/tmp/$n/$admin_wrapper"
+    echo -e "\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$admin_wrapper"
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" "resources/views/layouts/admin.blade.php"
   fi
 
