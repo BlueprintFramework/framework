@@ -287,34 +287,34 @@ if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ||
 
   echo -e "
 \x1b[34;1mExtensions\x1b[0m\x1b[34m
-  -install [name]      -i  install/update a blueprint extension
-  -remove [name]       -r  remove a blueprint extension
+  -install [name]   -add -i  install/update a blueprint extension
+  -remove [name]         -r  remove a blueprint extension
   \x1b[0m
   
 ${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
-  -init                -I  initialize development files
-  -build               -b  install/update your development files
-  -export (expose)     -e  export/download your development files
-  -wipe                -w  remove your development files
+  -init                  -I  initialize development files
+  -build                 -b  install/update your development files
+  -export (expose)       -e  export/download your development files
+  -wipe                  -w  remove your development files
   \x1b[0m
   
 \x1b[34;1mMisc\x1b[0m\x1b[34m
-  -version             -v  returns the blueprint version
-  -help                -h  displays this menu
-  -info                -f  show neofetch-like information about blueprint
-  -debug [lines]           print given amount of debug lines
+  -version               -v  returns the blueprint version
+  -help                  -h  displays this menu
+  -info                  -f  show neofetch-like information about blueprint
+  -debug [lines]             print given amount of debug lines
   \x1b[0m
   
 \x1b[34;1mAdvanced\x1b[0m\x1b[34m
-  -upgrade (dev)           update/reset to a newer/development version
-  -rerun-install           rerun the blueprint installation script
+  -upgrade (dev)             update/reset to a newer/development version
+  -rerun-install             rerun the blueprint installation script
   \x1b[0m
   "
 fi
 
 
-# -i, -install
-if [[ ( $2 == "-i" ) || ( $2 == "-install" ) ]]; then VCMD="y"
+# -i, -install, -add
+if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="y"
   if [[ $(( $# - 2 )) != 1 ]]; then PRINT FATAL "Expected 1 argument but got $(( $# - 2 )).";exit 2;fi
   if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";exit 2;fi
 
@@ -1616,7 +1616,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   tnum=${ASKTEMPLATE}
   PRINT INFO "Fetching templates.."
-  if [[ $(php artisan bp:latest) != "$VERSION" ]]; then PRINT WARNING "Installed Blueprint version is not latest, you might run into compatibility issues."; fi
+  if [[ $(php artisan bp:latest) != "$VERSION" ]]; then PRINT WARNING "Active Blueprint version is not latest, you might run into compatibility issues."; fi
   cd .blueprint/tmp || cdhalt
   git clone "https://github.com/teamblueprint/templates.git"
   cd ${FOLDER}/.blueprint || cdhalt
