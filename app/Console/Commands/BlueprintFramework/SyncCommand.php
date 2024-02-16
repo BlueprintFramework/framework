@@ -13,7 +13,7 @@ class SyncCommand extends Command
   protected $signature = 'bp:sync';
 
   /**
-   * TelemetryCommand constructor.
+   * SyncCommand constructor.
    */
   public function __construct(
     private BlueprintVariableService $bp,

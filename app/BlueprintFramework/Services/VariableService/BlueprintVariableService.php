@@ -26,33 +26,26 @@ class BlueprintVariableService
     return;
   }
 
-  public function latestVersion(): string {
-    $github_user = 'teamblueprint';
-    $github_repo = 'main';
-
-    $api_url = "https://api.github.com/repos/{$github_user}/{$github_repo}/releases/latest";
-
+  public function latest(): string {
+    $api_url = "http://api.blueprint.zip:50000/api/latest";
     $context = stream_context_create([
       'http' => [
         'method' => 'GET',
         'header' => 'User-Agent: BlueprintFramework',
       ],
     ]);
-
     $response = file_get_contents($api_url, false, $context);
-
     if ($response) {
       $cleaned_response = preg_replace('/[[:^print:]]/', '', $response);
-
       $data = json_decode($cleaned_response, true);
-      if (isset($data['tag_name'])) {
-        $latest_version = $data['tag_name'];
+      if (isset($data['name'])) {
+        $latest_version = $data['name'];
         return "$latest_version";
       } else {
-        return "Error: Unable to fetch the latest release version.";
+        return "Error";
       }
     } else {
-      return "Error: Failed to make the API request.";
+      return "Error";
     }
   }
 
