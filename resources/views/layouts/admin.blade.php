@@ -6,9 +6,12 @@
     $settings = app()->make('Pterodactyl\Contracts\Repository\SettingsRepositoryInterface');
     $blueprint = app()->make(BlueprintExtensionLibrary::class, ['settings' => $settings]);
 ?>
+@include("blueprint.admin.admin")
+
 <!DOCTYPE html>
 <html>
     <head>
+        @yield("blueprint.import")
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>{{ config('app.name', 'Pterodactyl') }} - @yield('title')</title>
@@ -36,10 +39,6 @@
             {!! Theme::css('css/pterodactyl.css?t={cache-version}') !!}
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-            <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-            <link rel="stylesheet" href="/assets/extensions/blueprint/admin.extensions.css">
-            <link rel="stylesheet" href="/assets/extensions/blueprint/blueprint.style.css">
 
             <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -48,28 +47,7 @@
         @show
     </head>
     <body class="hold-transition skin-blue fixed sidebar-mini">
-        <!-- Begin Blueprint cache-refresh requirement -->
-        <div 
-          id="I0TWHOPKAB-1"
-          class="I0TWHOPKAB-1"
-          style="
-            position: fixed;
-            bottom: 0px;
-            left: 0px;
-            background: rgb(23,23,23);
-            background: linear-gradient(180deg, rgba(23,23,23,1) 0%, rgba(8,8,8,1) 100%);
-            color: white;
-            padding: 0px 10px;
-            width: 100vw;
-            z-index: 6000001;
-            height: auto;"
-        >
-          <p style="font-size: 20px;">
-            <code style="background: none; border: none; color: white !important;">[<i style="margin-left:20px">.</i> <i style="margin-right:3px">.</i>]</code>
-            <code style="background: none; border: none;">Outdated stylesheets detected.</code>
-          </p>
-        </div>
-        <!-- End Blueprint cache-refresh requirement -->
+        @yield('blueprint.cache')
         <div class="wrapper">
             <header class="main-header">
                 <a href="{{ route('index') }}" class="logo">
@@ -90,10 +68,7 @@
                                     <span class="hidden-xs">{{ Auth::user()->name_first }} {{ Auth::user()->name_last }}</span>
                                 </a>
                             </li>
-                            <li>
-                                <!-- The puzzle icon in the admin panel to manage and configure your installed extensions. -->
-                                <li><a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions"><i class='fa fa-puzzle-piece <?php if($blueprint->fileRead("::f/.blueprint/extensions/blueprint/private/db/onboarding") == "true"){ echo "bx-flashing"; } ?>'></i></a></li>
-                            </li>
+                            @yield("blueprint.navigation")
                             <li>
                                 <li><a href="{{ route('index') }}" data-toggle="tooltip" data-placement="bottom" title="Exit Admin Control"><i class="fa fa-server"></i></a></li>
                             </li>
@@ -190,24 +165,6 @@
                         </div>
                     </div>
                     @yield('content')
-                    <?php
-
-                        // This might be further improved later.
-
-                        if($blueprint->fileRead("::f/.blueprint/extensions/blueprint/private/db/onboarding") == "true") {
-                            $blueprint->fileWipe("::f/.blueprint/extensions/blueprint/private/db/onboarding");
-                        }
-    
-                        $notification = $blueprint->dbGet("blueprint", "notification:text");
-                        if($notification != null) {
-                            echo "<div class=\"notification\">
-                            <p>".$notification."</p>
-                            </div>
-                            ";
-    
-                            $blueprint->dbSet("blueprint", "notification:text", "");
-                        }
-                    ?>
                 </section>
             </div>
             <footer class="main-footer">
@@ -266,6 +223,7 @@
                 })
             </script>
         @show
-        @include('partials.blueprint.admin.layout')
+        @yield('blueprint.notifications')
+        @yield('blueprint.extensions')
     </body>
 </html>

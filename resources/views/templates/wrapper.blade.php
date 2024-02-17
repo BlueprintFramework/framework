@@ -3,6 +3,8 @@
     $settings = app()->make('Pterodactyl\Contracts\Repository\SettingsRepositoryInterface');
     $blueprint = app()->make(BlueprintExtensionLibrary::class, ['settings' => $settings]);
 ?>
+@include('blueprint.dashboard.dashboard')
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -53,7 +55,7 @@
             @yield('container')
             @yield('below-container')
             
-            @include('partials.blueprint.dashboard.wrapper')
+            @yield('blueprint.extensions')
         @show
         @section('scripts')
             {!! $asset->js('main.js') !!}
