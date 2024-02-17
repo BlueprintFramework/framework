@@ -52,13 +52,8 @@
             @yield('above-container')
             @yield('container')
             @yield('below-container')
-
-            <!--
-                Blueprint extensions containing dashboard wrappers
-                will have their wrapper code injected here.
-            -->
-
-            <!-- wrapper:insert -->
+            
+            @include('partials.blueprint.dashboard.wrapper')
         @show
         @section('scripts')
             {!! $asset->js('main.js') !!}

@@ -266,6 +266,6 @@
                 })
             </script>
         @show
-        <!-- wrapper:insert -->
+        @include('partials.blueprint.admin.layout')
     </body>
 </html>
