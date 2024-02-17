@@ -2,9 +2,19 @@ import React from 'react';
 
 /* blueprint/import */
 
-interface ExtendedRouteDefinition { path: string; name: string | undefined; component: React.ComponentType; exact?: boolean; }
-interface ExtendedServerRouteDefinition extends ExtendedRouteDefinition { permission: string | string[] | null; }
-interface ExtendedRoutes { account: ExtendedRouteDefinition[]; server: ExtendedServerRouteDefinition[]; }
+interface RouteDefinition { 
+  path: string;
+  name: string | undefined;
+  component: React.ComponentType;
+  exact?: boolean;
+}
+interface ServerRouteDefinition extends RouteDefinition {
+  permission: string | string[] | null;
+}
+interface Routes {
+  account: RouteDefinition[];
+  server: ServerRouteDefinition[];
+}
 
 export default {
   account: [
@@ -13,4 +23,4 @@ export default {
   server: [
     /* routes/server */
   ],
-} as ExtendedRoutes;
+} as Routes;

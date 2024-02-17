@@ -40,7 +40,7 @@ export const NavigationLinks = () => {
         )}
 
       {/* Blueprint routes */}
-      {blueprintRoutes.server
+      {blueprintRoutes.server.length > 0 && blueprintRoutes.server
         .filter((route) => !!route.name)
         .map((route) =>
           route.permission ? (
@@ -85,7 +85,7 @@ export const NavigationRouter = () => {
           ))}
 
           {/* Blueprint routes */}
-          {blueprintRoutes.server.map(({ path, permission, component: Component }) => (
+          {blueprintRoutes.server.length > 0 && blueprintRoutes.server.map(({ path, permission, component: Component }) => (
             <PermissionRoute key={path} permission={permission} path={to(path)} exact>
               <Spinner.Suspense>
                 <Component />

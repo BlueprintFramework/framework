@@ -23,7 +23,7 @@ export const NavigationLinks = () => {
         ))}
 
       {/* Blueprint routes */}
-      {blueprintRoutes.account
+      {blueprintRoutes.account.length > 0 && blueprintRoutes.account
         .filter((route) => !!route.name)
         .map(({ path, name, exact = false }) => (
           <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
@@ -54,7 +54,7 @@ export const NavigationRouter = () => {
             ))}
 
             {/* Blueprint routes */}
-            {blueprintRoutes.account.map(({ path, component: Component }) => (
+            {blueprintRoutes.account.length > 0 && blueprintRoutes.account.map(({ path, component: Component }) => (
               <Route key={path} path={`/account/${path}`.replace('//', '/')} exact>
                 <Component />
               </Route>
