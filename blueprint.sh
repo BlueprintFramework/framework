@@ -1082,36 +1082,36 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $dashboard_wrapper != "" ]]; then
     PRINT INFO "Cloning and injecting dashboard wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
-      sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/partials/dashboard/dashboard.blade.php"
+      sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/blueprint/dashboard/dashboard.blade.php"
       sed -i \
         -e "s~<!--@$identifier:s@-->~~g" \
         -e "s~<!--@$identifier:e@-->~~g" \
-        "resources/views/partials/dashboard/dashboard.blade.php"
+        "resources/views/blueprint/dashboard/dashboard.blade.php"
     fi
     touch ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
     cat <(echo "<!--@$identifier:s@-->") ".blueprint/tmp/$n/$dashboard_wrapper" > ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
     cp ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$dashboard_wrapper"
     rm ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
     echo -e "\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$dashboard_wrapper"
-    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" "resources/views/partials/dashboard/dashboard.blade.php"
+    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" "resources/views/blueprint/dashboard/dashboard.blade.php"
   fi
 
   # Place admin wrapper
   if [[ $admin_wrapper != "" ]]; then
     PRINT INFO "Cloning and injecting admin wrapper.."
     if [[ $DUPLICATE == "y" ]]; then
-      sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/partials/admin/admin.blade.php"
+      sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/blueprint/admin/admin.blade.php"
       sed -i \
         -e "s~<!--@$identifier:s@-->~~g" \
         -e "s~<!--@$identifier:e@-->~~g" \
-        "resources/views/partials/admin/admin.blade.php"
+        "resources/views/blueprint/admin/admin.blade.php"
     fi
     touch ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
     cat <(echo "<!--@$identifier:s@-->") ".blueprint/tmp/$n/$admin_wrapper" > ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
     cp ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$admin_wrapper"
     rm ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
     echo -e "\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$admin_wrapper"
-    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" "resources/views/partials/admin/admin.blade.php"
+    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" "resources/views/blueprint/admin/admin.blade.php"
   fi
 
   # Create backup of generated values.
@@ -1297,21 +1297,21 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Remove admin wrapper
   if [[ $admin_wrapper != "" ]]; then 
     PRINT INFO "Removing admin wrapper.."
-    sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/partials/admin/admin.blade.php"
+    sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/blueprint/admin/admin.blade.php"
     sed -i \
       -e "s~<!--@$identifier:s@-->~~g" \
       -e "s~<!--@$identifier:e@-->~~g" \
-      "resources/views/partials/admin/admin.blade.php"
+      "resources/views/blueprint/admin/admin.blade.php"
   fi
 
   # Remove dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then 
     PRINT INFO "Removing dashboard wrapper.."
-    sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/partials/dashboard/dashboard.blade.php"
+    sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/blueprint/dashboard/dashboard.blade.php"
     sed -i \
       -e "s~<!--@$identifier:s@-->~~g" \
       -e "s~<!--@$identifier:e@-->~~g" \
-      "resources/views/partials/dashboard/dashboard.blade.php"
+      "resources/views/blueprint/dashboard/dashboard.blade.php"
   fi
 
   # Remove dashboard css
