@@ -247,7 +247,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Rebuild panel assets.
     PRINT INFO "Rebuilding panel assets.."
-    yarn run build:production
+    yarn run build:production --progress
 
     # Put application into production.
     PRINT INFO "Put application into production."
@@ -1458,7 +1458,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   # Rebuild panel
   if [[ $YARN == "y" ]]; then
     PRINT INFO "Rebuilding panel assets.."
-    yarn run build:production
+    yarn run build:production --progress 
   fi
 
   # Flush cache.
