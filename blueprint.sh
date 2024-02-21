@@ -1242,7 +1242,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   PRINT INPUT "Do you want to proceed with this transaction? Some files might not be removed properly. (y/N)"
   read -r YN
-  if [[ ( $YN == "n"* ) || ( $YN == "N"* ) || ( $YN == "" ) ]]; then PRINT INFO "Extension removal cancelled.";exit 1;fi
+  if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then  PRINT INFO "Extension removal cancelled.";exit 1;fi
 
   PRINT INFO "Searching and validating framework dependencies.."
   depend
