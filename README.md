@@ -38,7 +38,8 @@ Want your name, website or company listed here? [Sponsor **prplwtf** on GitHub](
 [sp11rum](https://github.com/sp11rum) - contributor\
 [phedona](https://github.com/Phedona) - contributor\
 [codixer](https://github.com/Codixer) - contributor\
-[slimi1](https://github.com/Slimi1) - contributor
+[slimi1](https://github.com/Slimi1) - contributor\
+[david1117dev](https://github.com/david1117dev) - contributor
 
 <br/>
 
