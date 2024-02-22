@@ -9,7 +9,7 @@
   FOLDER="/var/www/pterodactyl" #;
 
 # If the version below does not match your downloaded version, please let us know.
-  VERSION="alpha-SLX"
+  VERSION="beta-316A3"
 
 
 
