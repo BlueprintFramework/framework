@@ -59,7 +59,7 @@ tag[blue] {background-color:#288afb;}
 .extension-btn-text {font-size: 20px;margin:0;text-align:left;}
 .extension-btn-version {font-size: 11px;text-align:left;margin:0;}
 .extension-btn {background-color:#00000030;color:#cad1d8;border-color:#00000000;height:calc(65px + 14px);padding-top:7px;padding-bottom:7px;overflow:hidden;vertical-align:center;transition:background-color .2s;}
-.extension-btn:hover {background-color:#00000035;color:#cad1d8;border-color:#00000000;}
+.extension-btn:hover, .extension-btn:active, .extension-btn:focus {background-color:#00000035;color:#cad1d8 !important;border-color:#00000000;}
 
 .byte-img {
   width: 100px;
