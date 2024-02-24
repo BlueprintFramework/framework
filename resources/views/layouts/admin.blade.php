@@ -11,7 +11,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        @yield("blueprint.import")
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>{{ config('app.name', 'Pterodactyl') }} - @yield('title')</title>
@@ -45,6 +44,8 @@
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
             <![endif]-->
         @show
+
+        @yield("blueprint.import")
     </head>
     <body class="hold-transition skin-blue fixed sidebar-mini">
         @yield('blueprint.cache')
