@@ -8,6 +8,9 @@
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="/var/www/pterodactyl" #;
 
+# This stores the webserver ownership user which Blueprint uses when applying webserver permissions.
+  OWNERSHIP="www-data:www-data" #;
+
 # If the version below does not match your downloaded version, please let us know.
   VERSION="beta-316A3"
 
@@ -235,7 +238,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Make sure all files have correct permissions.
     PRINT INFO "Changing Pterodactyl file ownership to 'www-data'.."
-    chown -R www-data:www-data \
+    chown -R $OWNERSHIP \
       $FOLDER/.blueprint/* \
       $FOLDER/app/* \
       $FOLDER/config/* \
@@ -1155,7 +1158,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     php artisan cache:clear
   } &>> $BLUEPRINT__DEBUG 
 
-  chown -R www-data:www-data "$FOLDER/.blueprint/extensions/$identifier/private"
+  chown -R $OWNERSHIP "$FOLDER/.blueprint/extensions/$identifier/private"
   chmod --silent -R +x ".blueprint/extensions/"* 2>> $BLUEPRINT__DEBUG
 
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
@@ -1865,6 +1868,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
 
   chmod +x blueprint.sh
   sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
+  sed -i -E "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" $FOLDER/blueprint.sh
   mv $FOLDER/blueprint $FOLDER/.blueprint;
   bash blueprint.sh --post-upgrade
 
