@@ -37,7 +37,8 @@ export const NavigationLinks = () => {
               {route.name}
             </NavLink>
           )
-        )}
+        )
+      }
 
       {/* Blueprint routes */}
       {blueprintRoutes.server.length > 0 && blueprintRoutes.server
@@ -54,7 +55,8 @@ export const NavigationLinks = () => {
               {route.name}
             </NavLink>
           )
-        )}
+        )
+      }
 
     </>
   );

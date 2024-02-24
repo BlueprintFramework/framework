@@ -5,11 +5,13 @@ import { NotFound } from '@/components/elements/ScreenBlock';
 import TransitionRouter from '@/TransitionRouter';
 import DashboardContainer from '@/components/dashboard/DashboardContainer';
 import Spinner from '@/components/elements/Spinner';
+import { useStoreState } from 'easy-peasy';
 
 import routes from '@/routers/routes';
 import blueprintRoutes from './routes';
 
 export const NavigationLinks = () => {
+  const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
   return (
     <>
 
@@ -20,16 +22,19 @@ export const NavigationLinks = () => {
           <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
             {name}
           </NavLink>
-        ))}
+        ))
+      }
 
       {/* Blueprint routes */}
       {blueprintRoutes.account.length > 0 && blueprintRoutes.account
         .filter((route) => !!route.name)
+        .filter((route) => route.admin ? rootAdmin : true)
         .map(({ path, name, exact = false }) => (
           <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
             {name}
           </NavLink>
-        ))}
+        ))
+      }
 
     </>
   );

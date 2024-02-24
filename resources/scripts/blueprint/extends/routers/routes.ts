@@ -7,6 +7,7 @@ interface RouteDefinition {
   name: string | undefined;
   component: React.ComponentType;
   exact?: boolean;
+  admin: boolean | false;
 }
 interface ServerRouteDefinition extends RouteDefinition {
   permission: string | string[] | null;

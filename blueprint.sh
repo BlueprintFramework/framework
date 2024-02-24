@@ -796,6 +796,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Type" ]]; then COMPONENTS_ROUTE_TYPE="${!child}"; fi
             # Route component
             if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Component" ]]; then COMPONENTS_ROUTE_COMP="${!child}"; fi
+            # Route admin
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Admin" ]]; then COMPONENTS_ROUTE_ADMI="${!child}"; fi
           done
 
           # Route identifier
@@ -864,12 +866,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             exit 1
           fi
 
+          # Assign value to ROUTE_ADMI if empty
+          if [[ $COMPONENTS_ROUTE_ADMI != "true" ]]; then
+            COMPONENTS_ROUTE_ADMI="false"
+          fi
+
 
           # Apply routes.
           if [[ $COMPONENTS_ROUTE_TYPE == "account" ]]; then
             # Account routes
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
-            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, },"
+            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, admin: $COMPONENTS_ROUTE_ADMI },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
             sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
