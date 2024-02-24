@@ -28,7 +28,7 @@ export const NavigationLinks = () => {
       {/* Blueprint routes */}
       {blueprintRoutes.account.length > 0 && blueprintRoutes.account
         .filter((route) => !!route.name)
-        .filter((route) => route.admin ? rootAdmin : true)
+        .filter((route) => route.adminOnly ? rootAdmin : true)
         .map(({ path, name, exact = false }) => (
           <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
             {name}
@@ -42,6 +42,7 @@ export const NavigationLinks = () => {
 
 export const NavigationRouter = () => {
   const location = useLocation();
+  const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
   return (
     <>
       <TransitionRouter>
@@ -59,11 +60,14 @@ export const NavigationRouter = () => {
             ))}
 
             {/* Blueprint routes */}
-            {blueprintRoutes.account.length > 0 && blueprintRoutes.account.map(({ path, component: Component }) => (
-              <Route key={path} path={`/account/${path}`.replace('//', '/')} exact>
-                <Component />
-              </Route>
-            ))}
+            {blueprintRoutes.account.length > 0 && blueprintRoutes.account
+              .filter((route) => route.adminOnly ? rootAdmin : true)
+              .map(({ path, component: Component }) => (
+                <Route key={path} path={`/account/${path}`.replace('//', '/')} exact>
+                  <Component />
+                </Route>
+              ))
+            }
             
             <Route path={'*'}>
               <NotFound />

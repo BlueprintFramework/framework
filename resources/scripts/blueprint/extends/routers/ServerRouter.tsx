@@ -6,11 +6,13 @@ import Can from '@/components/elements/Can';
 import Spinner from '@/components/elements/Spinner';
 import { NotFound } from '@/components/elements/ScreenBlock';
 import { useLocation } from 'react-router';
+import { useStoreState } from 'easy-peasy';
 
 import routes from '@/routers/routes';
 import blueprintRoutes from './routes';
 
 export const NavigationLinks = () => {
+  const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
   const match = useRouteMatch<{ id: string }>();
   const to = (value: string, url = false) => {
     if (value === '/') {
@@ -43,6 +45,7 @@ export const NavigationLinks = () => {
       {/* Blueprint routes */}
       {blueprintRoutes.server.length > 0 && blueprintRoutes.server
         .filter((route) => !!route.name)
+        .filter((route) => route.adminOnly ? rootAdmin : true)
         .map((route) =>
           route.permission ? (
             <Can key={route.path} action={route.permission} matchAny>
@@ -63,6 +66,7 @@ export const NavigationLinks = () => {
 };
 
 export const NavigationRouter = () => {
+  const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
   const match = useRouteMatch<{ id: string }>();
   const to = (value: string, url = false) => {
     if (value === '/') {
@@ -87,13 +91,16 @@ export const NavigationRouter = () => {
           ))}
 
           {/* Blueprint routes */}
-          {blueprintRoutes.server.length > 0 && blueprintRoutes.server.map(({ path, permission, component: Component }) => (
-            <PermissionRoute key={path} permission={permission} path={to(path)} exact>
-              <Spinner.Suspense>
-                <Component />
-              </Spinner.Suspense>
-            </PermissionRoute>
-          ))}
+          {blueprintRoutes.server.length > 0 && blueprintRoutes.server
+            .filter((route) => route.adminOnly ? rootAdmin : true)
+            .map(({ path, permission, component: Component }) => (
+              <PermissionRoute key={path} permission={permission} path={to(path)} exact>
+                <Spinner.Suspense>
+                  <Component />
+                </Spinner.Suspense>
+              </PermissionRoute>
+            ))
+          }
 
           <Route path={'*'} component={NotFound} />
         </Switch>

@@ -237,7 +237,7 @@ if [[ $1 != "-bash" ]]; then
     fi
 
     # Make sure all files have correct permissions.
-    PRINT INFO "Changing Pterodactyl file ownership to 'www-data'.."
+    PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
     chown -R $OWNERSHIP \
       $FOLDER/.blueprint/* \
       $FOLDER/app/* \
@@ -797,7 +797,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             # Route component
             if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Component" ]]; then COMPONENTS_ROUTE_COMP="${!child}"; fi
             # Route admin
-            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Admin" ]]; then COMPONENTS_ROUTE_ADMI="${!child}"; fi
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_AdminOnly" ]]; then COMPONENTS_ROUTE_ADMI="${!child}"; fi
           done
 
           # Route identifier
@@ -876,14 +876,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           if [[ $COMPONENTS_ROUTE_TYPE == "account" ]]; then
             # Account routes
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
-            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, admin: $COMPONENTS_ROUTE_ADMI },"
+            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
             sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
           elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # Server routes
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
-            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', permission: null, name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, },"
+            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', permission: null, name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
             sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
@@ -1540,14 +1540,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_name() {
-    PRINT INPUT "Name [SpaceInvaders]:"
+    INPUT_DEFAULT="SpaceInvaders"
+    PRINT INPUT "Name [$INPUT_DEFAULT]:"
     read -r ASKNAME
     REDO_NAME=false
 
     # Name should not be empty
     if [[ ${ASKNAME} == "" ]]; then 
-      PRINT WARNING "Name should not be empty."
-      REDO_NAME=true
+      ASKNAME="$INPUT_DEFAULT"
     fi
 
     # Ask again if response does not pass validation.
@@ -1555,14 +1555,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_identifier() {
-    PRINT INPUT "Identifier [spaceinvaders]:"
+    INPUT_DEFAULT="spaceinvaders"
+    PRINT INPUT "Identifier [$INPUT_DEFAULT]:"
     read -r ASKIDENTIFIER
     REDO_IDENTIFIER=false
 
     # Identifier should not be empty
     if [[ ${ASKIDENTIFIER} == "" ]]; then
-      PRINT WARNING "Identifier should not be empty."
-      REDO_IDENTIFIER=true
+      ASKIDENTIFIER="$INPUT_DEFAULT"
     fi
     # Identifier should be a-z.
     if ! [[ ${ASKIDENTIFIER} =~ [a-z] ]]; then
@@ -1575,14 +1575,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_description() {
-    PRINT INPUT "Description [Shoot down space aliens!]:"
+    INPUT_DEFAULT="Shoot down space aliens!"
+    PRINT INPUT "Description [$INPUT_DEFAULT]:"
     read -r ASKDESCRIPTION
     REDO_DESCRIPTION=false
 
     # Description should not be empty
     if [[ ${ASKDESCRIPTION} == "" ]]; then
-      PRINT WARNING "Description should not be empty."
-      REDO_DESCRIPTION=true
+      ASKDESCRIPTION="$INPUT_DEFAULT"
     fi
     
     # Ask again if response does not pass validation.
@@ -1590,14 +1590,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_version() {
-    PRINT INPUT "Version [1.0]:"
+    INPUT_DEFAULT="1.0"
+    PRINT INPUT "Version [$INPUT_DEFAULT]:"
     read -r ASKVERSION
     REDO_VERSION=false
 
     # Version should not be empty
     if [[ ${ASKVERSION} == "" ]]; then
-      PRINT WARNING "Version should not be empty."
-      REDO_VERSION=true
+      ASKVERSION="$INPUT_DEFAULT"
     fi
 
     # Ask again if response does not pass validation.
@@ -1605,14 +1605,14 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   }
 
   ask_author() {
-    PRINT INPUT "Author [byte]:"
+    INPUT_DEFAULT="byte"
+    PRINT INPUT "Author [$INPUT_DEFAULT]:"
     read -r ASKAUTHOR
     REDO_AUTHOR=false
 
     # Author should not be empty
     if [[ ${ASKAUTHOR} == "" ]]; then
-      PRINT WARNING "Author should not be empty."
-      REDO_AUTHOR=true
+      ASKAUTHOR="$INPUT_DEFAULT"
     fi
     
     # Ask again if response does not pass validation.
