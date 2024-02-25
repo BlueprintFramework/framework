@@ -857,8 +857,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           fi
 
           # Return error if routes are defined incorrectly.
-          if [[ $COMPONENTS_ROUTE_NAME == "" ]] \
-          || [[ $COMPONENTS_ROUTE_PATH == "" ]] \
+          if [[ $COMPONENTS_ROUTE_PATH == "" ]] \
           || [[ $COMPONENTS_ROUTE_TYPE == "" ]] \
           || [[ $COMPONENTS_ROUTE_COMP == "" ]]; then
             rm -R ".blueprint/tmp/$n"
