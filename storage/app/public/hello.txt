@@ -1,2 +1,1 @@
-Believe it or not, most panels actually don't have their filesystem linked correctly. This file aims to fix that.
-We might even utilize the storage folder in the future.
+Might be utilized in the future.
