@@ -1162,6 +1162,19 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       yarn run build:production --progress
     fi
   fi
+  
+  # Make sure all files have correct permissions.
+  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+  chown -R $OWNERSHIP \
+    $FOLDER/.blueprint \
+    $FOLDER/app \
+    $FOLDER/bootstrap \
+    $FOLDER/config \
+    $FOLDER/database \
+    $FOLDER/public \
+    $FOLDER/resources \
+    $FOLDER/routes \
+    $FOLDER/storage
 
   # Flush cache.
   PRINT INFO "Flushing view, config and route cache.."
@@ -1192,19 +1205,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       echo -e "\e[0m\x1b[0m\033[0m"
     fi
   fi
-
-  # Make sure all files have correct permissions.
-  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-  chown -R $OWNERSHIP \
-    $FOLDER/.blueprint \
-    $FOLDER/app \
-    $FOLDER/bootstrap \
-    $FOLDER/config \
-    $FOLDER/database \
-    $FOLDER/public \
-    $FOLDER/resources \
-    $FOLDER/routes \
-    $FOLDER/storage
 
   if [[ $DUPLICATE != "y" ]]; then
     PRINT INFO "Adding '$identifier' to active extensions list.."
@@ -1490,6 +1490,19 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     PRINT INFO "Rebuilding panel assets.."
     yarn run build:production --progress 
   fi
+
+  # Make sure all files have correct permissions.
+  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+  chown -R $OWNERSHIP \
+    $FOLDER/.blueprint \
+    $FOLDER/app \
+    $FOLDER/bootstrap \
+    $FOLDER/config \
+    $FOLDER/database \
+    $FOLDER/public \
+    $FOLDER/resources \
+    $FOLDER/routes \
+    $FOLDER/storage
 
   # Flush cache.
   PRINT INFO "Flushing view, config and route cache.."
