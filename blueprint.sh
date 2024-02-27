@@ -982,15 +982,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$identifier" 2>> $BLUEPRINT__DEBUG
   cd $FOLDER || cdhalt
   
+  ICON_EXT="jpg"
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
     icnNUM=$(( 1 + RANDOM % 5 ))
-    cp ".blueprint/assets/defaultExtensionLogo$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.jpg"
+    cp ".blueprint/assets/defaultExtensionLogo$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
   else
-    cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.jpg"
+    if [[ $icon == *".svg" ]]; then ICON_EXT='svg'; fi
+    if [[ $icon == *".png" ]]; then ICON_EXT='png'; fi
+    if [[ $icon == *".gif" ]]; then ICON_EXT='gif'; fi
+    if [[ $icon == *".jpeg" ]]; then ICON_EXT='jpeg'; fi
+    if [[ $icon == *".webp" ]]; then ICON_EXT='webp'; fi
+    cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
   fi;
-  ICON="/assets/extensions/$identifier/icon.jpg"
+  ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
   CONTENT=$(cat .blueprint/tmp/"$n"/"$admin_view")
 
   if [[ $admin_css != "" ]]; then
@@ -1020,6 +1026,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     -e "s~\[name\]~$name~g" \
     -e "s~\[version\]~$version~g" \
     -e "s~\[id\]~$identifier~g" \
+    -e "s~\[icon\]~$ICON~g" \
     "$AdminButtonConstructor"
 
   # Construct admin view
