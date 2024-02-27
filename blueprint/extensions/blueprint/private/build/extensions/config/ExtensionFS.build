@@ -1,0 +1,1 @@
+/* [id^]Start */ 'blueprint:[id]' => [ 'driver' => 'local', 'root' => storage_path('extensions/[id]'), 'url' => env('APP_URL') . '/storage/extensions/[id]', 'visibility' => 'public', 'throw' => false, ], /* [id^]End */

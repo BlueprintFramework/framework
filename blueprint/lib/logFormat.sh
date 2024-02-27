@@ -18,7 +18,8 @@ PRINT() {
   if [[ $TYPE == "FATAL"   ]]; then PRIMARY=$(tput setaf 1); fi
   if [[ $TYPE == "SUCCESS" ]]; then PRIMARY=$(tput setaf 2); fi
   if [[ $TYPE == "INPUT"   ]]; then PRIMARY=$(tput setaf 5); fi
+  if [[ $TYPE == "DEBUG"   ]]; then PRIMARY="$SECONDARY"; fi
 
-  echo -e "${BOLD}${SECONDARY}$DATE${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE"
+  if [[ $TYPE != "DEBUG" ]]; then echo -e "${BOLD}${SECONDARY}$DATE${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE"; fi
   echo -e "${BOLD}${SECONDARY}$DATEDEBUG${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE" >> "$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
 }

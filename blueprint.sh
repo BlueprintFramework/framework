@@ -49,6 +49,8 @@ export BLUEPRINT__FOLDER=$FOLDER
 export BLUEPRINT__VERSION=$VERSION
 export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
 export NODE_OPTIONS=--openssl-legacy-provider
+# Write internal variables.
+__BuildDir=".blueprint/extensions/blueprint/private/build"
 
 # Automatically navigate to the Pterodactyl directory when running the core.
 cd $FOLDER || return
@@ -217,8 +219,8 @@ if [[ $1 != "-bash" ]]; then
     # Flush cache.
     PRINT INFO "Flushing view, config and route cache.."
     {
-      php artisan view:clear
-      php artisan config:clear
+      php artisan view:cache
+      php artisan config:cache
       php artisan route:cache
       php artisan cache:clear
     } &>> $BLUEPRINT__DEBUG 
@@ -787,14 +789,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       if [[ $Components_Navigation_Routes_ != "" ]]; then
         PRINT INFO "Linking navigation routes.."
 
-        ImportConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/importConstructor.bak"
-        AccountRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/accountRouteConstructor.bak"
-        ServerRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/routes/serverRouteConstructor.bak"
+        ImportConstructor="$__BuildDir/extensions/routes/importConstructor.bak"
+        AccountRouteConstructor="$__BuildDir/extensions/routes/accountRouteConstructor.bak"
+        ServerRouteConstructor="$__BuildDir/extensions/routes/serverRouteConstructor.bak"
         
         {
-          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/importConstructor" "$ImportConstructor"
-          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/accountRouteConstructor" "$AccountRouteConstructor"
-          cp ".blueprint/extensions/blueprint/private/build/extensions/routes/serverRouteConstructor" "$ServerRouteConstructor"
+          cp "$__BuildDir/extensions/routes/importConstructor" "$ImportConstructor"
+          cp "$__BuildDir/extensions/routes/accountRouteConstructor" "$AccountRouteConstructor"
+          cp "$__BuildDir/extensions/routes/serverRouteConstructor" "$ServerRouteConstructor"
         } 2>> $BLUEPRINT__DEBUG
 
         sed -i "s~\[id\^]~""${identifier^}""~g" $ImportConstructor
@@ -959,16 +961,18 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   fi
 
   # Prepare build files.
-  AdminControllerConstructor=".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"
-  AdminBladeConstructor=".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php.bak"
-  AdminRouteConstructor=".blueprint/extensions/blueprint/private/build/extensions/route.php.bak"
-  AdminButtonConstructor=".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak"
+  AdminControllerConstructor="$__BuildDir/extensions/controller.build.bak"
+  AdminBladeConstructor="$__BuildDir/extensions/admin.blade.php.bak"
+  AdminRouteConstructor="$__BuildDir/extensions/route.php.bak"
+  AdminButtonConstructor="$__BuildDir/extensions/button.blade.php.bak"
+  ConfigExtensionFS="$__BuildDir/extensions/config/ExtensionFS.build.bak"
 
   {
-    if [[ $controller_type == "default" ]]; then cp ".blueprint/extensions/blueprint/private/build/extensions/controller.build" "$AdminControllerConstructor"; fi
-    cp ".blueprint/extensions/blueprint/private/build/extensions/admin.blade.php" "$AdminBladeConstructor"
-    cp ".blueprint/extensions/blueprint/private/build/extensions/route.php" "$AdminRouteConstructor"
-    cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php" "$AdminButtonConstructor"
+    if [[ $controller_type == "default" ]]; then cp "$__BuildDir/extensions/controller.build" "$AdminControllerConstructor"; fi
+    cp "$__BuildDir/extensions/admin.blade.php" "$AdminBladeConstructor"
+    cp "$__BuildDir/extensions/route.php" "$AdminRouteConstructor"
+    cp "$__BuildDir/extensions/button.blade.php" "$AdminButtonConstructor"
+    cp "$__BuildDir/extensions/config/ExtensionFS.build" "$ConfigExtensionFS"
   } 2>> $BLUEPRINT__DEBUG;
 
 
@@ -1067,14 +1071,18 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   # Construct admin controller
   if [[ $controller_type == "default" ]]; then sed -i "s~\[id\]~$identifier~g" "$AdminControllerConstructor"; fi
 
+  # Construct ExtensionFS
+  sed -i \
+    -e "s~\[id\]~$identifier~g" \
+    -e "s~\[id\^\]~${identifier^}~g" \
+    "$ConfigExtensionFS"
 
   # Read final results.
   ADMINVIEW_RESULT=$(<"$AdminBladeConstructor")
   ADMINROUTE_RESULT=$(<"$AdminRouteConstructor")
   ADMINBUTTON_RESULT=$(<"$AdminButtonConstructor")
-  if [[ $controller_type == "default" ]]; then
-    ADMINCONTROLLER_RESULT=$(<"$AdminControllerConstructor")
-  fi
+  if [[ $controller_type == "default" ]]; then ADMINCONTROLLER_RESULT=$(<"$AdminControllerConstructor"); fi
+  CONFIGEXTENSIONFS_RESULT=$(<"$ConfigExtensionFS")
   ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
 
   # Place admin extension view.
@@ -1146,18 +1154,36 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" "resources/views/blueprint/admin/admin.blade.php"
   fi
 
+  # Create extension filesystem (ExtensionFS)
+  PRINT INFO "Creating and linking extension filesystem.."
+  mkdir -p ".blueprint/extensions/$identifier/fs"
+  ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/fs "$FOLDER/storage/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+  ln -s -T $FOLDER/storage/extensions/"$identifier" "$FOLDER/public/fs/$identifier" 2>> $BLUEPRINT__DEBUG
+  if [[ $DUPLICATE == "y" ]]; then
+    sed -i \
+      -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
+      -e "s~/\* ${identifier^}Start \*/~~g" \
+      -e "s~/\* ${identifier^}End \*/~~g" \
+      "config/ExtensionFS.php"
+  fi
+  sed -i "s~\/\* blueprint/disks \*\/~/* blueprint/disks */$CONFIGEXTENSIONFS_RESULT~g" config/ExtensionFS.php
+
   # Create backup of generated values.
-  mkdir -p ".blueprint/extensions/$identifier/private/.store/build"
-  cp ".blueprint/extensions/blueprint/private/build/extensions/button.blade.php.bak" ".blueprint/extensions/$identifier/private/.store/build/button.blade.php"
-  cp ".blueprint/extensions/blueprint/private/build/extensions/route.php.bak" ".blueprint/extensions/$identifier/private/.store/build/route.php"
+  mkdir -p \
+    ".blueprint/extensions/$identifier/private/.store/build" \
+    ".blueprint/extensions/$identifier/private/.store/build/config"
+  cp "$__BuildDir/extensions/button.blade.php.bak" ".blueprint/extensions/$identifier/private/.store/build/button.blade.php"
+  cp "$__BuildDir/extensions/route.php.bak" ".blueprint/extensions/$identifier/private/.store/build/route.php"
+  cp "$__BuildDir/extensions/config/ExtensionFS.build.bak" ".blueprint/extensions/$identifier/private/.store/build/config/ExtensionFS.build"
 
   # Remove temporary build files.
   PRINT INFO "Cleaning up build files.."
-  if [[ $controller_type == "default" ]]; then rm ".blueprint/extensions/blueprint/private/build/extensions/controller.build.bak"; fi
+  if [[ $controller_type == "default" ]]; then rm "$__BuildDir/extensions/controller.build.bak"; fi
   rm \
     "$AdminBladeConstructor" \
     "$AdminRouteConstructor" \
-    "$AdminButtonConstructor"
+    "$AdminButtonConstructor" \
+    "$ConfigExtensionFS"
   rm -R ".blueprint/tmp/$n"
 
   if [[ $database_migrations != "" ]]; then
@@ -1190,12 +1216,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     $FOLDER/resources \
     $FOLDER/routes \
     $FOLDER/storage
+  
+  # Link filesystems
+  PRINT INFO "Linking filesystems.."
+  php artisan storage:link &>> $BLUEPRINT__DEBUG
 
   # Flush cache.
   PRINT INFO "Flushing view, config and route cache.."
   {
-    php artisan view:clear
-    php artisan config:clear
+    php artisan view:cache
+    php artisan config:cache
     php artisan route:cache
     php artisan cache:clear
   } &>> $BLUEPRINT__DEBUG 
@@ -1505,6 +1535,18 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   rm -R \
     ".blueprint/extensions/$identifier/assets" \
     "public/assets/extensions/$identifier"
+  
+  # Remove extension filesystem (ExtensionFS)
+  PRINT INFO "Removing and unlinking extension filesystem.."
+  rm -r \
+    ".blueprint/extensions/$identifier/fs" \
+    "storage/extensions/sysautomation" \
+    "storage/extensions"
+  sed -i \
+    -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
+    -e "s~/\* ${identifier^}Start \*/~~g" \
+    -e "s~/\* ${identifier^}End \*/~~g" \
+    "config/ExtensionFS.php"
 
   # Remove extension directory
   PRINT INFO "Removing extension folder.."
@@ -1528,12 +1570,16 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     $FOLDER/resources \
     $FOLDER/routes \
     $FOLDER/storage
+  
+  # Link filesystems
+  PRINT INFO "Linking filesystems.."
+  php artisan storage:link &>> $BLUEPRINT__DEBUG
 
   # Flush cache.
   PRINT INFO "Flushing view, config and route cache.."
   {
-    php artisan view:clear
-    php artisan config:clear
+    php artisan view:cache
+    php artisan config:cache
     php artisan route:cache
     php artisan cache:clear
   } &>> $BLUEPRINT__DEBUG 
@@ -1694,11 +1740,11 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   rm -R tmp/templates
   cd ${FOLDER} || cdhalt
 
-  eval "$(parse_yaml .blueprint/extensions/blueprint/private/build/templates/"${tnum}"/TemplateConfiguration.yml t_)"
+  eval "$(parse_yaml $__BuildDir/templates/"${tnum}"/TemplateConfiguration.yml t_)"
 
   PRINT INFO "Building template.."
   mkdir -p .blueprint/tmp/init
-  cp -R .blueprint/extensions/blueprint/private/build/templates/"${tnum}"/contents/* .blueprint/tmp/init/
+  cp -R $__BuildDir/templates/"${tnum}"/contents/* .blueprint/tmp/init/
 
   sed -i \
     -e "s~␀name␀~${ASKNAME}~g" \
@@ -1722,7 +1768,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   PRINT INFO "Cleaning up build files.."
   rm -R \
     ".blueprint/tmp" \
-    ".blueprint/extensions/blueprint/private/build/templates/"*
+    "$__BuildDir/templates/"*
   mkdir -p .blueprint/tmp
 
   sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
