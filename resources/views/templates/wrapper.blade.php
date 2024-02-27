@@ -55,7 +55,7 @@
             @yield('container')
             @yield('below-container')
             
-            @yield('blueprint.extensions')
+            @yield('blueprint.wrappers')
         @show
         @section('scripts')
             {!! $asset->js('main.js') !!}

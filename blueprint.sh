@@ -395,6 +395,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   data_directory="$conf_data_directory"; #(optional)
   data_public="$conf_data_public"; #(optional)
+  data_views="$conf_data_views"; #(optional)
 
   database_migrations="$conf_database_migrations"; #(optional)
   
@@ -409,6 +410,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   || [[ ( $dashboard_components == "/"* ) || ( $dashboard_components == *"/.."* ) || ( $dashboard_components == *"../"* ) || ( $dashboard_components == *"/../"* ) || ( $dashboard_components == *"~"* ) || ( $dashboard_components == *"\n"* ) ]] \
   || [[ ( $data_directory       == "/"* ) || ( $data_directory       == *"/.."* ) || ( $data_directory       == *"../"* ) || ( $data_directory       == *"/../"* ) || ( $data_directory       == *"~"* ) || ( $data_directory       == *"\n"* ) ]] \
   || [[ ( $data_public          == "/"* ) || ( $data_public          == *"/.."* ) || ( $data_public          == *"../"* ) || ( $data_public          == *"/../"* ) || ( $data_public          == *"~"* ) || ( $data_public          == *"\n"* ) ]] \
+  || [[ ( $data_views           == "/"* ) || ( $data_views           == *"/.."* ) || ( $data_views           == *"../"* ) || ( $data_views           == *"/../"* ) || ( $data_views           == *"~"* ) || ( $data_views           == *"\n"* ) ]] \
   || [[ ( $database_migrations  == "/"* ) || ( $database_migrations  == *"/.."* ) || ( $database_migrations  == *"../"* ) || ( $database_migrations  == *"/../"* ) || ( $database_migrations  == *"~"* ) || ( $database_migrations  == *"\n"* ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Config file paths cannot escape the extension bundle."
@@ -416,10 +418,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   fi
 
   # prevent potentional problems during installation due to wrongly defined folders
-  if [[ ( $dashboard_components == *"/" ) || 
-        ( $data_directory == *"/"       ) || 
-        ( $data_public == *"/"          ) || 
-        ( $database_migrations == *"/"  ) ]]; then
+  if [[ ( $dashboard_components == *"/" ) ]] \
+  || [[ ( $data_directory == *"/"       ) ]] \
+  || [[ ( $data_public == *"/"          ) ]] \
+  || [[ ( $database_migrations == *"/"  ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Directory paths in conf.yml should not end with a slash."
     exit 1
@@ -457,9 +459,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   PRINT INFO "Reading and assigning extension flags.."
   assignflags
 
-  # Force http/https url scheme for extension website urls.
+  # Force http/https url scheme for extension website urls when needed.
   if [[ $website != "" ]]; then
-    if [[ ( $website != "https://"* ) && ( $website != "http://"* ) ]]; then
+    if [[ ( $website != "https://"* ) && ( $website != "http://"* ) ]] \
+    && [[ ( $website != "/"*        ) && ( $website != "."*       ) ]]; then
       website="http://${conf_info_website}"
       conf_info_website="${website}"
     fi
@@ -469,31 +472,31 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     websiteiconclass="bx-link-external"
 
     # git
-    if [[ $website == *"://github.com/"*        ]] || [[ $website == *"://www.github.com/"*        ]] ||
-       [[ $website == *"://github.com"          ]] || [[ $website == *"://www.github.com"          ]] ||
-       [[ $website == *"://gitlab.com/"*        ]] || [[ $website == *"://www.gitlab.com/"*        ]] ||
-       [[ $website == *"://gitlab.com"          ]] || [[ $website == *"://www.gitlab.com"          ]]; then websiteiconclass="bx-git-branch";fi
+    if [[ $website == *"://github.com/"*        ]] || [[ $website == *"://www.github.com/"*        ]] \
+    || [[ $website == *"://github.com"          ]] || [[ $website == *"://www.github.com"          ]] \
+    || [[ $website == *"://gitlab.com/"*        ]] || [[ $website == *"://www.gitlab.com/"*        ]] \
+    || [[ $website == *"://gitlab.com"          ]] || [[ $website == *"://www.gitlab.com"          ]]; then websiteiconclass="bx-git-branch";fi
     # marketplaces
-    if [[ $website == *"://sourcexchange.net/"* ]] || [[ $website == *"://www.sourcexchange.net/"* ]] ||
-       [[ $website == *"://sourcexchange.net"   ]] || [[ $website == *"://www.sourcexchange.net"   ]] ||
-       [[ $website == *"://builtbybit.com/"*    ]] || [[ $website == *"://www.builtbybit.com/"*    ]] ||
-       [[ $website == *"://builtbybit.com"      ]] || [[ $website == *"://www.builtbybit.com"      ]] ||
-       [[ $website == *"://builtbyb.it/"*       ]] || [[ $website == *"://www.builtbyb.it/"*       ]] ||
-       [[ $website == *"://builtbyb.it"         ]] || [[ $website == *"://www.builtbyb.it"         ]]; then websiteiconclass="bx-store";fi
+    if [[ $website == *"://sourcexchange.net/"* ]] || [[ $website == *"://www.sourcexchange.net/"* ]] \
+    || [[ $website == *"://sourcexchange.net"   ]] || [[ $website == *"://www.sourcexchange.net"   ]] \
+    || [[ $website == *"://builtbybit.com/"*    ]] || [[ $website == *"://www.builtbybit.com/"*    ]] \
+    || [[ $website == *"://builtbybit.com"      ]] || [[ $website == *"://www.builtbybit.com"      ]] \
+    || [[ $website == *"://builtbyb.it/"*       ]] || [[ $website == *"://www.builtbyb.it/"*       ]] \
+    || [[ $website == *"://builtbyb.it"         ]] || [[ $website == *"://www.builtbyb.it"         ]]; then websiteiconclass="bx-store";fi
     # discord
-    if [[ $website == *"://discord.com/"*       ]] || [[ $website == *"://www.discord.com/"*       ]] ||
-       [[ $website == *"://discord.com"         ]] || [[ $website == *"://www.discord.com"         ]] ||
-       [[ $website == *"://discord.gg/"*        ]] || [[ $website == *"://www.discord.gg/"*        ]] ||
-       [[ $website == *"://discord.gg"          ]] || [[ $website == *"://www.discord.gg"          ]]; then websiteiconclass="bxl-discord-alt";fi
+    if [[ $website == *"://discord.com/"*       ]] || [[ $website == *"://www.discord.com/"*       ]] \
+    || [[ $website == *"://discord.com"         ]] || [[ $website == *"://www.discord.com"         ]] \
+    || [[ $website == *"://discord.gg/"*        ]] || [[ $website == *"://www.discord.gg/"*        ]] \
+    || [[ $website == *"://discord.gg"          ]] || [[ $website == *"://www.discord.gg"          ]]; then websiteiconclass="bxl-discord-alt";fi
     # patreon
-    if [[ $website == *"://patreon.com/"*       ]] || [[ $website == *"://www.patreon.com/"*       ]] ||
-       [[ $website == *"://patreon.com"         ]] || [[ $website == *"://www.patreon.com"         ]]; then websiteiconclass="bxl-patreon";fi
+    if [[ $website == *"://patreon.com/"*       ]] || [[ $website == *"://www.patreon.com/"*       ]] \
+    || [[ $website == *"://patreon.com"         ]] || [[ $website == *"://www.patreon.com"         ]]; then websiteiconclass="bxl-patreon";fi
     # reddit
-    if [[ $website == *"://reddit.com/"*        ]] || [[ $website == *"://www.reddit.com/"*        ]] ||
-       [[ $website == *"://reddit.com"          ]] || [[ $website == *"://www.reddit.com"          ]]; then websiteiconclass="bxl-reddit";fi
+    if [[ $website == *"://reddit.com/"*        ]] || [[ $website == *"://www.reddit.com/"*        ]] \
+    || [[ $website == *"://reddit.com"          ]] || [[ $website == *"://www.reddit.com"          ]]; then websiteiconclass="bxl-reddit";fi
     # trello
-    if [[ $website == *"://trello.com/"*        ]] || [[ $website == *"://www.trello.com/"*        ]] ||
-       [[ $website == *"://trello.com"          ]] || [[ $website == *"://www.trello.com"          ]]; then websiteiconclass="bxl-trello";fi
+    if [[ $website == *"://trello.com/"*        ]] || [[ $website == *"://www.trello.com/"*        ]] \
+    || [[ $website == *"://trello.com"          ]] || [[ $website == *"://www.trello.com"          ]]; then websiteiconclass="bxl-trello";fi
   fi
 
   if [[ $dev == true ]]; then
@@ -576,7 +579,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
      [[ ( ! -d ".blueprint/tmp/$n/$dashboard_components" ) && ( ${dashboard_components} != "" ) ]] ||    # folder: dashboard_components (optional)
      [[ ( ! -d ".blueprint/tmp/$n/$data_directory"       ) && ( ${data_directory} != ""       ) ]] ||    # folder: data_directory       (optional)
      [[ ( ! -d ".blueprint/tmp/$n/$data_public"          ) && ( ${data_public} != ""          ) ]] ||    # folder: data_public          (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$data_migrations"      ) && ( ${data_migrations} != ""      ) ]];then  # folder: data_migrations      (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$data_views"           ) && ( ${data_views} != ""           ) ]] ||    # folder: data_views           (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$database_migrations"  ) && ( ${database_migrations} != ""  ) ]];then  # folder: database_migrations  (optional)
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Extension configuration points towards one or more files that do not exist."
     exit 1
@@ -590,9 +594,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       exit 1
     fi
 
-    if [[ $F_hasInstallScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/install.sh" ]] ||
-       [[ $F_hasRemovalScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/remove.sh"  ]] ||
-       [[ $F_hasExportScript  == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/export.sh"  ]]; then
+    if [[ $F_hasInstallScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/install.sh" ]] \
+    || [[ $F_hasRemovalScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/remove.sh"  ]] \
+    || [[ $F_hasExportScript  == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/export.sh"  ]]; then
       rm -R ".blueprint/tmp/$n"
       PRINT FATAL "Install/Remove/Export script could not be found or detected, even though enabled."
       exit 1
@@ -603,6 +607,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $database_migrations != "" ]]; then
     PRINT INFO "Cloning database migration files.."
     cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2>> $BLUEPRINT__DEBUG
+  fi
+
+  # Place views directory.
+  if [[ $data_views != "" ]]; then
+    PRINT INFO "Cloning and linking views directory.."
+    mkdir -p ".blueprint/extensions/$identifier/views"
+    cp -R ".blueprint/tmp/$n/$data_views/"* ".blueprint/extensions/$identifier/views/" 2>> $BLUEPRINT__DEBUG
+
+    cd $FOLDER/resources/views/blueprint/extensions || cdhalt
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/views "$identifier" 2>> $BLUEPRINT__DEBUG
+    cd $FOLDER || cdhalt
   fi
 
   # Create, link and connect components directory.
@@ -1262,6 +1277,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     data_directory="$conf_data_directory"; #(optional)
     data_public="$conf_data_public"; #(optional)
+    data_views="$conf_data_views"; #(optional)
 
     database_migrations="$conf_database_migrations"; #(optional)
   else 
@@ -1441,8 +1457,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     REMOVE_REACT "$Components_Account_SSH_BeforeContent" "Account/SSH/BeforeContent.tsx"
     REMOVE_REACT "$Components_Account_SSH_AfterContent" "Account/SSH/AfterContent.tsx"
 
-    rm -r $FOLDER/.blueprint/extensions/"$identifier"/components
-    rm -r $FOLDER/resources/scripts/blueprint/extensions/"$identifier"
+    rm -R \
+      ".blueprint/extensions/$identifier/components" \
+      "resources/scripts/blueprint/extensions/$identifier"
     YARN="y"
   fi
 
@@ -1462,6 +1479,14 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     -e "s~/\* ${identifier^}ServerRouteEnd \*~~g" \
     \
     "resources/scripts/blueprint/extends/routers/routes.ts"
+  
+  # Remove views folder
+  if [[ $data_views != "" ]]; then
+    PRINT INFO "Removing and unlinking views folder.."
+    rm -R \
+      ".blueprint/extensions/$identifier/views" \
+      "resources/views/blueprint/extensions/$identifier"
+  fi
 
   # Remove private folder
   PRINT INFO "Removing and unlinking private folder.."

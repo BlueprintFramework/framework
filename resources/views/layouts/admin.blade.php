@@ -225,6 +225,6 @@
             </script>
         @show
         @yield('blueprint.notifications')
-        @yield('blueprint.extensions')
+        @yield('blueprint.wrappers')
     </body>
 </html>
