@@ -74,4 +74,18 @@ class BlueprintAdminLibrary
   public function fileWipe($path) {
     return shell_exec("rm ".escapeshellarg($path).";");
   }
+
+
+  /*
+  | Extensions
+  | 
+  | extension("identifier");
+  */
+  public function extension($identifier) {
+    if(str_contains($this->fileRead("::f/.blueprint/extensions/blueprint/private/db/installed_extensions"), $identifier.',')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

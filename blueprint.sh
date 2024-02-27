@@ -208,6 +208,8 @@ if [[ $1 != "-bash" ]]; then
     PRINT INFO "Replacing internal placeholders.."
     # Update folder placeholder on PlaceholderService and admin layout.
     sed -i "s!::f!$FOLDER!g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
+    sed -i "s!::f!$FOLDER!g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Admin/BlueprintAdminLibrary.php
+    sed -i "s!::f!$FOLDER!g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Client/BlueprintClientLibrary.php
     sed -i "s!::f!$FOLDER!g" $FOLDER/resources/views/blueprint/admin/admin.blade.php
     # Copy "Blueprint" extension page logo from assets.
     cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg
