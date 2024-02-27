@@ -239,14 +239,15 @@ if [[ $1 != "-bash" ]]; then
     # Make sure all files have correct permissions.
     PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
     chown -R $OWNERSHIP \
-      $FOLDER/.blueprint/* \
-      $FOLDER/app/* \
-      $FOLDER/config/* \
-      $FOLDER/database/* \
-      $FOLDER/public/* \
-      $FOLDER/resources/* \
-      $FOLDER/routes/* \
-      $FOLDER/storage/*
+      $FOLDER/.blueprint \
+      $FOLDER/app \
+      $FOLDER/bootstrap \
+      $FOLDER/config \
+      $FOLDER/database \
+      $FOLDER/public \
+      $FOLDER/resources \
+      $FOLDER/routes \
+      $FOLDER/storage
 
     # Rebuild panel assets.
     PRINT INFO "Rebuilding panel assets.."
@@ -322,7 +323,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";exit 2;fi
 
   PRINT INFO "Searching and validating framework dependencies.."
-  # Check if required programs are installed
+  # Check if required programs and libraries are installed.
   depend
 
   # The following code does some magic to allow for extensions with a
@@ -398,17 +399,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   database_migrations="$conf_database_migrations"; #(optional)
   
   # "prevent" folder "escaping"
-  if [[ ( $icon                 == "/"* ) || ( $icon                 == *"/.."* ) || ( $icon                 == *"../"* ) || ( $icon                 == *"/../"* ) || ( $icon                 == *"\n"* ) ]] \
-  || [[ ( $admin_view           == "/"* ) || ( $admin_view           == *"/.."* ) || ( $admin_view           == *"../"* ) || ( $admin_view           == *"/../"* ) || ( $admin_view           == *"\n"* ) ]] \
-  || [[ ( $admin_controller     == "/"* ) || ( $admin_controller     == *"/.."* ) || ( $admin_controller     == *"../"* ) || ( $admin_controller     == *"/../"* ) || ( $admin_controller     == *"\n"* ) ]] \
-  || [[ ( $admin_css            == "/"* ) || ( $admin_css            == *"/.."* ) || ( $admin_css            == *"../"* ) || ( $admin_css            == *"/../"* ) || ( $admin_css            == *"\n"* ) ]] \
-  || [[ ( $admin_wrapper        == "/"* ) || ( $admin_wrapper        == *"/.."* ) || ( $admin_wrapper        == *"../"* ) || ( $admin_wrapper        == *"/../"* ) || ( $admin_wrapper        == *"\n"* ) ]] \
-  || [[ ( $dashboard_css        == "/"* ) || ( $dashboard_css        == *"/.."* ) || ( $dashboard_css        == *"../"* ) || ( $dashboard_css        == *"/../"* ) || ( $dashboard_css        == *"\n"* ) ]] \
-  || [[ ( $dashboard_wrapper    == "/"* ) || ( $dashboard_wrapper    == *"/.."* ) || ( $dashboard_wrapper    == *"../"* ) || ( $dashboard_wrapper    == *"/../"* ) || ( $dashboard_wrapper    == *"\n"* ) ]] \
-  || [[ ( $dashboard_components == "/"* ) || ( $dashboard_components == *"/.."* ) || ( $dashboard_components == *"../"* ) || ( $dashboard_components == *"/../"* ) || ( $dashboard_components == *"\n"* ) ]] \
-  || [[ ( $data_directory       == "/"* ) || ( $data_directory       == *"/.."* ) || ( $data_directory       == *"../"* ) || ( $data_directory       == *"/../"* ) || ( $data_directory       == *"\n"* ) ]] \
-  || [[ ( $data_public          == "/"* ) || ( $data_public          == *"/.."* ) || ( $data_public          == *"../"* ) || ( $data_public          == *"/../"* ) || ( $data_public          == *"\n"* ) ]] \
-  || [[ ( $database_migrations  == "/"* ) || ( $database_migrations  == *"/.."* ) || ( $database_migrations  == *"../"* ) || ( $database_migrations  == *"/../"* ) || ( $database_migrations  == *"\n"* ) ]]; then
+  if [[ ( $icon                 == "/"* ) || ( $icon                 == *"/.."* ) || ( $icon                 == *"../"* ) || ( $icon                 == *"/../"* ) || ( $icon                 == *"~"* ) || ( $icon                 == *"\n"* ) ]] \
+  || [[ ( $admin_view           == "/"* ) || ( $admin_view           == *"/.."* ) || ( $admin_view           == *"../"* ) || ( $admin_view           == *"/../"* ) || ( $admin_view           == *"~"* ) || ( $admin_view           == *"\n"* ) ]] \
+  || [[ ( $admin_controller     == "/"* ) || ( $admin_controller     == *"/.."* ) || ( $admin_controller     == *"../"* ) || ( $admin_controller     == *"/../"* ) || ( $admin_controller     == *"~"* ) || ( $admin_controller     == *"\n"* ) ]] \
+  || [[ ( $admin_css            == "/"* ) || ( $admin_css            == *"/.."* ) || ( $admin_css            == *"../"* ) || ( $admin_css            == *"/../"* ) || ( $admin_css            == *"~"* ) || ( $admin_css            == *"\n"* ) ]] \
+  || [[ ( $admin_wrapper        == "/"* ) || ( $admin_wrapper        == *"/.."* ) || ( $admin_wrapper        == *"../"* ) || ( $admin_wrapper        == *"/../"* ) || ( $admin_wrapper        == *"~"* ) || ( $admin_wrapper        == *"\n"* ) ]] \
+  || [[ ( $dashboard_css        == "/"* ) || ( $dashboard_css        == *"/.."* ) || ( $dashboard_css        == *"../"* ) || ( $dashboard_css        == *"/../"* ) || ( $dashboard_css        == *"~"* ) || ( $dashboard_css        == *"\n"* ) ]] \
+  || [[ ( $dashboard_wrapper    == "/"* ) || ( $dashboard_wrapper    == *"/.."* ) || ( $dashboard_wrapper    == *"../"* ) || ( $dashboard_wrapper    == *"/../"* ) || ( $dashboard_wrapper    == *"~"* ) || ( $dashboard_wrapper    == *"\n"* ) ]] \
+  || [[ ( $dashboard_components == "/"* ) || ( $dashboard_components == *"/.."* ) || ( $dashboard_components == *"../"* ) || ( $dashboard_components == *"/../"* ) || ( $dashboard_components == *"~"* ) || ( $dashboard_components == *"\n"* ) ]] \
+  || [[ ( $data_directory       == "/"* ) || ( $data_directory       == *"/.."* ) || ( $data_directory       == *"../"* ) || ( $data_directory       == *"/../"* ) || ( $data_directory       == *"~"* ) || ( $data_directory       == *"\n"* ) ]] \
+  || [[ ( $data_public          == "/"* ) || ( $data_public          == *"/.."* ) || ( $data_public          == *"../"* ) || ( $data_public          == *"/../"* ) || ( $data_public          == *"~"* ) || ( $data_public          == *"\n"* ) ]] \
+  || [[ ( $database_migrations  == "/"* ) || ( $database_migrations  == *"/.."* ) || ( $database_migrations  == *"../"* ) || ( $database_migrations  == *"/../"* ) || ( $database_migrations  == *"~"* ) || ( $database_migrations  == *"\n"* ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Config file paths cannot escape the extension bundle."
     exit 1
@@ -1170,7 +1171,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
     if $F_hasInstallScript; then
       PRINT WARNING "Extension uses a custom installation script, proceed with caution."
-      chmod +x ".blueprint/extensions/$identifier/private/install.sh"
+      chmod --silent +x ".blueprint/extensions/$identifier/private/install.sh" 2>> $BLUEPRINT__DEBUG
 
       # Run script while also parsing some useful variables for the install script to use.
       EXTENSION_IDENTIFIER="$identifier" \
@@ -1184,6 +1185,19 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       echo -e "\e[0m\x1b[0m\033[0m"
     fi
   fi
+
+  # Make sure all files have correct permissions.
+  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+  chown -R $OWNERSHIP \
+    $FOLDER/.blueprint \
+    $FOLDER/app \
+    $FOLDER/bootstrap \
+    $FOLDER/config \
+    $FOLDER/database \
+    $FOLDER/public \
+    $FOLDER/resources \
+    $FOLDER/routes \
+    $FOLDER/storage
 
   if [[ $DUPLICATE != "y" ]]; then
     PRINT INFO "Adding '$identifier' to active extensions list.."
