@@ -399,7 +399,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   data_directory="$conf_data_directory"; #(optional)
   data_public="$conf_data_public"; #(optional)
-  data_views="$conf_data_views"; #(optional)
+
+  requests_views="$conf_requests_views"; #(optional)
+  requests_controllers="$conf_requests_controllers"; #(optional)
+  requests_routes="$conf_requests_routes"; #(optional)
 
   database_migrations="$conf_database_migrations"; #(optional)
   
@@ -414,7 +417,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   || [[ ( $dashboard_components == "/"* ) || ( $dashboard_components == *"/.."* ) || ( $dashboard_components == *"../"* ) || ( $dashboard_components == *"/../"* ) || ( $dashboard_components == *"~"* ) || ( $dashboard_components == *"\n"* ) ]] \
   || [[ ( $data_directory       == "/"* ) || ( $data_directory       == *"/.."* ) || ( $data_directory       == *"../"* ) || ( $data_directory       == *"/../"* ) || ( $data_directory       == *"~"* ) || ( $data_directory       == *"\n"* ) ]] \
   || [[ ( $data_public          == "/"* ) || ( $data_public          == *"/.."* ) || ( $data_public          == *"../"* ) || ( $data_public          == *"/../"* ) || ( $data_public          == *"~"* ) || ( $data_public          == *"\n"* ) ]] \
-  || [[ ( $data_views           == "/"* ) || ( $data_views           == *"/.."* ) || ( $data_views           == *"../"* ) || ( $data_views           == *"/../"* ) || ( $data_views           == *"~"* ) || ( $data_views           == *"\n"* ) ]] \
+  || [[ ( $requests_views       == "/"* ) || ( $requests_views       == *"/.."* ) || ( $requests_views       == *"../"* ) || ( $requests_views       == *"/../"* ) || ( $requests_views       == *"~"* ) || ( $requests_views       == *"\n"* ) ]] \
+  || [[ ( $requests_controllers == "/"* ) || ( $requests_controllers == *"/.."* ) || ( $requests_controllers == *"../"* ) || ( $requests_controllers == *"/../"* ) || ( $requests_controllers == *"~"* ) || ( $requests_controllers == *"\n"* ) ]] \
+  || [[ ( $requests_routes      == "/"* ) || ( $requests_routes      == *"/.."* ) || ( $requests_routes      == *"../"* ) || ( $requests_routes      == *"/../"* ) || ( $requests_routes      == *"~"* ) || ( $requests_routes      == *"\n"* ) ]] \
   || [[ ( $database_migrations  == "/"* ) || ( $database_migrations  == *"/.."* ) || ( $database_migrations  == *"../"* ) || ( $database_migrations  == *"/../"* ) || ( $database_migrations  == *"~"* ) || ( $database_migrations  == *"\n"* ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Config file paths cannot escape the extension bundle."
@@ -583,7 +588,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
      [[ ( ! -d ".blueprint/tmp/$n/$dashboard_components" ) && ( ${dashboard_components} != "" ) ]] ||    # folder: dashboard_components (optional)
      [[ ( ! -d ".blueprint/tmp/$n/$data_directory"       ) && ( ${data_directory} != ""       ) ]] ||    # folder: data_directory       (optional)
      [[ ( ! -d ".blueprint/tmp/$n/$data_public"          ) && ( ${data_public} != ""          ) ]] ||    # folder: data_public          (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$data_views"           ) && ( ${data_views} != ""           ) ]] ||    # folder: data_views           (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$requests_views"       ) && ( ${requests_views} != ""       ) ]] ||    # folder: requests_views       (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$requests_controllers" ) && ( ${requests_controllers} != "" ) ]] ||    # folder: requests_controllers (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$requests_routes"      ) && ( ${requests_routes} != ""      ) ]] ||    # file:   requests_routes      (optional)
      [[ ( ! -d ".blueprint/tmp/$n/$database_migrations"  ) && ( ${database_migrations} != ""  ) ]];then  # folder: database_migrations  (optional)
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Extension configuration points towards one or more files that do not exist."
@@ -614,12 +621,23 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   fi
 
   # Place views directory.
-  if [[ $data_views != "" ]]; then
+  if [[ $requests_views != "" ]]; then
     PRINT INFO "Cloning and linking views directory.."
     mkdir -p ".blueprint/extensions/$identifier/views"
-    cp -R ".blueprint/tmp/$n/$data_views/"* ".blueprint/extensions/$identifier/views/" 2>> $BLUEPRINT__DEBUG
+    cp -R ".blueprint/tmp/$n/$requests_views/"* ".blueprint/extensions/$identifier/views/" 2>> $BLUEPRINT__DEBUG
 
     cd $FOLDER/resources/views/blueprint/extensions || cdhalt
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/views "$identifier" 2>> $BLUEPRINT__DEBUG
+    cd $FOLDER || cdhalt
+  fi
+
+  # Place controllers directory.
+  if [[ $requests_controllers != "" ]]; then
+    PRINT INFO "Cloning and linking views directory.."
+    mkdir -p ".blueprint/extensions/$identifier/controllers"
+    cp -R ".blueprint/tmp/$n/$requests_controllers/"* ".blueprint/extensions/$identifier/controllers/" 2>> $BLUEPRINT__DEBUG
+
+    cd $FOLDER/app/BlueprintFramework/Extensions || cdhalt
     ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/views "$identifier" 2>> $BLUEPRINT__DEBUG
     cd $FOLDER || cdhalt
   fi
@@ -1309,11 +1327,13 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     data_directory="$conf_data_directory"; #(optional)
     data_public="$conf_data_public"; #(optional)
-    data_views="$conf_data_views"; #(optional)
+
+    requests_views="$conf_requests_views"; #(optional)
+    requests_controllers="$conf_requests_controllers"; #(optional)
+    requests_routes="$conf_requests_routes"; #(optional)
 
     database_migrations="$conf_database_migrations"; #(optional)
   else 
-    PRINT FATAL "Backup conf.yml could not be found."
     PRINT FATAL "Extension configuration file not found or detected."
     exit 1
   fi
@@ -1513,11 +1533,19 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     "resources/scripts/blueprint/extends/routers/routes.ts"
   
   # Remove views folder
-  if [[ $data_views != "" ]]; then
+  if [[ $requests_views != "" ]]; then
     PRINT INFO "Removing and unlinking views folder.."
     rm -R \
       ".blueprint/extensions/$identifier/views" \
       "resources/views/blueprint/extensions/$identifier"
+  fi
+
+  # Remove controllers folder
+  if [[ $requests_controllers != "" ]]; then
+    PRINT INFO "Removing and unlinking controllers folder.."
+    rm -R \
+      ".blueprint/extensions/$identifier/controllers" \
+      "app/BlueprintFramework/Extensions/$identifier"
   fi
 
   # Remove private folder
