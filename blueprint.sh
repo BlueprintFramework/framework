@@ -432,6 +432,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ ( $dashboard_components == *"/" ) ]] \
   || [[ ( $data_directory == *"/"       ) ]] \
   || [[ ( $data_public == *"/"          ) ]] \
+  || [[ ( $requests_views == *"/"       ) ]] \
+  || [[ ( $requests_controllers == *"/" ) ]] \
   || [[ ( $database_migrations == *"/"  ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Directory paths in conf.yml should not end with a slash."
