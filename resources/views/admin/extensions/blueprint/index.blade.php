@@ -5,14 +5,54 @@
 @endsection
 
 @section('content-header')
+
+  <!-- Page logo -->
   <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" style="float:left;width:30px;height:30px;border-radius:3px;margin-right:5px;">
+  
+  <!-- Website button -->
   <a href="https://blueprint.zip" target="_blank"><button class="btn btn-gray-alt pull-right" style="padding: 5px 10px;"><i class="bx bx-link-external"></i></button></a>
-  <a href="https://github.com/teamblueprint/main" target="_blank"><button class="btn btn-gray-alt pull-right" style="padding: 5px 10px; margin-right: 7px;"><i class="bx bx-git-branch"></i></button></a>
+  
+  <!-- GitHub button -->
+  <a href="https://github.com/teamblueprint/main" class="pull-right" target="_blank">
+    <button class="btn btn-gray-alt" style="padding: 5px 10px; margin-right: 7px;"><i class="bx bx-git-branch"></i></button>
+    <div class="push-repo">
+      <div class="push-container">
+        <p>Contribute, klllll</p>
+      </div>
+    </div>
+  </a>
+  <style>
+    .push-repo {
+      position: absolute;
+      top: 60px;
+      right: 55px;
+      background-color: #1f2933;
+      width: 200px;
+      z-index: 10;
+      border-radius: 7px;
+      padding: 10px;
+      border: #33404d 2px solid;
+      color: #83909e
+    }
+
+    .push-repo::after {
+      content: " ";
+      position: absolute;
+      bottom: 100%;
+      right: 12px;
+      margin-left: -7px;
+      border-width: 7px;
+      border-style: solid;
+      border-color: transparent transparent #1f2933 transparent;
+    }
+  </style>
+
+  <!-- Page title -->
   <h1 ext-title>Blueprint<tag mg-left @if($latest != $bp->version()) red @else blue @endif>{{ $bp->version() }}</tag></h1>
+
 @endsection
 
 @section('content')
-  {{ $bp->serve() }}
   {{ $telemetry->send("SERVE_BLUEPRINT_ADMIN") }}
   <p>Blueprint is the framework that powers all Blueprint-compatible extensions, enabling multiple extensions to be installed and used simultaneously.</p>
   <div class="row">

@@ -14,17 +14,12 @@ class BlueprintVariableService
   }
 
 
-  // $bp->serve()
-  // $bp->latestVersion()
-  // $bp->isInstalled()
+  // $bp->latest()
   // $bp->version()
+  // $bp->isInstalled()
   // $bp->dbGet('db::record')
   // $bp->dbSet('db::record', 'value')
   // $bp->config('item', value);
-  
-  public function serve(): void {
-    return;
-  }
 
   public function latest(): string {
     $api_url = "http://api.blueprint.zip:50000/api/latest";
