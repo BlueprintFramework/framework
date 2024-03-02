@@ -632,10 +632,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   # Place controllers directory.
   if [[ $requests_controllers != "" ]]; then
-    PRINT INFO "Cloning and linking views directory.."
+    PRINT INFO "Cloning and linking controllers directory.."
     mkdir -p ".blueprint/extensions/$identifier/controllers"
     cp -R ".blueprint/tmp/$n/$requests_controllers/"* ".blueprint/extensions/$identifier/controllers/" 2>> $BLUEPRINT__DEBUG
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/views "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/controllers "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> $BLUEPRINT__DEBUG
   fi
 
   # Place routes directory.
@@ -643,7 +643,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     PRINT INFO "Cloning and linking router file.."
     mkdir -p ".blueprint/extensions/$identifier/routers"
     cp -R ".blueprint/tmp/$n/$requests_router" ".blueprint/extensions/$identifier/routers/$identifier.php" 2>> $BLUEPRINT__DEBUG
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/routers "$FOLDER/routes/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    ln -T ".blueprint/extensions/$identifier/routers/$identifier.php" "$FOLDER/routes/blueprint/extensions/$identifier.php" 2>> $BLUEPRINT__DEBUG
   fi
 
   # Create, link and connect components directory.
