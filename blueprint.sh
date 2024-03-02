@@ -162,6 +162,7 @@ assignflags() {
   F_hasExportScript=false
   F_developerIgnoreInstallScript=false
   F_developerIgnoreRebuild=false
+  F_developerForceMigrate=false
   if [[ ( $flags == *"ignorePlaceholders,"*           ) || ( $flags == *"ignorePlaceholders"           ) ]]; then F_ignorePlaceholders=true           ;fi
   if [[ ( $flags == *"ignoreAlphabetPlaceholders,"*   ) || ( $flags == *"ignoreAlphabetPlaceholders"   ) ]]; then F_ignoreAlphabetPlaceholders=true   ;fi
   if [[ ( $flags == *"hasInstallScript,"*             ) || ( $flags == *"hasInstallScript"             ) ]]; then F_hasInstallScript=true             ;fi
@@ -169,6 +170,7 @@ assignflags() {
   if [[ ( $flags == *"hasExportScript,"*              ) || ( $flags == *"hasExportScript"              ) ]]; then F_hasExportScript=true              ;fi
   if [[ ( $flags == *"developerIgnoreInstallScript,"* ) || ( $flags == *"developerIgnoreInstallScript" ) ]]; then F_developerIgnoreInstallScript=true ;fi
   if [[ ( $flags == *"developerIgnoreRebuild,"*       ) || ( $flags == *"developerIgnoreRebuild"       ) ]]; then F_developerIgnoreRebuild=true       ;fi
+  if [[ ( $flags == *"developerForceMigrate,"*        ) || ( $flags == *"developerForceMigrate"        ) ]]; then F_developerForceMigrate=true        ;fi
 }
 
 
@@ -1205,8 +1207,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   rm -R ".blueprint/tmp/$n"
 
   if [[ $database_migrations != "" ]]; then
-    PRINT INPUT "Would you like to migrate your database? (Y/n)"
-    read -r YN
+    if [[ ( $F_developerForceMigrate == true ) && ( $dev == true ) ]]; then
+      YN="y"
+    else
+      PRINT INPUT "Would you like to migrate your database? (Y/n)"
+      read -r YN
+    fi
     if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
       PRINT INFO "Running database migrations.."
       php artisan migrate --force
