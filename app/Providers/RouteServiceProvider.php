@@ -66,6 +66,7 @@ class RouteServiceProvider extends ServiceProvider
 
             /* Import Blueprint wildcard router */
             Route::middleware('blueprint')
+                ->prefix('/extensions')
                 ->group(base_path('routes/blueprint/wildcard.php'));
         });
     }
