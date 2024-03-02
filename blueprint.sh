@@ -2018,6 +2018,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
     PRINT INFO "Running database migrations.."
     php artisan migrate --force
+    php artisan up &>> $BLUEPRINT__DEBUG
   else
     PRINT INFO "Database migrations have been skipped."
   fi
