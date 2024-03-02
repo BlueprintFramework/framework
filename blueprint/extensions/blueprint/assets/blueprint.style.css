@@ -66,3 +66,28 @@ tag[blue] {background-color:#288afb;}
   opacity: .3;
   align-self: center;
 }
+
+
+.blueprint\:push-repo {
+  position: absolute;
+  top: 60px;
+  right: 55px;
+  background-color: #1f2933;
+  width: 270px;
+  z-index: 10;
+  border-radius: 7px;
+  padding: 10px;
+  border: #33404d 2px solid;
+  color: #83909e
+}
+
+.blueprint\:push-repo::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  right: 12px;
+  margin-left: -7px;
+  border-width: 7px;
+  border-style: solid;
+  border-color: transparent transparent #1f2933 transparent;
+}

@@ -1377,13 +1377,11 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     -e "s~// $identifier:stop~~g" \
     "routes/blueprint.php"
   
-  # Remove admin view
-  PRINT INFO "Removing admin view directory.."
-  rm -r "resources/views/admin/extensions/$identifier"
-
-  # Remove admin controller
-  PRINT INFO "Removing admin controller directory.."
-  rm -r "app/Http/Controllers/Admin/Extensions/$identifier"
+  # Remove admin view and controller
+  PRINT INFO "Removing admin view and controller.."
+  rm -r \
+    "resources/views/admin/extensions/$identifier" \
+    "app/Http/Controllers/Admin/Extensions/$identifier"
 
   # Remove admin css
   if [[ $admin_css != "" ]]; then

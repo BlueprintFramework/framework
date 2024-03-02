@@ -15,37 +15,12 @@
   <!-- GitHub button -->
   <a href="https://github.com/teamblueprint/main" class="pull-right" target="_blank">
     <button class="btn btn-gray-alt" style="padding: 5px 10px; margin-right: 7px;"><i class="bx bx-git-branch"></i></button>
-    <div class="push-repo">
-      <div class="push-container">
-        <p>Contribute, klllll</p>
+    <div class="blueprint:push-repo">
+      <div class="blueprint:push-container">
+        <p>Contribute to the Blueprint framework through GitHub.</p>
       </div>
     </div>
   </a>
-  <style>
-    .push-repo {
-      position: absolute;
-      top: 60px;
-      right: 55px;
-      background-color: #1f2933;
-      width: 200px;
-      z-index: 10;
-      border-radius: 7px;
-      padding: 10px;
-      border: #33404d 2px solid;
-      color: #83909e
-    }
-
-    .push-repo::after {
-      content: " ";
-      position: absolute;
-      bottom: 100%;
-      right: 12px;
-      margin-left: -7px;
-      border-width: 7px;
-      border-style: solid;
-      border-color: transparent transparent #1f2933 transparent;
-    }
-  </style>
 
   <!-- Page title -->
   <h1 ext-title>Blueprint<tag mg-left @if($latest != $bp->version()) red @else blue @endif>{{ $bp->version() }}</tag></h1>
