@@ -1568,7 +1568,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   PRINT INFO "Removing and unlinking extension filesystem.."
   rm -r \
     ".blueprint/extensions/$identifier/fs" \
-    "storage/extensions/sysautomation" \
+    "storage/extensions/$identifier" \
     "storage/extensions"
   sed -i \
     -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
