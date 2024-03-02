@@ -1960,9 +1960,12 @@ fi
 if [[ $2 == "-upgrade" ]]; then VCMD="y"
   PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
 
+  HAS_DEV=false
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    PRINT FATAL "Development directory contains files. To protect you against accidental data loss, you are unable to upgrade unless you clear the '.blueprint/dev' folder."
-    exit 2
+    PRINT WARNING "Development directory contains files. To protect you against accidental data loss, we're making a backup to /tmp/blueprint-dev."
+    mkdir -p /tmp/blueprint-dev
+    cp .blueprint/dev /tmp/blueprint-dev -Rf
+    HAS_DEV=true
   fi
 
 
@@ -2042,6 +2045,15 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
 
   if dbValidate "blueprint.setupFinished"; then score=$((score+1))
   else PRINT WARNING "'blueprint.setupFinished' could not be detected or found."; fi
+
+  if [[ ${HAS_DEV} == true ]]; then
+    PRINT WARNING "You had dev files. Restoring them now."
+    mkdir -p .blueprint/dev
+    cp /tmp/blueprint-dev/dev/* .blueprint/dev -r
+    PRINT WARNING "Removing backed up development files."
+    rm /tmp/blueprint-dev -rf
+    PRINT SUCCESS "Restored development files."
+  fi
 
   # Finalize upgrade.
   if [[ ${score} == 1 ]]; then
