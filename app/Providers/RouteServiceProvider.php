@@ -42,7 +42,7 @@ class RouteServiceProvider extends ServiceProvider
                 Route::middleware(['auth.session', RequireTwoFactorAuthentication::class, AdminAuthenticate::class])
                     ->prefix('/admin')
                     ->group(base_path('routes/admin.php'))
-                    ->group(base_path('routes/blueprint.php')); // Import Blueprint routes
+                    ->group(base_path('routes/blueprint.php')); // Import Blueprint admin routes
 
                 Route::middleware('guest')->prefix('/auth')->group(base_path('routes/auth.php'));
             });
@@ -63,6 +63,10 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('/api/remote')
                 ->scopeBindings()
                 ->group(base_path('routes/api-remote.php'));
+
+            /* Import Blueprint wildcard router */
+            Route::middleware('blueprint')
+                ->group(base_path('routes/blueprint/wildcard.php'));
         });
     }
 

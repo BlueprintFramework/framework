@@ -201,8 +201,10 @@ if [[ $1 != "-bash" ]]; then
 
     # Link directories.
     PRINT INFO "Linking directories and filesystems.."
-    cd $FOLDER/public/extensions        || cdhalt; ln -s -T $FOLDER/.blueprint/extensions/blueprint/public blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || cdhalt
-    cd $FOLDER/public/assets/extensions || cdhalt; ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets blueprint  2>> $BLUEPRINT__DEBUG; cd $FOLDER || cdhalt
+    {
+      ln -s -T $FOLDER/.blueprint/extensions/blueprint/public $FOLDER/public/extensions/blueprint
+      ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets $FOLDER/public/assets/extensions/blueprint
+    } 2>> $BLUEPRINT__DEBUG
     php artisan storage:link &>> $BLUEPRINT__DEBUG 
 
     PRINT INFO "Replacing internal placeholders.."
@@ -402,7 +404,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   requests_views="$conf_requests_views"; #(optional)
   requests_controllers="$conf_requests_controllers"; #(optional)
-  requests_routes="$conf_requests_routes"; #(optional)
+  requests_router="$conf_requests_router"; #(optional)
 
   database_migrations="$conf_database_migrations"; #(optional)
   
@@ -419,7 +421,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   || [[ ( $data_public          == "/"* ) || ( $data_public          == *"/.."* ) || ( $data_public          == *"../"* ) || ( $data_public          == *"/../"* ) || ( $data_public          == *"~"* ) || ( $data_public          == *"\n"* ) ]] \
   || [[ ( $requests_views       == "/"* ) || ( $requests_views       == *"/.."* ) || ( $requests_views       == *"../"* ) || ( $requests_views       == *"/../"* ) || ( $requests_views       == *"~"* ) || ( $requests_views       == *"\n"* ) ]] \
   || [[ ( $requests_controllers == "/"* ) || ( $requests_controllers == *"/.."* ) || ( $requests_controllers == *"../"* ) || ( $requests_controllers == *"/../"* ) || ( $requests_controllers == *"~"* ) || ( $requests_controllers == *"\n"* ) ]] \
-  || [[ ( $requests_routes      == "/"* ) || ( $requests_routes      == *"/.."* ) || ( $requests_routes      == *"../"* ) || ( $requests_routes      == *"/../"* ) || ( $requests_routes      == *"~"* ) || ( $requests_routes      == *"\n"* ) ]] \
+  || [[ ( $requests_router      == "/"* ) || ( $requests_router      == *"/.."* ) || ( $requests_router      == *"../"* ) || ( $requests_router      == *"/../"* ) || ( $requests_router      == *"~"* ) || ( $requests_router      == *"\n"* ) ]] \
   || [[ ( $database_migrations  == "/"* ) || ( $database_migrations  == *"/.."* ) || ( $database_migrations  == *"../"* ) || ( $database_migrations  == *"/../"* ) || ( $database_migrations  == *"~"* ) || ( $database_migrations  == *"\n"* ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Config file paths cannot escape the extension bundle."
@@ -590,7 +592,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
      [[ ( ! -d ".blueprint/tmp/$n/$data_public"          ) && ( ${data_public} != ""          ) ]] ||    # folder: data_public          (optional)
      [[ ( ! -d ".blueprint/tmp/$n/$requests_views"       ) && ( ${requests_views} != ""       ) ]] ||    # folder: requests_views       (optional)
      [[ ( ! -d ".blueprint/tmp/$n/$requests_controllers" ) && ( ${requests_controllers} != "" ) ]] ||    # folder: requests_controllers (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$requests_routes"      ) && ( ${requests_routes} != ""      ) ]] ||    # file:   requests_routes      (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$requests_router"      ) && ( ${requests_router} != ""      ) ]] ||    # file:   requests_router      (optional)
      [[ ( ! -d ".blueprint/tmp/$n/$database_migrations"  ) && ( ${database_migrations} != ""  ) ]];then  # folder: database_migrations  (optional)
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Extension configuration points towards one or more files that do not exist."
@@ -625,10 +627,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     PRINT INFO "Cloning and linking views directory.."
     mkdir -p ".blueprint/extensions/$identifier/views"
     cp -R ".blueprint/tmp/$n/$requests_views/"* ".blueprint/extensions/$identifier/views/" 2>> $BLUEPRINT__DEBUG
-
-    cd $FOLDER/resources/views/blueprint/extensions || cdhalt
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/views "$identifier" 2>> $BLUEPRINT__DEBUG
-    cd $FOLDER || cdhalt
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/views "$FOLDER/resources/views/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
   fi
 
   # Place controllers directory.
@@ -636,10 +635,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     PRINT INFO "Cloning and linking views directory.."
     mkdir -p ".blueprint/extensions/$identifier/controllers"
     cp -R ".blueprint/tmp/$n/$requests_controllers/"* ".blueprint/extensions/$identifier/controllers/" 2>> $BLUEPRINT__DEBUG
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/views "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+  fi
 
-    cd $FOLDER/app/BlueprintFramework/Extensions || cdhalt
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/views "$identifier" 2>> $BLUEPRINT__DEBUG
-    cd $FOLDER || cdhalt
+  # Place routes directory.
+  if [[ $requests_router != "" ]]; then
+    PRINT INFO "Cloning and linking router file.."
+    mkdir -p ".blueprint/extensions/$identifier/routers"
+    cp -R ".blueprint/tmp/$n/$requests_router" ".blueprint/extensions/$identifier/routers/$identifier.php" 2>> $BLUEPRINT__DEBUG
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/routers "$FOLDER/routes/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
   fi
 
   # Create, link and connect components directory.
@@ -647,10 +651,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     YARN="y"
     PRINT INFO "Cloning and linking components directory.."
     mkdir -p ".blueprint/extensions/$identifier/components"
-    
-    cd $FOLDER/resources/scripts/blueprint/extensions || cdhalt
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/components "$identifier" 2>> $BLUEPRINT__DEBUG
-    cd $FOLDER || cdhalt
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/components "$FOLDER/resources/scripts/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
 
     # Remove custom routes to prevent duplicates.
     if [[ $DUPLICATE == "y" ]]; then
@@ -966,10 +967,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $data_public != "" ]]; then
     PRINT INFO "Cloning and linking public directory.."
     mkdir -p ".blueprint/extensions/$identifier/public"
-    
-    cd $FOLDER/public/extensions || cdhalt
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/public "$identifier" 2>> $BLUEPRINT__DEBUG
-    cd $FOLDER || cdhalt
+    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/public "$FOLDER/public/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
 
     cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2>> $BLUEPRINT__DEBUG
   fi
@@ -1017,9 +1015,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     # Create assets folder if the extension is not updating.
     mkdir .blueprint/extensions/"$identifier"/assets
   fi
-  cd $FOLDER/public/assets/extensions || cdhalt
-  ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$identifier" 2>> $BLUEPRINT__DEBUG
-  cd $FOLDER || cdhalt
+  ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$FOLDER/public/assets/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
   
   ICON_EXT="jpg"
   if [[ $icon == "" ]]; then
@@ -1330,7 +1326,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     requests_views="$conf_requests_views"; #(optional)
     requests_controllers="$conf_requests_controllers"; #(optional)
-    requests_routes="$conf_requests_routes"; #(optional)
+    requests_router="$conf_requests_router"; #(optional)
 
     database_migrations="$conf_database_migrations"; #(optional)
   else 
@@ -1544,6 +1540,14 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     rm -R \
       ".blueprint/extensions/$identifier/controllers" \
       "app/BlueprintFramework/Extensions/$identifier"
+  fi
+
+  # Remove router files
+  if [[ $requests_router != "" ]]; then
+    PRINT INFO "Removing and unlinking router files.."
+    rm -R \
+      ".blueprint/extensions/$identifier/routers" \
+      "routes/blueprint/extensions/$identifier"
   fi
 
   # Remove private folder
