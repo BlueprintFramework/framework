@@ -15,11 +15,14 @@
   <!-- GitHub button -->
   <a href="https://github.com/teamblueprint/main" class="pull-right" target="_blank">
     <button class="btn btn-gray-alt" style="padding: 5px 10px; margin-right: 7px;"><i class="bx bx-git-branch"></i></button>
-    <div class="blueprint:push-repo">
-      <div class="blueprint:push-container">
-        <p>Contribute to the Blueprint framework through GitHub.</p>
+    @if($blueprint->dbGet("blueprint", "git-hint") != "0")
+      <div class="blueprint:push-repo">
+        <div class="blueprint:push-container">
+          <p>Contribute to the Blueprint framework through GitHub.</p>
+        </div>
       </div>
-    </div>
+      <?php $blueprint->dbSet("blueprint", "git-hint", "0"); ?>
+    @endif
   </a>
 
   <!-- Page title -->
@@ -56,20 +59,20 @@
               <label class="control-label">Telemetry</label>
               <select class="form-control" name="telemetry">
                 <option value="true">Enabled</option>
-                <option value="false" @if($bp->dbGet('telemetry') != "true") selected @endif>Disabled</option>
+                <option value="false" @if($blueprint->dbGet('blueprint', 'telemetry') != "true") selected @endif>Disabled</option>
               </select>
               <p class="text-muted small">Automatically share anonymous usage data with Blueprint.</p>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
               <label class="control-label">ID</label>
-              <input type="text" required name="panel:id" id="panel:id" value="{{ $bp->dbGet('panel:id') }}" class="form-control" readonly/>
+              <input type="text" required name="panel:id" id="panel:id" value="{{ $blueprint->dbGet('blueprint', 'panel:id') }}" class="form-control" readonly/>
               <p class="text-muted small">Randomly generated string with your version that is used as a panel identifier.</p>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
               <label class="control-label">Developer Mode</label>
               <select class="form-control" name="developer">
                 <option value="true">Enabled</option>
-                <option value="false" @if($bp->dbGet('developer') != "true") selected @endif>Disabled</option>
+                <option value="false" @if($blueprint->dbGet('blueprint', 'developer') != "true") selected @endif>Disabled</option>
               </select>
               <p class="text-muted small">Enable or disable developer-oriented features.</p>
             </div>

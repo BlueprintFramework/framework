@@ -50,6 +50,12 @@ class CreateBlueprintTable extends Migration
       $table->string('panel:id')->nullable();
 
       /*
+        Value for keeping track of displaying a GitHub-
+        repository-related hint.
+      */
+      $table->string('git-hint')->nullable();
+
+      /*
         Cache of the previous version name for Blueprint
         know when to reroll the panel ID and to know when
         it has updated.
