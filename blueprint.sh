@@ -1960,15 +1960,6 @@ fi
 if [[ $2 == "-upgrade" ]]; then VCMD="y"
   PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
 
-  HAS_DEV=false
-  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    PRINT WARNING "Development directory contains files. To protect you against accidental data loss, we're making a backup to /tmp/blueprint-dev."
-    mkdir -p /tmp/blueprint-dev
-    cp .blueprint/dev /tmp/blueprint-dev -Rf
-    HAS_DEV=true
-  fi
-
-
   # Confirmation question for developer upgrade.
   if [[ $3 == "dev" ]]; then
     PRINT INPUT "Upgrading to the latest development build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
@@ -1988,15 +1979,24 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   read -r YN
   if [[ ${YN} != "continue" ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
   YN=""
-
+  
 
   if [[ $3 == "dev" ]]; then PRINT INFO "Fetching and pulling latest commit.."
   else                       PRINT INFO "Fetching and pulling latest release.."; fi
 
+  mkdir $FOLDER/.tmp
   cp blueprint.sh .blueprint.sh.bak
 
-  mkdir $FOLDER/.tmp
-  cd $FOLDER/.tmp || cdhalt
+  HAS_DEV=false
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
+    PRINT INFO "Backing up extension development files.."
+    mkdir -p $FOLDER/.tmp/dev
+    cp .blueprint/dev $FOLDER/.tmp/dev -Rf
+    HAS_DEV=true
+  fi
+
+  mkdir -p $FOLDER/.tmp/files
+  cd $FOLDER/.tmp/files || cdhalt
   if [[ $3 == "dev" ]]; then
     # download latest commit
     git clone https://github.com/teamblueprint/main.git
@@ -2018,7 +2018,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   rm -r  \
     "main" \
     "$FOLDER"/.blueprint \
-    "$FOLDER"/.tmp
+    "$FOLDER"/.tmp/files
   cd $FOLDER || cdhalt
 
   chmod +x blueprint.sh
@@ -2039,21 +2039,21 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   fi
   YN=""
 
+  if [[ ${HAS_DEV} == true ]]; then
+    PRINT INFO "Restoring extension development files.."
+    mkdir -p .blueprint/dev
+    cp $FOLDER/.tmp/dev/* .blueprint/dev -r
+    rm $FOLDER/.tmp/dev -rf
+  fi
+
+  rm -r $FOLDER/.tmp
+
   # Post-upgrade checks.
   PRINT INFO "Validating update.."
   score=0
 
   if dbValidate "blueprint.setupFinished"; then score=$((score+1))
   else PRINT WARNING "'blueprint.setupFinished' could not be detected or found."; fi
-
-  if [[ ${HAS_DEV} == true ]]; then
-    PRINT WARNING "You had dev files. Restoring them now."
-    mkdir -p .blueprint/dev
-    cp /tmp/blueprint-dev/dev/* .blueprint/dev -r
-    PRINT WARNING "Removing backed up development files."
-    rm /tmp/blueprint-dev -rf
-    PRINT SUCCESS "Restored development files."
-  fi
 
   # Finalize upgrade.
   if [[ ${score} == 1 ]]; then
