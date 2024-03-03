@@ -1960,12 +1960,6 @@ fi
 if [[ $2 == "-upgrade" ]]; then VCMD="y"
   PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
 
-  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    PRINT FATAL "Development directory contains files. To protect you against accidental data loss, you are unable to upgrade unless you clear the '.blueprint/dev' folder."
-    exit 2
-  fi
-
-
   # Confirmation question for developer upgrade.
   if [[ $3 == "dev" ]]; then
     PRINT INPUT "Upgrading to the latest development build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
@@ -1985,15 +1979,24 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   read -r YN
   if [[ ${YN} != "continue" ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
   YN=""
-
+  
 
   if [[ $3 == "dev" ]]; then PRINT INFO "Fetching and pulling latest commit.."
   else                       PRINT INFO "Fetching and pulling latest release.."; fi
 
+  mkdir $FOLDER/.tmp
   cp blueprint.sh .blueprint.sh.bak
 
-  mkdir $FOLDER/.tmp
-  cd $FOLDER/.tmp || cdhalt
+  HAS_DEV=false
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
+    PRINT INFO "Backing up extension development files.."
+    mkdir -p $FOLDER/.tmp/dev
+    cp .blueprint/dev $FOLDER/.tmp/dev -Rf
+    HAS_DEV=true
+  fi
+
+  mkdir -p $FOLDER/.tmp/files
+  cd $FOLDER/.tmp/files || cdhalt
   if [[ $3 == "dev" ]]; then
     # download latest commit
     git clone https://github.com/teamblueprint/main.git
@@ -2015,7 +2018,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   rm -r  \
     "main" \
     "$FOLDER"/.blueprint \
-    "$FOLDER"/.tmp
+    "$FOLDER"/.tmp/files
   cd $FOLDER || cdhalt
 
   chmod +x blueprint.sh
@@ -2035,6 +2038,15 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     PRINT INFO "Database migrations have been skipped."
   fi
   YN=""
+
+  if [[ ${HAS_DEV} == true ]]; then
+    PRINT INFO "Restoring extension development files.."
+    mkdir -p .blueprint/dev
+    cp $FOLDER/.tmp/dev/* .blueprint/dev -r
+    rm $FOLDER/.tmp/dev -rf
+  fi
+
+  rm -r $FOLDER/.tmp
 
   # Post-upgrade checks.
   PRINT INFO "Validating update.."
