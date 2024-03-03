@@ -1991,7 +1991,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     PRINT INFO "Backing up extension development files.."
     mkdir -p $FOLDER/.tmp/dev
-    cp .blueprint/dev $FOLDER/.tmp/dev -Rf
+    cp .blueprint/dev/* $FOLDER/.tmp/dev/ -Rf
     HAS_DEV=true
   fi
 
