@@ -658,18 +658,27 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     mkdir -p ".blueprint/extensions/$identifier/routers"
 
     if [[ $requests_routers_application != "" ]]; then
-      cp -R ".blueprint/tmp/$n/$requests_routers_application" ".blueprint/extensions/$identifier/routers/application.php" 2>> $BLUEPRINT__DEBUG
-      ln -T ".blueprint/extensions/$identifier/routers/application.php" "$FOLDER/routes/blueprint/application/$identifier.php" 2>> $BLUEPRINT__DEBUG
+      { 
+        rm "$FOLDER/routes/blueprint/application/$identifier.php"
+        cp -R ".blueprint/tmp/$n/$requests_routers_application" ".blueprint/extensions/$identifier/routers/application.php"
+        ln -T ".blueprint/extensions/$identifier/routers/application.php" "$FOLDER/routes/blueprint/application/$identifier.php"
+      } 2>> $BLUEPRINT__DEBUG
     fi
 
     if [[ $requests_routers_client != "" ]]; then
-      cp -R ".blueprint/tmp/$n/$requests_routers_client" ".blueprint/extensions/$identifier/routers/client.php" 2>> $BLUEPRINT__DEBUG
-      ln -T ".blueprint/extensions/$identifier/routers/client.php" "$FOLDER/routes/blueprint/client/$identifier.php" 2>> $BLUEPRINT__DEBUG
+      {
+        rm "$FOLDER/routes/blueprint/client/$identifier.php"
+        cp -R ".blueprint/tmp/$n/$requests_routers_client" ".blueprint/extensions/$identifier/routers/client.php"
+        ln -T ".blueprint/extensions/$identifier/routers/client.php" "$FOLDER/routes/blueprint/client/$identifier.php"
+      } 2>> $BLUEPRINT__DEBUG
     fi
 
     if [[ $requests_routers_web != "" ]]; then
-      cp -R ".blueprint/tmp/$n/$requests_routers_web" ".blueprint/extensions/$identifier/routers/web.php" 2>> $BLUEPRINT__DEBUG
-      ln -T ".blueprint/extensions/$identifier/routers/web.php" "$FOLDER/routes/blueprint/web/$identifier.php" 2>> $BLUEPRINT__DEBUG
+      {
+        rm "$FOLDER/routes/blueprint/web/$identifier.php"
+        cp -R ".blueprint/tmp/$n/$requests_routers_web" ".blueprint/extensions/$identifier/routers/web.php"
+        ln -T ".blueprint/extensions/$identifier/routers/web.php" "$FOLDER/routes/blueprint/web/$identifier.php"
+      } 2>> $BLUEPRINT__DEBUG
     fi
   fi
 
@@ -1580,7 +1589,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   || [[ $requests_routers_client      != "" ]] \
   || [[ $requests_routers_web         != "" ]]; then
     PRINT INFO "Removing and unlinking router files.."
-    rm -R \
+    rm -r \
       ".blueprint/extensions/$identifier/routers" \
       "routes/blueprint/application/$identifier" \
       "routes/blueprint/client/$identifier" \
