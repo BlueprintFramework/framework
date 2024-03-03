@@ -501,7 +501,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     || [[ $website == *"://builtbybit.com/"*    ]] || [[ $website == *"://www.builtbybit.com/"*    ]] \
     || [[ $website == *"://builtbybit.com"      ]] || [[ $website == *"://www.builtbybit.com"      ]] \
     || [[ $website == *"://builtbyb.it/"*       ]] || [[ $website == *"://www.builtbyb.it/"*       ]] \
-    || [[ $website == *"://builtbyb.it"         ]] || [[ $website == *"://www.builtbyb.it"         ]]; then websiteiconclass="bx-store";fi
+    || [[ $website == *"://builtbyb.it"         ]] || [[ $website == *"://www.builtbyb.it"         ]] \
+    || [[ $website == *"://bbyb.it/"*           ]] || [[ $website == *"://www.bbyb.it/"*           ]] \
+    || [[ $website == *"://bbyb.it"             ]] || [[ $website == *"://www.bbyb.it"             ]]; then websiteiconclass="bx-store";fi
     # discord
     if [[ $website == *"://discord.com/"*       ]] || [[ $website == *"://www.discord.com/"*       ]] \
     || [[ $website == *"://discord.com"         ]] || [[ $website == *"://www.discord.com"         ]] \

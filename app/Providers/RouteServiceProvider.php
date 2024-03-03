@@ -46,12 +46,12 @@ class RouteServiceProvider extends ServiceProvider
                 Route::middleware(['blueprint/application-api', 'throttle:api.application'])
                     ->prefix('/api/application/extensions')
                     ->scopeBindings()
-                    ->group(base_path('routes/api-application.php'));
+                    ->group(base_path('routes/blueprint/application.php'));
                 /* Client API */
                 Route::middleware(['blueprint/client-api', 'throttle:api.client'])
                     ->prefix('/api/client/extensions')
                     ->scopeBindings()
-                    ->group(base_path('routes/api-client.php'));
+                    ->group(base_path('routes/blueprint/client.php'));
             });           
 
             Route::middleware('web')->group(function () {
