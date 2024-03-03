@@ -35,6 +35,25 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('database', Database::class);
 
         $this->routes(function () {
+            /* Blueprint web routes */
+            Route::middleware('blueprint')
+                ->prefix('/extensions')
+                ->group(base_path('routes/blueprint/web.php'));
+
+            /* Blueprint API routes */
+            Route::middleware(['blueprint/api', RequireTwoFactorAuthentication::class])->group(function () {
+                /* Application API */
+                Route::middleware(['blueprint/application-api', 'throttle:api.application'])
+                    ->prefix('/api/application/extensions')
+                    ->scopeBindings()
+                    ->group(base_path('routes/api-application.php'));
+                /* Client API */
+                Route::middleware(['blueprint/client-api', 'throttle:api.client'])
+                    ->prefix('/api/client/extensions')
+                    ->scopeBindings()
+                    ->group(base_path('routes/api-client.php'));
+            });           
+
             Route::middleware('web')->group(function () {
                 Route::middleware(['auth.session', RequireTwoFactorAuthentication::class])
                     ->group(base_path('routes/base.php'));
@@ -63,11 +82,6 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('/api/remote')
                 ->scopeBindings()
                 ->group(base_path('routes/api-remote.php'));
-
-            /* Import Blueprint wildcard router */
-            Route::middleware('blueprint')
-                ->prefix('/extensions')
-                ->group(base_path('routes/blueprint/wildcard.php'));
         });
     }
 

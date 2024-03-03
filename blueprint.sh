@@ -406,25 +406,29 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   requests_views="$conf_requests_views"; #(optional)
   requests_controllers="$conf_requests_controllers"; #(optional)
-  requests_router="$conf_requests_router"; #(optional)
+  requests_routers_application="$conf_requests_routers_application"; #(optional)
+  requests_routers_client="$conf_requests_routers_client"; #(optional)
+  requests_routers_web="$conf_requests_routers_web"; #(optional)
 
   database_migrations="$conf_database_migrations"; #(optional)
   
   # "prevent" folder "escaping"
-  if [[ ( $icon                 == "/"* ) || ( $icon                 == *"/.."* ) || ( $icon                 == *"../"* ) || ( $icon                 == *"/../"* ) || ( $icon                 == *"~"* ) || ( $icon                 == *"\n"* ) ]] \
-  || [[ ( $admin_view           == "/"* ) || ( $admin_view           == *"/.."* ) || ( $admin_view           == *"../"* ) || ( $admin_view           == *"/../"* ) || ( $admin_view           == *"~"* ) || ( $admin_view           == *"\n"* ) ]] \
-  || [[ ( $admin_controller     == "/"* ) || ( $admin_controller     == *"/.."* ) || ( $admin_controller     == *"../"* ) || ( $admin_controller     == *"/../"* ) || ( $admin_controller     == *"~"* ) || ( $admin_controller     == *"\n"* ) ]] \
-  || [[ ( $admin_css            == "/"* ) || ( $admin_css            == *"/.."* ) || ( $admin_css            == *"../"* ) || ( $admin_css            == *"/../"* ) || ( $admin_css            == *"~"* ) || ( $admin_css            == *"\n"* ) ]] \
-  || [[ ( $admin_wrapper        == "/"* ) || ( $admin_wrapper        == *"/.."* ) || ( $admin_wrapper        == *"../"* ) || ( $admin_wrapper        == *"/../"* ) || ( $admin_wrapper        == *"~"* ) || ( $admin_wrapper        == *"\n"* ) ]] \
-  || [[ ( $dashboard_css        == "/"* ) || ( $dashboard_css        == *"/.."* ) || ( $dashboard_css        == *"../"* ) || ( $dashboard_css        == *"/../"* ) || ( $dashboard_css        == *"~"* ) || ( $dashboard_css        == *"\n"* ) ]] \
-  || [[ ( $dashboard_wrapper    == "/"* ) || ( $dashboard_wrapper    == *"/.."* ) || ( $dashboard_wrapper    == *"../"* ) || ( $dashboard_wrapper    == *"/../"* ) || ( $dashboard_wrapper    == *"~"* ) || ( $dashboard_wrapper    == *"\n"* ) ]] \
-  || [[ ( $dashboard_components == "/"* ) || ( $dashboard_components == *"/.."* ) || ( $dashboard_components == *"../"* ) || ( $dashboard_components == *"/../"* ) || ( $dashboard_components == *"~"* ) || ( $dashboard_components == *"\n"* ) ]] \
-  || [[ ( $data_directory       == "/"* ) || ( $data_directory       == *"/.."* ) || ( $data_directory       == *"../"* ) || ( $data_directory       == *"/../"* ) || ( $data_directory       == *"~"* ) || ( $data_directory       == *"\n"* ) ]] \
-  || [[ ( $data_public          == "/"* ) || ( $data_public          == *"/.."* ) || ( $data_public          == *"../"* ) || ( $data_public          == *"/../"* ) || ( $data_public          == *"~"* ) || ( $data_public          == *"\n"* ) ]] \
-  || [[ ( $requests_views       == "/"* ) || ( $requests_views       == *"/.."* ) || ( $requests_views       == *"../"* ) || ( $requests_views       == *"/../"* ) || ( $requests_views       == *"~"* ) || ( $requests_views       == *"\n"* ) ]] \
-  || [[ ( $requests_controllers == "/"* ) || ( $requests_controllers == *"/.."* ) || ( $requests_controllers == *"../"* ) || ( $requests_controllers == *"/../"* ) || ( $requests_controllers == *"~"* ) || ( $requests_controllers == *"\n"* ) ]] \
-  || [[ ( $requests_router      == "/"* ) || ( $requests_router      == *"/.."* ) || ( $requests_router      == *"../"* ) || ( $requests_router      == *"/../"* ) || ( $requests_router      == *"~"* ) || ( $requests_router      == *"\n"* ) ]] \
-  || [[ ( $database_migrations  == "/"* ) || ( $database_migrations  == *"/.."* ) || ( $database_migrations  == *"../"* ) || ( $database_migrations  == *"/../"* ) || ( $database_migrations  == *"~"* ) || ( $database_migrations  == *"\n"* ) ]]; then
+  if [[ ( $icon                         == "/"* ) || ( $icon                         == *"/.."* ) || ( $icon                         == *"../"* ) || ( $icon                         == *"/../"* ) || ( $icon                         == *"~"* ) || ( $icon                         == *"\n"* ) ]] \
+  || [[ ( $admin_view                   == "/"* ) || ( $admin_view                   == *"/.."* ) || ( $admin_view                   == *"../"* ) || ( $admin_view                   == *"/../"* ) || ( $admin_view                   == *"~"* ) || ( $admin_view                   == *"\n"* ) ]] \
+  || [[ ( $admin_controller             == "/"* ) || ( $admin_controller             == *"/.."* ) || ( $admin_controller             == *"../"* ) || ( $admin_controller             == *"/../"* ) || ( $admin_controller             == *"~"* ) || ( $admin_controller             == *"\n"* ) ]] \
+  || [[ ( $admin_css                    == "/"* ) || ( $admin_css                    == *"/.."* ) || ( $admin_css                    == *"../"* ) || ( $admin_css                    == *"/../"* ) || ( $admin_css                    == *"~"* ) || ( $admin_css                    == *"\n"* ) ]] \
+  || [[ ( $admin_wrapper                == "/"* ) || ( $admin_wrapper                == *"/.."* ) || ( $admin_wrapper                == *"../"* ) || ( $admin_wrapper                == *"/../"* ) || ( $admin_wrapper                == *"~"* ) || ( $admin_wrapper                == *"\n"* ) ]] \
+  || [[ ( $dashboard_css                == "/"* ) || ( $dashboard_css                == *"/.."* ) || ( $dashboard_css                == *"../"* ) || ( $dashboard_css                == *"/../"* ) || ( $dashboard_css                == *"~"* ) || ( $dashboard_css                == *"\n"* ) ]] \
+  || [[ ( $dashboard_wrapper            == "/"* ) || ( $dashboard_wrapper            == *"/.."* ) || ( $dashboard_wrapper            == *"../"* ) || ( $dashboard_wrapper            == *"/../"* ) || ( $dashboard_wrapper            == *"~"* ) || ( $dashboard_wrapper            == *"\n"* ) ]] \
+  || [[ ( $dashboard_components         == "/"* ) || ( $dashboard_components         == *"/.."* ) || ( $dashboard_components         == *"../"* ) || ( $dashboard_components         == *"/../"* ) || ( $dashboard_components         == *"~"* ) || ( $dashboard_components         == *"\n"* ) ]] \
+  || [[ ( $data_directory               == "/"* ) || ( $data_directory               == *"/.."* ) || ( $data_directory               == *"../"* ) || ( $data_directory               == *"/../"* ) || ( $data_directory               == *"~"* ) || ( $data_directory               == *"\n"* ) ]] \
+  || [[ ( $data_public                  == "/"* ) || ( $data_public                  == *"/.."* ) || ( $data_public                  == *"../"* ) || ( $data_public                  == *"/../"* ) || ( $data_public                  == *"~"* ) || ( $data_public                  == *"\n"* ) ]] \
+  || [[ ( $requests_views               == "/"* ) || ( $requests_views               == *"/.."* ) || ( $requests_views               == *"../"* ) || ( $requests_views               == *"/../"* ) || ( $requests_views               == *"~"* ) || ( $requests_views               == *"\n"* ) ]] \
+  || [[ ( $requests_controllers         == "/"* ) || ( $requests_controllers         == *"/.."* ) || ( $requests_controllers         == *"../"* ) || ( $requests_controllers         == *"/../"* ) || ( $requests_controllers         == *"~"* ) || ( $requests_controllers         == *"\n"* ) ]] \
+  || [[ ( $requests_routers_application == "/"* ) || ( $requests_routers_application == *"/.."* ) || ( $requests_routers_application == *"../"* ) || ( $requests_routers_application == *"/../"* ) || ( $requests_routers_application == *"~"* ) || ( $requests_routers_application == *"\n"* ) ]] \
+  || [[ ( $requests_routers_client      == "/"* ) || ( $requests_routers_client      == *"/.."* ) || ( $requests_routers_client      == *"../"* ) || ( $requests_routers_client      == *"/../"* ) || ( $requests_routers_client      == *"~"* ) || ( $requests_routers_client      == *"\n"* ) ]] \
+  || [[ ( $requests_routers_web         == "/"* ) || ( $requests_routers_web         == *"/.."* ) || ( $requests_routers_web         == *"../"* ) || ( $requests_routers_web         == *"/../"* ) || ( $requests_routers_web         == *"~"* ) || ( $requests_routers_web         == *"\n"* ) ]] \
+  || [[ ( $database_migrations          == "/"* ) || ( $database_migrations          == *"/.."* ) || ( $database_migrations          == *"../"* ) || ( $database_migrations          == *"/../"* ) || ( $database_migrations          == *"~"* ) || ( $database_migrations          == *"\n"* ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Config file paths cannot escape the extension bundle."
     exit 1
@@ -584,20 +588,22 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";  PRINT FATAL "Extensions can not have the identifier 'blueprint'.";exit 1;fi
 
   # Validate paths to files and directories defined in conf.yml.
-  if [[ ( ! -f ".blueprint/tmp/$n/$icon"                 ) && ( ${icon} != ""                 ) ]] ||    # file:   icon                 (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$admin_view"           )                                      ]] ||    # file:   admin_view
-     [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"     ) && ( ${admin_controller} != ""     ) ]] ||    # file:   admin_controller     (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$admin_css"            ) && ( ${admin_css} != ""            ) ]] ||    # file:   admin_css            (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$admin_wrapper"        ) && ( ${admin_wrapper} != ""        ) ]] ||    # file:   admin_wrapper        (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_css"        ) && ( ${dashboard_css} != ""        ) ]] ||    # file:   dashboard_css        (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_wrapper"    ) && ( ${dashboard_wrapper} != ""    ) ]] ||    # file:   dashboard_wrapper    (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$dashboard_components" ) && ( ${dashboard_components} != "" ) ]] ||    # folder: dashboard_components (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$data_directory"       ) && ( ${data_directory} != ""       ) ]] ||    # folder: data_directory       (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$data_public"          ) && ( ${data_public} != ""          ) ]] ||    # folder: data_public          (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$requests_views"       ) && ( ${requests_views} != ""       ) ]] ||    # folder: requests_views       (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$requests_controllers" ) && ( ${requests_controllers} != "" ) ]] ||    # folder: requests_controllers (optional)
-     [[ ( ! -f ".blueprint/tmp/$n/$requests_router"      ) && ( ${requests_router} != ""      ) ]] ||    # file:   requests_router      (optional)
-     [[ ( ! -d ".blueprint/tmp/$n/$database_migrations"  ) && ( ${database_migrations} != ""  ) ]];then  # folder: database_migrations  (optional)
+  if [[ ( ! -f ".blueprint/tmp/$n/$icon"                         ) && ( ${icon} != ""                         ) ]] ||    # file:   icon                         (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_view"                   )                                              ]] ||    # file:   admin_view
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"             ) && ( ${admin_controller} != ""             ) ]] ||    # file:   admin_controller             (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_css"                    ) && ( ${admin_css} != ""                    ) ]] ||    # file:   admin_css                    (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$admin_wrapper"                ) && ( ${admin_wrapper} != ""                ) ]] ||    # file:   admin_wrapper                (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_css"                ) && ( ${dashboard_css} != ""                ) ]] ||    # file:   dashboard_css                (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$dashboard_wrapper"            ) && ( ${dashboard_wrapper} != ""            ) ]] ||    # file:   dashboard_wrapper            (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$dashboard_components"         ) && ( ${dashboard_components} != ""         ) ]] ||    # folder: dashboard_components         (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$data_directory"               ) && ( ${data_directory} != ""               ) ]] ||    # folder: data_directory               (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$data_public"                  ) && ( ${data_public} != ""                  ) ]] ||    # folder: data_public                  (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$requests_views"               ) && ( ${requests_views} != ""               ) ]] ||    # folder: requests_views               (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$requests_controllers"         ) && ( ${requests_controllers} != ""         ) ]] ||    # folder: requests_controllers         (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$requests_routers_application" ) && ( ${requests_routers_application} != "" ) ]] ||    # file:   requests_routers_application (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$requests_routers_client"      ) && ( ${requests_routers_client} != ""      ) ]] ||    # file:   requests_routers_client      (optional)
+     [[ ( ! -f ".blueprint/tmp/$n/$requests_routers_web"         ) && ( ${requests_routers_web} != ""         ) ]] ||    # file:   requests_routers_web         (optional)
+     [[ ( ! -d ".blueprint/tmp/$n/$database_migrations"          ) && ( ${database_migrations} != ""          ) ]];then  # folder: database_migrations          (optional)
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Extension configuration points towards one or more files that do not exist."
     exit 1
@@ -643,11 +649,26 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   fi
 
   # Place routes directory.
-  if [[ $requests_router != "" ]]; then
-    PRINT INFO "Cloning and linking router file.."
+  if [[ $requests_routers_application != "" ]] \
+  || [[ $requests_routers_client      != "" ]] \
+  || [[ $requests_routers_web         != "" ]]; then
+    PRINT INFO "Cloning and linking router files.."
     mkdir -p ".blueprint/extensions/$identifier/routers"
-    cp -R ".blueprint/tmp/$n/$requests_router" ".blueprint/extensions/$identifier/routers/$identifier.php" 2>> $BLUEPRINT__DEBUG
-    ln -T ".blueprint/extensions/$identifier/routers/$identifier.php" "$FOLDER/routes/blueprint/extensions/$identifier.php" 2>> $BLUEPRINT__DEBUG
+
+    if [[ $requests_routers_application != "" ]]; then
+      cp -R ".blueprint/tmp/$n/$requests_routers_application" ".blueprint/extensions/$identifier/routers/application.php" 2>> $BLUEPRINT__DEBUG
+      ln -T ".blueprint/extensions/$identifier/routers/application.php" "$FOLDER/routes/blueprint/application/$identifier.php" 2>> $BLUEPRINT__DEBUG
+    fi
+
+    if [[ $requests_routers_client != "" ]]; then
+      cp -R ".blueprint/tmp/$n/$requests_routers_client" ".blueprint/extensions/$identifier/routers/client.php" 2>> $BLUEPRINT__DEBUG
+      ln -T ".blueprint/extensions/$identifier/routers/client.php" "$FOLDER/routes/blueprint/client/$identifier.php" 2>> $BLUEPRINT__DEBUG
+    fi
+
+    if [[ $requests_routers_web != "" ]]; then
+      cp -R ".blueprint/tmp/$n/$requests_routers_web" ".blueprint/extensions/$identifier/routers/web.php" 2>> $BLUEPRINT__DEBUG
+      ln -T ".blueprint/extensions/$identifier/routers/web.php" "$FOLDER/routes/blueprint/web/$identifier.php" 2>> $BLUEPRINT__DEBUG
+    fi
   fi
 
   # Create, link and connect components directory.
@@ -1334,7 +1355,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     requests_views="$conf_requests_views"; #(optional)
     requests_controllers="$conf_requests_controllers"; #(optional)
-    requests_router="$conf_requests_router"; #(optional)
+    requests_routers_application="$conf_requests_routers_application"; #(optional)
+    requests_routers_client="$conf_requests_routers_client"; #(optional)
+    requests_routers_web="$conf_requests_routers_web"; #(optional)
 
     database_migrations="$conf_database_migrations"; #(optional)
   else 
@@ -1551,11 +1574,16 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   fi
 
   # Remove router files
-  if [[ $requests_router != "" ]]; then
+  if [[ $requests_routers_application != "" ]] \
+  || [[ $requests_routers_client      != "" ]] \
+  || [[ $requests_routers_web         != "" ]]; then
     PRINT INFO "Removing and unlinking router files.."
     rm -R \
       ".blueprint/extensions/$identifier/routers" \
-      "routes/blueprint/extensions/$identifier"
+      "routes/blueprint/application/$identifier" \
+      "routes/blueprint/client/$identifier" \
+      "routes/blueprint/web/$identifier" \
+      &>> $BLUEPRINT__DEBUG
   fi
 
   # Remove private folder
