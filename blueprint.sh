@@ -246,16 +246,9 @@ if [[ $1 != "-bash" ]]; then
 
     # Make sure all files have correct permissions.
     PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-    chown -R $OWNERSHIP \
-      $FOLDER/.blueprint \
-      $FOLDER/app \
-      $FOLDER/bootstrap \
-      $FOLDER/config \
-      $FOLDER/database \
-      $FOLDER/public \
-      $FOLDER/resources \
-      $FOLDER/routes \
-      $FOLDER/storage
+    find "$FOLDER/" \
+      -path "$FOLDER/node_modules" -prune \
+      -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
 
     # Rebuild panel assets.
     PRINT INFO "Rebuilding panel assets.."
@@ -1272,16 +1265,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   
   # Make sure all files have correct permissions.
   PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-  chown -R $OWNERSHIP \
-    $FOLDER/.blueprint \
-    $FOLDER/app \
-    $FOLDER/bootstrap \
-    $FOLDER/config \
-    $FOLDER/database \
-    $FOLDER/public \
-    $FOLDER/resources \
-    $FOLDER/routes \
-    $FOLDER/storage
+  find "$FOLDER/" \
+   -path "$FOLDER/node_modules" -prune \
+   -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
   
   # Link filesystems
   PRINT INFO "Linking filesystems.."
@@ -1649,16 +1635,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Make sure all files have correct permissions.
   PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-  chown -R $OWNERSHIP \
-    $FOLDER/.blueprint \
-    $FOLDER/app \
-    $FOLDER/bootstrap \
-    $FOLDER/config \
-    $FOLDER/database \
-    $FOLDER/public \
-    $FOLDER/resources \
-    $FOLDER/routes \
-    $FOLDER/storage
+  find "$FOLDER/" \
+   -path "$FOLDER/node_modules" -prune \
+   -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
   
   # Link filesystems
   PRINT INFO "Linking filesystems.."
