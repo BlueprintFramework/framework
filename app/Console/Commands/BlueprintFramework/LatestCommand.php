@@ -3,9 +3,6 @@
 namespace Pterodactyl\Console\Commands\BlueprintFramework;
 
 use Illuminate\Console\Command;
-use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
-use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
-use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 
 class LatestCommand extends Command
 {
