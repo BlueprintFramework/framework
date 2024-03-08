@@ -1,5 +1,23 @@
 #!/bin/bash
 
+
+# ████████████████████████████████████████████████████████
+# █▄─▄─▀█▄─▄███▄─██─▄█▄─▄▄─█▄─▄▄─█▄─▄▄▀█▄─▄█▄─▀█▄─▄█─▄─▄─█
+# ██─▄─▀██─██▀██─██─███─▄█▀██─▄▄▄██─▄─▄██─███─█▄▀─████─███
+# ▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▀▀▀▄▄▀▄▄▀▄▄▄▀▄▄▄▀▀▄▄▀▀▄▄▄▀▀
+# ██████████████████████████████████████████████████████████████████████
+# █▄─██─▄█▄─▀█▄─▄█▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─██▀▄─██▄─▄███▄─▄███▄─▄▄─█▄─▄▄▀█
+# ██─██─███─█▄▀─███─███─█▄▀─██▄▄▄▄─███─████─▀─███─██▀██─██▀██─▄█▀██─▄─▄█
+# ▀▀▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▀▄▄▀
+#
+# - initial commit by Tudorhc5
+# 
+# A small uninstall script, that should work on most ubuntu / debian based distros (not CentOS)
+#
+
+
+
+
 # Check if the script is run with root privileges
 if [ "$(id -u)" -ne 0 ]; then
     echo "This script must be run as root" 1>&2
@@ -9,7 +27,10 @@ fi
 
 # Prompt the user
 echo "WARNING!: The following uninstall will remove blueprint and most* of its components"
-echo "This will also delete your app/ public/ resources/ ./blueprint folders."
+echo "This will also delete your app/ public/ resources/ routes/ ./blueprint folders."
+echo " "
+echo "WARNING!: This script assumes its running on a debian or ubuntu based system."
+echo " "
 read -p "Are you sure you want to continue with the uninstall(y/n): " choice
 
 # Check the user's choice
@@ -53,7 +74,7 @@ for filename in "${files_to_delete[@]}"; do
     file_path="${directory}/${filename}"
 
     if [ -e "$file_path" ]; then
-        rm "$file_path"
+        rm -fr "$file_path"
         echo "File '$filename' deleted successfully."
     else
         echo "File '$filename' does not exist in directory '$directory'."
@@ -64,7 +85,10 @@ echo "Done deleting files"
 curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv
 echo "Got latest panel build"
 rm -fr panel.tar.gz
+# Make sure files have proper permissions, as instructed by pterodactyl.
 chmod -R 755 storage/* bootstrap/cache
+
+# Reload the website
 php artisan view:clear
 php artisan config:clear
 
@@ -73,21 +97,24 @@ read -p "Do you want to update your database schema for the newest version of Pt
 
 # Check the user's choice
 case "$choice" in
-  y|Y) echo "Updating database schema..." 
+  y|Y) echo "Updating database schema..."
     php artisan migrate --seed --force
     ;;
   n|N) echo "Skipping database schema update." ;;
   *) echo "Invalid choice. Please enter 'y' for yes or 'n' for no." ;;
 esac
 echo "Finishing up..."
+# Making sure all the files have the proper owner twice.
 chown -R www-data:www-data ${directory}/
+# Boot the website back up
 php artisan queue:restart
 php artisan up
+
 chown -R www-data:www-data ${directory}/
 echo "If you want to update your dependencies also, run:"
 echo "composer install --no-dev --optimize-autoloader"
 echo "As composer's developers recommandation, do NOT run it as root."
-echo "See https://getcomposer.org/root for details"
+echo "See https://getcomposer.org/root for details."
 cd $currentLoc
 echo "Job is complete!"
 
