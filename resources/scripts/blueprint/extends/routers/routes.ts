@@ -11,6 +11,7 @@ interface RouteDefinition {
 }
 interface ServerRouteDefinition extends RouteDefinition {
   permission: string | string[] | null;
+  nests?: number[];
 }
 interface Routes {
   account: RouteDefinition[];

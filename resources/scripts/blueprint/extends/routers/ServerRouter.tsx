@@ -7,12 +7,14 @@ import Spinner from '@/components/elements/Spinner';
 import { NotFound } from '@/components/elements/ScreenBlock';
 import { useLocation } from 'react-router';
 import { useStoreState } from 'easy-peasy';
+import { ServerContext } from '@/state/server';
 
 import routes from '@/routers/routes';
 import blueprintRoutes from './routes';
 
 export const NavigationLinks = () => {
   const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
+  const serverNest = ServerContext.useStoreState((state) => state.server.data?.nestId);
   const match = useRouteMatch<{ id: string }>();
   const to = (value: string, url = false) => {
     if (value === '/') {
@@ -46,6 +48,7 @@ export const NavigationLinks = () => {
       {blueprintRoutes.server.length > 0 && blueprintRoutes.server
         .filter((route) => !!route.name)
         .filter((route) => route.adminOnly ? rootAdmin : true)
+        .filter((route) => route.nests && serverNest ? route.nests.includes(serverNest) : true )
         .map((route) =>
           route.permission ? (
             <Can key={route.path} action={route.permission} matchAny>
