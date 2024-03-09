@@ -876,8 +876,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Component" ]]; then COMPONENTS_ROUTE_COMP="${!child}"; fi
             # Route admin
             if [[ $child == "Components_Navigation_Routes_"+([0-9])"_AdminOnly" ]]; then COMPONENTS_ROUTE_ADMI="${!child}"; fi
-            # Route nests
-            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Nests" ]]; then COMPONENTS_ROUTE_NEST="${!child}"; fi
           done
 
           # Route identifier
@@ -945,10 +943,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             exit 1
           fi
 
-          # Assign value to ROUTE_ADMI and ROUTE_NEST if empty
+          # Assign value to ROUTE_ADMI if empty
           if [[ $COMPONENTS_ROUTE_ADMI != "true" ]]; then COMPONENTS_ROUTE_ADMI="false"; fi
-          if [[ $COMPONENTS_ROUTE_NEST != ""     ]]; then COMPONENTS_ROUTE_NEST="nests: [$COMPONENTS_ROUTE_NEST]"; fi
-
 
           # Apply routes.
           if [[ $COMPONENTS_ROUTE_TYPE == "account" ]]; then
@@ -961,7 +957,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # Server routes
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
-            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', permission: null, name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI, $COMPONENTS_ROUTE_NEST },"
+            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', permission: null, name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
             sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
@@ -977,7 +973,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           COMPONENTS_ROUTE_COMP=""
           COMPONENTS_ROUTE_IDEN=""
           COMPONENTS_ROUTE_ADMI=""
-          COMPONENTS_ROUTE_NEST=""
         done
 
         sed -i "s~/\* \[import] \*/~~g" $ImportConstructor
