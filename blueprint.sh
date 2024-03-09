@@ -874,6 +874,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Type" ]]; then COMPONENTS_ROUTE_TYPE="${!child}"; fi
             # Route component
             if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Component" ]]; then COMPONENTS_ROUTE_COMP="${!child}"; fi
+            # Route permission
+            if [[ $child == "Components_Navigation_Routes_"+([0-9])"_Permission" ]]; then COMPONENTS_ROUTE_PERM="${!child}"; fi
             # Route admin
             if [[ $child == "Components_Navigation_Routes_"+([0-9])"_AdminOnly" ]]; then COMPONENTS_ROUTE_ADMI="${!child}"; fi
           done
@@ -943,12 +945,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             exit 1
           fi
 
-          # Assign value to ROUTE_ADMI if empty
+          # Assign value to certain variables if empty/invalid
           if [[ $COMPONENTS_ROUTE_ADMI != "true" ]]; then COMPONENTS_ROUTE_ADMI="false"; fi
+          if [[ $COMPONENTS_ROUTE_PERM == ""     ]]; then COMPONENTS_ROUTE_PERM="null";  fi
 
           # Apply routes.
           if [[ $COMPONENTS_ROUTE_TYPE == "account" ]]; then
             # Account routes
+            if [[ $COMPONENTS_ROUTE_PERM != "" ]]; then PRINT WARNING "Route permission declerations have no effect on account navigation routes."; fi
+          
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI },"
 
@@ -957,7 +962,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # Server routes
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
-            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', permission: null, name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI },"
+            COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', permission: $COMPONENTS_ROUTE_PERM, name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
             sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
@@ -972,6 +977,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           COMPONENTS_ROUTE_TYPE=""
           COMPONENTS_ROUTE_COMP=""
           COMPONENTS_ROUTE_IDEN=""
+          COMPONENTS_ROUTE_PERM=""
           COMPONENTS_ROUTE_ADMI=""
         done
 

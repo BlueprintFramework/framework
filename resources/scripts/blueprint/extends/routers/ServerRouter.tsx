@@ -14,7 +14,7 @@ import blueprintRoutes from './routes';
 
 export const NavigationLinks = () => {
   const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
-  const serverNest = ServerContext.useStoreState((state) => state.server.data?.nestId);
+  const serverEgg = ServerContext.useStoreState((state) => state.server.data?.eggId);
   const match = useRouteMatch<{ id: string }>();
   const to = (value: string, url = false) => {
     if (value === '/') {
@@ -48,7 +48,7 @@ export const NavigationLinks = () => {
       {blueprintRoutes.server.length > 0 && blueprintRoutes.server
         .filter((route) => !!route.name)
         .filter((route) => route.adminOnly ? rootAdmin : true)
-        .filter((route) => route.nests && serverNest ? route.nests.includes(serverNest) : true )
+        .filter((route) => route.eggs && serverEgg ? route.eggs.includes(serverEgg) : true )
         .map((route) =>
           route.permission ? (
             <Can key={route.path} action={route.permission} matchAny>
@@ -70,6 +70,7 @@ export const NavigationLinks = () => {
 
 export const NavigationRouter = () => {
   const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
+  const serverEgg = ServerContext.useStoreState((state) => state.server.data?.eggId);
   const match = useRouteMatch<{ id: string }>();
   const to = (value: string, url = false) => {
     if (value === '/') {
@@ -96,6 +97,7 @@ export const NavigationRouter = () => {
           {/* Blueprint routes */}
           {blueprintRoutes.server.length > 0 && blueprintRoutes.server
             .filter((route) => route.adminOnly ? rootAdmin : true)
+            .filter((route) => route.eggs && serverEgg ? route.eggs.includes(serverEgg) : true )
             .map(({ path, permission, component: Component }) => (
               <PermissionRoute key={path} permission={permission} path={to(path)} exact>
                 <Spinner.Suspense>
