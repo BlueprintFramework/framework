@@ -6,7 +6,8 @@ use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Artisan;
 use Pterodactyl\Http\Controllers\Controller;
-use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
+use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
+use Pterodactyl\BlueprintFramework\Services\ConfigService\BlueprintConfigService;
 use Pterodactyl\BlueprintFramework\Services\TelemetryService\BlueprintTelemetryService;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
@@ -20,9 +21,10 @@ class BlueprintExtensionController extends Controller
    * BlueprintExtensionController constructor.
    */
   public function __construct(
-    private BlueprintVariableService $bp,
-    private BlueprintTelemetryService $telemetry,
-    private BlueprintExtensionLibrary $blueprint,
+    private BlueprintTelemetryService $TelemetryService,
+    private BlueprintExtensionLibrary $ExtensionLibrary,
+    private BlueprintPlaceholderService $PlaceholderService,
+    private BlueprintConfigService $ConfigService,
 
     private ViewFactory $view,
     private SettingsRepositoryInterface $settings,
@@ -34,12 +36,14 @@ class BlueprintExtensionController extends Controller
    */
   public function index(): View
   {
+    $LatestVersion = $this->ConfigService->latest();
     return $this->view->make(
       'admin.extensions.blueprint.index', [
-        'bp' => $this->bp,
-        'blueprint' => $this->blueprint,
-        'telemetry' => $this->telemetry,
-        'latest' => $this->bp->latest(),
+        'ExtensionLibrary' => $this->ExtensionLibrary,
+        'TelemetryService' => $this->TelemetryService,
+        'PlaceholderService' => $this->PlaceholderService,
+        'ConfigService' => $this->ConfigService,
+        'LatestVersion' => $LatestVersion,
         
         'root' => "/admin/extensions/blueprint",
       ]
@@ -57,7 +61,7 @@ class BlueprintExtensionController extends Controller
     }
 
     // Confirm that the database value changes have been applied.
-    $this->blueprint->notify("Your changes have been saved.");
+    $this->ExtensionLibrary->notify("Your changes have been saved.");
     // Sync database values with the bash side of Blueprint.
     Artisan::call("bp:sync");
     // Redirect back to the page the user was on.

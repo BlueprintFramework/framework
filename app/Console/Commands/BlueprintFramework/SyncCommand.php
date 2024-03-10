@@ -3,7 +3,8 @@
 namespace Pterodactyl\Console\Commands\BlueprintFramework;
 
 use Illuminate\Console\Command;
-use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
+use Pterodactyl\BlueprintFramework\Services\ConfigService\BlueprintConfigService;
+use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 
@@ -16,8 +17,9 @@ class SyncCommand extends Command
    * SyncCommand constructor.
    */
   public function __construct(
-    private BlueprintVariableService $bp,
     private BlueprintExtensionLibrary $blueprint,
+    private BlueprintConfigService $ConfigService,
+    private BlueprintPlaceholderService $PlaceholderService,
     private SettingsRepositoryInterface $settings,
   ) { parent::__construct(); }
 
@@ -27,18 +29,17 @@ class SyncCommand extends Command
   public function handle()
   {
     // TELEMETRY ID
-    if ($this->settings->get('blueprint::panel:id') == "" || $this->bp->version() != $this->settings->get('blueprint::version:cache')) {
-      $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->bp->version());
-      $this->settings->set('blueprint::version:cache', $this->bp->version());
+    if ($this->settings->get('blueprint::panel:id') == "" || $this->PlaceholderService->version() != $this->settings->get('blueprint::version:cache')) {
+      $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->PlaceholderService->version());
+      $this->settings->set('blueprint::version:cache', $this->PlaceholderService->version());
     }
     
     // TELEMETRY STATUS
     if ($this->settings->get('blueprint::telemetry') == "") { $this->settings->set('blueprint::telemetry', "true"); }
-    if ($this->settings->get('blueprint::telemetry') == "false") { $this->bp->config('TELEMETRY_ID','KEY_NOT_UPDATED');
-    } else { $this->bp->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id")); }
-
+    if ($this->settings->get('blueprint::telemetry') == "false") { $this->ConfigService->config('TELEMETRY_ID','KEY_NOT_UPDATED');
+    } else { $this->ConfigService->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id")); }
 
     // DEVELOPER MODE
-    $this->bp->config('DEVELOPER', $this->settings->get('blueprint::developer'));
+    $this->ConfigService->config('DEVELOPER', $this->settings->get('blueprint::developer'));
   }
 }

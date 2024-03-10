@@ -6,7 +6,6 @@ use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
-use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
 
@@ -18,9 +17,8 @@ class ExtensionsController extends Controller
   public function __construct(
     private SoftwareVersionService $version,
     private ViewFactory $view,
-    private BlueprintVariableService $bp,
-    private BlueprintExtensionLibrary $blueprint,
-    private BlueprintPlaceholderService $placeholder)
+    private BlueprintExtensionLibrary $ExtensionLibrary,
+    private BlueprintPlaceholderService $PlaceholderService)
   {
   }
 
@@ -29,17 +27,11 @@ class ExtensionsController extends Controller
    */
   public function index(): View
   {
-    // Onboarding check.
-    if($this->blueprint->fileRead("{$this->placeholder->folder()}/.blueprint/extensions/blueprint/private/db/onboarding") == "*blueprint*") { 
-      $onboarding = true;
-    } else {
-      $onboarding = false;
-    }
     return $this->view->make('admin.extensions', [
+      'ExtensionLibrary' => $this->ExtensionLibrary,
+      'PlaceholderService' => $this->PlaceholderService,
+      
       'version' => $this->version,
-      'bp' => $this->bp,
-      'blueprint' => $this->blueprint,
-      'onboarding' => $onboarding,
       'root' => "/admin/extensions",
     ]);
   }

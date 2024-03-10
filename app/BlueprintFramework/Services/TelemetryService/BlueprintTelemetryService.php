@@ -3,13 +3,14 @@
 namespace Pterodactyl\BlueprintFramework\Services\TelemetryService;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
+use Pterodactyl\BlueprintFramework\Services\ConfigService\BlueprintConfigService;
 
 class BlueprintTelemetryService
 {
   // Construct core
   public function __construct(
     private SettingsRepositoryInterface $settings,
-    private BlueprintVariableService $bp,
+    private BlueprintConfigService $ConfigService,
   ) {
   }
 
@@ -32,7 +33,7 @@ class BlueprintTelemetryService
     $response = curl_exec($curl);
 
     curl_close($curl);
-    $this->bp->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id"));
+    $this->ConfigService->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id"));
     return;
   }
 }
