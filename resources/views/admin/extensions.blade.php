@@ -13,7 +13,7 @@
 @endsection
 
 @section('content')
-  @if(($PlaceholderService->isInstalled() != "NOTINSTALLED") && ($PlaceholderService->version() != "::"."v"))
+  @if(($PlaceholderService->installed() != "NOTINSTALLED") && ($PlaceholderService->version() != "::"."v"))
 
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center">
       <a href="{{ route('admin.extensions.blueprint.index') }}">
