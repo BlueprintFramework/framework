@@ -21,7 +21,7 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 <br/>
 
 ## Screenshots
-![screenshots](https://github.com/teamblueprint/main/assets/103201875/cb66943e-a60e-44e5-afd4-90475b106244)
+![screenshots](https://github.com/BlueprintFramework/main/assets/103201875/cb66943e-a60e-44e5-afd4-90475b106244)
 
 
 <br/>
@@ -46,5 +46,5 @@ Want your name, website or company listed here? [Sponsor **prplwtf** on GitHub](
 
 ## Related Links
 [**Pterodactyl**](https://pterodactyl.io/) is a free, open-source game server management panel built with PHP, React, and Go.\
-[**teamblueprint/templates**](https://github.com/teamblueprint/templates) is a repository with initialization templates for extension development.\
-[**teamblueprint/web**](https://github.com/teamblueprint/web) is our website and documentation revision.
+[**teamblueprint/templates**](https://github.com/BlueprintFramework/templates) is a repository with initialization templates for extension development.\
+[**teamblueprint/web**](https://github.com/BlueprintFramework/web) is our website and documentation revision.

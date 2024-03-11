@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # blueprint.zip
-# github.com/teamblueprint/main
+# github.com/BlueprintFramework/main
 # prpl.wtf
 
 # This should allow Blueprint to run in Docker. Please note that changing the $FOLDER variable after running
@@ -1696,7 +1696,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   ask_template() {
     PRINT INPUT "Choose an extension template:"
-    echo -e "$(curl 'https://raw.githubusercontent.com/teamblueprint/templates/main/repository' 2>> $BLUEPRINT__DEBUG)"
+    echo -e "$(curl 'https://raw.githubusercontent.com/BlueprintFramework/templates/main/repository' 2>> $BLUEPRINT__DEBUG)"
     read -r ASKTEMPLATE
     REDO_TEMPLATE=false
 
@@ -1706,7 +1706,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
       REDO_TEMPLATE=true
     fi
     # Unknown template.
-    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/teamblueprint/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2>> $BLUEPRINT__DEBUG)") == "404: Not Found" ]]; then 
+    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/BlueprintFramework/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2>> $BLUEPRINT__DEBUG)") == "404: Not Found" ]]; then 
       PRINT WARNING "Unknown template, please choose a valid option."
       REDO_TEMPLATE=true
     fi
@@ -1806,7 +1806,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   PRINT INFO "Fetching templates.."
   if [[ $(php artisan bp:latest) != "$VERSION" ]]; then PRINT WARNING "Active Blueprint version is not latest, you might run into compatibility issues."; fi
   cd .blueprint/tmp || cdhalt
-  git clone "https://github.com/teamblueprint/templates.git"
+  git clone "https://github.com/BlueprintFramework/templates.git"
   cd ${FOLDER}/.blueprint || cdhalt
   cp -R tmp/templates/* extensions/blueprint/private/build/templates/
   rm -R tmp/templates
@@ -2030,10 +2030,10 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   cd $FOLDER/.tmp/files || cdhalt
   if [[ $3 == "dev" ]]; then
     # download latest commit
-    git clone https://github.com/teamblueprint/main.git
+    git clone https://github.com/BlueprintFramework/main.git
   else
     # download latest release
-    LOCATION=$(curl -s https://api.github.com/repos/teamblueprint/main/releases/latest \
+    LOCATION=$(curl -s https://api.github.com/repos/BlueprintFramework/main/releases/latest \
   | grep "zipball_url" \
   | awk '{ print $2 }' \
   | sed 's/,$//'       \
