@@ -14,7 +14,7 @@ import blueprintRoutes from './routes';
 
 export const NavigationLinks = () => {
   const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
-  const serverEgg = ServerContext.useStoreState((state) => state.server.data?.eggId);
+  const serverEgg = ServerContext.useStoreState((state) => state.server.data?.BlueprintFramework.eggId);
   const match = useRouteMatch<{ id: string }>();
   const to = (value: string, url = false) => {
     if (value === '/') {
@@ -70,7 +70,7 @@ export const NavigationLinks = () => {
 
 export const NavigationRouter = () => {
   const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
-  const serverEgg = ServerContext.useStoreState((state) => state.server.data?.eggId);
+  const serverEgg = ServerContext.useStoreState((state) => state.server.data?.BlueprintFramework.eggId);
   const match = useRouteMatch<{ id: string }>();
   const to = (value: string, url = false) => {
     if (value === '/') {
