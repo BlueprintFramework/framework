@@ -6,8 +6,8 @@
 
 @section('content-header')
     <img src="[icon]" alt="logo" style="float:left;width:30px;height:30px;border-radius:3px;margin-right:5px;"/>
-    <button class="btn btn-gray-alt pull-right" style="padding: 5px 10px;" data-toggle="modal" data-target="#extensionConfigModal"><i class="bx bxs-cog"></i></button>
-    <!--[web] <a href="[website]" target="_blank"><button class="btn btn-gray-alt pull-right" style="padding: 5px 10px;"><i class="bx [webicon]"></i></button></a> [web]--> 
+    <button class="btn btn-gray-alt pull-right" style="padding: 5px 10px; margin-right: 7px" data-toggle="modal" data-target="#extensionConfigModal"><i class="bx bx-slider"></i></button>
+    <!--[web] <a href="[website]" target="_blank"><button class="btn btn-gray-alt pull-right" style="padding: 5px 10px; margin: 0px 5px"><i class="bx [webicon]"></i></button></a> [web]--> 
     <h1 ext-title>[name]<tag mg-left blue>[version]</tag></h1>
 @endsection
 
