@@ -8,6 +8,7 @@ interface RouteDefinition {
   component: React.ComponentType;
   exact?: boolean;
   adminOnly: boolean | false;
+  identifier: string;
 }
 interface ServerRouteDefinition extends RouteDefinition {
   permission: string | string[] | null;
