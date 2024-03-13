@@ -1113,6 +1113,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     -e "s~\[description\]~$description~g" \
     -e "s~\[version\]~$version~g" \
     -e "s~\[icon\]~$ICON~g" \
+    -e "s~\[id\]~$identifier~g" \
     "$AdminBladeConstructor"
   if [[ $website != "" ]]; then
     sed -i \
