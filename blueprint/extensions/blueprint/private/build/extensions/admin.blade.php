@@ -13,17 +13,21 @@
 
 @section('content')
     <div class="modal fade" id="extensionConfigModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form action="/admin/extensions/blueprint/config" method="POST" autocomplete="off">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <form action="/admin/extensions/blueprint/config" method="POST" autocomplete="off">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <p>hello</p>
+                </div>
+                <div class="modal-footer">
+                    <p class="text-danger small text-left">hope you like living on the edge because this isn't production-ready yet</p>
+                    {!! csrf_field() !!}
                     <input type="hidden" name="_identifier" value="[id]">
                     <input type="hidden" name="_method" value="PATCH">
-
-                    <button type="submit" id="submit"></button>
-                </form>
+                    <button type="button" class="btn btn-default btn-sm pull-left" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success btn-sm">Create</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
     <p>[description]</p>
