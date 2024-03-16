@@ -1268,12 +1268,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     fi
   fi
   
-  # Make sure all files have correct permissions.
-  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-  find "$FOLDER/" \
-   -path "$FOLDER/node_modules" -prune \
-   -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
-  
   # Link filesystems
   PRINT INFO "Linking filesystems.."
   php artisan storage:link &>> $BLUEPRINT__DEBUG
@@ -1286,6 +1280,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     php artisan route:cache
     php artisan cache:clear
   } &>> $BLUEPRINT__DEBUG 
+
+  # Make sure all files have correct permissions.
+  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+  find "$FOLDER/" \
+   -path "$FOLDER/node_modules" -prune \
+   -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
 
   chown -R $OWNERSHIP "$FOLDER/.blueprint/extensions/$identifier/private"
   chmod --silent -R +x ".blueprint/extensions/"* 2>> $BLUEPRINT__DEBUG
@@ -1636,12 +1636,6 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     PRINT INFO "Rebuilding panel assets.."
     yarn run build:production --progress 
   fi
-
-  # Make sure all files have correct permissions.
-  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-  find "$FOLDER/" \
-   -path "$FOLDER/node_modules" -prune \
-   -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
   
   # Link filesystems
   PRINT INFO "Linking filesystems.."
@@ -1655,6 +1649,12 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     php artisan route:cache
     php artisan cache:clear
   } &>> $BLUEPRINT__DEBUG 
+
+  # Make sure all files have correct permissions.
+  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+  find "$FOLDER/" \
+   -path "$FOLDER/node_modules" -prune \
+   -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
   
   # Remove from installed list
   PRINT INFO "Removing '$identifier' from active extensions list.."

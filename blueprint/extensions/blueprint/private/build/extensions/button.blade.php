@@ -1,1 +1,1 @@
-<?php $EXTENSION_ID = "[id]"; $EXTENSION_NAME = "[name]"; $EXTENSION_VERSION = "[version]"; $EXTENSION_ICON = "[icon]";?> @yield("entry")
+@yield("entry", array('EXTENSION_ID' => '[id]', 'EXTENSION_NAME' => '[name]', 'EXTENSION_VERSION' => '[version]', 'EXTENSION_ICON' => '[icon]'))
