@@ -1170,10 +1170,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     echo // "$identifier":stop; } >> "routes/blueprint.php"
   else
     # Replace old extensions page button if extension is updating.
-    OLDBUTTON_RESULT=$(<.blueprint/extensions/"$identifier"/private/.store/build/button.blade.php)
-    sed -i "s~\<\!--@$identifier:s\@--\>*\<\!--\@$identifier:e\@--\>~~g" "resources/views/admin/extensions.blade.php"
+    sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/admin/extensions.blade.php"
+    sed -i \
+      -e "s~<!--@$identifier:s@-->~~g" \
+      -e "s~<!--@$identifier:e@-->~~g" \
+      "resources/views/admin/extensions.blade.php"
   fi
-  sed -i "s~<!-- \[entryplaceholder\] -->~$ADMINBUTTON_RESULT\n<!-- \[entryplaceholder\] -->~g" "resources/views/admin/extensions.blade.php"
+  sed -i "s~<!-- \[entryplaceholder\] -->~<!--@$identifier:s@-->\n$ADMINBUTTON_RESULT\n<!--@$identifier:e@-->\n<!-- \[entryplaceholder\] -->~g" "resources/views/admin/extensions.blade.php"
 
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
@@ -1229,7 +1232,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   mkdir -p \
     ".blueprint/extensions/$identifier/private/.store/build" \
     ".blueprint/extensions/$identifier/private/.store/build/config"
-  cp "$__BuildDir/extensions/button.blade.php.bak" ".blueprint/extensions/$identifier/private/.store/build/button.blade.php"
   cp "$__BuildDir/extensions/route.php.bak" ".blueprint/extensions/$identifier/private/.store/build/route.php"
   cp "$__BuildDir/extensions/config/ExtensionFS.build.bak" ".blueprint/extensions/$identifier/private/.store/build/config/ExtensionFS.build"
 
