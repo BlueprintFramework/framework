@@ -1,1 +1,1 @@
-@yield("entry", ['EXTENSION_ID' => '[id]', 'EXTENSION_NAME' => '[name]', 'EXTENSION_VERSION' => '[version]', 'EXTENSION_ICON' => '[icon]'])
+@include("entry", ['EXTENSION_ID' => '[id]', 'EXTENSION_NAME' => '[name]', 'EXTENSION_VERSION' => '[version]', 'EXTENSION_ICON' => '[icon]'])
