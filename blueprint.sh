@@ -491,7 +491,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
 
     # Change link icon depending on website url.
-    websiteiconclass="bx-link-external"
+    websiteiconclass="bx bx-link-external"
 
     # git
     if [[ $website == *"://github.com/"*        ]] || [[ $website == *"://www.github.com/"*        ]] \
@@ -1027,7 +1027,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   AdminRouteConstructor="$__BuildDir/extensions/route.php.bak"
   AdminButtonConstructor="$__BuildDir/extensions/button.blade.php.bak"
   ConfigExtensionFS="$__BuildDir/extensions/config/ExtensionFS.build.bak"
-
   {
     if [[ $controller_type == "default" ]]; then cp "$__BuildDir/extensions/controller.build" "$AdminControllerConstructor"; fi
     cp "$__BuildDir/extensions/admin.blade.php" "$AdminBladeConstructor"
@@ -1075,7 +1074,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
   fi;
   ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
-  CONTENT=$(cat .blueprint/tmp/"$n"/"$admin_view")
 
   if [[ $admin_css != "" ]]; then
     PRINT INFO "Cloning and linking admin css.."
@@ -1095,7 +1093,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $name == *"~"* ]]; then        PRINT WARNING "'name' contains '~' and may result in an error.";fi
   if [[ $description == *"~"* ]]; then PRINT WARNING "'description' contains '~' and may result in an error.";fi
   if [[ $version == *"~"* ]]; then     PRINT WARNING "'version' contains '~' and may result in an error.";fi
-  if [[ $CONTENT == *"~"* ]]; then     PRINT WARNING "'CONTENT' contains '~' and may result in an error.";fi
   if [[ $ICON == *"~"* ]]; then        PRINT WARNING "'ICON' contains '~' and may result in an error.";fi
   if [[ $identifier == *"~"* ]]; then  PRINT WARNING "'identifier' contains '~' and may result in an error.";fi
 
@@ -1123,7 +1120,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       -e "s~\[webicon\]~$websiteiconclass~g" \
       "$AdminBladeConstructor"
   fi
-  echo -e "$CONTENT\n@endsection" >> "$AdminBladeConstructor"
+  echo -e "\n@endsection" >> "$AdminBladeConstructor"
 
   # Construct admin route
   sed -i "s~\[id\]~$identifier~g" "$AdminRouteConstructor"
@@ -1174,7 +1171,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   else
     # Replace old extensions page button if extension is updating.
     OLDBUTTON_RESULT=$(<.blueprint/extensions/"$identifier"/private/.store/build/button.blade.php)
-    sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
+    sed -i "s~\<\!--@$identifier:s\@--\>*\<\!--\@$identifier:e\@--\>~~g" "resources/views/admin/extensions.blade.php"
   fi
   sed -i "s~<!-- \[entryplaceholder\] -->~$ADMINBUTTON_RESULT\n<!-- \[entryplaceholder\] -->~g" "resources/views/admin/extensions.blade.php"
 
