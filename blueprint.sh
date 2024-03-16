@@ -466,7 +466,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       PRINT FATAL "Upgrading extension has failed due to missing essential .store files."
       exit 1
     fi
-    
+
     eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/conf.yml old_)"
     DUPLICATE="y"
 
@@ -1405,8 +1405,11 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Remove admin button 
   PRINT INFO "Editing 'extensions' admin page.."
-  OLDBUTTON_RESULT=$(cat ".blueprint/extensions/$identifier/private/.store/build/button.blade.php")
-  sed -i "s~$OLDBUTTON_RESULT~~g" "resources/views/admin/extensions.blade.php"
+  sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/admin/extensions.blade.php"
+  sed -i \
+    -e "s~<!--@$identifier:s@-->~~g" \
+    -e "s~<!--@$identifier:e@-->~~g" \
+    "resources/views/admin/extensions.blade.php"
 
   # Remove admin routes
   PRINT INFO "Removing admin routes.."
