@@ -460,14 +460,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   # Detect if extension is already installed and prepare the upgrading process.
   if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"$identifier,"* ]]; then
     PRINT INFO "Switching to update process as extension has already been installed."
-    eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/conf.yml old_)"
-    DUPLICATE="y"
 
-    if [[ ! -f ".blueprint/extensions/$identifier/private/.store/build/button.blade.php" ]]; then
+    if [[ ! -d ".blueprint/extensions/$identifier/private/.store" ]]; then
       rm -R ".blueprint/tmp/$n"
       PRINT FATAL "Upgrading extension has failed due to missing essential .store files."
       exit 1
     fi
+    
+    eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/conf.yml old_)"
+    DUPLICATE="y"
 
     # Clean up some old extension files.
     if [[ $old_data_public != "" ]]; then
