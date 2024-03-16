@@ -1,1 +1,1 @@
-<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center"><a href="{{ route('admin.extensions.[id].index') }}"><button class="btn extension-btn" style="width:100%;margin-bottom:17px;"><img src="[icon]" alt="logo" class="extension-btn-image"><p class="extension-btn-text">[name]</p><p class="extension-btn-version">[version]</p></button></a></div>
+<?php $EXTENSION_ID = "[id]"; $EXTENSION_NAME = "[name]"; $EXTENSION_VERSION = "[version]"; $EXTENSION_ICON = "[icon]";?> @yield("entry")
