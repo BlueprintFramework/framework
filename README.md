@@ -47,4 +47,4 @@ Want your name, website or company listed here? [Sponsor **prplwtf** on GitHub](
 ## Related Links
 [**Pterodactyl**](https://pterodactyl.io/) is a free, open-source game server management panel built with PHP, React, and Go.\
 [**BlueprintFramework/templates**](https://github.com/BlueprintFramework/templates) is a repository with initialization templates for extension development.\
-[**BlueprintFramework/web**](https://github.com/BlueprintFramework/web) is our open-source documentation and landing website.\
+[**BlueprintFramework/web**](https://github.com/BlueprintFramework/web) is our open-source documentation and landing website.
