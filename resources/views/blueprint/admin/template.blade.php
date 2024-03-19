@@ -35,7 +35,7 @@
 
           <div class="modal-body" style="border-color:transparent; border-radius:7px; margin-bottom: 15px">
             <h4><b>Permissions</b></h4>
-            <p class="text-muted text-left">Configure what sections this extension can edit or can't extend on your Pterodactyl panel.</p><br>
+            <p class="text-muted text-left">Configure what elements this extension can or can't edit/extend on your Pterodactyl panel.</p><br>
 
             <div class="row">
               <div class="col-xs-6">
