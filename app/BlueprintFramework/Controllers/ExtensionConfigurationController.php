@@ -20,7 +20,7 @@ class ExtensionConfigurationController extends Controller
    */
   public function update(ExtensionConfigurationRequest $request): RedirectResponse
   {
-    foreach ($request->normalize() as $key => $value) { $this->settings->set('extensionconfig_blueprint::' . $key, $value); }
+    foreach ($request->normalize() as $key => $value) { $this->settings->set('blueprint::extensionconfig_' . $key, $value); }
     return redirect()->route('admin.extensions.'.$request->input('_identifier', 'blueprint').'.index');
   }
 }
