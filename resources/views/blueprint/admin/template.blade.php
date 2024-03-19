@@ -44,7 +44,6 @@
                   <option value="1" @if($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_adminlayouts') != "0") selected @endif>Allowed</option>
                   <option value="0" @if($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_adminlayouts') == "0") selected @endif>Blocked</option>
                 </select>
-                <?php echo($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_adminlayouts')) ?>
                 <p class="text-muted small">Allow this extension to extend the admin panel layouts.</p>
               </div>
               <div class="col-xs-6">
@@ -53,7 +52,6 @@
                   <option value="1" @if($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_dashboardwrapper') != "0") selected @endif>Allowed</option>
                   <option value="0" @if($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_dashboardwrapper') == "0") selected @endif>Blocked</option>
                 </select>
-                <?php echo($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_dashboardwrapper')) ?>
                 <p class="text-muted small">Allow this extension to extend the dashboard's blade wrapper.</p>
               </div>
             </div>
