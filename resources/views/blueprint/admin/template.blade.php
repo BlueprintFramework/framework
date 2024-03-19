@@ -33,11 +33,11 @@
           </div>
           <div class="modal-footer">
             <p class="text-danger small text-left">hope you like living on the edge because this isn't production-ready yet</p>
-            {!! csrf_field() !!}
+            {{ csrf_field() }}
             <input type="hidden" name="_identifier" value="{{ $EXTENSION_ID }}">
             <input type="hidden" name="_method" value="PATCH">
-            <button type="button" class="btn btn-default btn-sm pull-left" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-success btn-sm">Create</button>
+            <button type="button" class="btn btn-gray btn-sm pull-left" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
           </div>
         </div>
       </div>
