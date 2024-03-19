@@ -23,19 +23,41 @@
 @section("extension.config")
   <div class="modal fade" id="extensionConfigModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content" style="background-color:transparent">
         <form action="/admin/extensions/blueprint/config" method="POST" autocomplete="off">
-          <div class="modal-header">
+          <div class="modal-header" style="border-color:transparent; border-radius:7px; margin-bottom: 15px">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;box-shadow:none"><span aria-hidden="true"><i class="bi bi-x"></i></span></button>
             <h3 class="modal-title">
               <img src="{{ $EXTENSION_ICON }}" alt="logo" height="34" width="34" class="pull-left" style="border-radius:3px;margin-right:10px"/>
               Configure <b>{{ $EXTENSION_NAME }}</b>
             </h3>
           </div>
-          <div class="modal-body">
-            <p>hello</p>
+
+          <div class="modal-body" style="border-color:transparent; border-radius:7px; margin-bottom: 15px">
+            <h4><b>Permissions</b></h4>
+            <p class="text-muted text-left">Configure what sections this extension can edit or can't extend on your Pterodactyl panel.</p><br>
+
+            <div class="row">
+              <div class="col-xs-6">
+                <label class="control-label">Admin layouts</label>
+                <select class="form-control" name="{{ $EXTENSION_ID }}.adminlayouts">
+                  <option value="true" @if($blueprint->dbGet('blueprint', 'extension.config/'.$EXTENSION_ID.'.adminlayouts') != "false") selected @endif>Allowed</option>
+                  <option value="false">Blocked</option>
+                </select>
+                <p class="text-muted small">Allow this extension to extend the admin panel layouts.</p>
+              </div>
+              <div class="col-xs-6">
+                <label class="control-label">Dashboard wrapper</label>
+                <select class="form-control" name="{{ $EXTENSION_ID }}.dashboardwrapper">
+                  <option value="true" @if($blueprint->dbGet('blueprint', 'extension.config/'.$EXTENSION_ID.'.dashboardwrapper') != "false") selected @endif>Allowed</option>
+                  <option value="false">Blocked</option>
+                </select>
+                <p class="text-muted small">Allow this extension to extend the dashboard's blade wrapper.</p>
+              </div>
+            </div>
           </div>
-          <div class="modal-footer">
+
+          <div class="modal-footer" style="border-color:transparent; border-radius:7px">
             {{ csrf_field() }}
             <input type="hidden" name="_identifier" value="{{ $EXTENSION_ID }}">
             <input type="hidden" name="_method" value="PATCH">
