@@ -1996,8 +1996,8 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
 
   # Confirmation question for developer upgrade.
-  if [[ $3 == "dev" ]]; then
-    PRINT INPUT "Upgrading to the latest development build will update Blueprint to an unstable work-in-progress preview of the next version. Continue? (y/N)"
+  if [[ $3 == "remote" ]]; then
+    PRINT INPUT "Upgrading to the latest development build will update Blueprint to a remote version which might differ from the latest release. Continue? (y/N)"
     read -r YN
     if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
     YN=""
