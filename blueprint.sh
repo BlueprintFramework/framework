@@ -311,7 +311,7 @@ ${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
   \x1b[0m
   
 \x1b[34;1mAdvanced\x1b[0m\x1b[34m
-  -upgrade (dev)             update/reset to a newer/development version
+  -upgrade (remote <url>)    update/reset to another release
   -rerun-install             rerun the blueprint installation script
   \x1b[0m
   "
@@ -2016,8 +2016,8 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   YN=""
   
 
-  if [[ $3 == "dev" ]]; then PRINT INFO "Fetching and pulling latest commit.."
-  else                       PRINT INFO "Fetching and pulling latest release.."; fi
+  if [[ $3 == "remote" ]]; then PRINT INFO "Fetching and pulling latest commit.."
+  else                          PRINT INFO "Fetching and pulling latest release.."; fi
 
   mkdir $FOLDER/.tmp
   cp blueprint.sh .blueprint.sh.bak
@@ -2032,9 +2032,11 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
 
   mkdir -p $FOLDER/.tmp/files
   cd $FOLDER/.tmp/files || cdhalt
-  if [[ $3 == "dev" ]]; then
+  if [[ $3 == "remote" ]]; then
+    if [[ $4 == "" ]]; then REMOTE_REPOSITORY="BlueprintFramework/main"
+    else REMOTE_REPOSITORY="$4"; fi
     # download latest commit
-    git clone https://github.com/BlueprintFramework/main.git
+    git clone https://github.com/"$REMOTE_REPOSITORY".git main
   else
     # download latest release
     LOCATION=$(curl -s https://api.github.com/repos/BlueprintFramework/main/releases/latest \
@@ -2047,6 +2049,13 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     unzip main.zip
     rm main.zip
     mv ./* main
+  fi
+
+  if [[ ! -d "main" ]]; then
+    cd $FOLDER || cdhalt
+    rm -r $FOLDER/.tmp &>> $BLUEPRINT__DEBUG
+    rm $FOLDER/.blueprint.sh.bak &>> $BLUEPRINT__DEBUG
+    PRINT FATAL "Remote does not exist or encountered an error, try again later."
   fi
 
   cp -r main/* "$FOLDER"/
