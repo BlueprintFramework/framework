@@ -2056,6 +2056,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     rm -r $FOLDER/.tmp &>> $BLUEPRINT__DEBUG
     rm $FOLDER/.blueprint.sh.bak &>> $BLUEPRINT__DEBUG
     PRINT FATAL "Remote does not exist or encountered an error, try again later."
+    exit 1
   fi
 
   cp -r main/* "$FOLDER"/
