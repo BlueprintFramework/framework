@@ -1190,10 +1190,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
         "resources/views/blueprint/dashboard/dashboard.blade.php"
     fi
     touch ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
-    cat <(echo -e "<!--@$identifier:s@-->\n@if(\$blueprint->dbGet('blueprint', 'extensionconfig_${identifier}_dashboardwrapper') != '0')") ".blueprint/tmp/$n/$dashboard_wrapper" > ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
+    cat <(echo -e "<!--@$identifier:s@-->\n@if(\$blueprint->dbGet('blueprint', 'extensionconfig_${identifier}_dashboardwrapper') != '0')\n") ".blueprint/tmp/$n/$dashboard_wrapper" > ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
     cp ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$dashboard_wrapper"
     rm ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
-    echo -e "@endif\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$dashboard_wrapper"
+    echo -e "\n@endif\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$dashboard_wrapper"
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" "resources/views/blueprint/dashboard/dashboard.blade.php"
   fi
 
@@ -1208,10 +1208,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
         "resources/views/blueprint/admin/admin.blade.php"
     fi
     touch ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
-    cat <(echo -e "<!--@$identifier:s@-->\n@if(\$blueprint->dbGet('blueprint', 'extensionconfig_${identifier}_adminlayouts') != '0')") ".blueprint/tmp/$n/$admin_wrapper" > ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
+    cat <(echo -e "<!--@$identifier:s@-->\n@if(\$blueprint->dbGet('blueprint', 'extensionconfig_${identifier}_adminlayouts') != '0')\n") ".blueprint/tmp/$n/$admin_wrapper" > ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
     cp ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$admin_wrapper"
     rm ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
-    echo -e "@endif\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$admin_wrapper"
+    echo -e "\n@endif\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$admin_wrapper"
     sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" "resources/views/blueprint/admin/admin.blade.php"
   fi
 
