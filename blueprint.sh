@@ -2061,8 +2061,9 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
 
   # Remove some files/directories that don't have to be moved to the Pterodactyl folder.
   rm -r \
-    "main/.github"
-    "main/.git"
+    "main/.github" \
+    "main/.git" \
+    &>> $BLUEPRINT__DEBUG
 
   # Copy fetched release files to the Pterodactyl directory and remove temp files.
   cp -r main/* "$FOLDER"/
