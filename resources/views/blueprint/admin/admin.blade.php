@@ -71,4 +71,9 @@
   -->
 
   <!-- wrapper:insert -->
+  @foreach (File::allFiles(__DIR__ . '/wrappers') as $partial)
+    @if ($partial->getExtension() == 'php')
+      @include(str_replace(base_path() . '/', '', $partial->getPathname()))
+    @endif
+  @endforeach
 @endsection
