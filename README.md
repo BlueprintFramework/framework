@@ -1,9 +1,15 @@
-<h2><img src="https://i.imgur.com/nBYQ4Bl.png" style="height:30px;padding-right:1px"></img></h2>
-
-[**Discord** ➚](https://ptero.shop/community)\
-[**Documentation** ➚](https://blueprint.zip/docs)\
-[**Extensions** ➚](https://blueprint.zip/browse)\
-[**Installation** ➚](https://blueprint.zip/docs/?page=getting-started/Installation)
+<br/><p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/BlueprintFramework/main/assets/103201875/d40db33e-a43f-4f81-b760-6f64c169a8e0" height="30"> <!-- light theme -->
+    <img alt="blueprint-logo" src="https://github.com/BlueprintFramework/main/assets/103201875/c0072c61-0135-4931-b5fa-ce4ee7d79f4a" height="30"> <!-- dark theme -->
+  </picture>
+  <br/>
+  <a href="https://blueprint.zip">Website</a> <b>·</b>
+  <a href="https://discord.gg/CUwHwv6xRe">Community</a> <b>·</b>
+  <a href="https://blueprint.zip/docs">Documentation</a>
+  <br/><br/>
+  Open-source Pterodactyl modding framework written in TypeScript, PHP and Bash.
+</p><br/>
 
 [Introduction](#introduction)\
 [Screenshots](#screenshots)\
@@ -22,7 +28,6 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 
 ## Screenshots
 ![screenshots](https://github.com/BlueprintFramework/main/assets/103201875/cb66943e-a60e-44e5-afd4-90475b106244)
-
 
 <br/>
 
