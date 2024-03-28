@@ -1181,20 +1181,25 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
-    PRINT INFO "Cloning and injecting dashboard wrapper.."
-    if [[ $DUPLICATE == "y" ]]; then
-      sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/blueprint/dashboard/dashboard.blade.php"
-      sed -i \
-        -e "s~<!--@$identifier:s@-->~~g" \
-        -e "s~<!--@$identifier:e@-->~~g" \
-        "resources/views/blueprint/dashboard/dashboard.blade.php"
-    fi
-    touch ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
-    cat <(echo -e "<!--@$identifier:s@-->\n@if(\$blueprint->dbGet('blueprint', 'extensionconfig_${identifier}_dashboardwrapper') != '0')\n") ".blueprint/tmp/$n/$dashboard_wrapper" > ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
-    cp ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$dashboard_wrapper"
-    rm ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
-    echo -e "\n@endif\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$dashboard_wrapper"
-    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" "resources/views/blueprint/dashboard/dashboard.blade.php"
+    #PRINT INFO "Cloning and injecting dashboard wrapper.."
+    #if [[ $DUPLICATE == "y" ]]; then
+    #  sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/blueprint/dashboard/dashboard.blade.php"
+    #  sed -i \
+    #    -e "s~<!--@$identifier:s@-->~~g" \
+    #    -e "s~<!--@$identifier:e@-->~~g" \
+    #    "resources/views/blueprint/dashboard/dashboard.blade.php"
+    #fi
+    #touch ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
+    #cat <(echo -e "<!--@$identifier:s@-->\n@if(\$blueprint->dbGet('blueprint', 'extensionconfig_${identifier}_dashboardwrapper') != '0')\n") ".blueprint/tmp/$n/$dashboard_wrapper" > ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
+    #cp ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$dashboard_wrapper"
+    #rm ".blueprint/tmp/$n/$dashboard_wrapper.BLUEPRINTBAK"
+    #echo -e "\n@endif\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$dashboard_wrapper"
+    #sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$dashboard_wrapper" "resources/views/blueprint/dashboard/dashboard.blade.php"
+    PRINT INFO "Cloning and linking dashboard wrapper.."
+    if [[ ! -f "resources/views/blueprint/dashboard/wrappers/$identifier.blade.php" ]]; then rm "resources/views/blueprint/dashboard/wrappers/$identifier.blade.php"; fi
+    if [[ ! -d ".blueprint/extensions/$identifier/wrappers" ]]; then mkdir ".blueprint/extensions/$identifier/wrappers"; fi
+    cp ".blueprint/tmp/$n/$dashboard_wrapper" ".blueprint/extensions/$identifier/wrappers/dashboard.blade.php"
+    ln -T ".blueprint/extensions/$identifier/wrappers/dashboard.blade.php" "$FOLDER/resources/views/blueprint/dashboard/wrappers/$identifier.blade.php"
   fi
 
   # Place admin wrapper
