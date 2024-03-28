@@ -73,7 +73,9 @@
   <!-- wrapper:insert -->
   @foreach (File::allFiles(__DIR__ . '/wrappers') as $partial)
     @if ($partial->getExtension() == 'php')
-      @include('blueprint.admin.wrappers.'.$partial->getPathname())
+      @if ($blueprint->dbGet('blueprint', 'extensionconfig_'.str_replace('.blade','',$partial->getPathname()).'_adminwrapper') != '0')
+        @include('blueprint.admin.wrappers.'.str_replace('.blade','',$partial->getPathname()))
+      @endif
     @endif
   @endforeach
 @endsection
