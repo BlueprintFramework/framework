@@ -1204,20 +1204,25 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   # Place admin wrapper
   if [[ $admin_wrapper != "" ]]; then
-    PRINT INFO "Cloning and injecting admin wrapper.."
-    if [[ $DUPLICATE == "y" ]]; then
-      sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/blueprint/admin/admin.blade.php"
-      sed -i \
-        -e "s~<!--@$identifier:s@-->~~g" \
-        -e "s~<!--@$identifier:e@-->~~g" \
-        "resources/views/blueprint/admin/admin.blade.php"
-    fi
-    touch ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
-    cat <(echo -e "<!--@$identifier:s@-->\n@if(\$blueprint->dbGet('blueprint', 'extensionconfig_${identifier}_adminlayouts') != '0')\n") ".blueprint/tmp/$n/$admin_wrapper" > ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
-    cp ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$admin_wrapper"
-    rm ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
-    echo -e "\n@endif\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$admin_wrapper"
-    sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" "resources/views/blueprint/admin/admin.blade.php"
+    #PRINT INFO "Cloning and injecting admin wrapper.."
+    #if [[ $DUPLICATE == "y" ]]; then
+    #  sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/blueprint/admin/admin.blade.php"
+    #  sed -i \
+    #    -e "s~<!--@$identifier:s@-->~~g" \
+    #    -e "s~<!--@$identifier:e@-->~~g" \
+    #    "resources/views/blueprint/admin/admin.blade.php"
+    #fi
+    #touch ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
+    #cat <(echo -e "<!--@$identifier:s@-->\n@if(\$blueprint->dbGet('blueprint', 'extensionconfig_${identifier}_adminlayouts') != '0')\n") ".blueprint/tmp/$n/$admin_wrapper" > ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
+    #cp ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK" ".blueprint/tmp/$n/$admin_wrapper"
+    #rm ".blueprint/tmp/$n/$admin_wrapper.BLUEPRINTBAK"
+    #echo -e "\n@endif\n<!--@$identifier:e@-->" >> ".blueprint/tmp/$n/$admin_wrapper"
+    #sed -i "/<\!-- wrapper:insert -->/r .blueprint/tmp/$n/$admin_wrapper" "resources/views/blueprint/admin/admin.blade.php"
+    PRINT INFO "Cloning and linking admin wrapper.."
+    if [[ ! -f "resources/views/blueprint/admin/wrappers/$identifier.blade.php" ]]; then rm "resources/views/blueprint/admin/wrappers/$identifier.blade.php"; fi
+    if [[ ! -d ".blueprint/extensions/$identifier/wrappers" ]]; then mkdir ".blueprint/extensions/$identifier/wrappers"; fi
+    cp ".blueprint/tmp/$n/$admin_wrapper" ".blueprint/extensions/$identifier/wrappers/admin.blade.php"
+    ln -T ".blueprint/extensions/$identifier/wrappers/admin.blade.php" "$FOLDER/resources/views/blueprint/admin/wrappers/$identifier.blade.php"
   fi
 
   # Create extension filesystem (ExtensionFS)
