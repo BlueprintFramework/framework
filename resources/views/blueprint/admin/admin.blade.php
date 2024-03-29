@@ -44,7 +44,7 @@
 @section("blueprint.navigation")
   <?php
     $extensionsIcon="fa fa-puzzle-piece";
-    if($blueprint->fileRead("::f/.blueprint/extensions/blueprint/private/db/onboarding") == "true"){
+    if($blueprint->fileRead($PlaceholderService->folder()."/.blueprint/extensions/blueprint/private/db/onboarding") == "true"){
       $extensionsIcon="fa fa-puzzle-piece bx-flashing";
     }
   ?>
@@ -60,8 +60,8 @@
 
 @section("blueprint.notifications")
   <?php
-    if($blueprint->fileRead("::f/.blueprint/extensions/blueprint/private/db/onboarding") == "true") {
-      $blueprint->fileWipe("::f/.blueprint/extensions/blueprint/private/db/onboarding");
+    if($blueprint->fileRead($PlaceholderService->folder()."/.blueprint/extensions/blueprint/private/db/onboarding") == "true") {
+      $blueprint->fileWipe($PlaceholderService->folder()."/.blueprint/extensions/blueprint/private/db/onboarding");
     }
     $notification = $blueprint->dbGet("blueprint", "notification:text");
     if($notification != null) {
@@ -82,7 +82,7 @@
   -->
 
   <!-- wrapper:insert -->
-  @foreach (File::allFiles(__DIR__ . '/wrappers') as $partial)
+  @foreach (File::allFiles($PlaceholderService->folder().'/resources/views/blueprint/admin/wrappers') as $partial)
     @if ($partial->getExtension() == 'php')
       @if ($blueprint->dbGet('blueprint', 'extensionconfig_'.str_replace('.blade','',$partial->getPathname()).'_adminwrapper') != '0')
         @include('blueprint.admin.wrappers.'.str_replace('.blade','',$partial->getPathname()))
