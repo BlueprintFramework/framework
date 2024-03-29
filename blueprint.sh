@@ -2047,6 +2047,8 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   rm -r \
     "main/.github" \
     "main/.git" \
+    "main/.gitignore" \
+    "main/README.md" \
     &>> $BLUEPRINT__DEBUG
 
   # Copy fetched release files to the Pterodactyl directory and remove temp files.
