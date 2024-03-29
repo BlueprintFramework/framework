@@ -76,12 +76,6 @@
 @endsection
 
 @section("blueprint.wrappers")
-  <!--
-    Blueprint extensions containing admin wrappers
-    will have their wrapper code injected here.
-  -->
-
-  <!-- wrapper:insert -->
   @foreach (File::allFiles($PlaceholderService->folder().'/resources/views/blueprint/admin/wrappers') as $partial)
     @if ($partial->getExtension() == 'php')
       @if ($blueprint->dbGet('blueprint', 'extensionconfig_'.str_replace('.blade.php','',basename($partial->getPathname())).'_adminwrapper') != '0')
