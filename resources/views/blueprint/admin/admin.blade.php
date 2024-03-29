@@ -1,3 +1,11 @@
+@section("blueprint.lib")
+  <?php
+    use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
+    $settings = app()->make('Pterodactyl\Contracts\Repository\SettingsRepositoryInterface');
+    $blueprint = app()->make(BlueprintExtensionLibrary::class, ['settings' => $settings]);
+  ?>
+@endsection
+
 @section("blueprint.import")
   <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
