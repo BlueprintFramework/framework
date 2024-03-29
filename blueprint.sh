@@ -7,6 +7,7 @@
 # This should allow Blueprint to run in Docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
   FOLDER="/var/www/pterodactyl" #;
+  DOCKERFOLDER="/app"
 
 # This stores the webserver ownership user which Blueprint uses when applying webserver permissions.
   OWNERSHIP="www-data:www-data" #;
@@ -31,6 +32,9 @@ fi
 # Check for panels that are using Docker, which should have better support in the future.
 if [[ -f "/.dockerenv" ]]; then
   DOCKER="y"
+  # Force Docker-users onto the /app folder for Pterodactyl as the Pterodactyl developers have done
+  # that already anyways.
+  FOLDER="$DOCKERFOLDER"
 else
   DOCKER="n"
 fi
