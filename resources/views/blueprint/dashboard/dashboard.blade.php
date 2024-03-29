@@ -19,8 +19,7 @@
   @foreach (File::allFiles($PlaceholderService->folder().'/resources/views/blueprint/dashboard/wrappers') as $partial)
     @if ($partial->getExtension() == 'php')
       @if ($blueprint->dbGet('blueprint', 'extensionconfig_'.str_replace('.blade','',$partial->getPathname()).'_dashboardwrapper') != '0')
-        <?php echo(str_replace('.blade','',$partial->getPathname())); ?>
-        <?php //@include('blueprint.dashboard.wrappers.'.str_replace('.blade','',$partial->getPathname())) ?>
+        @include('blueprint.dashboard.wrappers.'.str_replace('.blade','',$partial->getPathname()))
       @endif
     @endif
   @endforeach
