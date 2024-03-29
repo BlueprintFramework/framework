@@ -177,13 +177,16 @@ assignflags() {
 
 
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
-{
-  touch /usr/local/bin/blueprint
-  chmod u+x \
-    $FOLDER/blueprint.sh \
-    /usr/local/bin/blueprint
-} >> $BLUEPRINT__DEBUG
-echo -e "#!/bin/bash\nbash $FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint
+if ! [ -x "$(command -v blueprint)" ]; then
+  PRINT INFO "Placing Blueprint command shortcut.."
+  {
+    touch /usr/local/bin/blueprint
+    chmod u+x \
+      $FOLDER/blueprint.sh \
+      /usr/local/bin/blueprint
+  } >> $BLUEPRINT__DEBUG
+  echo -e "#!/bin/bash\nbash $FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint
+fi
 
 
 if [[ $1 != "-bash" ]]; then
@@ -213,10 +216,9 @@ if [[ $1 != "-bash" ]]; then
 
     PRINT INFO "Replacing internal placeholders.."
     # Update folder placeholder on PlaceholderService and admin layout.
-    sed -i "s!::f!$FOLDER!g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -i "s!::f!$FOLDER!g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Admin/BlueprintAdminLibrary.php
-    sed -i "s!::f!$FOLDER!g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Client/BlueprintClientLibrary.php
-    sed -i "s!::f!$FOLDER!g" $FOLDER/resources/views/blueprint/admin/admin.blade.php
+    sed -i "s~::f~$FOLDER~g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
+    sed -i "s~::f~$FOLDER~g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Admin/BlueprintAdminLibrary.php
+    sed -i "s~::f~$FOLDER~g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Client/BlueprintClientLibrary.php
     # Copy "Blueprint" extension page logo from assets.
     cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg
 
@@ -235,7 +237,7 @@ if [[ $1 != "-bash" ]]; then
     updateCacheReminder
 
     # Run migrations if Blueprint is not upgrading.
-    if [[ $1 != "--post-upgrade" ]]; then
+    if [[ ( $1 != "--post-upgrade" ) && ( $DOCKER != "y" ) ]]; then
       PRINT INPUT "Would you like to migrate your database? (Y/n)"
       read -r YN
       if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
@@ -256,13 +258,15 @@ if [[ $1 != "-bash" ]]; then
     PRINT INFO "Rebuilding panel assets.."
     yarn run build:production --progress
 
-    # Put application into production.
-    PRINT INFO "Put application into production."
-    php artisan up &>> $BLUEPRINT__DEBUG
+    if [[ $DOCKER != "y" ]]; then
+      # Put application into production.
+      PRINT INFO "Put application into production."
+      php artisan up &>> $BLUEPRINT__DEBUG
 
-    # Sync some database values.
-    PRINT INFO "Syncing Blueprint-related database values.."
-    php artisan bp:sync
+      # Sync some database values.
+      PRINT INFO "Syncing Blueprint-related database values.."
+      php artisan bp:sync
+    fi
 
     # Finish installation
     if [[ $1 != "--post-upgrade" ]]; then
@@ -271,7 +275,7 @@ if [[ $1 != "-bash" ]]; then
 
     dbAdd "blueprint.setupFinished"
     # Let the panel know the user has finished installation.
-    sed -i "s!NOTINSTALLED!INSTALLED!g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
+    sed -i "s/NOTINSTALLED/INSTALLED/g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
     exit 1
   fi
 fi
@@ -1230,7 +1234,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     "$ConfigExtensionFS"
   rm -R ".blueprint/tmp/$n"
 
-  if [[ $database_migrations != "" ]]; then
+  if [[ ( $database_migrations != "" ) && ( $DOCKER != "y" ) ]]; then
     if [[ ( $F_developerForceMigrate == true ) && ( $dev == true ) ]]; then
       YN="y"
     else
