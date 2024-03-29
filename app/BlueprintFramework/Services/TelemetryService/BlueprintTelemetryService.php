@@ -2,7 +2,6 @@
 
 namespace Pterodactyl\BlueprintFramework\Services\TelemetryService;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Pterodactyl\BlueprintFramework\Services\VariableService\BlueprintVariableService;
 use Pterodactyl\BlueprintFramework\Services\ConfigService\BlueprintConfigService;
 
 class BlueprintTelemetryService
