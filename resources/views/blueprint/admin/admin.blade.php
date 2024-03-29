@@ -84,8 +84,8 @@
   <!-- wrapper:insert -->
   @foreach (File::allFiles($PlaceholderService->folder().'/resources/views/blueprint/admin/wrappers') as $partial)
     @if ($partial->getExtension() == 'php')
-      @if ($blueprint->dbGet('blueprint', 'extensionconfig_'.str_replace('.blade','',$partial->getPathname()).'_adminwrapper') != '0')
-        @include('blueprint.admin.wrappers.'.str_replace('.blade','',$partial->getPathname()))
+      @if ($blueprint->dbGet('blueprint', 'extensionconfig_'.str_replace('.blade.php','',basename($partial->getPathname())).'_adminwrapper') != '0')
+        @include('blueprint.admin.wrappers.'.str_replace('.blade.php','',basename($partial->getPathname())))
       @endif
     @endif
   @endforeach
