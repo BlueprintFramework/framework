@@ -603,6 +603,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if ! [[ $identifier =~ [a-z] ]]; then rm -R ".blueprint/tmp/$n";      PRINT FATAL "Extension identifier should be lowercase and only contain characters a-z.";exit 1;fi
   if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";  PRINT FATAL "Extensions can not have the identifier 'blueprint'.";exit 1;fi
 
+  if [[ $identifier == *" "* ]] \
+  || [[ $identifier == *"-"* ]] \
+  || [[ $identifier == *"_"* ]] \
+  || [[ $identifier == *"."* ]]; then
+    rm -R ".blueprint/tmp/$n"
+    PRINT FATAL "Extension identifier may not contain spaces, underscores, hyphens or periods."
+    exit 1
+  fi
+
   # Validate paths to files and directories defined in conf.yml.
   if [[ ( ! -f ".blueprint/tmp/$n/$icon"                         ) && ( ${icon} != ""                         ) ]] ||    # file:   icon                         (optional)
      [[ ( ! -f ".blueprint/tmp/$n/$admin_view"                   )                                              ]] ||    # file:   admin_view
