@@ -213,8 +213,8 @@ if [[ $1 != "-bash" ]]; then
     # Link directories.
     PRINT INFO "Linking directories and filesystems.."
     {
-      ln -s -T $FOLDER/.blueprint/extensions/blueprint/public $FOLDER/public/extensions/blueprint
-      ln -s -T $FOLDER/.blueprint/extensions/blueprint/assets $FOLDER/public/assets/extensions/blueprint
+      ln -s -r -T $FOLDER/.blueprint/extensions/blueprint/public $FOLDER/public/extensions/blueprint
+      ln -s -r -T $FOLDER/.blueprint/extensions/blueprint/assets $FOLDER/public/assets/extensions/blueprint
     } 2>> $BLUEPRINT__DEBUG
     php artisan storage:link &>> $BLUEPRINT__DEBUG 
 
@@ -662,7 +662,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     PRINT INFO "Cloning and linking views directory.."
     mkdir -p ".blueprint/extensions/$identifier/views"
     cp -R ".blueprint/tmp/$n/$requests_views/"* ".blueprint/extensions/$identifier/views/" 2>> $BLUEPRINT__DEBUG
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/views "$FOLDER/resources/views/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/views "$FOLDER/resources/views/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
   fi
 
   # Place controllers directory.
@@ -670,7 +670,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     PRINT INFO "Cloning and linking controllers directory.."
     mkdir -p ".blueprint/extensions/$identifier/controllers"
     cp -R ".blueprint/tmp/$n/$requests_controllers/"* ".blueprint/extensions/$identifier/controllers/" 2>> $BLUEPRINT__DEBUG
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/controllers "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/controllers "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> $BLUEPRINT__DEBUG
   fi
 
   # Place routes directory.
@@ -684,7 +684,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       { 
         rm "$FOLDER/routes/blueprint/application/$identifier.php"
         cp -R ".blueprint/tmp/$n/$requests_routers_application" ".blueprint/extensions/$identifier/routers/application.php"
-        ln -T ".blueprint/extensions/$identifier/routers/application.php" "$FOLDER/routes/blueprint/application/$identifier.php"
+        ln -s -r -T ".blueprint/extensions/$identifier/routers/application.php" "$FOLDER/routes/blueprint/application/$identifier.php"
       } 2>> $BLUEPRINT__DEBUG
     fi
 
@@ -692,7 +692,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       {
         rm "$FOLDER/routes/blueprint/client/$identifier.php"
         cp -R ".blueprint/tmp/$n/$requests_routers_client" ".blueprint/extensions/$identifier/routers/client.php"
-        ln -T ".blueprint/extensions/$identifier/routers/client.php" "$FOLDER/routes/blueprint/client/$identifier.php"
+        ln -s -r -T ".blueprint/extensions/$identifier/routers/client.php" "$FOLDER/routes/blueprint/client/$identifier.php"
       } 2>> $BLUEPRINT__DEBUG
     fi
 
@@ -700,7 +700,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       {
         rm "$FOLDER/routes/blueprint/web/$identifier.php"
         cp -R ".blueprint/tmp/$n/$requests_routers_web" ".blueprint/extensions/$identifier/routers/web.php"
-        ln -T ".blueprint/extensions/$identifier/routers/web.php" "$FOLDER/routes/blueprint/web/$identifier.php"
+        ln -s -r -T ".blueprint/extensions/$identifier/routers/web.php" "$FOLDER/routes/blueprint/web/$identifier.php"
       } 2>> $BLUEPRINT__DEBUG
     fi
   fi
@@ -710,7 +710,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     YARN="y"
     PRINT INFO "Cloning and linking components directory.."
     mkdir -p ".blueprint/extensions/$identifier/components"
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/components "$FOLDER/resources/scripts/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/components "$FOLDER/resources/scripts/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
 
     # Remove custom routes to prevent duplicates.
     if [[ $DUPLICATE == "y" ]]; then
@@ -1030,7 +1030,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $data_public != "" ]]; then
     PRINT INFO "Cloning and linking public directory.."
     mkdir -p ".blueprint/extensions/$identifier/public"
-    ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/public "$FOLDER/public/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/public "$FOLDER/public/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
 
     cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2>> $BLUEPRINT__DEBUG
   fi
@@ -1077,7 +1077,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     # Create assets folder if the extension is not updating.
     mkdir .blueprint/extensions/"$identifier"/assets
   fi
-  ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$FOLDER/public/assets/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+  ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$FOLDER/public/assets/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
   
   ICON_EXT="jpg"
   if [[ $icon == "" ]]; then
@@ -1204,7 +1204,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     if [[ -f "resources/views/blueprint/dashboard/wrappers/$identifier.blade.php" ]]; then rm "resources/views/blueprint/dashboard/wrappers/$identifier.blade.php"; fi
     if [[ ! -d ".blueprint/extensions/$identifier/wrappers" ]]; then mkdir ".blueprint/extensions/$identifier/wrappers"; fi
     cp ".blueprint/tmp/$n/$dashboard_wrapper" ".blueprint/extensions/$identifier/wrappers/dashboard.blade.php"
-    ln -T ".blueprint/extensions/$identifier/wrappers/dashboard.blade.php" "$FOLDER/resources/views/blueprint/dashboard/wrappers/$identifier.blade.php"
+    ln -s -r -T ".blueprint/extensions/$identifier/wrappers/dashboard.blade.php" "$FOLDER/resources/views/blueprint/dashboard/wrappers/$identifier.blade.php"
   fi
 
   # Place admin wrapper
@@ -1213,14 +1213,14 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     if [[ -f "resources/views/blueprint/admin/wrappers/$identifier.blade.php" ]]; then rm "resources/views/blueprint/admin/wrappers/$identifier.blade.php"; fi
     if [[ ! -d ".blueprint/extensions/$identifier/wrappers" ]]; then mkdir ".blueprint/extensions/$identifier/wrappers"; fi
     cp ".blueprint/tmp/$n/$admin_wrapper" ".blueprint/extensions/$identifier/wrappers/admin.blade.php"
-    ln -T ".blueprint/extensions/$identifier/wrappers/admin.blade.php" "$FOLDER/resources/views/blueprint/admin/wrappers/$identifier.blade.php"
+    ln -s -r -T ".blueprint/extensions/$identifier/wrappers/admin.blade.php" "$FOLDER/resources/views/blueprint/admin/wrappers/$identifier.blade.php"
   fi
 
   # Create extension filesystem (ExtensionFS)
   PRINT INFO "Creating and linking extension filesystem.."
   mkdir -p ".blueprint/extensions/$identifier/fs"
-  ln -s -T $FOLDER/.blueprint/extensions/"$identifier"/fs "$FOLDER/storage/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
-  ln -s -T $FOLDER/storage/extensions/"$identifier" "$FOLDER/public/fs/$identifier" 2>> $BLUEPRINT__DEBUG
+  ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/fs "$FOLDER/storage/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+  ln -s -r -T $FOLDER/storage/extensions/"$identifier" "$FOLDER/public/fs/$identifier" 2>> $BLUEPRINT__DEBUG
   if [[ $DUPLICATE == "y" ]]; then
     sed -i \
       -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
