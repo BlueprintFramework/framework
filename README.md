@@ -55,10 +55,10 @@ Contributors help shape the future of the Blueprint modding framework. To start 
 <!-- Stargazers -->
 <br/><h2 align="center">🌟 Stargazers</h2>
 
-<a href="https://github.com/BlueprintFramework/main/stargazers">
+<a href="https://github.com/BlueprintFramework/main/stargazers/">
   <picture>
-    <source media="(prefers-color-scheme: light)" srcset="http://reporoster.com/stars/BlueprintFramework/main">
-    <img alt="stargazer-widget" src="http://reporoster.com/stars/dark/BlueprintFramework/main">
+    <source media="(prefers-color-scheme: light)" srcset="http://reporoster.com/stars/BlueprintFramework/main/">
+    <img alt="stargazer-widget" src="http://reporoster.com/stars/dark/BlueprintFramework/main/">
   </picture>
 </a>
 
