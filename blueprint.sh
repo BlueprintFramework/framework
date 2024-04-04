@@ -546,8 +546,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     INSTALLMODE="normal"
     installation_timestamp=$(date +%s)
     if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
-    EXTPUBDIR="$FOLDER/.blueprint/extensions/$identifier/public"
-    if [[ $data_public == "" ]]; then EXTPUBDIR="null"; fi
 
     PLACE_PLACEHOLDERS() {
       local dir="$1"
@@ -561,7 +559,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             -e "s~\^#identifier#\^~$identifier~g" \
             -e "s~\^#path#\^~$FOLDER~g" \
             -e "s~\^#datapath#\^~$FOLDER/.blueprint/extensions/$identifier/private~g" \
-            -e "s~\^#publicpath#\^~$EXTPUBDIR~g" \
+            -e "s~\^#publicpath#\^~$FOLDER/.blueprint/extensions/$identifier/public~g" \
             -e "s~\^#installmode#\^~$INSTALLMODE~g" \
             -e "s~\^#blueprintversion#\^~$VERSION~g" \
             -e "s~\^#timestamp#\^~$installation_timestamp~g" \
@@ -575,7 +573,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
               -e "s~__name__~$name~g" \
               -e "s~__path__~$FOLDER~g" \
               -e "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" \
-              -e "s~__publicpath__~$EXTPUBDIR~g" \
+              -e "s~__publicpath__~$FOLDER/.blueprint/extensions/$identifier/public~g" \
               -e "s~__installmode__~$INSTALLMODE~g" \
               -e "s~__blueprintversion__~$VERSION~g" \
               -e "s~__timestamp__~$installation_timestamp~g" \
