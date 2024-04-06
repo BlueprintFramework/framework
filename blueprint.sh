@@ -549,7 +549,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     EXT_AUTHOR="$author"
     if [[ $author == "" ]]; then EXT_AUTHOR="undefined"; fi
     IS_TARGET=true
-    if [[ $target != $VERSION ]]; then IS_TARGET=false; fi
+    if [[ $target != "$VERSION" ]]; then IS_TARGET=false; fi
 
     # Use either legacy or stable placeholders for backwards compatibility.
     if [[ $target == "alpha-"* ]] \
