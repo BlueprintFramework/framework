@@ -547,45 +547,48 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     installation_timestamp=$(date +%s)
     if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
 
-    PLACE_PLACEHOLDERS() {
-      local dir="$1"
-      for file in "$dir"/*; do
-        if [ -f "$file" ]; then
-          file=${file// /\\ }
-          sed -i \
-            -e "s~\^#version#\^~$version~g" \
-            -e "s~\^#author#\^~$author~g" \
-            -e "s~\^#name#\^~$name~g" \
-            -e "s~\^#identifier#\^~$identifier~g" \
-            -e "s~\^#path#\^~$FOLDER~g" \
-            -e "s~\^#datapath#\^~$FOLDER/.blueprint/extensions/$identifier/private~g" \
-            -e "s~\^#publicpath#\^~$FOLDER/.blueprint/extensions/$identifier/public~g" \
-            -e "s~\^#installmode#\^~$INSTALLMODE~g" \
-            -e "s~\^#blueprintversion#\^~$VERSION~g" \
-            -e "s~\^#timestamp#\^~$installation_timestamp~g" \
-            -e "s~\^#componentroot#\^~@/blueprint/extensions/$identifier~g" \
-            "$file"
-          if ! $F_ignoreAlphabetPlaceholders; then
+    if [[ $target == "alpha-"* ]] \
+    || [[ $target == "indev-"* ]]; then
+      PLACE_PLACEHOLDERS() {
+        local dir="$1"
+        for file in "$dir"/*; do
+          if [ -f "$file" ]; then
+            file=${file// /\\ }
             sed -i \
-              -e "s~__version__~$version~g" \
-              -e "s~__author__~$author~g" \
-              -e "s~__identifier__~$identifier~g" \
-              -e "s~__name__~$name~g" \
-              -e "s~__path__~$FOLDER~g" \
-              -e "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" \
-              -e "s~__publicpath__~$FOLDER/.blueprint/extensions/$identifier/public~g" \
-              -e "s~__installmode__~$INSTALLMODE~g" \
-              -e "s~__blueprintversion__~$VERSION~g" \
-              -e "s~__timestamp__~$installation_timestamp~g" \
-              -e "s~__componentroot__~@/blueprint/extensions/$identifier~g" \
+              -e "s~\^#version#\^~$version~g" \
+              -e "s~\^#author#\^~$author~g" \
+              -e "s~\^#name#\^~$name~g" \
+              -e "s~\^#identifier#\^~$identifier~g" \
+              -e "s~\^#path#\^~$FOLDER~g" \
+              -e "s~\^#datapath#\^~$FOLDER/.blueprint/extensions/$identifier/private~g" \
+              -e "s~\^#publicpath#\^~$FOLDER/.blueprint/extensions/$identifier/public~g" \
+              -e "s~\^#installmode#\^~$INSTALLMODE~g" \
+              -e "s~\^#blueprintversion#\^~$VERSION~g" \
+              -e "s~\^#timestamp#\^~$installation_timestamp~g" \
+              -e "s~\^#componentroot#\^~@/blueprint/extensions/$identifier~g" \
               "$file"
+            if ! $F_ignoreAlphabetPlaceholders; then
+              sed -i \
+                -e "s~__version__~$version~g" \
+                -e "s~__author__~$author~g" \
+                -e "s~__identifier__~$identifier~g" \
+                -e "s~__name__~$name~g" \
+                -e "s~__path__~$FOLDER~g" \
+                -e "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" \
+                -e "s~__publicpath__~$FOLDER/.blueprint/extensions/$identifier/public~g" \
+                -e "s~__installmode__~$INSTALLMODE~g" \
+                -e "s~__blueprintversion__~$VERSION~g" \
+                -e "s~__timestamp__~$installation_timestamp~g" \
+                -e "s~__componentroot__~@/blueprint/extensions/$identifier~g" \
+                "$file"
+            fi
+          elif [ -d "$file" ]; then
+            PLACE_PLACEHOLDERS "$file"
           fi
-        elif [ -d "$file" ]; then
-          PLACE_PLACEHOLDERS "$file"
-        fi
-      done
-    }
-    PLACE_PLACEHOLDERS "$DIR"
+        done
+      }
+      PLACE_PLACEHOLDERS "$DIR"
+    fi
   fi
 
   if [[ $name == "" ]]; then rm -R ".blueprint/tmp/$n";                 PRINT FATAL "'info_name' is a required configuration option.";exit 1;fi
