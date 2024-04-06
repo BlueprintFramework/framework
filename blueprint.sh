@@ -547,10 +547,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     INSTALL_MODE="local"
     if $dev; then INSTALL_MODE="develop"; fi
 
-    # Legacy placeholders for backwards compatibility.
+    # Use either legacy or stable placeholders for backwards compatibility.
     if [[ $target == "alpha-"* ]] \
     || [[ $target == "indev-"* ]]; then
 
+      # (v1) Legacy placeholders
       INSTALLMODE="normal"
       if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
       PLACE_PLACEHOLDERS() {
@@ -595,6 +596,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
     else
 
+      # (v2) Stable placeholders
       PLACE_PLACEHOLDERS() {
         local dir="$1"
         for file in "$dir"/*; do
@@ -603,8 +605,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
             # Step 1: Modify escaped placeholders to prevent them from being written to.
             # Step 2: Apply normal placeholders.
-            # Step 3: (WIP) Apply placeholders with modifiers.
-            # Step 4: (WIP) Switch escaped placeholders back to their original form, without the backslash.
+            # Step 3: Apply placeholders with modifiers.
+            # Step 4: Switch escaped placeholders back to their original form, without the backslash.
             sed -i \
               -e "s~\\{identifier~{-identifier~g" \
               -e "s~\\{name~{-name~g" \
@@ -621,6 +623,18 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
               -e "s~{random}~$RANDOM~g" \
               -e "s~{timestamp}~$INSTALL_STAMP~g" \
               -e "s~{mode}~$INSTALL_MODE~g" \
+              \
+              -e "s~{identifier^}~${identifier^}~g" \
+              -e "s~{identifier!}~${identifier^^}~g" \
+              -e "s~{name!}~${name^^}~g" \
+              \
+              -e "s~{-identifier~{identifier~g" \
+              -e "s~{-name~{name~g" \
+              -e "s~{-author~{author~g" \
+              -e "s~{-version~{version~g" \
+              -e "s~{-random~{random~g" \
+              -e "s~{-timestamp~{timestamp~g" \
+              -e "s~{-mode~{mode~g" \
               "$file"
            
 
