@@ -543,12 +543,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     # Prepare variables for placeholders
     PRINT INFO "Writing extension placeholders.."
     DIR=".blueprint/tmp/$n"
-    INSTALLMODE="normal"
-    installation_timestamp=$(date +%s)
-    if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
+    INSTALL_STAMP=$(date +%s)
+    INSTALL_MODE="local"
+    if $dev; then INSTALL_MODE="develop"; fi
 
+    # Legacy placeholders for backwards compatibility.
     if [[ $target == "alpha-"* ]] \
     || [[ $target == "indev-"* ]]; then
+
+      INSTALLMODE="normal"
+      if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
       PLACE_PLACEHOLDERS() {
         local dir="$1"
         for file in "$dir"/*; do
@@ -564,7 +568,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
               -e "s~\^#publicpath#\^~$FOLDER/.blueprint/extensions/$identifier/public~g" \
               -e "s~\^#installmode#\^~$INSTALLMODE~g" \
               -e "s~\^#blueprintversion#\^~$VERSION~g" \
-              -e "s~\^#timestamp#\^~$installation_timestamp~g" \
+              -e "s~\^#timestamp#\^~$INSTALL_STAMP~g" \
               -e "s~\^#componentroot#\^~@/blueprint/extensions/$identifier~g" \
               "$file"
             if ! $F_ignoreAlphabetPlaceholders; then
@@ -578,7 +582,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
                 -e "s~__publicpath__~$FOLDER/.blueprint/extensions/$identifier/public~g" \
                 -e "s~__installmode__~$INSTALLMODE~g" \
                 -e "s~__blueprintversion__~$VERSION~g" \
-                -e "s~__timestamp__~$installation_timestamp~g" \
+                -e "s~__timestamp__~$INSTALL_STAMP~g" \
                 -e "s~__componentroot__~@/blueprint/extensions/$identifier~g" \
                 "$file"
             fi
@@ -588,6 +592,45 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
         done
       }
       PLACE_PLACEHOLDERS "$DIR"
+
+    else
+
+      PLACE_PLACEHOLDERS() {
+        local dir="$1"
+        for file in "$dir"/*; do
+          if [ -f "$file" ]; then
+            file=${file// /\\ }
+
+            # Step 1: Modify escaped placeholders to prevent them from being written to.
+            # Step 2: Apply normal placeholders.
+            # Step 3: (WIP) Apply placeholders with modifiers.
+            # Step 4: (WIP) Switch escaped placeholders back to their original form, without the backslash.
+            sed -i \
+              -e "s~\\{identifier~{-identifier~g" \
+              -e "s~\\{name~{-name~g" \
+              -e "s~\\{author~{-author~g" \
+              -e "s~\\{version~{-version~g" \
+              -e "s~\\{random~{-random~g" \
+              -e "s~\\{timestamp~{-timestamp~g" \
+              -e "s~\\{mode~{-mode~g" \
+              \
+              -e "s~{identifier}~$identifier~g" \
+              -e "s~{name}~$name~g" \
+              -e "s~{author}~$author~g" \
+              -e "s~{version}~$version~g" \
+              -e "s~{random}~$RANDOM~g" \
+              -e "s~{timestamp}~$INSTALL_STAMP~g" \
+              -e "s~{mode}~$INSTALL_MODE~g" \
+              "$file"
+           
+
+          elif [ -d "$file" ]; then
+            PLACE_PLACEHOLDERS "$file"
+          fi
+        done
+      }
+      PLACE_PLACEHOLDERS "$DIR"
+      
     fi
   fi
 
