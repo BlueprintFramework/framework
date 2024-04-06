@@ -546,6 +546,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     INSTALL_STAMP=$(date +%s)
     INSTALL_MODE="local"
     if $dev; then INSTALL_MODE="develop"; fi
+    EXT_AUTHOR="$author"
+    if [[ $author == "" ]]; then EXT_AUTHOR="undefined"; fi
+    IS_TARGET=true
+    if [[ $target != $VERSION ]]; then IS_TARGET=false; fi
 
     # Use either legacy or stable placeholders for backwards compatibility.
     if [[ $target == "alpha-"* ]] \
@@ -606,35 +610,43 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             # Step 1: Modify escaped placeholders to prevent them from being written to.
             # Step 2: Apply normal placeholders.
             # Step 3: Apply placeholders with modifiers.
-            # Step 4: Switch escaped placeholders back to their original form, without the backslash.
+            # Step 4: Apply conditional placeholders.
+            # Step 5: Switch escaped placeholders back to their original form, without the backslash.
             sed -i \
-              -e "s~\\{identifier~{-identifier~g" \
-              -e "s~\\{name~{-name~g" \
-              -e "s~\\{author~{-author~g" \
-              -e "s~\\{version~{-version~g" \
-              -e "s~\\{random~{-random~g" \
-              -e "s~\\{timestamp~{-timestamp~g" \
-              -e "s~\\{mode~{-mode~g" \
+              -e "s~\\{identifier~{!!!!identifier~g" \
+              -e "s~\\{name~{!!!!name~g" \
+              -e "s~\\{author~{!!!!author~g" \
+              -e "s~\\{version~{!!!!version~g" \
+              -e "s~\\{random~{!!!!random~g" \
+              -e "s~\\{timestamp~{!!!!timestamp~g" \
+              -e "s~\\{mode~{!!!!mode~g" \
+              -e "s~\\{target~{!!!!target~g" \
+              -e "s~\\{is_~{!!!!is_~g" \
               \
               -e "s~{identifier}~$identifier~g" \
               -e "s~{name}~$name~g" \
-              -e "s~{author}~$author~g" \
+              -e "s~{author}~$EXT_AUTHOR~g" \
               -e "s~{version}~$version~g" \
               -e "s~{random}~$RANDOM~g" \
               -e "s~{timestamp}~$INSTALL_STAMP~g" \
               -e "s~{mode}~$INSTALL_MODE~g" \
+              -e "s~{target}~$VERSION~g" \
               \
               -e "s~{identifier^}~${identifier^}~g" \
               -e "s~{identifier!}~${identifier^^}~g" \
               -e "s~{name!}~${name^^}~g" \
               \
-              -e "s~{-identifier~{identifier~g" \
-              -e "s~{-name~{name~g" \
-              -e "s~{-author~{author~g" \
-              -e "s~{-version~{version~g" \
-              -e "s~{-random~{random~g" \
-              -e "s~{-timestamp~{timestamp~g" \
-              -e "s~{-mode~{mode~g" \
+              -e "s~{is_target}~$IS_TARGET~g" \
+              \
+              -e "s~{!!!!identifier~{identifier~g" \
+              -e "s~{!!!!name~{name~g" \
+              -e "s~{!!!!author~{author~g" \
+              -e "s~{!!!!version~{version~g" \
+              -e "s~{!!!!random~{random~g" \
+              -e "s~{!!!!timestamp~{timestamp~g" \
+              -e "s~{!!!!mode~{mode~g" \
+              -e "s~{!!!!target~{target~g" \
+              -e "s~{!!!!is_~{is~g" \
               "$file"
            
 
