@@ -2,7 +2,7 @@ import React from 'react';
 
 /* blueprint/import */
 
-interface RouteDefinition { 
+interface RouteDefinition {
   path: string;
   name: string | undefined;
   component: React.ComponentType;
@@ -12,7 +12,6 @@ interface RouteDefinition {
 }
 interface ServerRouteDefinition extends RouteDefinition {
   permission: string | string[] | null;
-  eggs?: number[];
 }
 interface Routes {
   account: RouteDefinition[];
