@@ -2,9 +2,9 @@
 
 namespace Pterodactyl\Http\Controllers\Admin\Extensions\Blueprint;
 
+use Artisan;
 use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
-use Artisan;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 use Pterodactyl\BlueprintFramework\Services\ConfigService\BlueprintConfigService;

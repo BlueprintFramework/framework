@@ -55,6 +55,19 @@
                 <p class="text-muted small">Allow this extension to extend the dashboard's blade wrapper.</p>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-xs-12">
+                <label class="control-label">Route eggs</label>
+                <select multiple class="pOptions form-control" name="{{ $EXTENSION_ID }}_eggs[]">
+                  <option value="-1" @if(in_array('-1', json_decode($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_eggs') ?: '["-1"]'))) selected @endif>Show on all eggs</option>
+                  @foreach ($eggs as $egg)
+                    <option value="{{ $egg->id }}" @if(in_array(strval($egg->id), json_decode($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_eggs') ?: '["-1"]'))) selected @endif>{{ $egg->name }}</option>
+                  @endforeach
+                </select>
+                <p class="text-muted small">Guess</p>
+              </div>
+            </div>
           </div>
 
           <div class="modal-footer" style="border-color:transparent; border-radius:7px">
@@ -74,4 +87,20 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('footer-scripts')
+  @parent
+  <script>
+    $('.pOptions').select2();
+  </script>
+  <style>
+    .select2-selection {
+      border-radius: 6px !important;
+    }
+    .select2-container--open .select2-selection {
+      border-bottom-left-radius: 0px !important;
+      border-bottom-right-radius: 0px !important;
+    }
+  </style>
 @endsection
