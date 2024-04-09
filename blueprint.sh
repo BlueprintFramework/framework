@@ -2138,6 +2138,14 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     "$FOLDER"/.tmp/files
   cd $FOLDER || cdhalt
 
+  # Clean up folders with potentially broken symlinks.
+  rm \
+    "resources/views/blueprint/admin/wrappers/"* \
+    "resources/views/blueprint/dashboard/wrappers/"* \
+    "routes/blueprint/application/"* \
+    "routes/blueprint/client/"* \
+    "routes/blueprint/web/"*
+
   chmod +x blueprint.sh
   sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
   sed -i -E "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" $FOLDER/blueprint.sh
