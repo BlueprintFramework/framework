@@ -162,7 +162,7 @@ depend() {
 # Assign variables for extension flags.
 assignflags() {
   F_ignorePlaceholders=false
-  F_ignoreAlphabetPlaceholders=false
+  F_forceLegacyPlaceholders=false
   F_hasInstallScript=false
   F_hasRemovalScript=false
   F_hasExportScript=false
@@ -170,7 +170,7 @@ assignflags() {
   F_developerIgnoreRebuild=false
   F_developerForceMigrate=false
   if [[ ( $flags == *"ignorePlaceholders,"*           ) || ( $flags == *"ignorePlaceholders"           ) ]]; then F_ignorePlaceholders=true           ;fi
-  if [[ ( $flags == *"ignoreAlphabetPlaceholders,"*   ) || ( $flags == *"ignoreAlphabetPlaceholders"   ) ]]; then F_ignoreAlphabetPlaceholders=true   ;fi
+  if [[ ( $flags == *"forceLegacyPlaceholders,"*      ) || ( $flags == *"forceLegacyPlaceholders"      ) ]]; then F_forceLegacyPlaceholders=true      ;fi
   if [[ ( $flags == *"hasInstallScript,"*             ) || ( $flags == *"hasInstallScript"             ) ]]; then F_hasInstallScript=true             ;fi
   if [[ ( $flags == *"hasRemovalScript,"*             ) || ( $flags == *"hasRemovalScript"             ) ]]; then F_hasRemovalScript=true             ;fi
   if [[ ( $flags == *"hasExportScript,"*              ) || ( $flags == *"hasExportScript"              ) ]]; then F_hasExportScript=true              ;fi
@@ -553,7 +553,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
     # Use either legacy or stable placeholders for backwards compatibility.
     if [[ $target == "alpha-"* ]] \
-    || [[ $target == "indev-"* ]]; then
+    || [[ $target == "indev-"* ]] \
+    || $F_forceLegacyPlaceholders; then
 
       # (v1) Legacy placeholders
       INSTALLMODE="normal"
@@ -575,22 +576,19 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
               -e "s~\^#blueprintversion#\^~$VERSION~g" \
               -e "s~\^#timestamp#\^~$INSTALL_STAMP~g" \
               -e "s~\^#componentroot#\^~@/blueprint/extensions/$identifier~g" \
+              \
+              -e "s~__version__~$version~g" \
+              -e "s~__author__~$author~g" \
+              -e "s~__identifier__~$identifier~g" \
+              -e "s~__name__~$name~g" \
+              -e "s~__path__~$FOLDER~g" \
+              -e "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" \
+              -e "s~__publicpath__~$FOLDER/.blueprint/extensions/$identifier/public~g" \
+              -e "s~__installmode__~$INSTALLMODE~g" \
+              -e "s~__blueprintversion__~$VERSION~g" \
+              -e "s~__timestamp__~$INSTALL_STAMP~g" \
+              -e "s~__componentroot__~@/blueprint/extensions/$identifier~g" \
               "$file"
-            if ! $F_ignoreAlphabetPlaceholders; then
-              sed -i \
-                -e "s~__version__~$version~g" \
-                -e "s~__author__~$author~g" \
-                -e "s~__identifier__~$identifier~g" \
-                -e "s~__name__~$name~g" \
-                -e "s~__path__~$FOLDER~g" \
-                -e "s~__datapath__~$FOLDER/.blueprint/extensions/$identifier/private~g" \
-                -e "s~__publicpath__~$FOLDER/.blueprint/extensions/$identifier/public~g" \
-                -e "s~__installmode__~$INSTALLMODE~g" \
-                -e "s~__blueprintversion__~$VERSION~g" \
-                -e "s~__timestamp__~$INSTALL_STAMP~g" \
-                -e "s~__componentroot__~@/blueprint/extensions/$identifier~g" \
-                "$file"
-            fi
           elif [ -d "$file" ]; then
             PLACE_PLACEHOLDERS "$file"
           fi
@@ -621,6 +619,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
               -e "s~\\{timestamp~{!!!!timestamp~g" \
               -e "s~\\{mode~{!!!!mode~g" \
               -e "s~\\{target~{!!!!target~g" \
+              -e "s~\\{root~{!!!!root~g" \
+              -e "s~\\{webroot~{!!!!webroot~g" \
               -e "s~\\{is_~{!!!!is_~g" \
               \
               -e "s~{identifier}~$identifier~g" \
@@ -631,10 +631,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
               -e "s~{timestamp}~$INSTALL_STAMP~g" \
               -e "s~{mode}~$INSTALL_MODE~g" \
               -e "s~{target}~$VERSION~g" \
+              -e "s~{root}~$FOLDER~g" \
+              -e "s~{webroot}~/~g" \
               \
               -e "s~{identifier^}~${identifier^}~g" \
               -e "s~{identifier!}~${identifier^^}~g" \
               -e "s~{name!}~${name^^}~g" \
+              -e "s~{root/public}~$FOLDER/.blueprint/extensions/$identifier/public~g" \
+              -e "s~{root/data}~$FOLDER/.blueprint/extensions/$identifier/private~g" \
+              -e "s~{webroot/public}~/extensions/$identifier~g" \
+              -e "s~{webroot/fs}~/fs/extensions/$identifier~g" \
               \
               -e "s~{is_target}~$IS_TARGET~g" \
               \
@@ -646,6 +652,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
               -e "s~{!!!!timestamp~{timestamp~g" \
               -e "s~{!!!!mode~{mode~g" \
               -e "s~{!!!!target~{target~g" \
+              -e "s~{!!!!root~{root~g" \
+              -e "s~{!!!!webroot~{webroot~g" \
               -e "s~{!!!!is_~{is~g" \
               "$file"
            
