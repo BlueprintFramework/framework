@@ -65,7 +65,7 @@
                     <option value="{{ $egg->id }}" @if(in_array(strval($egg->id), json_decode($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_eggs') ?: '["-1"]'))) selected @endif>{{ $egg->name }}</option>
                   @endforeach
                 </select>
-                <p class="text-muted small">Guess</p>
+                <p class="text-muted small">Choose on which Pterodactyl eggs this extension should be able to add new pages on.</p>
               </div>
             </div>
           </div>
