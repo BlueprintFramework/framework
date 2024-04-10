@@ -23,7 +23,9 @@
 @section("extension.config")
   <?php
     use Pterodactyl\Models\Egg;
+    echo("use Pterodactyl\Models\Egg;");
     $eggs = Egg::all();
+    echo('$eggs = Egg::all();');
   ?>
   <div class="modal fade" id="extensionConfigModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
