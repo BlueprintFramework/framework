@@ -2,10 +2,12 @@
   <?php
     use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
     use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
+    use Pterodactyl\Models\Egg;
 
     $settings = app()->make('Pterodactyl\Contracts\Repository\SettingsRepositoryInterface');
     $blueprint = app()->make(BlueprintExtensionLibrary::class, ['settings' => $settings]);
     $PlaceholderService = app()->make(BlueprintPlaceholderService::class);
+    $Eggs = Egg::all();
   ?>
 @endsection
 
