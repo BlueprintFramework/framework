@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCogs, faLayerGroup, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCogs, faLayerGroup, faSignOutAlt, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
@@ -75,6 +75,13 @@ export default () => {
                         <Tooltip placement={'bottom'} content={'Admin'}>
                             <a href={'/admin'} rel={'noreferrer'}>
                                 <FontAwesomeIcon icon={faCogs} />
+                            </a>
+                        </Tooltip>
+                    )}
+                    {rootAdmin && (
+                        <Tooltip placement={'bottom'} content={'Extensions'}>
+                            <a href={'/admin/extensions'} rel={'noreferrer'}>
+                                <FontAwesomeIcon icon={faPuzzlePiece} />
                             </a>
                         </Tooltip>
                     )}
