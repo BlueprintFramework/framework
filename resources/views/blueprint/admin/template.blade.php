@@ -93,7 +93,7 @@
   </div>
 @endsection
 
-@section('extension.script')
+@section('footer-scripts')
   @parent
   <script>
     $('.pOptions').select2();

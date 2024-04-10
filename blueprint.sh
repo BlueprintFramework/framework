@@ -1218,7 +1218,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       -e "s~\[webicon\]~$websiteiconclass~g" \
       "$AdminBladeConstructor"
   fi
-  echo -e "\n@endsection\n@yield('extension.script')" >> "$AdminBladeConstructor"
+  echo -e "$(<.blueprint/tmp/"$n"/"$admin_view")\n@endsection" >> "$AdminBladeConstructor"
 
   # Construct admin route
   sed -i "s~\[id\]~$identifier~g" "$AdminRouteConstructor"
