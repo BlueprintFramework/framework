@@ -63,7 +63,7 @@ export default () => {
             ) : (
                 <>
                     <CSSTransition timeout={150} classNames={'fade'} appear in>
-                        <SubNavigation>
+                        <SubNavigation id={'SubNavigation'}>
                             <BeforeSubNavigation />
                             <div>
                                 <NavigationLinks />
