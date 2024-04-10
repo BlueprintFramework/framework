@@ -21,6 +21,10 @@
 @endsection
 
 @section("extension.config")
+  <?php
+    use Pterodactyl\Models\Egg;
+    $eggs = Egg::all();
+  ?>
   <div class="modal fade" id="extensionConfigModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content" style="background-color:transparent">
@@ -61,7 +65,7 @@
                 <label class="control-label">Route eggs</label>
                 <select multiple class="pOptions form-control" name="{{ $EXTENSION_ID }}_eggs[]">
                   <option value="-1" @if(in_array('-1', json_decode($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_eggs') ?: '["-1"]'))) selected @endif>Show on all eggs</option>
-                  @foreach ($Eggs as $egg)
+                  @foreach ($eggs as $egg)
                     <option value="{{ $egg->id }}" @if(in_array(strval($egg->id), json_decode($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_eggs') ?: '["-1"]'))) selected @endif>{{ $egg->name }}</option>
                   @endforeach
                 </select>
