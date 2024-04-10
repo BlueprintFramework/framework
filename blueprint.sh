@@ -2153,7 +2153,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     "routes/blueprint/application/"* \
     "routes/blueprint/client/"* \
     "routes/blueprint/web/"* \
-    &>> $BLUEPRINT__DEBUG
+    &>> /dev/null # cannot forward to debug dir because it does not exist
 
   chmod +x blueprint.sh
   sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
