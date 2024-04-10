@@ -235,6 +235,7 @@ if [[ $1 != "-bash" ]]; then
     {
       php artisan view:cache
       php artisan config:cache
+      php artisan route:clear
       php artisan route:cache
       php artisan cache:clear
     } &>> $BLUEPRINT__DEBUG 
@@ -1356,6 +1357,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   {
     php artisan view:cache
     php artisan config:cache
+    php artisan route:clear
     php artisan route:cache
     php artisan cache:clear
   } &>> $BLUEPRINT__DEBUG 
@@ -1720,6 +1722,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   {
     php artisan view:cache
     php artisan config:cache
+    php artisan route:clear
     php artisan route:cache
     php artisan cache:clear
   } &>> $BLUEPRINT__DEBUG 
