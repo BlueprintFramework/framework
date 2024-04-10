@@ -13,7 +13,7 @@
   OWNERSHIP="www-data:www-data" #;
 
 # If the version below does not match your downloaded version, please let us know.
-  VERSION="beta-A428-1"
+  VERSION="beta-A428-2"
 
 
 
@@ -611,17 +611,17 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             # Step 4: Apply conditional placeholders.
             # Step 5: Switch escaped placeholders back to their original form, without the backslash.
             sed -i \
-              -e "s~\\{identifier~{!!!!identifier~g" \
-              -e "s~\\{name~{!!!!name~g" \
-              -e "s~\\{author~{!!!!author~g" \
-              -e "s~\\{version~{!!!!version~g" \
-              -e "s~\\{random~{!!!!random~g" \
-              -e "s~\\{timestamp~{!!!!timestamp~g" \
-              -e "s~\\{mode~{!!!!mode~g" \
-              -e "s~\\{target~{!!!!target~g" \
-              -e "s~\\{root~{!!!!root~g" \
-              -e "s~\\{webroot~{!!!!webroot~g" \
-              -e "s~\\{is_~{!!!!is_~g" \
+              -e "s~\\\{identifier~{!!!!identifier~g" \
+              -e "s~\\\{name~{!!!!name~g" \
+              -e "s~\\\{author~{!!!!author~g" \
+              -e "s~\\\{version~{!!!!version~g" \
+              -e "s~\\\{random~{!!!!random~g" \
+              -e "s~\\\{timestamp~{!!!!timestamp~g" \
+              -e "s~\\\{mode~{!!!!mode~g" \
+              -e "s~\\\{target~{!!!!target~g" \
+              -e "s~\\\{root~{!!!!root~g" \
+              -e "s~\\\{webroot~{!!!!webroot~g" \
+              -e "s~\\\{is_~{!!!!is_~g" \
               \
               -e "s~{identifier}~$identifier~g" \
               -e "s~{name}~$name~g" \
