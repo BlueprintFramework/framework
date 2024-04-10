@@ -2152,7 +2152,8 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     "resources/views/blueprint/dashboard/wrappers/"* \
     "routes/blueprint/application/"* \
     "routes/blueprint/client/"* \
-    "routes/blueprint/web/"*
+    "routes/blueprint/web/"* \
+    &>> $BLUEPRINT__DEBUG
 
   chmod +x blueprint.sh
   sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
