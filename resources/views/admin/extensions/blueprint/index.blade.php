@@ -55,6 +55,7 @@
         </div>
         <div class="box-body">
           <div class="row">
+            <!-- Telemetry -->
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
               <label class="control-label">Telemetry</label>
               <select class="form-control" name="telemetry">
@@ -63,11 +64,13 @@
               </select>
               <p class="text-muted small">Automatically share anonymous usage data with Blueprint.</p>
             </div>
+            <!-- Identifier -->
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-              <label class="control-label">ID</label>
+              <label class="control-label">Identifer</label>
               <input type="text" required name="panel:id" id="panel:id" value="{{ $ExtensionLibrary->dbGet('blueprint', 'panel:id') }}" class="form-control" readonly/>
               <p class="text-muted small">Randomly generated string with your version that is used as a panel identifier.</p>
             </div>
+            <!-- Developer Mode -->
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
               <label class="control-label">Developer Mode</label>
               <select class="form-control" name="developer">
