@@ -77,8 +77,8 @@ class BlueprintAdminFormRequest extends AdminFormRequest
   public function rules(): array {
     return [
       'placeholder' => 'string',
-      'developer' => 'string',
-      'telemetry' => 'string',
+      'developer' => 'boolean',
+      'telemetry' => 'boolean',
     ];
   }
 
