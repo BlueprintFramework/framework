@@ -1666,9 +1666,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     PRINT INFO "Removing and unlinking router files.."
     rm -r \
       ".blueprint/extensions/$identifier/routers" \
-      "routes/blueprint/application/$identifier" \
-      "routes/blueprint/client/$identifier" \
-      "routes/blueprint/web/$identifier" \
+      "routes/blueprint/application/$identifier.php" \
+      "routes/blueprint/client/$identifier.php" \
+      "routes/blueprint/web/$identifier.php" \
       &>> $BLUEPRINT__DEBUG
   fi
 
