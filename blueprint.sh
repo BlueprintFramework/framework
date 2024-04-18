@@ -209,7 +209,7 @@ if [[ $1 != "-bash" ]]; then
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
-    # Check if required programs are installed
+    # Check if required dependencies are installed
     depend
 
     # Link directories.
