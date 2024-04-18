@@ -13,7 +13,7 @@
   OWNERSHIP="www-data:www-data" #;
 
 # If the version below does not match your downloaded version, please let us know.
-  VERSION="beta-A428-2"
+  VERSION="beta-CB38"
 
 
 
