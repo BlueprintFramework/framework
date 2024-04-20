@@ -284,7 +284,7 @@ if [[ $1 != "-bash" ]]; then
     dbAdd "blueprint.setupFinished"
     # Let the panel know the user has finished installation.
     sed -i "s/NOTINSTALLED/INSTALLED/g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    exit 1
+    exit 0
   fi
 fi
 
