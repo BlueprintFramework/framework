@@ -19,7 +19,6 @@ class BlueprintTelemetryService
     if ($this->settings->get('blueprint::telemetry') == "false") { return; };
 
     $curl = curl_init();
-
     curl_setopt_array($curl, array(
       CURLOPT_URL => $this->PlaceholderService->api_url().'/send/'.$this->settings->get('blueprint::panel:id')."/".$event."/",
       CURLOPT_RETURNTRANSFER => true,
@@ -31,10 +30,8 @@ class BlueprintTelemetryService
       CURLOPT_CUSTOMREQUEST => 'GET',
       CURLOPT_CONNECTTIMEOUT => 2,
     ));
-
-    $response = curl_exec($curl);
-
     curl_close($curl);
+
     $this->ConfigService->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id"));
     return;
   }
