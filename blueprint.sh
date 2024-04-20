@@ -1920,9 +1920,8 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     "$__BuildDir/templates/"*
   mkdir -p .blueprint/tmp
 
-  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
-
   PRINT SUCCESS "Extension files initialized and imported to '.blueprint/dev'."
+  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
 fi
 
 
@@ -1992,14 +1991,12 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     mkdir .blueprint/extensions/blueprint/assets/exports/${randstr}
     cp "${identifier}".blueprint .blueprint/extensions/blueprint/assets/exports/${randstr}/"${identifier}".blueprint
 
-    sendTelemetry "EXPOSE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
     PRINT SUCCESS "Extension has been exported to '$(grabAppUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint' and '${FOLDER}/${identifier}.blueprint'."
-
     eval "$(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> $BLUEPRINT__DEBUG)" &
   else
-    sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
     PRINT SUCCESS "Extension has been exported to '${FOLDER}/${identifier}.blueprint'."
   fi
+  sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
 fi
 
 
