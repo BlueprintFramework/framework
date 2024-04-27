@@ -14,7 +14,7 @@ class BlueprintClientLibrary
     private SettingsRepositoryInterface $settings,
   ) {
   }
-  
+
   /**
    * Fetch a record from the database.
    * 
@@ -24,7 +24,7 @@ class BlueprintClientLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function dbGet($table, $record) {
+  public function dbGet($table, $record): mixed {
     return $this->settings->get($table."::".$record);
   }
 
@@ -39,6 +39,18 @@ class BlueprintClientLibrary
    */
   public function dbSet($table, $record, $value) {
     return $this->settings->set($table."::".$record, $value);
+  }
+
+  /**
+   * Delete/forget a database record.
+   * 
+   * @param string $table Database table
+   * @param string $record Database record
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function dbForget($table, $record) {
+    return $this->settings->forget($table."::".$record);
   }
 
   /**
