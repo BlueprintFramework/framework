@@ -31,7 +31,6 @@
 @endsection
 
 @section('content')
-  {{ $TelemetryService->send("SERVE_BLUEPRINT_ADMIN") }}
   <p>Blueprint is the framework that powers all Blueprint-compatible extensions, enabling multiple extensions to be installed and used simultaneously.</p>
   <div class="row">
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
