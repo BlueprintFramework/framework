@@ -5,6 +5,7 @@
         <div class="extension-btn-overlay"></div>
         <img src="{{ $EXTENSION_ICON }}" alt="logo" class="extension-btn-image"><p class="extension-btn-text">{{ $EXTENSION_NAME }}</p>
         <p class="extension-btn-version">{{ $EXTENSION_VERSION }}</p>
+        <i class="bi bi-arrow-right-short" style="font-size: 34px;position: absolute;top: 15px;right: 30px;"></i>
       </button>
     </a>
   </div>

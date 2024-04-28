@@ -22,6 +22,7 @@
           <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="extension-btn-image"/>
           <p class="extension-btn-text">Blueprint</p>
           <p class="extension-btn-version">{{ $PlaceholderService->version() }}</p>
+          <i class="bi bi-arrow-right-short" style="font-size: 34px;position: absolute;top: 15px;right: 30px;"></i>
         </button>
       </a>
     </div>
