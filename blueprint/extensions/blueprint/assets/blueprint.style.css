@@ -105,7 +105,7 @@ tag[blue] {background-color:#288afb;}
   border-color:#00000000;
 }
 .extension-btn-overlay {
-  height: calc(100% - 18px);
+  height: calc(100% - 19px);
   width: auto;
   position: absolute;
   z-index: 2;

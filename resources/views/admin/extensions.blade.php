@@ -33,4 +33,17 @@
     <p><i class='bx bxs-error-alt'></i> You need to finish installing Blueprint to start using extensions.</p>
 
   @endif
+
+  <style>
+    /* backwards compatibility */
+    <?php
+      if($ExtensionLibrary->extension("slate")) {
+        echo("
+          .extension-btn-overlay {
+            background: linear-gradient(90deg, rgba(24,24,27,0.35) 0%, rgba(24,24,27,1) 100%);
+          }
+        ");
+      }
+    ?>
+  </style>
 @endsection
