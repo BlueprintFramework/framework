@@ -59,8 +59,8 @@ tag[blue] {background-color:#288afb;}
   width:auto;
   height:100%;
   aspect-ratio: 1/1;
-  border-top-left-radius:6px;
-  border-bottom-left-radius:6px;
+  border-top-left-radius:7px;
+  border-bottom-left-radius:7px;
   float: left;
   margin-right:10px;
 }
