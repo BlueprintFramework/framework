@@ -16,7 +16,7 @@ class BlueprintConfigService
   }
 
   public function latest(): string {
-    $api_url = "http://api.blueprint.zip:50000/api/latest";
+    $api_url = $this->PlaceholderService->api_url()."/api/latest";
     $context = stream_context_create([
       'http' => [
         'method' => 'GET',

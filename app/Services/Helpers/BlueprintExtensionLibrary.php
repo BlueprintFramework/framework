@@ -1,19 +1,10 @@
 <?php
 
-
-
-
 // THIS IS FOR BACKWARDS COMPATABILITY ONLY!
 // 
 // This file will be removed in later versions of Blueprint to
 // give developers the time to move to the new location of the
 // extension library.
-
-
-
-
-
-
 
 
 

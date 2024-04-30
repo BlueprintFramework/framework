@@ -15,73 +15,136 @@ class BlueprintAdminLibrary
   ) {
   }
 
-
-  /*
-  | Databasing
-  |
-  | dbGet("table", "record");
-  | dbSet("table", "record", "value");
-  */
-  public function dbGet($table, $record) {
+  /**
+   * Fetch a record from the database.
+   * 
+   * @param string $table Database table
+   * @param string $record Database record
+   * @return mixed Database value
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function dbGet($table, $record): mixed {
     return $this->settings->get($table."::".$record);
   }
 
+  /**
+   * Set a database record.
+   * 
+   * @param string $table Database table
+   * @param string $record Database record
+   * @param string $value Value to store
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
   public function dbSet($table, $record, $value) {
     return $this->settings->set($table."::".$record, $value);
   }
 
+  /**
+   * Delete/forget a database record.
+   * 
+   * @param string $table Database table
+   * @param string $record Database record
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function dbForget($table, $record) {
+    return $this->settings->forget($table."::".$record);
+  }
 
-  /*
-  | Notifications
-  |
-  | notify("text");
-  | notifyAfter(delay, "text");
-  | notifyNow("text");
-  */
-  public function notify($text) {
+  /**
+   * Display a notification on the Pterodactyl admin panel (on next page load).
+   * 
+   * @param string $text Notification contents
+   * @return void Nothing is returned
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function notify($text): void {
     $this->dbSet("blueprint", "notification:text", $text);
     return;
   }
 
-  public function notifyAfter($delay, $text) {
+  /**
+   * Display a notification on the Pterodactyl admin panel and refresh the page after a certain delay.
+   * 
+   * @param string $delay Refresh after (in seconds)
+   * @param string $text Notification contents
+   * @return void Nothing is returned
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function notifyAfter($delay, $text): void {
     $this->dbSet("blueprint", "notification:text", $text);
     header("Refresh:$delay");
     return;
   }
 
-  public function notifyNow($text) {
+  /**
+   * Display a notification on the Pterodactyl admin panel and refresh the page instantly.
+   * Behaves the same as calling `notifyAfter()` with a delay of zero.
+   * 
+   * @param string $text Notification contents
+   * @return void Nothing is returned
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function notifyNow($text): void {
     $this->dbSet("blueprint", "notification:text", $text);
     header("Refresh:0");
     return;
   }
 
-
-  /*
-  | Files
-  | 
-  | fileRead("path");
-  | fileMake("path");
-  | fileWipe("path");
-  */
+  /**
+   * Read and returns the content of a given file.
+   * 
+   * @param string $path Path to file
+   * @return string File contents
+   * @throws string Errors encountered by `cat` shell utility
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
   public function fileRead($path) {
     return shell_exec("cat ".escapeshellarg($path).";");
   }
 
+  /**
+   * Attempts to (non-recursively) create a file.
+   * 
+   * @param string $path File name/path
+   * @return string Empty string unless error
+   * @throws string Errors encountered by `touch` shell utility
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
   public function fileMake($path) {
     return shell_exec("touch ".escapeshellarg($path).";");
   }
 
+  /**
+   * Attempts to (recursively) remove a file/folder.
+   * It's good practice to terminate this function after a certain timeout, to prevent infinite page loads upon input. Blueprint attempts to use `yes` as an input for all questions, but might not succeed.
+   * 
+   * @param string $path Path to file/folder
+   * @return string Empty string unless error
+   * @throws string Errors encountered by `rm` shell utility
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
   public function fileWipe($path) {
-    return shell_exec("rm ".escapeshellarg($path).";");
+    return shell_exec("yes | rm -r ".escapeshellarg($path).";");
   }
 
-
-  /*
-  | Extensions
-  | 
-  | extension("identifier");
-  */
-  public function extension($identifier) {
+  /**
+   * Check if an extension is installed based on it's identifier.
+   * 
+   * @param string $identifier Extension identifier
+   * @return bool Boolean
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function extension($identifier): bool {
     if(str_contains($this->fileRead("::f/.blueprint/extensions/blueprint/private/db/installed_extensions"), $identifier.',')) {
       return true;
     } else {

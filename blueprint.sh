@@ -13,7 +13,7 @@
   OWNERSHIP="www-data:www-data" #;
 
 # If the version below does not match your downloaded version, please let us know.
-  VERSION="beta-A428-2"
+  VERSION="beta-CB38"
 
 
 
@@ -118,6 +118,7 @@ depend() {
   ! [ -x "$(command -v grep)" ] ||                           # grep
   ! [ -x "$(command -v sed)" ] ||                            # sed
   ! [ -x "$(command -v awk)" ] ||                            # awk
+  ! [ -x "$(command -v tput)" ] ||                           # tput
   ! [ "$(ls "node_modules/"*"cross-env"* 2> /dev/null)" ] || # cross-env
   ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ] || # webpack
   ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ] || # react
@@ -146,6 +147,7 @@ depend() {
     if ! [ -x "$(command -v grep)"                           ]; then PRINT FATAL "Required dependency \"grep\" is not installed or detected.";      fi
     if ! [ -x "$(command -v sed)"                            ]; then PRINT FATAL "Required dependency \"sed\" is not installed or detected.";       fi
     if ! [ -x "$(command -v awk)"                            ]; then PRINT FATAL "Required dependency \"awk\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v tput)"                           ]; then PRINT FATAL "Required dependency \"tput\" is not installed or detected.";      fi
     if ! [ "$(ls "node_modules/"*"cross-env"* 2> /dev/null)" ]; then PRINT FATAL "Required dependency \"cross-env\" is not installed or detected."; fi
     if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ]; then PRINT FATAL "Required dependency \"webpack\" is not installed or detected.";   fi
     if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ]; then PRINT FATAL "Required dependency \"react\" is not installed or detected.";     fi
@@ -169,14 +171,16 @@ assignflags() {
   F_developerIgnoreInstallScript=false
   F_developerIgnoreRebuild=false
   F_developerForceMigrate=false
-  if [[ ( $flags == *"ignorePlaceholders,"*           ) || ( $flags == *"ignorePlaceholders"           ) ]]; then F_ignorePlaceholders=true           ;fi
-  if [[ ( $flags == *"forceLegacyPlaceholders,"*      ) || ( $flags == *"forceLegacyPlaceholders"      ) ]]; then F_forceLegacyPlaceholders=true      ;fi
-  if [[ ( $flags == *"hasInstallScript,"*             ) || ( $flags == *"hasInstallScript"             ) ]]; then F_hasInstallScript=true             ;fi
-  if [[ ( $flags == *"hasRemovalScript,"*             ) || ( $flags == *"hasRemovalScript"             ) ]]; then F_hasRemovalScript=true             ;fi
-  if [[ ( $flags == *"hasExportScript,"*              ) || ( $flags == *"hasExportScript"              ) ]]; then F_hasExportScript=true              ;fi
-  if [[ ( $flags == *"developerIgnoreInstallScript,"* ) || ( $flags == *"developerIgnoreInstallScript" ) ]]; then F_developerIgnoreInstallScript=true ;fi
-  if [[ ( $flags == *"developerIgnoreRebuild,"*       ) || ( $flags == *"developerIgnoreRebuild"       ) ]]; then F_developerIgnoreRebuild=true       ;fi
-  if [[ ( $flags == *"developerForceMigrate,"*        ) || ( $flags == *"developerForceMigrate"        ) ]]; then F_developerForceMigrate=true        ;fi
+  F_developerKeepApplicationCache=false
+  if [[ ( $flags == *"ignorePlaceholders,"*            ) || ( $flags == *"ignorePlaceholders"            ) ]]; then F_ignorePlaceholders=true            ;fi
+  if [[ ( $flags == *"forceLegacyPlaceholders,"*       ) || ( $flags == *"forceLegacyPlaceholders"       ) ]]; then F_forceLegacyPlaceholders=true       ;fi
+  if [[ ( $flags == *"hasInstallScript,"*              ) || ( $flags == *"hasInstallScript"              ) ]]; then F_hasInstallScript=true              ;fi
+  if [[ ( $flags == *"hasRemovalScript,"*              ) || ( $flags == *"hasRemovalScript"              ) ]]; then F_hasRemovalScript=true              ;fi
+  if [[ ( $flags == *"hasExportScript,"*               ) || ( $flags == *"hasExportScript"               ) ]]; then F_hasExportScript=true               ;fi
+  if [[ ( $flags == *"developerIgnoreInstallScript,"*  ) || ( $flags == *"developerIgnoreInstallScript"  ) ]]; then F_developerIgnoreInstallScript=true  ;fi
+  if [[ ( $flags == *"developerIgnoreRebuild,"*        ) || ( $flags == *"developerIgnoreRebuild"        ) ]]; then F_developerIgnoreRebuild=true        ;fi
+  if [[ ( $flags == *"developerForceMigrate,"*         ) || ( $flags == *"developerForceMigrate"         ) ]]; then F_developerForceMigrate=true         ;fi
+  if [[ ( $flags == *"developerKeepApplicationCache,"* ) || ( $flags == *"developerKeepApplicationCache" ) ]]; then F_developerKeepApplicationCache=true ;fi
 }
 
 
@@ -207,7 +211,7 @@ if [[ $1 != "-bash" ]]; then
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
-    # Check if required programs are installed
+    # Check if required dependencies are installed
     depend
 
     # Link directories.
@@ -280,7 +284,7 @@ if [[ $1 != "-bash" ]]; then
     dbAdd "blueprint.setupFinished"
     # Let the panel know the user has finished installation.
     sed -i "s/NOTINSTALLED/INSTALLED/g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    exit 1
+    exit 0
   fi
 fi
 
@@ -1357,7 +1361,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     php artisan view:cache
     php artisan config:cache
     php artisan route:clear
-    php artisan cache:clear
+    if ! $dev || ! $F_developerKeepApplicationCache; then php artisan cache:clear; fi
   } &>> $BLUEPRINT__DEBUG 
 
   # Make sure all files have correct permissions.
@@ -1666,9 +1670,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     PRINT INFO "Removing and unlinking router files.."
     rm -r \
       ".blueprint/extensions/$identifier/routers" \
-      "routes/blueprint/application/$identifier" \
-      "routes/blueprint/client/$identifier" \
-      "routes/blueprint/web/$identifier" \
+      "routes/blueprint/application/$identifier.php" \
+      "routes/blueprint/client/$identifier.php" \
+      "routes/blueprint/web/$identifier.php" \
       &>> $BLUEPRINT__DEBUG
   fi
 
@@ -1918,9 +1922,8 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
     "$__BuildDir/templates/"*
   mkdir -p .blueprint/tmp
 
-  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
-
   PRINT SUCCESS "Extension files initialized and imported to '.blueprint/dev'."
+  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
 fi
 
 
@@ -1990,14 +1993,12 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     mkdir .blueprint/extensions/blueprint/assets/exports/${randstr}
     cp "${identifier}".blueprint .blueprint/extensions/blueprint/assets/exports/${randstr}/"${identifier}".blueprint
 
-    sendTelemetry "EXPOSE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
     PRINT SUCCESS "Extension has been exported to '$(grabAppUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint' and '${FOLDER}/${identifier}.blueprint'."
-
     eval "$(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> $BLUEPRINT__DEBUG)" &
   else
-    sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
     PRINT SUCCESS "Extension has been exported to '${FOLDER}/${identifier}.blueprint'."
   fi
+  sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
 fi
 
 

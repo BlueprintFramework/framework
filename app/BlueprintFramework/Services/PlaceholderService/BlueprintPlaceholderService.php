@@ -7,4 +7,5 @@ class BlueprintPlaceholderService
   public function version(): string { return "::v"; }
   public function folder(): string { return "::f"; }
   public function installed(): string { return "NOTINSTALLED"; }
+  public function api_url(): string { return "http://api.blueprint.zip:50000"; }
 }

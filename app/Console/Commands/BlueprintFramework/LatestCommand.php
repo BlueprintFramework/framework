@@ -3,6 +3,7 @@
 namespace Pterodactyl\Console\Commands\BlueprintFramework;
 
 use Illuminate\Console\Command;
+use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 
 class LatestCommand extends Command
 {
@@ -13,6 +14,7 @@ class LatestCommand extends Command
    * LatestCommand constructor.
    */
   public function __construct(
+    private BlueprintPlaceholderService $PlaceholderService,
   ) { parent::__construct(); }
 
   /**
@@ -20,7 +22,7 @@ class LatestCommand extends Command
    */
   public function handle()
   {
-    $api_url = "http://api.blueprint.zip:50000/api/latest";
+    $api_url = $this->PlaceholderService->api_url()."/api/latest";
     $context = stream_context_create([
       'http' => [
         'method' => 'GET',

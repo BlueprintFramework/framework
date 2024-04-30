@@ -55,11 +55,68 @@ tag[blue] {background-color:#288afb;}
 }
 
 
-.extension-btn-image {width:50px;height:50px;border-radius:3px;float: left;margin-right:10px;}
-.extension-btn-text {font-size: 20px;margin:0;text-align:left;}
-.extension-btn-version {font-size: 11px;text-align:left;margin:0;}
-.extension-btn {background-color:#00000030;color:#cad1d8;border-color:#00000000;height:calc(65px + 14px);padding-top:7px;padding-bottom:7px;overflow:hidden;vertical-align:center;transition:background-color .2s;}
-.extension-btn:hover, .extension-btn:active, .extension-btn:focus {background-color:#00000035;color:#cad1d8 !important;border-color:#00000000;}
+.extension-btn-image {
+  width:auto;
+  height:100%;
+  aspect-ratio: 1/1;
+  border-top-left-radius:7px;
+  border-bottom-left-radius:7px;
+  float: left;
+  margin-right:10px;
+}
+.extension-btn-text {
+  font-size: 20px;
+  margin:0;
+  text-align:left;
+  position: relative;
+  left: -30px;
+  z-index: 2;
+  width: calc( 100% - 20px );
+  font-weight: 600;
+  margin-top: 11px;
+  overflow: clip;
+  text-overflow: ellipsis;
+}
+.extension-btn-version {
+  font-size: 11px;
+  text-align:left;
+  margin:0;
+  position: relative;
+  left: -30px;
+  z-index: 2;
+  width: calc( 100% - 20px );
+  overflow: clip;
+  text-overflow: ellipsis;
+}
+.extension-btn {
+  background-color:rgb(38, 50, 60);
+  color:#cad1d8;
+  border-color:#00000000;
+  height:calc(65px + 14px);
+  /*padding-top:7px;
+  padding-bottom:7px;*/
+  padding: 0px !important;
+  overflow:hidden;
+  vertical-align:center;
+  transition:background-color .2s;
+  border-radius:6px;
+}
+.extension-btn:hover,
+.extension-btn:active,
+.extension-btn:focus {
+  background-color:rgb(38, 50, 60);
+  color:#cad1d8 !important;
+  border-color:#00000000;
+}
+.extension-btn-overlay {
+  height: calc(100% - 19px);
+  width: auto;
+  position: absolute;
+  z-index: 2;
+  aspect-ratio: 1/1;
+  border-radius: 4px;
+  background: linear-gradient(90deg, rgba(38, 50, 60, 0.35) 0%, rgb(38, 50, 60) 100%);
+}
 
 .byte-img {
   width: 100px;

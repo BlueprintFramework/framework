@@ -21,7 +21,7 @@ sendTelemetry() {
   if [[ $key == "KEY_NOT_UPDATED" ]]; then 
     exit 1
   fi
-  curl --location --silent "http://api.blueprint.zip:50000/send/$key/$1" > /dev/null
+  curl --location --silent --connect-timeout 3 "http://api.blueprint.zip:50000/send/$key/$1" &
 }
 
 # === CACHEREMINDER ===

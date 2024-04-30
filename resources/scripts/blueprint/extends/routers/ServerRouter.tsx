@@ -47,7 +47,6 @@ export const NavigationLinks = () => {
     return `${(url ? match.url : match.path).replace(/\/*$/, '')}/${value.replace(/^\/+/, '')}`;
   };
   const extensionEggs = useExtensionEggs();
-  console.log(serverEgg);
 
   return (
     <>

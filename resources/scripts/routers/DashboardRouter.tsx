@@ -15,7 +15,7 @@ export default () => {
         <>
             <NavigationBar />
             {location.pathname.startsWith('/account') && (
-                <SubNavigation>
+                <SubNavigation id={'SubNavigation'}>
                     <BeforeSubNavigation />
                     <div>
                         <NavigationLinks />
