@@ -99,7 +99,7 @@ tag[blue] {background-color:#288afb;}
   overflow:hidden;
   vertical-align:center;
   transition:background-color .2s;
-  border-radius:6px;
+  border-radius:8px;
 }
 .extension-btn:hover,
 .extension-btn:active,
@@ -114,7 +114,8 @@ tag[blue] {background-color:#288afb;}
   position: absolute;
   z-index: 2;
   aspect-ratio: 1/1;
-  border-radius: 4px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
   background: linear-gradient(90deg, rgba(38, 50, 60, 0.35) 0%, rgb(38, 50, 60) 100%);
 }
 
