@@ -116,7 +116,7 @@ tag[blue] {background-color:#288afb;}
   aspect-ratio: 1/1;
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
-  background: linear-gradient(90deg, transparent -200%, #13171d 90%);
+  background: linear-gradient(90deg, rgba(10, 27, 48, 0.35) 0%, rgb(10, 27, 48) 100%);
 }
 
 .byte-img {
