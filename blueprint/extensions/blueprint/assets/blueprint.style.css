@@ -89,7 +89,7 @@ tag[blue] {background-color:#288afb;}
   text-overflow: ellipsis;
 }
 .extension-btn {
-  background-color:#0a1b30;
+  background-color:#1f2933;
   color:#cad1d8;
   border-color:#00000000;
   height:calc(65px + 14px);
@@ -104,7 +104,7 @@ tag[blue] {background-color:#288afb;}
 .extension-btn:hover,
 .extension-btn:active,
 .extension-btn:focus {
-  background-color:#0a1b30;
+  background-color:#1f2933;
   color:#cad1d8 !important;
   border-color:#00000000;
 }
