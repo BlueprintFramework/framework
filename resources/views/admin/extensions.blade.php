@@ -42,7 +42,11 @@
       if($ExtensionLibrary->extension("slate")) {
         echo("
           .extension-btn-overlay {
-            background: linear-gradient(90deg, rgba(24,24,27,0.35) 0%, rgba(24,24,27,1) 100%);
+            background: linear-gradient(90deg, rgba(24,24,27,0.35) 0%, rgba(24,24,27,1) 95%);
+          }
+          .btn.extension-btn:hover {
+            background-color: #18181b !important;
+            background: #18181b !important;
           }
         ");
       }
