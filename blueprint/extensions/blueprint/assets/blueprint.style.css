@@ -64,9 +64,8 @@ tag[blue] {background-color:#288afb;}
   border-radius: 9px;
 }
 .extension-btn-image {
-  width:auto;
+  width:95px;
   height:100%;
-  aspect-ratio: 1/1;
   border-top-left-radius:7px;
   border-bottom-left-radius:7px;
   float: left;
@@ -79,7 +78,7 @@ tag[blue] {background-color:#288afb;}
   margin:0;
   text-align:left;
   position: relative;
-  left: -15px;
+  left: -32px;
   z-index: 3;
   width: calc( 100% - 20px );
   font-weight: 600;
@@ -92,7 +91,7 @@ tag[blue] {background-color:#288afb;}
   text-align:left;
   margin:0;
   position: relative;
-  left: -15px;
+  left: -32px;
   z-index: 3;
   width: calc( 100% - 20px );
   overflow: clip;
