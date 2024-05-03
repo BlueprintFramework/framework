@@ -55,6 +55,14 @@ tag[blue] {background-color:#288afb;}
 }
 
 
+.extension-btn-image2 {
+  position: absolute;
+  height: 53%;
+  left: 28px;
+  z-index: 4;
+  top: 13px;
+  border-radius: 9px;
+}
 .extension-btn-image {
   width:auto;
   height:100%;
@@ -63,13 +71,15 @@ tag[blue] {background-color:#288afb;}
   border-bottom-left-radius:7px;
   float: left;
   margin-right:10px;
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
 }
 .extension-btn-text {
   font-size: 20px;
   margin:0;
   text-align:left;
   position: relative;
-  left: -30px;
+  left: -15px;
   z-index: 2;
   width: calc( 100% - 20px );
   font-weight: 600;
@@ -82,7 +92,7 @@ tag[blue] {background-color:#288afb;}
   text-align:left;
   margin:0;
   position: relative;
-  left: -30px;
+  left: -15px;
   z-index: 2;
   width: calc( 100% - 20px );
   overflow: clip;
@@ -116,7 +126,7 @@ tag[blue] {background-color:#288afb;}
   aspect-ratio: 1/1;
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
-  background: linear-gradient(90deg, rgba(31, 41, 51, 0.35) 0%, rgb(31, 41, 51) 100%);
+  background: linear-gradient(90deg, rgba(31, 41, 51, 0.35) 0%, rgb(31, 41, 51) 95%);
 }
 
 .byte-img {

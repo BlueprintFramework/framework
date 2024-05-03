@@ -19,6 +19,7 @@
       <a href="{{ route('admin.extensions.blueprint.index') }}">
         <button class="btn extension-btn" style="width:100%;margin-bottom:17px;">
           <div class="extension-btn-overlay"></div>
+          <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="extension-btn-image2"/>
           <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="extension-btn-image"/>
           <p class="extension-btn-text">Blueprint</p>
           <p class="extension-btn-version">{{ $PlaceholderService->version() }}</p>
