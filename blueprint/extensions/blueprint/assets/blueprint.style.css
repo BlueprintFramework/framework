@@ -80,7 +80,7 @@ tag[blue] {background-color:#288afb;}
   text-align:left;
   position: relative;
   left: -15px;
-  z-index: 2;
+  z-index: 3;
   width: calc( 100% - 20px );
   font-weight: 600;
   margin-top: 11px;
@@ -93,7 +93,7 @@ tag[blue] {background-color:#288afb;}
   margin:0;
   position: relative;
   left: -15px;
-  z-index: 2;
+  z-index: 3;
   width: calc( 100% - 20px );
   overflow: clip;
   text-overflow: ellipsis;
@@ -120,10 +120,9 @@ tag[blue] {background-color:#288afb;}
 }
 .extension-btn-overlay {
   height: calc(100% - 19px);
-  width: auto;
+  width: 50%;
   position: absolute;
   z-index: 2;
-  aspect-ratio: 1/1;
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
   background: linear-gradient(90deg, rgba(31, 41, 51, 0.35) 0%, rgb(31, 41, 51) 95%);
