@@ -102,7 +102,8 @@ depend() {
   && [[ $nodeVer != "v18."* ]] \
   && [[ $nodeVer != "v19."* ]] \
   && [[ $nodeVer != "v20."* ]] \
-  && [[ $nodeVer != "v21."* ]]; then 
+  && [[ $nodeVer != "v21."* ]] \
+  && [[ $nodeVer != "v22."* ]]; then 
     DEPEND_MISSING=true
   fi
 
