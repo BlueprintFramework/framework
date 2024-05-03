@@ -207,9 +207,6 @@ if [[ $1 != "-bash" ]]; then
     # Only run if Blueprint is not in the process of upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
       echo -e "  ██\n██  ██\n  ████\n"; # Blueprint "ascii" "logo".
-      if [[ $DOCKER == "y" ]]; then
-        PRINT WARNING "Docker is untested and you might run into issues."
-      fi
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
