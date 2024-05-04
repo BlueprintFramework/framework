@@ -96,6 +96,7 @@ tag[blue] {background-color:#288afb;}
   width: calc( 100% - 20px );
   overflow: clip;
   text-overflow: ellipsis;
+  opacity: .6;
 }
 .extension-btn {
   background-color:#1f2933;
