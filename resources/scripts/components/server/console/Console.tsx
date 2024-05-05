@@ -16,7 +16,7 @@ import { SocketEvent, SocketRequest } from '@/components/server/events';
 import classNames from 'classnames';
 import { ChevronDoubleRightIcon } from '@heroicons/react/solid';
 
-import ConsoleCommandRow  from '@/blueprint/components/Server/Terminal/ConsoleCommandRow';
+import CommandRow  from '@/blueprint/components/Server/Terminal/CommandRow';
 
 import 'xterm/css/xterm.css';
 import styles from './style.module.css';
@@ -223,7 +223,7 @@ export default () => {
                     >
                         <ChevronDoubleRightIcon className={'w-4 h-4'} />
                     </div>
-                    <ConsoleCommandRow />
+                    <CommandRow />
                 </div>
             )}
         </div>
