@@ -1429,15 +1429,15 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ -f ".blueprint/extensions/$3/private/.store/conf.yml" ]]; then 
     eval "$(parse_yaml ".blueprint/extensions/$3/private/.store/conf.yml" conf_)"
     # Add aliases for config values to make working with them easier.
-    name="$conf_info_name";    
-    identifier="$conf_info_identifier"
-    description="$conf_info_description"
-    flags="$conf_info_flags" #(optional)
-    version="$conf_info_version"
-    target="$conf_info_target"
-    author="$conf_info_author" #(optional)
-    icon="$conf_info_icon" #(optional)
-    website="$conf_info_website"; #(optional)
+    name="${conf_info_name//&/\\&}"
+    identifier="${conf_info_identifier//&/\\&}"
+    description="${conf_info_description//&/\\&}"
+    flags="${conf_info_flags//&/\\&}" #(optional)
+    version="${conf_info_version//&/\\&}"
+    target="${conf_info_target//&/\\&}"
+    author="${conf_info_author//&/\\&}" #(optional)
+    icon="${conf_info_icon//&/\\&}" #(optional)
+    website="${conf_info_website//&/\\&}"; #(optional)
 
     admin_view="$conf_admin_view"
     admin_controller="$conf_admin_controller"; #(optional)
