@@ -11,6 +11,7 @@
 
 # This stores the webserver ownership user which Blueprint uses when applying webserver permissions.
   OWNERSHIP="www-data:www-data" #;
+  WEBUSER="www-data" #;
 
 # If the version below does not match your downloaded version, please let us know.
   VERSION="beta-CB38"
@@ -1382,14 +1383,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       chmod --silent +x ".blueprint/extensions/$identifier/private/install.sh" 2>> $BLUEPRINT__DEBUG
 
       # Run script while also parsing some useful variables for the install script to use.
-      EXTENSION_IDENTIFIER="$identifier" \
-      EXTENSION_TARGET="$target"         \
-      EXTENSION_VERSION="$version"       \
-      PTERODACTYL_DIRECTORY="$FOLDER"    \
-      BLUEPRINT_VERSION="$VERSION"       \
-      BLUEPRINT_DEVELOPER="$dev"         \
-      bash ".blueprint/extensions/$identifier/private/install.sh"
-
+      su "$WEBUSER" -c "
+        EXTENSION_IDENTIFIER=\"$identifier\" \
+        EXTENSION_TARGET=\"$target\"         \
+        EXTENSION_VERSION=\"$version\"       \
+        PTERODACTYL_DIRECTORY=\"$FOLDER\"    \
+        BLUEPRINT_VERSION=\"$VERSION\"       \
+        BLUEPRINT_DEVELOPER=\"$dev\"         \
+        bash .blueprint/extensions/$identifier/private/install.sh
+      "
       echo -e "\e[0m\x1b[0m\033[0m"
     fi
   fi
@@ -1479,12 +1481,14 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
 
     # Run script while also parsing some useful variables for the uninstall script to use.
-    EXTENSION_IDENTIFIER="$identifier" \
-    EXTENSION_TARGET="$target"         \
-    EXTENSION_VERSION="$version"       \
-    PTERODACTYL_DIRECTORY="$FOLDER"    \
-    BLUEPRINT_VERSION="$VERSION"       \
-    bash ".blueprint/extensions/$identifier/private/remove.sh"
+    su "$WEBUSER" -c "
+        EXTENSION_IDENTIFIER=\"$identifier\" \
+        EXTENSION_TARGET=\"$target\"         \
+        EXTENSION_VERSION=\"$version\"       \
+        PTERODACTYL_DIRECTORY=\"$FOLDER\"    \
+        BLUEPRINT_VERSION=\"$VERSION\"       \
+        bash .blueprint/extensions/$identifier/private/remove.sh
+      "
     
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
@@ -1977,14 +1981,15 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     chmod +x "${conf_data_directory}""/export.sh"
 
     # Run script while also parsing some useful variables for the export script to use.
-    EXTENSION_IDENTIFIER="$conf_info_identifier"        \
-    EXTENSION_TARGET="$conf_info_target"                \
-    EXTENSION_VERSION="$conf_info_version"              \
-    PTERODACTYL_DIRECTORY="$FOLDER"                     \
-    BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" \
-    BLUEPRINT_VERSION="$VERSION"                        \
-    bash "${conf_data_directory}""/export.sh"
-
+    su "$WEBUSER" -c "
+        EXTENSION_IDENTIFIER=\"$conf_info_identifier\"        \
+        EXTENSION_TARGET=\"$conf_info_target\"                \
+        EXTENSION_VERSION=\"$conf_info_version\"              \
+        PTERODACTYL_DIRECTORY=\"$FOLDER\"                     \
+        BLUEPRINT_EXPORT_DIRECTORY=\"$FOLDER/.blueprint/tmp\" \
+        BLUEPRINT_VERSION=\"$VERSION\"                        \
+        bash \"${conf_data_directory}\"/private/export.sh
+      "
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
@@ -2164,8 +2169,11 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     &>> /dev/null # cannot forward to debug dir because it does not exist
 
   chmod +x blueprint.sh
-  sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" $FOLDER/blueprint.sh
-  sed -i -E "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" $FOLDER/blueprint.sh
+  sed -i -E \
+    -e "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" \
+    -e "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" \
+    -e "s|WEBUSER=\"www-data\" #;|WEBUSER=\"$WEBUSER\" #;|g" \
+    $FOLDER/blueprint.sh
   mv $FOLDER/blueprint $FOLDER/.blueprint;
   bash blueprint.sh --post-upgrade
 
