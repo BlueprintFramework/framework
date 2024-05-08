@@ -38,6 +38,7 @@ Sponsors help fund development and maintenance. [Interested in sponsoring Bluepr
 | Type | Company | About |
 |------|---------|-------|
 | ![](https://github.com/BlueprintFramework/main/assets/103201875/9ce9a6c4-70a8-4dda-8dd7-86e2268175b7) | [**`FastVPS.Systems`**](https://fastvps.systems?utm_source=blueprint) | Your gateway to next-level hosting! Blast off with our ultra-fast VPS and game servers in the UK and Germany. Power your digital frontier with top-tier Rust and Minecraft hosting. Use code `Blueprint` for 25% off your first month! |
+| ![](https://github.com/BlueprintFramework/main/assets/103201875/9ce9a6c4-70a8-4dda-8dd7-86e2268175b7) | [**`HostEZ`**](https://hostez.io?utm_source=blueprint) | US & EU Rust & Minecraft Hosting. DDoS Protected bare metal, VPS and colocation with low latency, high uptime and maximum availability. EZ! |
 
 
 
