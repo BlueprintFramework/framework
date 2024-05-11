@@ -757,8 +757,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   fi
 
   # Place routes directory.
-  if [[ $requests_routers             != "" ]] \
-  || [[ $requests_routers_application != "" ]] \
+  if [[ $requests_routers_application != "" ]] \
   || [[ $requests_routers_client      != "" ]] \
   || [[ $requests_routers_web         != "" ]]; then
     PRINT INFO "Cloning and linking router files.."
@@ -780,13 +779,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       } 2>> $BLUEPRINT__DEBUG
     fi
 
-    if [[ $requests_routers_web != "" ]] \
-    || [[ $requests_routers     != "" ]]; then
-      if [[ $requests_routers_web != "" ]]; then PLACEDIR="$requests_routers_web"; fi
-      if [[ $requests_routers     != "" ]]; then PLACEDIR="$requests_routers";     fi
+    if [[ $requests_routers_web != "" ]]; then
       {
         rm "$FOLDER/routes/blueprint/web/$identifier.php"
-        cp -R ".blueprint/tmp/$n/$PLACEDIR" ".blueprint/extensions/$identifier/routers/web.php"
+        cp -R ".blueprint/tmp/$n/$requests_routers_web" ".blueprint/extensions/$identifier/routers/web.php"
         ln -s -r -T ".blueprint/extensions/$identifier/routers/web.php" "$FOLDER/routes/blueprint/web/$identifier.php"
       } 2>> $BLUEPRINT__DEBUG
     fi
