@@ -1,9 +1,9 @@
 <!-- Header -->
 <br/><p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/BlueprintFramework/framework/assets/103201875/c0072c61-0135-4931-b5fa-ce4ee7d79f4a">
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/BlueprintFramework/framework/assets/103201875/a652a6e7-b53f-4dcd-ae4e-2051f5c9c7b9">
-    <img alt="Blueprint" src="https://github.com/BlueprintFramework/framework/assets/103201875/c0072c61-0135-4931-b5fa-ce4ee7d79f4a" height="30">
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/BlueprintFramework/main/assets/103201875/c0072c61-0135-4931-b5fa-ce4ee7d79f4a">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/BlueprintFramework/main/assets/103201875/a652a6e7-b53f-4dcd-ae4e-2051f5c9c7b9">
+    <img alt="Blueprint" src="https://github.com/BlueprintFramework/main/assets/103201875/c0072c61-0135-4931-b5fa-ce4ee7d79f4a" height="30">
   </picture>
   <br/>
   Open-source modding framework for the Pterodactyl panel.
@@ -27,7 +27,7 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 <!-- Showcase -->
 <br/><h2 align="center">📷 Showcase</h2>
 
-![screenshots](https://github.com/BlueprintFramework/framework/assets/103201875/cb66943e-a60e-44e5-afd4-90475b106244)
+![screenshots](https://github.com/BlueprintFramework/main/assets/103201875/cb66943e-a60e-44e5-afd4-90475b106244)
 
 
 
@@ -45,10 +45,10 @@ Sponsors help fund development and maintenance. [Interested in sponsoring Bluepr
 <!-- Contributors -->
 <br/><h2 align="center">👥 Contributors</h2>
 
-Contributors help shape the future of the Blueprint modding framework. To start contributing you have to [fork this repository](https://github.com/BlueprintFramework/framework/fork) and [open a pull request](https://github.com/BlueprintFramework/framework/compare).
+Contributors help shape the future of the Blueprint modding framework. To start contributing you have to [fork this repository](https://github.com/blueprintFramework/main/fork) and [open a pull request](https://github.com/BlueprintFramework/main/compare).
 
-<a href="https://github.com/BlueprintFramework/framework/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=BlueprintFramework/framework" />
+<a href="https://github.com/BlueprintFramework/main/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=BlueprintFramework/main" />
 </a>
 
 
@@ -56,10 +56,10 @@ Contributors help shape the future of the Blueprint modding framework. To start 
 <!-- Stargazers -->
 <br/><h2 align="center">🌟 Stargazers</h2>
 
-<a href="https://github.com/BlueprintFramework/framework/stargazers/">
+<a href="https://github.com/BlueprintFramework/main/stargazers/">
   <picture>
-    <source media="(prefers-color-scheme: light)" srcset="http://reporoster.com/stars/BlueprintFramework/framework">
-    <img alt="stargazer-widget" src="http://reporoster.com/stars/dark/BlueprintFramework/framework">
+    <source media="(prefers-color-scheme: light)" srcset="http://reporoster.com/stars/BlueprintFramework/main">
+    <img alt="stargazer-widget" src="http://reporoster.com/stars/dark/BlueprintFramework/main">
   </picture>
 </a>
 
