@@ -13,7 +13,7 @@
   <a href="https://blueprint.zip" target="_blank"><button class="btn btn-gray-alt pull-right" style="padding: 5px 10px;"><i class="bx bx-link-external"></i></button></a>
   
   <!-- GitHub button -->
-  <a href="https://github.com/BlueprintFramework/main" class="pull-right" target="_blank">
+  <a href="https://github.com/BlueprintFramework/framework" class="pull-right" target="_blank">
     <button class="btn btn-gray-alt" style="padding: 5px 10px; margin-right: 7px;"><i class="bx bx-git-branch"></i></button>
     @if($ExtensionLibrary->dbGet("blueprint", "git-hint") != "0")
       <div class="blueprint:push-repo">

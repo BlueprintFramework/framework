@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # blueprint.zip
-# github.com/BlueprintFramework/main
+# github.com/BlueprintFramework/framework
 # prpl.wtf
 
 # This should allow Blueprint to run in Docker. Please note that changing the $FOLDER variable after running
@@ -2142,13 +2142,13 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   mkdir -p $FOLDER/.tmp/files
   cd $FOLDER/.tmp/files || cdhalt
   if [[ $3 == "remote" ]]; then
-    if [[ $4 == "" ]]; then REMOTE_REPOSITORY="BlueprintFramework/main"
+    if [[ $4 == "" ]]; then REMOTE_REPOSITORY="BlueprintFramework/framework"
     else REMOTE_REPOSITORY="$4"; fi
     # download latest commit
     git clone https://github.com/"$REMOTE_REPOSITORY".git main
   else
     # download latest release
-    LOCATION=$(curl -s https://api.github.com/repos/BlueprintFramework/main/releases/latest \
+    LOCATION=$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest \
   | grep "zipball_url" \
   | awk '{ print $2 }' \
   | sed 's/,$//'       \
