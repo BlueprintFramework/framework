@@ -413,6 +413,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   requests_views="$conf_requests_views"; #(optional)
   requests_controllers="$conf_requests_controllers"; #(optional)
+  requests_artisan="$conf_requests_artisan"; #(optional)
   requests_routers="$conf_requests_routers"; #(optional)
   requests_routers_application="$conf_requests_routers_application"; #(optional)
   requests_routers_client="$conf_requests_routers_client"; #(optional)
@@ -1455,6 +1456,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     requests_views="$conf_requests_views"; #(optional)
     requests_controllers="$conf_requests_controllers"; #(optional)
+    requests_artisan="$conf_requests_artisan"; #(optional)
+    requests_routers="$conf_requests_routers"; #(optional)
     requests_routers_application="$conf_requests_routers_application"; #(optional)
     requests_routers_client="$conf_requests_routers_client"; #(optional)
     requests_routers_web="$conf_requests_routers_web"; #(optional)
@@ -1675,7 +1678,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   fi
 
   # Remove router files
-  if [[ $requests_routers_application != "" ]] \
+  if [[ $requests_routers             != "" ]] \
+  || [[ $requests_routers_application != "" ]] \
   || [[ $requests_routers_client      != "" ]] \
   || [[ $requests_routers_web         != "" ]]; then
     PRINT INFO "Removing and unlinking router files.."
