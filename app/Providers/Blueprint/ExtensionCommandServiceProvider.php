@@ -28,7 +28,7 @@ class ExtensionCommandServiceProvider extends ServiceProvider
    */
   protected function loadCommandsFrom($directory)
   {
-    $namespace = 'App\\Console\\Commands\\BlueprintFramework\\Extensions';
+    $namespace = 'Pterodactyl\\Console\\Commands\\BlueprintFramework\\Extensions';
 
     // Iterate through the directory to find command files
     $iterator = new RecursiveIteratorIterator(
