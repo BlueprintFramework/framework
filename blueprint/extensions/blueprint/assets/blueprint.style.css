@@ -103,8 +103,6 @@ tag[blue] {background-color:#288afb;}
   color:#cad1d8;
   border-color:#00000000;
   height:calc(65px + 14px);
-  /*padding-top:7px;
-  padding-bottom:7px;*/
   padding: 0px !important;
   overflow:hidden;
   vertical-align:center;
