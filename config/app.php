@@ -207,6 +207,7 @@ return [
          * Blueprint Service Providers
          */
         Pterodactyl\Providers\Blueprint\RouteServiceProvider::class,
+        Pterodactyl\Providers\Blueprint\ExtensionCommandServiceProvider::class,
 
         /*
          * Additional Dependencies
