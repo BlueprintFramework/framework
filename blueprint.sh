@@ -178,6 +178,7 @@ assignflags() {
   F_developerIgnoreRebuild=false
   F_developerForceMigrate=false
   F_developerKeepApplicationCache=false
+  F_developerEscalateExportScript=false
   if [[ ( $flags == *"ignorePlaceholders,"*            ) || ( $flags == *"ignorePlaceholders"            ) ]]; then F_ignorePlaceholders=true            ;fi
   if [[ ( $flags == *"forceLegacyPlaceholders,"*       ) || ( $flags == *"forceLegacyPlaceholders"       ) ]]; then F_forceLegacyPlaceholders=true       ;fi
   if [[ ( $flags == *"hasInstallScript,"*              ) || ( $flags == *"hasInstallScript"              ) ]]; then F_hasInstallScript=true              ;fi
@@ -187,6 +188,7 @@ assignflags() {
   if [[ ( $flags == *"developerIgnoreRebuild,"*        ) || ( $flags == *"developerIgnoreRebuild"        ) ]]; then F_developerIgnoreRebuild=true        ;fi
   if [[ ( $flags == *"developerForceMigrate,"*         ) || ( $flags == *"developerForceMigrate"         ) ]]; then F_developerForceMigrate=true         ;fi
   if [[ ( $flags == *"developerKeepApplicationCache,"* ) || ( $flags == *"developerKeepApplicationCache" ) ]]; then F_developerKeepApplicationCache=true ;fi
+  if [[ ( $flags == *"developerEscalateExportScript,"* ) || ( $flags == *"developerEscalateExportScript" ) ]]; then F_developerEscalateExportScript=true ;fi
 }
 
 
@@ -2011,16 +2013,26 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     chmod +x "${conf_data_directory}""/export.sh"
 
     # Run script while also parsing some useful variables for the export script to use.
-    su "$WEBUSER" -s "$USERSHELL" -c "
-        cd \"$FOLDER\";
-        EXTENSION_IDENTIFIER=\"$conf_info_identifier\"        \
-        EXTENSION_TARGET=\"$conf_info_target\"                \
-        EXTENSION_VERSION=\"$conf_info_version\"              \
-        PTERODACTYL_DIRECTORY=\"$FOLDER\"                     \
-        BLUEPRINT_EXPORT_DIRECTORY=\"$FOLDER/.blueprint/tmp\" \
-        BLUEPRINT_VERSION=\"$VERSION\"                        \
-        bash .blueprint/dev/\"${conf_data_directory}\"/export.sh
-      "
+    if $F_developerEscalateExportScript; then
+      EXTENSION_IDENTIFIER="$conf_info_identifier"        \
+      EXTENSION_TARGET="$conf_info_target"                \
+      EXTENSION_VERSION="$conf_info_version"              \
+      PTERODACTYL_DIRECTORY="$FOLDER"                     \
+      BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" \
+      BLUEPRINT_VERSION="$VERSION"                        \
+      bash "${conf_data_directory}"/export.sh
+    else
+      su "$WEBUSER" -s "$USERSHELL" -c "
+          cd \"$FOLDER\"/.blueprint/tmp;
+          EXTENSION_IDENTIFIER=\"$conf_info_identifier\"        \
+          EXTENSION_TARGET=\"$conf_info_target\"                \
+          EXTENSION_VERSION=\"$conf_info_version\"              \
+          PTERODACTYL_DIRECTORY=\"$FOLDER\"                     \
+          BLUEPRINT_EXPORT_DIRECTORY=\"$FOLDER/.blueprint/tmp\" \
+          BLUEPRINT_VERSION=\"$VERSION\"                        \
+          bash \"${conf_data_directory}\"/export.sh
+        "
+    fi
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
