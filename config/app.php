@@ -190,12 +190,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
-         * Blueprint Service Providers
-         */
-        Pterodactyl\Providers\Blueprint\RouteServiceProvider::class,
-        Pterodactyl\Providers\Blueprint\ExtensionCommandServiceProvider::class,
-
-        /*
          * Application Service Providers...
          */
         Pterodactyl\Providers\ActivityLogServiceProvider::class,
@@ -208,6 +202,11 @@ return [
         Pterodactyl\Providers\RouteServiceProvider::class,
         Pterodactyl\Providers\RepositoryServiceProvider::class,
         Pterodactyl\Providers\ViewComposerServiceProvider::class,
+
+        /*
+         * Blueprint Service Providers
+         */
+        Pterodactyl\Providers\Blueprint\RouteServiceProvider::class,
 
         /*
          * Additional Dependencies
