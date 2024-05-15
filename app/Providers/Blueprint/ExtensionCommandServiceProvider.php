@@ -54,7 +54,7 @@ class ExtensionCommandServiceProvider extends ServiceProvider
             // Register the command with the prefix
             Artisan::starting(function ($artisan) use ($className, $prefix) {
               $command = $artisan->resolve($className);
-              $command->setName($prefix . ':' . $command->getName());
+              $command->setName('ext:' . $prefix . ':' . $command->getName());
               $artisan->add($command);
             });
           }
