@@ -11,7 +11,10 @@
 
 # This stores the webserver ownership user which Blueprint uses when applying webserver permissions.
   OWNERSHIP="www-data:www-data" #;
+
+# This stores options for permissions related to running install scripts the webserver user.
   WEBUSER="www-data" #;
+  USERSHELL="/bin/bash" #;
 
 # If the version below does not match your downloaded version, please let us know.
   VERSION="beta-CB38"
@@ -1395,7 +1398,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       chmod --silent +x ".blueprint/extensions/$identifier/private/install.sh" 2>> $BLUEPRINT__DEBUG
 
       # Run script while also parsing some useful variables for the install script to use.
-      su "$WEBUSER" -c "
+      su "$WEBUSER" -s "$USERSHELL" -c "
         EXTENSION_IDENTIFIER=\"$identifier\" \
         EXTENSION_TARGET=\"$target\"         \
         EXTENSION_VERSION=\"$version\"       \
@@ -1496,7 +1499,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
 
     # Run script while also parsing some useful variables for the uninstall script to use.
-    su "$WEBUSER" -c "
+    su "$WEBUSER" -s "$USERSHELL" -c "
         EXTENSION_IDENTIFIER=\"$identifier\" \
         EXTENSION_TARGET=\"$target\"         \
         EXTENSION_VERSION=\"$version\"       \
@@ -2006,7 +2009,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     chmod +x "${conf_data_directory}""/export.sh"
 
     # Run script while also parsing some useful variables for the export script to use.
-    su "$WEBUSER" -c "
+    su "$WEBUSER" -s "$USERSHELL" -c "
         EXTENSION_IDENTIFIER=\"$conf_info_identifier\"        \
         EXTENSION_TARGET=\"$conf_info_target\"                \
         EXTENSION_VERSION=\"$conf_info_version\"              \
@@ -2198,6 +2201,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     -e "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$FOLDER\" #;|g" \
     -e "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" \
     -e "s|WEBUSER=\"www-data\" #;|WEBUSER=\"$WEBUSER\" #;|g" \
+    -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
     $FOLDER/blueprint.sh
   mv $FOLDER/blueprint $FOLDER/.blueprint;
   bash blueprint.sh --post-upgrade
