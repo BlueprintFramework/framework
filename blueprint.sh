@@ -1399,7 +1399,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
       # Run script while also parsing some useful variables for the install script to use.
       su "$WEBUSER" -s "$USERSHELL" -c "
-        cd \"$FOLDER\"
+        cd \"$FOLDER\";
         EXTENSION_IDENTIFIER=\"$identifier\" \
         EXTENSION_TARGET=\"$target\"         \
         EXTENSION_VERSION=\"$version\"       \
@@ -1501,7 +1501,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     # Run script while also parsing some useful variables for the uninstall script to use.
     su "$WEBUSER" -s "$USERSHELL" -c "
-        cd \"$FOLDER\"
+        cd \"$FOLDER\";
         EXTENSION_IDENTIFIER=\"$identifier\" \
         EXTENSION_TARGET=\"$target\"         \
         EXTENSION_VERSION=\"$version\"       \
@@ -2012,7 +2012,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
 
     # Run script while also parsing some useful variables for the export script to use.
     su "$WEBUSER" -s "$USERSHELL" -c "
-        cd \"$FOLDER\"
+        cd \"$FOLDER\";
         EXTENSION_IDENTIFIER=\"$conf_info_identifier\"        \
         EXTENSION_TARGET=\"$conf_info_target\"                \
         EXTENSION_VERSION=\"$conf_info_version\"              \
