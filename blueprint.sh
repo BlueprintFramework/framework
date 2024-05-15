@@ -2019,7 +2019,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
         PTERODACTYL_DIRECTORY=\"$FOLDER\"                     \
         BLUEPRINT_EXPORT_DIRECTORY=\"$FOLDER/.blueprint/tmp\" \
         BLUEPRINT_VERSION=\"$VERSION\"                        \
-        bash \"${conf_data_directory}\"/export.sh
+        bash .blueprint/dev/\"${conf_data_directory}\"/export.sh
       "
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
