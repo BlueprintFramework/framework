@@ -229,6 +229,7 @@ if [[ $1 != "-bash" ]]; then
 
     PRINT INFO "Replacing internal placeholders.."
     # Update folder placeholder on PlaceholderService and admin layout.
+    # Should avoid doing stuff this way in the future!
     sed -i "s~::f~$FOLDER~g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
     sed -i "s~::f~$FOLDER~g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Admin/BlueprintAdminLibrary.php
     sed -i "s~::f~$FOLDER~g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Client/BlueprintClientLibrary.php
@@ -236,6 +237,7 @@ if [[ $1 != "-bash" ]]; then
     cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg
 
     # Put application into maintenance.
+    # Should give users a choice!
     PRINT INFO "Put application into maintenance mode."
     php artisan down &>> $BLUEPRINT__DEBUG
 
@@ -273,6 +275,7 @@ if [[ $1 != "-bash" ]]; then
 
     if [[ $DOCKER != "y" ]]; then
       # Put application into production.
+      # Should give users a choice!
       PRINT INFO "Put application into production."
       php artisan up &>> $BLUEPRINT__DEBUG
 
