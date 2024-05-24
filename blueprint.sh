@@ -238,8 +238,14 @@ if [[ $1 != "-bash" ]]; then
 
     # Put application into maintenance.
     # Should give users a choice!
-    PRINT INFO "Put application into maintenance mode."
-    php artisan down &>> $BLUEPRINT__DEBUG
+    PRINT INPUT "Would you like to put your application into maintenance? (Y/n)"
+    read -r YN
+    if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
+      PRINT INFO "Put application into maintenance mode."
+      php artisan down &>> $BLUEPRINT__DEBUG
+    else
+      PRINT INFO "Putting application into maintenance has been skipped."
+    fi
 
     # Flush cache.
     PRINT INFO "Flushing view, config and route cache.."
@@ -275,9 +281,14 @@ if [[ $1 != "-bash" ]]; then
 
     if [[ $DOCKER != "y" ]]; then
       # Put application into production.
-      # Should give users a choice!
-      PRINT INFO "Put application into production."
-      php artisan up &>> $BLUEPRINT__DEBUG
+      PRINT INPUT "Would you like to put your application into production? (Y/n)"
+      read -r YN
+      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
+        PRINT INFO "Put application into production."
+        php artisan up &>> $BLUEPRINT__DEBUG
+      else
+        PRINT INFO "Putting application into production has been skipped."
+      fi
 
       # Sync some database values.
       PRINT INFO "Syncing Blueprint-related database values.."
