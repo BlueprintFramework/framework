@@ -237,7 +237,6 @@ if [[ $1 != "-bash" ]]; then
     cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg
 
     # Put application into maintenance.
-    # Should give users a choice!
     PRINT INPUT "Would you like to put your application into maintenance? (Y/n)"
     read -r YN
     if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
