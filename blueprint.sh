@@ -296,7 +296,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Finish installation
     if [[ $1 != "--post-upgrade" ]]; then
-      PRINT SUCCESS "Blueprint has completed it's installation process."
+      PRINT SUCCESS "Blueprint has completed its installation process."
     fi
 
     dbAdd "blueprint.setupFinished"
