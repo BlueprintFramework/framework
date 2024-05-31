@@ -2286,5 +2286,5 @@ fi
 if [[ ${VCMD} != "y" && $1 == "-bash" ]]; then
   # This is logged as a "fatal" error since it's something that is making Blueprint run unsuccessfully.
   PRINT FATAL "'$2' is not a valid command or argument. Use argument '-help' for a list of commands."
-  exit 1
+  exit 2
 fi
