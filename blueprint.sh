@@ -16,8 +16,8 @@
   WEBUSER="www-data" #;
   USERSHELL="/bin/bash" #;
 
-# If the version below does not match your downloaded version, please let us know.
-  VERSION="beta-CB38"
+# Defines the version Blueprint will display as the active one.
+  VERSION="beta-F248"
 
 
 
