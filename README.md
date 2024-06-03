@@ -70,5 +70,13 @@ Contributors help shape the future of the Blueprint modding framework. To start 
 <br/><h2 align="center">🔗 Related Links</h2>
 
 [**Pterodactyl**](https://pterodactyl.io/) is a free, open-source game server management panel built with PHP, React, and Go.\
+[**BlueprintFramework/docker**](https://github.com/BlueprintFramework/docker) is the image for running Blueprint and Pterodactyl with Docker.\
 [**BlueprintFramework/templates**](https://github.com/BlueprintFramework/templates) is a repository with initialization templates for extension development.\
 [**BlueprintFramework/web**](https://github.com/BlueprintFramework/web) is our open-source documentation and landing website.
+
+
+<br/><br/>
+<p align="center">
+  $\color{#4b4950}{\textsf{© 2023-2024 Ivy (prpl.wtf)}}$
+  <br/><br/><img src="https://github.com/BlueprintFramework/framework/assets/103201875/c2b8a53d-c17b-4bfc-b77e-0f49f9dcdfea"/>
+</p>
