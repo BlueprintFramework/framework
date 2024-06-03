@@ -22,6 +22,8 @@
 
 We aim to introduce new developers to Blueprint with easy to understand guides, documentation, developer commands, community support and more.
 
+[Learn more about **Blueprint** ➡️](https://blueprint.zip)
+
 
 
 <!-- Showcase -->
