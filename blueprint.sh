@@ -1,8 +1,8 @@
 #!/bin/bash
+# © 2023-2024 Ivy (prpl.wtf)
 
-# blueprint.zip
-# github.com/BlueprintFramework/framework
-# prpl.wtf
+# Learn more @ blueprint.zip
+# Source code available on github.com/blueprintframework/framework
 
 # This should allow Blueprint to run in Docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
