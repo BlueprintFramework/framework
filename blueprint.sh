@@ -237,12 +237,14 @@ if [[ $1 != "-bash" ]]; then
     cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg
 
     # Put application into maintenance.
-    PRINT INPUT "Would you like to put your application into maintenance? (Y/n)"
+    PRINT INPUT "Would you like to put your application into maintenance while Blueprint is installing? (Y/n)"
     read -r YN
-    if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
+    if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then
+      MAINTENANCE=true
       PRINT INFO "Put application into maintenance mode."
       php artisan down &>> $BLUEPRINT__DEBUG
     else
+      MAINTENANCE=false
       PRINT INFO "Putting application into maintenance has been skipped."
     fi
 
@@ -278,17 +280,13 @@ if [[ $1 != "-bash" ]]; then
     PRINT INFO "Rebuilding panel assets.."
     yarn run build:production --progress
 
-    if [[ $DOCKER != "y" ]]; then
+    if [[ $DOCKER != "y" ]] && ! $MAINTENANCE; then
       # Put application into production.
-      PRINT INPUT "Would you like to put your application into production? (Y/n)"
-      read -r YN
-      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then 
-        PRINT INFO "Put application into production."
-        php artisan up &>> $BLUEPRINT__DEBUG
-      else
-        PRINT INFO "Putting application into production has been skipped."
-      fi
+      PRINT INFO "Put application into production."
+      php artisan up &>> $BLUEPRINT__DEBUG
+    fi
 
+    if [[ $DOCKER != "y" ]]; then
       # Sync some database values.
       PRINT INFO "Syncing Blueprint-related database values.."
       php artisan bp:sync
