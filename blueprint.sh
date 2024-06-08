@@ -22,6 +22,7 @@
 
 
 # Allow non-default Pterodactyl installation folders.
+# Should be removed in the future!
 if [[ $_FOLDER != "" ]]; then
   if [[ ( ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ) && ( $FOLDER == "/var/www/pterodactyl" ) ]]; then
     sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$_FOLDER\" #;|g" "$_FOLDER"/blueprint.sh
