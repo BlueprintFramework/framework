@@ -218,7 +218,8 @@ if [[ $1 != "-bash" ]]; then
   else
     # Only run if Blueprint is not in the process of upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
-      echo -e "  ██\n██  ██\n  ████\n"; # Blueprint "ascii" "logo".
+      # Print Blueprint icon with ascii characters.
+      echo -e "  ██\n██  ██\n  ████\n";
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
