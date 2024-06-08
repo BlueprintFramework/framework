@@ -22,7 +22,7 @@
 
 We aim to introduce new developers to Blueprint with easy to understand guides, documentation, developer commands, community support and more.
 
-[Learn more about **Blueprint** ➡️](https://blueprint.zip)
+[Learn more about **Blueprint**](https://blueprint.zip) or [find your **next extension**](https://blueprint.zip/browse).
 
 
 
