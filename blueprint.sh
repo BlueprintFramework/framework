@@ -19,6 +19,9 @@
 # Defines the version Blueprint will display as the active one.
   VERSION="beta-F248"
 
+# Default GitHub repository to use when upgrading Blueprint.
+  REPOSITORY="BlueprintFramework/framework"
+
 
 
 # Allow non-default Pterodactyl installation folders.
@@ -2174,13 +2177,13 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   mkdir -p $FOLDER/.tmp/files
   cd $FOLDER/.tmp/files || cdhalt
   if [[ $3 == "remote" ]]; then
-    if [[ $4 == "" ]]; then REMOTE_REPOSITORY="BlueprintFramework/framework"
+    if [[ $4 == "" ]]; then REMOTE_REPOSITORY="$REPOSITORY"
     else REMOTE_REPOSITORY="$4"; fi
     # download latest commit
     git clone https://github.com/"$REMOTE_REPOSITORY".git main
   else
     # download latest release
-    LOCATION=$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest \
+    LOCATION=$(curl -s https://api.github.com/repos/"$REPOSITORY"/releases/latest \
   | grep "zipball_url" \
   | awk '{ print $2 }' \
   | sed 's/,$//'       \
