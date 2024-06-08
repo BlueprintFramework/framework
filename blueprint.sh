@@ -103,7 +103,7 @@ cdhalt() { PRINT FATAL "Attempted navigation into nonexistent directory, halting
 
 
 depend() {
-  # Check for incorrect node version.
+  # Check for compatible node versions
   nodeVer=$(node -v)
   if [[ $nodeVer != "v17."* ]] \
   && [[ $nodeVer != "v18."* ]] \
