@@ -24,19 +24,6 @@
 
 
 
-# Allow non-default Pterodactyl installation folders.
-# Should be removed in the future!
-if [[ $_FOLDER != "" ]]; then
-  if [[ ( ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ) && ( $FOLDER == "/var/www/pterodactyl" ) ]]; then
-    sed -i -E "s|FOLDER=\"/var/www/pterodactyl\" #;|FOLDER=\"$_FOLDER\" #;|g" "$_FOLDER"/blueprint.sh
-    echo "Variable has been replaced."
-    exit 0
-  else
-    echo "Variable cannot be replaced right now."
-    exit 2
-  fi
-fi
-
 # Check for panels that are using Docker, which should have better support in the future.
 if [[ -f "/.dockerenv" ]]; then
   DOCKER="y"
