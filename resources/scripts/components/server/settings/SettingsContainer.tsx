@@ -15,8 +15,8 @@ import CopyOnClick from '@/components/elements/CopyOnClick';
 import { ip } from '@/lib/formatters';
 import { Button } from '@/components/elements/button/index';
 
-import BeforeContent from '@/blueprint/components/Server/Backups/BeforeContent';
-import AfterContent  from '@/blueprint/components/Server/Backups/AfterContent';
+import BeforeContent from '@/blueprint/components/Server/Settings/BeforeContent';
+import AfterContent  from '@/blueprint/components/Server/Settings/AfterContent';
 
 export default () => {
     const username = useStoreState((state) => state.user.data!.username);
