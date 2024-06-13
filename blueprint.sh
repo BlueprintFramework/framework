@@ -6,7 +6,8 @@
 
 # This should allow Blueprint to run in Docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
-  FOLDER="/var/www/pterodactyl" #;
+  FOLDER="$(realpath $(dirname $0))" #;
+# Technically shouldn't be needed now, but I'm not going to touch this for now just in case it breaks stuff on Docker. -- @itsvic-dev
   DOCKERFOLDER="/app"
 
 # This stores the webserver ownership user which Blueprint uses when applying webserver permissions.
@@ -222,11 +223,6 @@ if [[ $1 != "-bash" ]]; then
     php artisan storage:link &>> $BLUEPRINT__DEBUG 
 
     PRINT INFO "Replacing internal placeholders.."
-    # Update folder placeholder on PlaceholderService and admin layout.
-    # Should avoid doing stuff this way in the future!
-    sed -i "s~::f~$FOLDER~g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -i "s~::f~$FOLDER~g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Admin/BlueprintAdminLibrary.php
-    sed -i "s~::f~$FOLDER~g" $FOLDER/app/BlueprintFramework/Libraries/ExtensionLibrary/Client/BlueprintClientLibrary.php
     # Copy "Blueprint" extension page logo from assets.
     cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg
 

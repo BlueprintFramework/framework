@@ -145,7 +145,7 @@ class BlueprintAdminLibrary
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function extension($identifier): bool {
-    if(str_contains($this->fileRead("::f/.blueprint/extensions/blueprint/private/db/installed_extensions"), $identifier.',')) {
+    if(str_contains($this->fileRead(base_path(".blueprint/extensions/blueprint/private/db/installed_extensions")), $identifier.',')) {
       return true;
     } else {
       return false;
