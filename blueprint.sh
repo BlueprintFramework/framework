@@ -1443,6 +1443,8 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   
   # Check if the extension is installed.
   if [[ $FILE == *".blueprint" ]]; then FILE="${FILE::-10}"; fi
+  set -- "${@:1:2}" "$FILE" "${@:4}"
+
   if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$3,"* ]]; then
     PRINT FATAL "'$3' is not installed or detected."
     exit 2
