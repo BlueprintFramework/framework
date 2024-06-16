@@ -357,11 +357,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   else
     dev=false
     n="$3"
-    FILE="${n}"
 
-    if [[ $n == *"."* ]] && [[ $n != *".blueprint" ]]; then PRINT FATAL "Extension filenames must end with '.blueprint'.";exit 2;fi
+    if [[ $n == *".blueprint" ]]; then n="${n::-10}";fi
+    FILE="${n}.blueprint"
 
-    if [[ ! -f "$FILE" ]]; then FILE="${n}.blueprint";fi
     if [[ ! -f "$FILE" ]]; then PRINT FATAL "$FILE could not be found or detected.";exit 2;fi
 
     ZIP="${n}.zip"
