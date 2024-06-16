@@ -357,8 +357,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   else
     dev=false
     n="$3"
-    FILE="${n}.blueprint"
-    if [[ ( $FILE == *".blueprint.blueprint" ) && ( $n == *".blueprint" ) ]]; then PRINT FATAL "Argument one must not end with '.blueprint'.";exit 2; fi
+    FILE="${n}"
+
+    if [[ $n == *"."* ]] && [[ $n != *".blueprint" ]]; then PRINT FATAL "Extension filenames must end with '.blueprint'.";exit 2;fi
+
+    if [[ ! -f "$FILE" ]]; then FILE="${n}.blueprint";fi
     if [[ ! -f "$FILE" ]]; then PRINT FATAL "$FILE could not be found or detected.";exit 2;fi
 
     ZIP="${n}.zip"
@@ -1440,12 +1443,11 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ $(( $# - 2 )) != 1 ]]; then PRINT FATAL "Expected 1 argument but got $(( $# - 2 )).";exit 2;fi
   
   # Check if the extension is installed.
+  if [[ $FILE == *".blueprint" ]]; then FILE="${FILE::-10}"; fi
   if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$3,"* ]]; then
     PRINT FATAL "'$3' is not installed or detected."
     exit 2
   fi
-
-  if [[ ( $FILE == *".blueprint" ) ]]; then PRINT FATAL "Argument one must not end with '.blueprint'.";exit 2; fi
 
   if [[ -f ".blueprint/extensions/$3/private/.store/conf.yml" ]]; then 
     eval "$(parse_yaml ".blueprint/extensions/$3/private/.store/conf.yml" conf_)"
