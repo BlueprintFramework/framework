@@ -260,7 +260,7 @@ if [[ $1 != "-bash" ]]; then
     PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
     find "$FOLDER/" \
       -path "$FOLDER/node_modules" -prune \
-      -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
+      -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
     # Rebuild panel assets.
     PRINT INFO "Rebuilding panel assets.."
@@ -269,7 +269,7 @@ if [[ $1 != "-bash" ]]; then
     if [[ $DOCKER != "y" ]] && ! $MAINTENANCE; then
       # Put application into production.
       PRINT INFO "Put application into production."
-      php artisan up &>> $BLUEPRINT__DEBUG
+      php artisan up &>> "$BLUEPRINT__DEBUG"
     fi
 
     if [[ $DOCKER != "y" ]]; then
@@ -285,7 +285,7 @@ if [[ $1 != "-bash" ]]; then
 
     dbAdd "blueprint.setupFinished"
     # Let the panel know the user has finished installation.
-    sed -i "s/NOTINSTALLED/INSTALLED/g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
+    sed -i "s/NOTINSTALLED/INSTALLED/g" "$FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php"
     exit 0
   fi
 fi
@@ -380,7 +380,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   fi
 
   # Return to the Pterodactyl installation folder.
-  cd $FOLDER || cdhalt
+  cd "$FOLDER" || cdhalt
 
   # Get all strings from the conf.yml file and make them accessible as variables.
   if [[ ! -f ".blueprint/tmp/$n/conf.yml" ]]; then
@@ -744,23 +744,23 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   # Place database migrations.
   if [[ $database_migrations != "" ]]; then
     PRINT INFO "Cloning database migration files.."
-    cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2>> $BLUEPRINT__DEBUG
+    cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2>> "$BLUEPRINT__DEBUG"
   fi
 
   # Place views directory.
   if [[ $requests_views != "" ]]; then
     PRINT INFO "Cloning and linking views directory.."
     mkdir -p ".blueprint/extensions/$identifier/views"
-    cp -R ".blueprint/tmp/$n/$requests_views/"* ".blueprint/extensions/$identifier/views/" 2>> $BLUEPRINT__DEBUG
-    ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/views "$FOLDER/resources/views/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    cp -R ".blueprint/tmp/$n/$requests_views/"* ".blueprint/extensions/$identifier/views/" 2>> "$BLUEPRINT__DEBUG"
+    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/views" "$FOLDER/resources/views/blueprint/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
   fi
 
   # Place controllers directory.
   if [[ $requests_controllers != "" ]]; then
     PRINT INFO "Cloning and linking controllers directory.."
     mkdir -p ".blueprint/extensions/$identifier/controllers"
-    cp -R ".blueprint/tmp/$n/$requests_controllers/"* ".blueprint/extensions/$identifier/controllers/" 2>> $BLUEPRINT__DEBUG
-    ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/controllers "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    cp -R ".blueprint/tmp/$n/$requests_controllers/"* ".blueprint/extensions/$identifier/controllers/" 2>> "$BLUEPRINT__DEBUG"
+    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/controllers" "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
   fi
 
   # Place routes directory.
