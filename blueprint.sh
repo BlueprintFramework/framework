@@ -6,7 +6,7 @@
 
 # This should allow Blueprint to run in Docker. Please note that changing the $FOLDER variable after running
 # the Blueprint installation script will not change anything in any files besides blueprint.sh.
-  FOLDER="$(realpath $(dirname $0))"
+  FOLDER=$(realpath "$(dirname "$0")")
 
 # This stores the webserver ownership user which Blueprint uses when applying webserver permissions.
   OWNERSHIP="www-data:www-data" #;
