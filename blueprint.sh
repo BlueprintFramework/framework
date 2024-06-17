@@ -1929,10 +1929,10 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   if [[ $(php artisan bp:latest) != "$VERSION" ]]; then PRINT WARNING "Active Blueprint version is not latest, you might run into compatibility issues."; fi
   cd .blueprint/tmp || cdhalt
   git clone "https://github.com/BlueprintFramework/templates.git"
-  cd ${FOLDER}/.blueprint || cdhalt
+  cd "${FOLDER}"/.blueprint || cdhalt
   cp -R tmp/templates/* extensions/blueprint/private/build/templates/
   rm -R tmp/templates
-  cd ${FOLDER} || cdhalt
+  cd "${FOLDER}" || cdhalt
 
   eval "$(parse_yaml $__BuildDir/templates/"${tnum}"/TemplateConfiguration.yml t_)"
 
@@ -1966,7 +1966,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
   mkdir -p .blueprint/tmp
 
   PRINT SUCCESS "Extension files initialized and imported to '.blueprint/dev'."
-  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
+  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
 fi
 
 
@@ -1997,7 +1997,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   PRINT INFO "Start packaging extension.."
 
   cd .blueprint || cdhalt
-  rm dev/.gitkeep 2>> $BLUEPRINT__DEBUG
+  rm dev/.gitkeep 2>> "$BLUEPRINT__DEBUG"
 
   eval "$(parse_yaml dev/conf.yml conf_)"; identifier="${conf_info_identifier}"
 
@@ -2037,7 +2037,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
   fi
 
   zip -r extension.zip ./*
-  cd ${FOLDER} || cdhalt
+  cd "${FOLDER}" || cdhalt
   cp .blueprint/tmp/extension.zip "${identifier}.blueprint"
   rm -R .blueprint/tmp
   mkdir -p .blueprint/tmp
@@ -2049,11 +2049,11 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     cp "${identifier}".blueprint .blueprint/extensions/blueprint/assets/exports/${randstr}/"${identifier}".blueprint
 
     PRINT SUCCESS "Extension has been exported to '$(grabAppUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint' and '${FOLDER}/${identifier}.blueprint'."
-    eval "$(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> $BLUEPRINT__DEBUG)" &
+    eval "$(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> "$BLUEPRINT__DEBUG")" &
   else
     PRINT SUCCESS "Extension has been exported to '${FOLDER}/${identifier}.blueprint'."
   fi
-  sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
+  sendTelemetry "EXPORT_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
 fi
 
 
@@ -2075,7 +2075,7 @@ if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
   rm -R \
     .blueprint/dev/* \
     .blueprint/dev/.* \
-    2>> $BLUEPRINT__DEBUG
+    2>> "$BLUEPRINT__DEBUG"
 
   PRINT SUCCESS "Development folder has been cleared."
 fi
@@ -2084,7 +2084,7 @@ fi
 # -info
 if [[ ( $2 == "-info" || $2 == "-f" ) ]]; then VCMD="y"
   fetchversion()    { printf "\x1b[0m\x1b[37m"; if [[ $VERSION != "" ]]; then echo $VERSION; else echo "none"; fi }
-  fetchfolder()     { printf "\x1b[0m\x1b[37m"; if [[ $FOLDER != "" ]]; then echo $FOLDER; else echo "none"; fi }
+  fetchfolder()     { printf "\x1b[0m\x1b[37m"; if [[ $FOLDER != "" ]]; then echo "$FOLDER"; else echo "none"; fi }
   fetchurl()        { printf "\x1b[0m\x1b[37m"; if [[ $(grabAppUrl) != "" ]]; then grabAppUrl; else echo "none"; fi }
   fetchlocale()     { printf "\x1b[0m\x1b[37m"; if [[ $(grabAppLocale) != "" ]]; then grabAppLocale; else echo "none"; fi }
   fetchtimezone()   { printf "\x1b[0m\x1b[37m"; if [[ $(grabAppTimezone) != "" ]]; then grabAppTimezone; else echo "none"; fi }
@@ -2113,7 +2113,7 @@ fi
 if [[ $2 == "-rerun-install" ]]; then VCMD="y"
   PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
   dbRemove "blueprint.setupFinished"
-  cd ${FOLDER} || cdhalt
+  cd "${FOLDER}" || cdhalt
   bash blueprint.sh
 fi
 
@@ -2146,19 +2146,19 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ $3 == "remote" ]]; then PRINT INFO "Fetching and pulling latest commit.."
   else                          PRINT INFO "Fetching and pulling latest release.."; fi
 
-  mkdir $FOLDER/.tmp
+  mkdir "$FOLDER/.tmp"
   cp blueprint.sh .blueprint.sh.bak
 
   HAS_DEV=false
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     PRINT INFO "Backing up extension development files.."
-    mkdir -p $FOLDER/.tmp/dev
-    cp .blueprint/dev/* $FOLDER/.tmp/dev/ -Rf
+    mkdir -p "$FOLDER/.tmp/dev"
+    cp .blueprint/dev/* "$FOLDER/.tmp/dev/" -Rf
     HAS_DEV=true
   fi
 
-  mkdir -p $FOLDER/.tmp/files
-  cd $FOLDER/.tmp/files || cdhalt
+  mkdir -p "$FOLDER/.tmp/files"
+  cd "$FOLDER/.tmp/files" || cdhalt
   if [[ $3 == "remote" ]]; then
     if [[ $4 == "" ]]; then REMOTE_REPOSITORY="$REPOSITORY"
     else REMOTE_REPOSITORY="$4"; fi
@@ -2179,9 +2179,9 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   fi
 
   if [[ ! -d "main" ]]; then
-    cd $FOLDER || cdhalt
-    rm -r $FOLDER/.tmp &>> $BLUEPRINT__DEBUG
-    rm $FOLDER/.blueprint.sh.bak &>> $BLUEPRINT__DEBUG
+    cd "$FOLDER" || cdhalt
+    rm -r "$FOLDER/.tmp" &>> "$BLUEPRINT__DEBUG"
+    rm "$FOLDER/.blueprint.sh.bak" &>> "$BLUEPRINT__DEBUG"
     PRINT FATAL "Remote does not exist or encountered an error, try again later."
     exit 1
   fi
@@ -2192,7 +2192,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     "main/.git" \
     "main/.gitignore" \
     "main/README.md" \
-    &>> $BLUEPRINT__DEBUG
+    &>> "$BLUEPRINT__DEBUG"
 
   # Copy fetched release files to the Pterodactyl directory and remove temp files.
   cp -r main/* "$FOLDER"/
@@ -2200,7 +2200,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     "main" \
     "$FOLDER"/.blueprint \
     "$FOLDER"/.tmp/files
-  cd $FOLDER || cdhalt
+  cd "$FOLDER" || cdhalt
 
   # Clean up folders with potentially broken symlinks.
   rm \
@@ -2217,8 +2217,8 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
     -e "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" \
     -e "s|WEBUSER=\"www-data\" #;|WEBUSER=\"$WEBUSER\" #;|g" \
     -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
-    $FOLDER/blueprint.sh
-  mv $FOLDER/blueprint $FOLDER/.blueprint;
+    "$FOLDER/blueprint.sh"
+  mv "$FOLDER/blueprint" "$FOLDER/.blueprint"
   bash blueprint.sh --post-upgrade
 
   # Ask user if they'd like to migrate their database.
@@ -2227,7 +2227,7 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then
     PRINT INFO "Running database migrations.."
     php artisan migrate --force
-    php artisan up &>> $BLUEPRINT__DEBUG
+    php artisan up &>> "$BLUEPRINT__DEBUG"
   else
     PRINT INFO "Database migrations have been skipped."
   fi
@@ -2236,11 +2236,11 @@ if [[ $2 == "-upgrade" ]]; then VCMD="y"
   if [[ ${HAS_DEV} == true ]]; then
     PRINT INFO "Restoring extension development files.."
     mkdir -p .blueprint/dev
-    cp $FOLDER/.tmp/dev/* .blueprint/dev -r
-    rm $FOLDER/.tmp/dev -rf
+    cp "$FOLDER/.tmp/dev/"* .blueprint/dev -r
+    rm "$FOLDER/.tmp/dev" -rf
   fi
 
-  rm -r $FOLDER/.tmp
+  rm -r "$FOLDER/.tmp"
 
   # Post-upgrade checks.
   PRINT INFO "Validating update.."
