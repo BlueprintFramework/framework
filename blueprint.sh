@@ -1373,7 +1373,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   # Link filesystems
   PRINT INFO "Linking filesystems.."
-  php artisan storage:link &>> $BLUEPRINT__DEBUG
+  php artisan storage:link &>> "$BLUEPRINT__DEBUG"
 
   # Flush cache.
   PRINT INFO "Flushing view, config and route cache.."
@@ -1382,21 +1382,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     php artisan config:cache
     php artisan route:clear
     if ! $dev || ! $F_developerKeepApplicationCache; then php artisan cache:clear; fi
-  } &>> $BLUEPRINT__DEBUG
+  } &>> "$BLUEPRINT__DEBUG"
 
   # Make sure all files have correct permissions.
   PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
   find "$FOLDER/" \
    -path "$FOLDER/node_modules" -prune \
-   -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
+   -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
   chown -R $OWNERSHIP "$FOLDER/.blueprint/extensions/$identifier/private"
-  chmod --silent -R +x ".blueprint/extensions/"* 2>> $BLUEPRINT__DEBUG
+  chmod --silent -R +x ".blueprint/extensions/"* 2>> "$BLUEPRINT__DEBUG"
 
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
     if $F_hasInstallScript; then
       PRINT WARNING "Extension uses a custom installation script, proceed with caution."
-      chmod --silent +x ".blueprint/extensions/$identifier/private/install.sh" 2>> $BLUEPRINT__DEBUG
+      chmod --silent +x ".blueprint/extensions/$identifier/private/install.sh" 2>> "$BLUEPRINT__DEBUG"
 
       # Run script while also parsing some useful variables for the install script to use.
       su "$WEBUSER" -s "$USERSHELL" -c "
@@ -1424,10 +1424,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     else
       PRINT SUCCESS "$identifier has been installed."
     fi
-    sendTelemetry "FINISH_EXTENSION_INSTALLATION" >> $BLUEPRINT__DEBUG
+    sendTelemetry "FINISH_EXTENSION_INSTALLATION" >> "$BLUEPRINT__DEBUG"
   elif [[ $dev == true ]]; then
     PRINT SUCCESS "$identifier has been built."
-    sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> $BLUEPRINT__DEBUG
+    sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
   fi
 
   exit 0 # success
@@ -1488,7 +1488,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   PRINT INPUT "Do you want to proceed with this transaction? Some files might not be removed properly. (y/N)"
   read -r YN
-  if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then  PRINT INFO "Extension removal cancelled.";exit 1;fi
+  if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then PRINT INFO "Extension removal cancelled.";exit 1;fi
 
   PRINT INFO "Searching and validating framework dependencies.."
   depend
@@ -1707,7 +1707,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
       "routes/blueprint/application/$identifier.php" \
       "routes/blueprint/client/$identifier.php" \
       "routes/blueprint/web/$identifier.php" \
-      &>> $BLUEPRINT__DEBUG
+      &>> "$BLUEPRINT__DEBUG"
   fi
 
   # Remove console folder
@@ -1760,7 +1760,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
   # Link filesystems
   PRINT INFO "Linking filesystems.."
-  php artisan storage:link &>> $BLUEPRINT__DEBUG
+  php artisan storage:link &>> "$BLUEPRINT__DEBUG"
 
   # Flush cache.
   PRINT INFO "Flushing view, config and route cache.."
@@ -1769,20 +1769,20 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     php artisan config:cache
     php artisan route:clear
     php artisan cache:clear
-  } &>> $BLUEPRINT__DEBUG
+  } &>> "$BLUEPRINT__DEBUG"
 
   # Make sure all files have correct permissions.
   PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
   find "$FOLDER/" \
    -path "$FOLDER/node_modules" -prune \
-   -o -exec chown "$OWNERSHIP" {} + &>> $BLUEPRINT__DEBUG
+   -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
   # Remove from installed list
   PRINT INFO "Removing '$identifier' from active extensions list.."
   sed -i "s~$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
 
   PRINT SUCCESS "'$identifier' has been removed."
-  sendTelemetry "FINISH_EXTENSION_REMOVAL" >> $BLUEPRINT__DEBUG
+  sendTelemetry "FINISH_EXTENSION_REMOVAL" >> "$BLUEPRINT__DEBUG"
 
   exit 0 # success
 fi
@@ -1818,7 +1818,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
 
   ask_template() {
     PRINT INPUT "Choose an extension template:"
-    echo -e "$(curl 'https://raw.githubusercontent.com/BlueprintFramework/templates/main/repository' 2>> $BLUEPRINT__DEBUG)"
+    echo -e "$(curl 'https://raw.githubusercontent.com/BlueprintFramework/templates/main/repository' 2>> "$BLUEPRINT__DEBUG")"
     read -r ASKTEMPLATE
     REDO_TEMPLATE=false
 
@@ -1828,7 +1828,7 @@ if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
       REDO_TEMPLATE=true
     fi
     # Unknown template.
-    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/BlueprintFramework/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2>> $BLUEPRINT__DEBUG)") == "404: Not Found" ]]; then
+    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/BlueprintFramework/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2>> "$BLUEPRINT__DEBUG")") == "404: Not Found" ]]; then
       PRINT WARNING "Unknown template, please choose a valid option."
       REDO_TEMPLATE=true
     fi
