@@ -775,7 +775,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
         rm "$FOLDER/routes/blueprint/application/$identifier.php"
         cp -R ".blueprint/tmp/$n/$requests_routers_application" ".blueprint/extensions/$identifier/routers/application.php"
         ln -s -r -T ".blueprint/extensions/$identifier/routers/application.php" "$FOLDER/routes/blueprint/application/$identifier.php"
-      } 2>> $BLUEPRINT__DEBUG
+      } 2>> "$BLUEPRINT__DEBUG"
     fi
 
     if [[ $requests_routers_client != "" ]]; then
@@ -783,7 +783,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
         rm "$FOLDER/routes/blueprint/client/$identifier.php"
         cp -R ".blueprint/tmp/$n/$requests_routers_client" ".blueprint/extensions/$identifier/routers/client.php"
         ln -s -r -T ".blueprint/extensions/$identifier/routers/client.php" "$FOLDER/routes/blueprint/client/$identifier.php"
-      } 2>> $BLUEPRINT__DEBUG
+      } 2>> "$BLUEPRINT__DEBUG"
     fi
 
     if [[ $requests_routers_web != "" ]]; then
@@ -791,7 +791,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
         rm "$FOLDER/routes/blueprint/web/$identifier.php"
         cp -R ".blueprint/tmp/$n/$requests_routers_web" ".blueprint/extensions/$identifier/routers/web.php"
         ln -s -r -T ".blueprint/extensions/$identifier/routers/web.php" "$FOLDER/routes/blueprint/web/$identifier.php"
-      } 2>> $BLUEPRINT__DEBUG
+      } 2>> "$BLUEPRINT__DEBUG"
     fi
   fi
 
@@ -799,8 +799,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $console_artisan != "" ]]; then
     PRINT INFO "Cloning and linking artisan directory.."
     mkdir -p ".blueprint/extensions/$identifier/console/artisan"
-    cp -R ".blueprint/tmp/$n/$console_artisan/"* ".blueprint/extensions/$identifier/console/artisan/" 2>> $BLUEPRINT__DEBUG
-    ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/console/artisan "$FOLDER/app/Console/Commands/BlueprintFramework/Extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    cp -R ".blueprint/tmp/$n/$console_artisan/"* ".blueprint/extensions/$identifier/console/artisan/" 2>> "$BLUEPRINT__DEBUG"
+    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/console/artisan" "$FOLDER/app/Console/Commands/BlueprintFramework/Extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
   fi
 
   # Create, link and connect components directory.
@@ -808,7 +808,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     YARN="y"
     PRINT INFO "Cloning and linking components directory.."
     mkdir -p ".blueprint/extensions/$identifier/components"
-    ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/components "$FOLDER/resources/scripts/blueprint/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/components" "$FOLDER/resources/scripts/blueprint/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
 
     # Remove custom routes to prevent duplicates.
     if [[ $DUPLICATE == "y" ]]; then
@@ -828,7 +828,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
         "resources/scripts/blueprint/extends/routers/routes.ts"
     fi
 
-    cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> $BLUEPRINT__DEBUG
+    cp -R ".blueprint/tmp/$n/$dashboard_components/"* ".blueprint/extensions/$identifier/components/" 2>> "$BLUEPRINT__DEBUG"
     if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
 
       # fetch component config
@@ -979,7 +979,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           cp "$__BuildDir/extensions/routes/importConstructor" "$ImportConstructor"
           cp "$__BuildDir/extensions/routes/accountRouteConstructor" "$AccountRouteConstructor"
           cp "$__BuildDir/extensions/routes/serverRouteConstructor" "$ServerRouteConstructor"
-        } 2>> $BLUEPRINT__DEBUG
+        } 2>> "$BLUEPRINT__DEBUG"
 
         sed -i "s~\[id\^]~""${identifier^}""~g" $ImportConstructor
         sed -i "s~\[id\^]~""${identifier^}""~g" $AccountRouteConstructor
@@ -1006,7 +1006,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           COMPONENTS_ROUTE_IDEN=$(tr -dc '[:lower:]' < /dev/urandom | fold -w 10 | head -n 1)
           COMPONENTS_ROUTE_IDEN="${identifier^}${COMPONENTS_ROUTE_IDEN^}"
 
-          echo -e "NAME: $COMPONENTS_ROUTE_NAME\nPATH: $COMPONENTS_ROUTE_PATH\nTYPE: $COMPONENTS_ROUTE_TYPE\nCOMP: $COMPONENTS_ROUTE_COMP\nIDEN: $COMPONENTS_ROUTE_IDEN" >> $BLUEPRINT__DEBUG
+          echo -e "NAME: $COMPONENTS_ROUTE_NAME\nPATH: $COMPONENTS_ROUTE_PATH\nTYPE: $COMPONENTS_ROUTE_TYPE\nCOMP: $COMPONENTS_ROUTE_COMP\nIDEN: $COMPONENTS_ROUTE_IDEN" >> "$BLUEPRINT__DEBUG"
 
 
           # Return error if type is not defined correctly.
@@ -1120,7 +1120,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           rm "$ImportConstructor"
           rm "$AccountRouteConstructor"
           rm "$ServerRouteConstructor"
-        } 2>> $BLUEPRINT__DEBUG
+        } 2>> "$BLUEPRINT__DEBUG"
       fi
     else
       # warn about missing components.yml file
@@ -1132,9 +1132,9 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ $data_public != "" ]]; then
     PRINT INFO "Cloning and linking public directory.."
     mkdir -p ".blueprint/extensions/$identifier/public"
-    ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/public "$FOLDER/public/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/public" "$FOLDER/public/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
 
-    cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2>> $BLUEPRINT__DEBUG
+    cp -R ".blueprint/tmp/$n/$data_public/"* ".blueprint/extensions/$identifier/public/" 2>> "$BLUEPRINT__DEBUG"
   fi
 
   if [[ $admin_controller == "" ]]; then
@@ -1155,7 +1155,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     cp "$__BuildDir/extensions/route.php" "$AdminRouteConstructor"
     cp "$__BuildDir/extensions/button.blade.php" "$AdminButtonConstructor"
     cp "$__BuildDir/extensions/config/ExtensionFS.build" "$ConfigExtensionFS"
-  } 2>> $BLUEPRINT__DEBUG;
+  } 2>> "$BLUEPRINT__DEBUG"
 
 
   # Start creating data directory.
@@ -1179,7 +1179,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     # Create assets folder if the extension is not updating.
     mkdir .blueprint/extensions/"$identifier"/assets
   fi
-  ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/assets "$FOLDER/public/assets/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
+  ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/assets" "$FOLDER/public/assets/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
 
   ICON_EXT="jpg"
   if [[ $icon == "" ]]; then
@@ -1321,8 +1321,8 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   # Create extension filesystem (ExtensionFS)
   PRINT INFO "Creating and linking extension filesystem.."
   mkdir -p ".blueprint/extensions/$identifier/fs"
-  ln -s -r -T $FOLDER/.blueprint/extensions/"$identifier"/fs "$FOLDER/storage/extensions/$identifier" 2>> $BLUEPRINT__DEBUG
-  ln -s -r -T $FOLDER/storage/extensions/"$identifier" "$FOLDER/public/fs/$identifier" 2>> $BLUEPRINT__DEBUG
+  ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/fs" "$FOLDER/storage/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
+  ln -s -r -T "$FOLDER/storage/extensions/$identifier" "$FOLDER/public/fs/$identifier" 2>> "$BLUEPRINT__DEBUG"
   if [[ $DUPLICATE == "y" ]]; then
     sed -i \
       -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
