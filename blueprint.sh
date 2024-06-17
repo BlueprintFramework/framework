@@ -33,14 +33,14 @@ fi
 
 # This has caused a bunch of errors but is just here to make sure people actually upload the
 # "blueprint" folder onto their panel when installing Blueprint. Pick your poison.
-if [[ -d "$FOLDER/blueprint" ]]; then mv $FOLDER/blueprint $FOLDER/.blueprint; fi
+if [[ -d "$FOLDER/blueprint" ]]; then mv "$FOLDER/blueprint" "$FOLDER/.blueprint"; fi
 
 if [[ $VERSION != "" ]]; then
   # This function makes sure some placeholders get replaced with the current Blueprint version.
   if [[ ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/version" ]]; then
-    sed -E -i "s*::v*$VERSION*g" $FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php
-    sed -E -i "s*::v*$VERSION*g" $FOLDER/.blueprint/extensions/blueprint/public/index.html
-    touch $FOLDER/.blueprint/extensions/blueprint/private/db/version
+    sed -E -i "s*::v*$VERSION*g" "$FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php"
+    sed -E -i "s*::v*$VERSION*g" "$FOLDER/.blueprint/extensions/blueprint/public/index.html"
+    touch "$FOLDER/.blueprint/extensions/blueprint/private/db/version"
   fi
 fi
 
@@ -53,7 +53,7 @@ export NODE_OPTIONS=--openssl-legacy-provider
 __BuildDir=".blueprint/extensions/blueprint/private/build"
 
 # Automatically navigate to the Pterodactyl directory when running the core.
-cd $FOLDER || return
+cd "$FOLDER" || return
 
 # Import libraries.
 source .blueprint/lib/parse_yaml.sh || missinglibs+="[parse_yaml]"
@@ -188,9 +188,9 @@ if ! [ -x "$(command -v blueprint)" ]; then
   {
     touch /usr/local/bin/blueprint
     chmod u+x \
-      $FOLDER/blueprint.sh \
+      "$FOLDER/blueprint.sh" \
       /usr/local/bin/blueprint
-  } >> $BLUEPRINT__DEBUG
+  } >> "$BLUEPRINT__DEBUG"
   echo -e "#!/bin/bash\nbash $FOLDER/blueprint.sh -bash \$@;" > /usr/local/bin/blueprint
 fi
 
@@ -213,14 +213,14 @@ if [[ $1 != "-bash" ]]; then
     # Link directories.
     PRINT INFO "Linking directories and filesystems.."
     {
-      ln -s -r -T $FOLDER/.blueprint/extensions/blueprint/public $FOLDER/public/extensions/blueprint
-      ln -s -r -T $FOLDER/.blueprint/extensions/blueprint/assets $FOLDER/public/assets/extensions/blueprint
-    } 2>> $BLUEPRINT__DEBUG
-    php artisan storage:link &>> $BLUEPRINT__DEBUG
+      ln -s -r -T "$FOLDER/.blueprint/extensions/blueprint/public" "$FOLDER/public/extensions/blueprint"
+      ln -s -r -T "$FOLDER/.blueprint/extensions/blueprint/assets" "$FOLDER/public/assets/extensions/blueprint"
+    } 2>> "$BLUEPRINT__DEBUG"
+    php artisan storage:link &>> "$BLUEPRINT__DEBUG"
 
     PRINT INFO "Replacing internal placeholders.."
     # Copy "Blueprint" extension page logo from assets.
-    cp $FOLDER/.blueprint/assets/logo.jpg $FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg
+    cp "$FOLDER/.blueprint/assets/logo.jpg" "$FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg"
 
     # Put application into maintenance.
     PRINT INPUT "Would you like to put your application into maintenance while Blueprint is installing? (Y/n)"
@@ -228,7 +228,7 @@ if [[ $1 != "-bash" ]]; then
     if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then
       MAINTENANCE=true
       PRINT INFO "Put application into maintenance mode."
-      php artisan down &>> $BLUEPRINT__DEBUG
+      php artisan down &>> "$BLUEPRINT__DEBUG"
     else
       MAINTENANCE=false
       PRINT INFO "Putting application into maintenance has been skipped."
@@ -241,7 +241,7 @@ if [[ $1 != "-bash" ]]; then
       php artisan config:cache
       php artisan route:clear
       php artisan cache:clear
-    } &>> $BLUEPRINT__DEBUG
+    } &>> "$BLUEPRINT__DEBUG"
     updateCacheReminder
 
     # Run migrations if Blueprint is not upgrading.
