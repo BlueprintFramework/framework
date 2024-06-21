@@ -794,7 +794,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     fi
   fi
 
-  # Place and link artisan directory.
+  # Place and link console directory and generate artisan files.
   if [[ $data_console != "" ]]; then
     PRINT INFO "Cloning and linking artisan directory.."
     mkdir -p ".blueprint/extensions/$identifier/console"
