@@ -414,6 +414,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   data_directory="$conf_data_directory"; #(optional)
   data_public="$conf_data_public"; #(optional)
+  data_console="$conf_data_console"; #(optional)
 
   requests_views="$conf_requests_views"; #(optional)
   requests_controllers="$conf_requests_controllers"; #(optional)
@@ -423,8 +424,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   requests_routers_web="$conf_requests_routers_web"; #(optional)
 
   database_migrations="$conf_database_migrations"; #(optional)
-
-  console_artisan="$conf_console_artisan"; #(optional)
 
 
   # assign config aliases
@@ -1470,6 +1469,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
 
     data_directory="$conf_data_directory"; #(optional)
     data_public="$conf_data_public"; #(optional)
+    data_console="$conf_data_console"; #(optional)
 
     requests_views="$conf_requests_views"; #(optional)
     requests_controllers="$conf_requests_controllers"; #(optional)
@@ -1479,8 +1479,6 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     requests_routers_web="$conf_requests_routers_web"; #(optional)
 
     database_migrations="$conf_database_migrations"; #(optional)
-
-    console_artisan="$conf_console_artisan"; #(optional)
   else
     PRINT FATAL "Extension configuration file not found or detected."
     exit 1
