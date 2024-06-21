@@ -445,13 +445,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   || [[ ( $dashboard_components         == "/"* ) || ( $dashboard_components         == *"/.."* ) || ( $dashboard_components         == *"../"* ) || ( $dashboard_components         == *"/../"* ) || ( $dashboard_components         == *"~"* ) || ( $dashboard_components         == *"\\"* ) ]] \
   || [[ ( $data_directory               == "/"* ) || ( $data_directory               == *"/.."* ) || ( $data_directory               == *"../"* ) || ( $data_directory               == *"/../"* ) || ( $data_directory               == *"~"* ) || ( $data_directory               == *"\\"* ) ]] \
   || [[ ( $data_public                  == "/"* ) || ( $data_public                  == *"/.."* ) || ( $data_public                  == *"../"* ) || ( $data_public                  == *"/../"* ) || ( $data_public                  == *"~"* ) || ( $data_public                  == *"\\"* ) ]] \
+  || [[ ( $data_console                 == "/"* ) || ( $data_console                 == *"/.."* ) || ( $data_console                 == *"../"* ) || ( $data_console                 == *"/../"* ) || ( $data_console                 == *"~"* ) || ( $data_console                 == *"\\"* ) ]] \
   || [[ ( $requests_views               == "/"* ) || ( $requests_views               == *"/.."* ) || ( $requests_views               == *"../"* ) || ( $requests_views               == *"/../"* ) || ( $requests_views               == *"~"* ) || ( $requests_views               == *"\\"* ) ]] \
   || [[ ( $requests_controllers         == "/"* ) || ( $requests_controllers         == *"/.."* ) || ( $requests_controllers         == *"../"* ) || ( $requests_controllers         == *"/../"* ) || ( $requests_controllers         == *"~"* ) || ( $requests_controllers         == *"\\"* ) ]] \
   || [[ ( $requests_routers_application == "/"* ) || ( $requests_routers_application == *"/.."* ) || ( $requests_routers_application == *"../"* ) || ( $requests_routers_application == *"/../"* ) || ( $requests_routers_application == *"~"* ) || ( $requests_routers_application == *"\\"* ) ]] \
   || [[ ( $requests_routers_client      == "/"* ) || ( $requests_routers_client      == *"/.."* ) || ( $requests_routers_client      == *"../"* ) || ( $requests_routers_client      == *"/../"* ) || ( $requests_routers_client      == *"~"* ) || ( $requests_routers_client      == *"\\"* ) ]] \
   || [[ ( $requests_routers_web         == "/"* ) || ( $requests_routers_web         == *"/.."* ) || ( $requests_routers_web         == *"../"* ) || ( $requests_routers_web         == *"/../"* ) || ( $requests_routers_web         == *"~"* ) || ( $requests_routers_web         == *"\\"* ) ]] \
-  || [[ ( $database_migrations          == "/"* ) || ( $database_migrations          == *"/.."* ) || ( $database_migrations          == *"../"* ) || ( $database_migrations          == *"/../"* ) || ( $database_migrations          == *"~"* ) || ( $database_migrations          == *"\\"* ) ]] \
-  || [[ ( $console_artisan              == "/"* ) || ( $console_artisan              == *"/.."* ) || ( $console_artisan              == *"../"* ) || ( $console_artisan              == *"/../"* ) || ( $console_artisan              == *"~"* ) || ( $console_artisan              == *"\\"* ) ]]; then
+  || [[ ( $database_migrations          == "/"* ) || ( $database_migrations          == *"/.."* ) || ( $database_migrations          == *"../"* ) || ( $database_migrations          == *"/../"* ) || ( $database_migrations          == *"~"* ) || ( $database_migrations          == *"\\"* ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Config file paths cannot escape the extension bundle."
     exit 1
@@ -461,10 +461,10 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ ( $dashboard_components == *"/" ) ]] \
   || [[ ( $data_directory == *"/"       ) ]] \
   || [[ ( $data_public == *"/"          ) ]] \
+  || [[ ( $data_console == *"/"         ) ]] \
   || [[ ( $requests_views == *"/"       ) ]] \
   || [[ ( $requests_controllers == *"/" ) ]] \
-  || [[ ( $database_migrations == *"/"  ) ]] \
-  || [[ ( $console_artisan == *"/"      ) ]]; then
+  || [[ ( $database_migrations == *"/"  ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Directory paths in conf.yml should not end with a slash."
     exit 1
@@ -795,11 +795,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   fi
 
   # Place and link artisan directory.
-  if [[ $console_artisan != "" ]]; then
+  if [[ $data_console != "" ]]; then
     PRINT INFO "Cloning and linking artisan directory.."
-    mkdir -p ".blueprint/extensions/$identifier/console/artisan"
-    cp -R ".blueprint/tmp/$n/$console_artisan/"* ".blueprint/extensions/$identifier/console/artisan/" 2>> "$BLUEPRINT__DEBUG"
-    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/console/artisan" "$FOLDER/app/Console/Commands/BlueprintFramework/Extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
+    mkdir -p ".blueprint/extensions/$identifier/console"
+    cp -R ".blueprint/tmp/$n/$data_console/"* ".blueprint/extensions/$identifier/console/" 2>> "$BLUEPRINT__DEBUG"
+    #ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/console/artisan" "$FOLDER/app/Console/Commands/BlueprintFramework/Extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
   fi
 
   # Create, link and connect components directory.
@@ -1709,7 +1709,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   fi
 
   # Remove console folder
-  if [[ $console_artisan != "" ]]; then # further expand on this if needed
+  if [[ $data_console != "" ]]; then # further expand on this if needed
     PRINT INFO "Removing and unlinking console folder.."
     rm -R \
       ".blueprint/extensions/$identifier/console" \
