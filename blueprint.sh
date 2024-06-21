@@ -796,10 +796,20 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   # Place and link console directory and generate artisan files.
   if [[ $data_console != "" ]]; then
-    PRINT INFO "Cloning and linking artisan directory.."
+    PRINT INFO "Cloning and linking console directory.."
     mkdir -p ".blueprint/extensions/$identifier/console"
     cp -R ".blueprint/tmp/$n/$data_console/"* ".blueprint/extensions/$identifier/console/" 2>> "$BLUEPRINT__DEBUG"
-    #ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/console/artisan" "$FOLDER/app/Console/Commands/BlueprintFramework/Extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
+
+    if [[ -f ".blueprint/tmp/$n/$data_console/Console.yml" ]]; then
+
+      # fetch console config
+      eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/Console.yml Console_)"
+      if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Console.yml OldConsole_)"; fi
+    
+      # TODO: read through every console entry
+      # tests/Console.yml
+
+    fi
   fi
 
   # Create, link and connect components directory.
@@ -1165,10 +1175,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   if [[ $data_directory != "" ]]; then cp -R ".blueprint/tmp/$n/$data_directory/"* ".blueprint/extensions/$identifier/private/"; fi
 
-  cp ".blueprint/tmp/$n/conf.yml" ".blueprint/extensions/$identifier/private/.store/conf.yml" #backup conf.yml
-  if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
-    cp ".blueprint/tmp/$n/$dashboard_components/Components.yml" ".blueprint/extensions/$identifier/private/.store/Components.yml" #backup Components.yml
+  #backup conf.yml
+  cp ".blueprint/tmp/$n/conf.yml" ".blueprint/extensions/$identifier/private/.store/conf.yml"
+
+  #backup Components.yml
+  if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]] \
+  && [[ $dashboard_components != "" ]]; then
+    cp ".blueprint/tmp/$n/$dashboard_components/Components.yml" ".blueprint/extensions/$identifier/private/.store/Components.yml"
   fi
+
+  #backup Console.yml
+  if [[ -f ".blueprint/tmp/$n/$data_console/Console.yml" ]] \
+  && [[ $data_console != "" ]]; then
+    cp ".blueprint/tmp/$n/$data_console/Console.yml" ".blueprint/extensions/$identifier/private/.store/Console.yml"
+  fi
+
   # End creating data directory.
 
 

@@ -1,0 +1,12 @@
+#- {
+#  Signature: "",
+#  Description: "",
+#  Path: "",
+#  Interval: ""
+#}
+- {
+  Signature: "check-latest", # this should become "blueprint:check-latest"
+  Description: "check if blueprint is running the latest version",
+  Path: "./Command.php",
+  Interval: "hourly/daily" # optional
+}
