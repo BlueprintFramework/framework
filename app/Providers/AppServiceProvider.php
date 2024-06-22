@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Pterodactyl\Extensions\Themes\Theme;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Pterodactyl\Providers\Blueprint\RouteServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -58,6 +59,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // Merge Blueprint configurations with existing configurations.
         $this->mergeConfigFrom(base_path('config/ExtensionFS.php'), 'filesystems');
+        
+        // Load Blueprint's route service provider.
+        $this->app->register(RouteServiceProvider::class);
         
         // Only load the settings service provider if the environment
         // is configured to allow it.
