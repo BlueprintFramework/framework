@@ -24,6 +24,7 @@ sendTelemetry() {
   curl --location --silent --connect-timeout 3 "http://api.blueprint.zip:50000/send/$key/$1" &
 }
 
+
 # === CACHEREMINDER ===
 updateCacheReminder() {
   cd "${BLUEPRINT__FOLDER}" || exit
@@ -35,4 +36,15 @@ updateCacheReminder() {
   sed -i "s~I0TWHOPKAB-$oldClassName~I0TWHOPKAB-$newClassName~g" resources/views/blueprint/admin/admin.blade.php
   sed -i "s~I0TWHOPKAB-$oldClassName~I0TWHOPKAB-$newClassName~g" .blueprint/extensions/blueprint/assets/misc/cacheOverlay-"${newClassName}".css
   echo "$newClassName" > .blueprint/extensions/blueprint/private/db/randomclassname
+}
+
+
+# === IS_VALID_CRON ===
+function is_valid_cron() {
+  local cron_expr="$1"
+  if [[ $(echo "$cron_expr" | crontab 2>/dev/null) ]]; then
+    echo true
+  else
+    echo false
+  fi
 }

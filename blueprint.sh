@@ -820,22 +820,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       eval "$(parse_yaml .blueprint/tmp/"$n"/"$data_console"/Console.yml Console_)"
       if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Console.yml OldConsole_)"; fi
     
-      # TODO: read through every console entry
-      # tests/Console.yml
-
       # Print warning if console configuration is empty - otherwise go through all options.
       if [[ $Console__ == "" ]]; then
         PRINT WARNING "Console configuration (Console.yml) is empty!"
       else
         PRINT INFO "Creating and linking console commands and schedules.."
 
-        ArtisanCommandConstructor="$__BuildDir/extensions/console/ArtisanCommandConstructor.bak"
-
-        {
-          cp "$__BuildDir/extensions/console/ArtisanCommandConstructor" "$ArtisanCommandConstructor"
-        } 2>> "$BLUEPRINT__DEBUG"
-
-        sed -i "s~\[id\^]~""${identifier^}""~g" $ArtisanCommandConstructor
+        # Create (and replace) schedules file
+        touch "app/BlueprintFramework/Schedules/${identifier^}Schedules.php" 2>> "$BLUEPRINT__DEBUG"
+        echo -e "<?php\n\n" > "app/BlueprintFramework/Schedules/${identifier^}Schedules.php"
 
         for parent in $Console__; do
           parent="${parent}_"
@@ -850,6 +843,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             if [[ $child == "Console_"+([0-9])"_Interval" ]]; then CONSOLE_ENTRY_INTE="${!child}"; fi
           done
 
+          ArtisanCommandConstructor="$__BuildDir/extensions/console/ArtisanCommandConstructor.bak"
+          ScheduleConstructor="$__BuildDir/extensions/console/ScheduleConstructor.bak"
+
+          {
+            cp "$__BuildDir/extensions/console/ArtisanCommandConstructor" "$ArtisanCommandConstructor"
+            cp "$__BuildDir/extensions/console/ScheduleConstructor" "$ScheduleConstructor"
+          } 2>> "$BLUEPRINT__DEBUG"
+
+          sed -i "s~\[id\^]~""${identifier^}""~g" $ArtisanCommandConstructor
+
           CONSOLE_ENTRY_SIGN="${CONSOLE_ENTRY_SIGN//&/\\&}"
           CONSOLE_ENTRY_DESC="${CONSOLE_ENTRY_DESC//&/\\&}"
           CONSOLE_ENTRY_SIGN="${CONSOLE_ENTRY_SIGN//\'/\\\'}"
@@ -861,22 +864,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
           echo -e "SIGN: $CONSOLE_ENTRY_SIGN\nDESC: $CONSOLE_ENTRY_DESC\nPATH: $CONSOLE_ENTRY_PATH\nINTE: $CONSOLE_ENTRY_INTE\nIDEN: $CONSOLE_ENTRY_IDEN" >> "$BLUEPRINT__DEBUG"
 
-
-          # Return error if interval is not defined correctly.
-          # -> We should really allow more than just hourly/daily, but for now
-          #    this is just here for testing. We're probably gonna go with
-          #      minutely/hourly/bihourly/
-          #      daily/bidaily/weekly/
-          #      biweekly/monthly/bimonthly
-          if [[
-            ( $CONSOLE_ENTRY_INTE != "hourly" ) &&
-            ( $CONSOLE_ENTRY_INTE != "daily" ) &&
-            ( $CONSOLE_ENTRY_INTE != "" )
-          ]]; then
-            rm -R ".blueprint/tmp/$n"
-            PRINT FATAL "Console entry intervals can only be empty, 'hourly' or 'daily'."
-            exit 1
-          fi
 
           # Prevent escaping console folder.
           if [[
@@ -926,7 +913,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           # Assign value to certain variables if empty/invalid
           if [[ $CONSOLE_ENTRY_INTE == "" ]]; then CONSOLE_ENTRY_INTE="false";  fi
 
-          # Apply variables to contructor.
+          # Apply variables to contructors.
           sed -i \
             -e "s~\[IDENTIFIER\]~$identifier~g" \
             -e "s~\[SIGNATURE\]~$CONSOLE_ENTRY_SIGN~g" \
@@ -934,8 +921,65 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             -e "s~\[FILENAME\]~$CONSOLE_ENTRY_PATH~g" \
             -e "s~__ArtisanCommand__~${CONSOLE_ENTRY_IDEN}Command~g" \
             "$ArtisanCommandConstructor"
+          sed -i \
+            -e "s~\[IDENTIFIER\]~$identifier~g" \
+            -e "s~\[SIGNATURE\]~$CONSOLE_ENTRY_SIGN~g" \
+            "$ScheduleConstructor"
           
           cp "$ArtisanCommandConstructor" "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}/${CONSOLE_ENTRY_IDEN}Command.php"
+
+          # Detect schedule definition and apply it
+          SCHEDULE_SET=false
+          if [[ 
+            ( $CONSOLE_ENTRY_INTE != "" ) &&
+            ( $CONSOLE_ENTRY_INTE != "false" )
+          ]]; then
+            # Check if interval has valid cron syntax
+            if eval is_valid_cron "$CONSOLE_ENTRY_INTE"; then
+              sed -i "s~\[SCHEDULE\]~cron('$CONSOLE_ENTRY_INTE')~g" "$ScheduleConstructor"
+            else
+              SCHEDULE_SET=false
+              ApplyConsoleInterval() {
+                sed -i "s~\[SCHEDULE\]~${1}()~g" "$ScheduleConstructor"
+                SCHEDULE_SET=true
+              }
+              if [[ $CONSOLE_ENTRY_INTE == "everySecond"         ]]; then ApplyConsoleInterval "everySecond";         fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyTwoSeconds"     ]]; then ApplyConsoleInterval "everyTwoSeconds";     fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyFiveSeconds"    ]]; then ApplyConsoleInterval "everyFiveSeconds";    fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyTenSeconds"     ]]; then ApplyConsoleInterval "everyTenSeconds";     fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyFifteenSeconds" ]]; then ApplyConsoleInterval "everyFifteenSeconds"; fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyTwentySeconds"  ]]; then ApplyConsoleInterval "everyTwentySeconds";  fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyThirtySeconds"  ]]; then ApplyConsoleInterval "everyThirtySeconds";  fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyMinute"         ]]; then ApplyConsoleInterval "everyMinute";         fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyTwoMinutes"     ]]; then ApplyConsoleInterval "everyTwoMinutes";     fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyThreeMinutes"   ]]; then ApplyConsoleInterval "everyThreeMinutes";   fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyFourMinutes"    ]]; then ApplyConsoleInterval "everyFourMinutes";    fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyFiveMinutes"    ]]; then ApplyConsoleInterval "everyFiveMinutes";    fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyTenMinutes"     ]]; then ApplyConsoleInterval "everyTenMinutes";     fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyFifteenMinutes" ]]; then ApplyConsoleInterval "everyFifteenMinutes"; fi
+              if [[ $CONSOLE_ENTRY_INTE == "everyThirtyMinutes"  ]]; then ApplyConsoleInterval "everyThirtyMinutes";  fi
+              if [[ $CONSOLE_ENTRY_INTE == "hourly"              ]]; then ApplyConsoleInterval "hourly";              fi
+              if [[ $CONSOLE_ENTRY_INTE == "daily"               ]]; then ApplyConsoleInterval "daily";               fi
+              if [[ $CONSOLE_ENTRY_INTE == "weekdays"            ]]; then ApplyConsoleInterval "daily()->weekdays";   fi
+              if [[ $CONSOLE_ENTRY_INTE == "weekends"            ]]; then ApplyConsoleInterval "daily()->weekends";   fi
+              if [[ $CONSOLE_ENTRY_INTE == "sundays"             ]]; then ApplyConsoleInterval "daily()->sundays";    fi
+              if [[ $CONSOLE_ENTRY_INTE == "mondays"             ]]; then ApplyConsoleInterval "daily()->mondays";    fi
+              if [[ $CONSOLE_ENTRY_INTE == "tuesdays"            ]]; then ApplyConsoleInterval "daily()->tuesdays";   fi
+              if [[ $CONSOLE_ENTRY_INTE == "wednesdays"          ]]; then ApplyConsoleInterval "daily()->wednesdays"; fi
+              if [[ $CONSOLE_ENTRY_INTE == "thursdays"           ]]; then ApplyConsoleInterval "daily()->thursdays";  fi
+              if [[ $CONSOLE_ENTRY_INTE == "fridays"             ]]; then ApplyConsoleInterval "daily()->fridays";    fi
+              if [[ $CONSOLE_ENTRY_INTE == "saturdays"           ]]; then ApplyConsoleInterval "daily()->saturdays";  fi
+              if [[ $CONSOLE_ENTRY_INTE == "weekly"              ]]; then ApplyConsoleInterval "weekly";              fi
+              if [[ $CONSOLE_ENTRY_INTE == "monthly"             ]]; then ApplyConsoleInterval "monthly";             fi
+              if [[ $CONSOLE_ENTRY_INTE == "quarterly"           ]]; then ApplyConsoleInterval "quarterly";           fi
+              if [[ $CONSOLE_ENTRY_INTE == "yearly"              ]]; then ApplyConsoleInterval "yearly";              fi
+            fi
+            if $SCHEDULE_SET; then
+              cat "$ScheduleConstructor" >> "app/BlueprintFramework/Schedules/${identifier^}Schedules.php"
+            else
+              PRINT WARNING "Unknown interval provided for console command ($CONSOLE_ENTRY_SIGN), this command will not have an interval!"
+            fi
+          fi
 
           # Clear variables after doing all console entry stuff for a defined entry.
           CONSOLE_ENTRY_SIGN=""
@@ -943,11 +987,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
           CONSOLE_ENTRY_PATH=""
           CONSOLE_ENTRY_INTE=""
           CONSOLE_ENTRY_IDEN=""
-        done
 
-        {
-          rm "$ArtisanCommandConstructor"
-        } 2>> "$BLUEPRINT__DEBUG"
+          rm \
+            "$ArtisanCommandConstructor" \
+            "$ScheduleConstructor" \
+            2>> "$BLUEPRINT__DEBUG"
+        done
       fi
 
     fi
@@ -1266,11 +1311,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
         # Fix line breaks by removing all of them.
         sed -i -E "s~~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
-        {
-          rm "$ImportConstructor"
-          rm "$AccountRouteConstructor"
-          rm "$ServerRouteConstructor"
-        } 2>> "$BLUEPRINT__DEBUG"
+        rm \
+          "$ImportConstructor" \
+          "$AccountRouteConstructor" \
+          "$ServerRouteConstructor" \
+          2>> "$BLUEPRINT__DEBUG"
       fi
     else
       # warn about missing components.yml file
