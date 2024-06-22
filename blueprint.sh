@@ -797,17 +797,152 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   # Place and link console directory and generate artisan files.
   if [[ $data_console != "" ]]; then
     PRINT INFO "Cloning and linking console directory.."
-    mkdir -p ".blueprint/extensions/$identifier/console"
-    cp -R ".blueprint/tmp/$n/$data_console/"* ".blueprint/extensions/$identifier/console/" 2>> "$BLUEPRINT__DEBUG"
 
+    # Create console directory alongside a functions directory which would store all console functions.
+    # -> To avoid conflicts, we sadly have to import functions instead of giving full access to Artisan commands.
+    #    We'll need to create a decently large BlueprintConsoleLibrary for more functionality as well, and somehow
+    #    automatically import it into these functions.
+    mkdir -p \
+      ".blueprint/extensions/$identifier/console/functions" \
+      "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}"
+    cp -R ".blueprint/tmp/$n/$data_console/" ".blueprint/extensions/$identifier/console/functions/" 2>> "$BLUEPRINT__DEBUG"
+
+    # Now we check if Console.yml exists, and if it does, create Artisan commands from options defined in Console.yml.
     if [[ -f ".blueprint/tmp/$n/$data_console/Console.yml" ]]; then
 
-      # fetch console config
-      eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/Console.yml Console_)"
+      # Read the Console.yml file with the "parse_yaml" library.
+      eval "$(parse_yaml .blueprint/tmp/"$n"/"$data_console"/Console.yml Console_)"
       if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Console.yml OldConsole_)"; fi
     
       # TODO: read through every console entry
       # tests/Console.yml
+
+      # Print warning if console configuration is empty - otherwise go through all options.
+      if [[ $Console_ == "" ]]; then
+        PRINT WARNING "Console configuration (Console.yml) is empty!"
+      else
+        PRINT INFO "Creating and linking console commands and schedules.."
+
+        ArtisanCommandConstructor="$__BuildDir/extensions/console/ArtisanCommandConstructor.bak"
+
+        {
+          cp "$__BuildDir/extensions/console/ArtisanCommandConstructor" "$ArtisanCommandConstructor"
+        } 2>> "$BLUEPRINT__DEBUG"
+
+        sed -i "s~\[id\^]~""${identifier^}""~g" $ArtisanCommandConstructor
+
+        for parent in $Console_; do
+          parent="${parent}_"
+          for child in ${!parent}; do
+            # Entry signature
+            if [[ $child == "Console_"+([0-9])"_Signature" ]]; then CONSOLE_ENTRY_SIGN="${!child}"; fi
+            # Entry description
+            if [[ $child == "Console_"+([0-9])"_Description" ]]; then CONSOLE_ENTRY_DESC="${!child}"; fi
+            # Entry path
+            if [[ $child == "Console_"+([0-9])"_Path" ]]; then CONSOLE_ENTRY_PATH="${!child}"; fi
+            # Entry interval
+            if [[ $child == "Console_"+([0-9])"_Interval" ]]; then CONSOLE_ENTRY_INTE="${!child}"; fi
+          done
+
+          CONSOLE_ENTRY_SIGN="${CONSOLE_ENTRY_SIGN//&/\\&}"
+          CONSOLE_ENTRY_DESC="${CONSOLE_ENTRY_DESC//&/\\&}"
+          CONSOLE_ENTRY_SIGN="${CONSOLE_ENTRY_SIGN//\'/\\\'}"
+          CONSOLE_ENTRY_DESC="${CONSOLE_ENTRY_DESC//\'/\\\'}"
+
+          # Console entry identifier
+          CONSOLE_ENTRY_IDEN=$(tr -dc '[:lower:]' < /dev/urandom | fold -w 10 | head -n 1)
+          CONSOLE_ENTRY_IDEN="${identifier^}${CONSOLE_ENTRY_IDEN^}"
+
+          echo -e "SIGN: $CONSOLE_ENTRY_SIGN\nDESC: $CONSOLE_ENTRY_DESC\nPATH: $CONSOLE_ENTRY_PATH\nINTE: $CONSOLE_ENTRY_INTE\nIDEN: $CONSOLE_ENTRY_IDEN" >> "$BLUEPRINT__DEBUG"
+
+
+          # Return error if interval is not defined correctly.
+          # -> We should really allow more than just hourly/daily, but for now
+          #    this is just here for testing. We're probably gonna go with
+          #      minutely/hourly/bihourly/
+          #      daily/bidaily/weekly/
+          #      biweekly/monthly/bimonthly
+          if [[
+            ( $CONSOLE_ENTRY_INTE != "hourly" ) &&
+            ( $CONSOLE_ENTRY_INTE != "daily" ) &&
+            ( $CONSOLE_ENTRY_INTE != "" )
+          ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Console entry intervals can only be empty, 'hourly' or 'daily'."
+            exit 1
+          fi
+
+          # Prevent escaping console folder.
+          if [[
+            ( ${CONSOLE_ENTRY_PATH} == "/"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"/.."* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"../"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"/../"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"\n"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"@"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"\\"* )
+          ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Console entry paths may not escape the console directory."
+            exit 1
+          fi
+
+          # Validate file names for console entries.
+          if [[ ${CONSOLE_ENTRY_PATH} != *".php" ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Console entry paths may not end with a file extension other than '.php'."
+            exit 1
+          fi
+
+          # Validate file path.
+          if [[ ! -f ".blueprint/tmp/$n/$data_console/${CONSOLE_ENTRY_PATH}" ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Console configuration points towards one or more files that do not exist."
+            exit 1
+          fi
+
+          # Return error if identifier is generated incorrectly.
+          if [[ $CONSOLE_ENTRY_IDEN == "" ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Failed to generate extension console entry identifier, halting process."
+            exit 1
+          fi
+
+          # Return error if console entries are defined incorrectly.
+          if [[ $CONSOLE_ENTRY_SIGN == "" ]] \
+          || [[ $CONSOLE_ENTRY_DESC == "" ]] \
+          || [[ $CONSOLE_ENTRY_INTE == "" ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "One or more extension console entries appear to have undefined fields."
+            exit 1
+          fi
+
+          # Assign value to certain variables if empty/invalid
+          if [[ $CONSOLE_ENTRY_INTE == "" ]]; then CONSOLE_ENTRY_INTE="false";  fi
+
+          # Apply variables to contructor.
+          sed -i \
+            -e "s~\[IDENTIFIER\]~$identifier~g" \
+            -e "s~\[SIGNATURE\]~$CONSOLE_ENTRY_SIGN~g" \
+            -e "s~\[DESCRIPTION\]~$CONSOLE_ENTRY_DESC~g" \
+            -e "s~\[FILENAME\]~$CONSOLE_ENTRY_PATH~g" \
+            -e "s~__ArtisanCommand__~$CONSOLE_ENTRY_IDEN~g" \
+            "$ArtisanCommandConstructor"
+          
+          cp "$ArtisanCommandConstructor" "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}/${CONSOLE_ENTRY_IDEN}Command.php"
+
+          # Clear variables after doing all console entry stuff for a defined entry.
+          CONSOLE_ENTRY_SIGN=""
+          CONSOLE_ENTRY_DESC=""
+          CONSOLE_ENTRY_PATH=""
+          CONSOLE_ENTRY_INTE=""
+          CONSOLE_ENTRY_IDEN=""
+        done
+
+        {
+          rm "$ArtisanCommandConstructor"
+        } 2>> "$BLUEPRINT__DEBUG"
+      fi
 
     fi
   fi
