@@ -497,6 +497,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       rm -R ".blueprint/extensions/$identifier/public"
       mkdir ".blueprint/extensions/$identifier/public"
     fi
+    if [[ $old_data_console != "" ]]; then
+      # Clean up old console folder.
+      rm -R \
+        ".blueprint/extensions/$identifier/console" \
+        "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}"
+    fi
   fi
 
   # Assign variables to extension flags.
@@ -805,7 +811,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     mkdir -p \
       ".blueprint/extensions/$identifier/console/functions" \
       "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}"
-    cp -R ".blueprint/tmp/$n/$data_console/" ".blueprint/extensions/$identifier/console/functions/" 2>> "$BLUEPRINT__DEBUG"
+    cp -R ".blueprint/tmp/$n/$data_console/"* ".blueprint/extensions/$identifier/console/functions/" 2>> "$BLUEPRINT__DEBUG"
 
     # Now we check if Console.yml exists, and if it does, create Artisan commands from options defined in Console.yml.
     if [[ -f ".blueprint/tmp/$n/$data_console/Console.yml" ]]; then
@@ -818,7 +824,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       # tests/Console.yml
 
       # Print warning if console configuration is empty - otherwise go through all options.
-      if [[ $Console_ == "" ]]; then
+      if [[ $Console__ == "" ]]; then
         PRINT WARNING "Console configuration (Console.yml) is empty!"
       else
         PRINT INFO "Creating and linking console commands and schedules.."
@@ -831,7 +837,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
         sed -i "s~\[id\^]~""${identifier^}""~g" $ArtisanCommandConstructor
 
-        for parent in $Console_; do
+        for parent in $Console__; do
           parent="${parent}_"
           for child in ${!parent}; do
             # Entry signature
@@ -926,7 +932,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
             -e "s~\[SIGNATURE\]~$CONSOLE_ENTRY_SIGN~g" \
             -e "s~\[DESCRIPTION\]~$CONSOLE_ENTRY_DESC~g" \
             -e "s~\[FILENAME\]~$CONSOLE_ENTRY_PATH~g" \
-            -e "s~__ArtisanCommand__~$CONSOLE_ENTRY_IDEN~g" \
+            -e "s~__ArtisanCommand__~${CONSOLE_ENTRY_IDEN}Command~g" \
             "$ArtisanCommandConstructor"
           
           cp "$ArtisanCommandConstructor" "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}/${CONSOLE_ENTRY_IDEN}Command.php"
