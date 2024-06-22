@@ -76,7 +76,8 @@ class BlueprintClientLibrary
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function fileMake($path) {
-    return shell_exec("touch ".escapeshellarg($path).";");
+    $file = fopen($path, "w");
+    fclose($file);
   }
 
   /**
