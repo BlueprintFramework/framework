@@ -1,0 +1,1 @@
+$schedule->command("[IDENTIFIER]:[SIGNATURE]")->[SCHEDULE];

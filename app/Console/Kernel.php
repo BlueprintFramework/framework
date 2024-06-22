@@ -8,7 +8,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Console\PruneCommand;
 use Pterodactyl\Repositories\Eloquent\SettingsRepository;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Pterodactyl\BlueprintFramework\Console\KernelExtensions;
+use Pterodactyl\BlueprintFramework\GetExtensionSchedules;
 use Pterodactyl\Services\Telemetry\TelemetryCollectionService;
 use Pterodactyl\Console\Commands\Schedule\ProcessRunnableCommand;
 use Pterodactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
@@ -49,7 +49,7 @@ class Kernel extends ConsoleKernel
             $this->registerTelemetry($schedule);
         }
 
-        KernelExtensions::schedules($schedule);
+        GetExtensionSchedules::schedules($schedule);
     }
 
     /**

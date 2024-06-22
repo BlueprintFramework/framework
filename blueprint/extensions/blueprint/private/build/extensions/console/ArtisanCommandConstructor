@@ -1,0 +1,22 @@
+<?php
+
+namespace Pterodactyl\Console\Commands\BlueprintFramework\Extensions\[id^];
+
+use Illuminate\Console\Command;
+use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
+
+class __ArtisanCommand__ extends Command
+{
+  protected $signature = '[IDENTIFIER]:[SIGNATURE]';
+  protected $description = '[DESCRIPTION]';
+
+  public function __construct(
+    private BlueprintExtensionLibrary $blueprint,
+  ) { parent::__construct(); }
+
+  public function handle()
+  {
+    $blueprint = $this->blueprint;
+    require base_path().'/.blueprint/extensions/[IDENTIFIER]/console/functions/[FILENAME]';
+  }
+}

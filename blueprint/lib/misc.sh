@@ -24,6 +24,7 @@ sendTelemetry() {
   curl --location --silent --connect-timeout 3 "http://api.blueprint.zip:50000/send/$key/$1" &
 }
 
+
 # === CACHEREMINDER ===
 updateCacheReminder() {
   cd "${BLUEPRINT__FOLDER}" || exit

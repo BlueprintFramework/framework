@@ -497,6 +497,12 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       rm -R ".blueprint/extensions/$identifier/public"
       mkdir ".blueprint/extensions/$identifier/public"
     fi
+    if [[ $old_data_console != "" ]]; then
+      # Clean up old console folder.
+      rm -R \
+        ".blueprint/extensions/$identifier/console" \
+        "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}"
+    fi
   fi
 
   # Assign variables to extension flags.
@@ -796,10 +802,187 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   # Place and link console directory and generate artisan files.
   if [[ $data_console != "" ]]; then
-    PRINT INFO "Cloning and linking artisan directory.."
-    mkdir -p ".blueprint/extensions/$identifier/console"
-    cp -R ".blueprint/tmp/$n/$data_console/"* ".blueprint/extensions/$identifier/console/" 2>> "$BLUEPRINT__DEBUG"
-    #ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/console/artisan" "$FOLDER/app/Console/Commands/BlueprintFramework/Extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
+    PRINT INFO "Cloning and linking console directory.."
+
+    # Create console directory alongside a functions directory which would store all console functions.
+    # -> To avoid conflicts, we sadly have to import functions instead of giving full access to Artisan commands.
+    #    We'll need to create a decently large BlueprintConsoleLibrary for more functionality as well, and somehow
+    #    automatically import it into these functions.
+    mkdir -p \
+      ".blueprint/extensions/$identifier/console/functions" \
+      "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}"
+    cp -R ".blueprint/tmp/$n/$data_console/"* ".blueprint/extensions/$identifier/console/functions/" 2>> "$BLUEPRINT__DEBUG"
+
+    # Now we check if Console.yml exists, and if it does, create Artisan commands from options defined in Console.yml.
+    if [[ -f ".blueprint/tmp/$n/$data_console/Console.yml" ]]; then
+
+      # Read the Console.yml file with the "parse_yaml" library.
+      eval "$(parse_yaml .blueprint/tmp/"$n"/"$data_console"/Console.yml Console_)"
+      if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Console.yml OldConsole_)"; fi
+    
+      # Print warning if console configuration is empty - otherwise go through all options.
+      if [[ $Console__ == "" ]]; then
+        PRINT WARNING "Console configuration (Console.yml) is empty!"
+      else
+        PRINT INFO "Creating and linking console commands and schedules.."
+
+        # Create (and replace) schedules file
+        touch "app/BlueprintFramework/Schedules/${identifier^}Schedules.php" 2>> "$BLUEPRINT__DEBUG"
+        echo -e "<?php\n\n" > "app/BlueprintFramework/Schedules/${identifier^}Schedules.php"
+
+        for parent in $Console__; do
+          parent="${parent}_"
+          for child in ${!parent}; do
+            # Entry signature
+            if [[ $child == "Console_"+([0-9])"_Signature" ]]; then CONSOLE_ENTRY_SIGN="${!child}"; fi
+            # Entry description
+            if [[ $child == "Console_"+([0-9])"_Description" ]]; then CONSOLE_ENTRY_DESC="${!child}"; fi
+            # Entry path
+            if [[ $child == "Console_"+([0-9])"_Path" ]]; then CONSOLE_ENTRY_PATH="${!child}"; fi
+            # Entry interval
+            if [[ $child == "Console_"+([0-9])"_Interval" ]]; then CONSOLE_ENTRY_INTE="${!child}"; fi
+          done
+
+          ArtisanCommandConstructor="$__BuildDir/extensions/console/ArtisanCommandConstructor.bak"
+          ScheduleConstructor="$__BuildDir/extensions/console/ScheduleConstructor.bak"
+
+          {
+            cp "$__BuildDir/extensions/console/ArtisanCommandConstructor" "$ArtisanCommandConstructor"
+            cp "$__BuildDir/extensions/console/ScheduleConstructor" "$ScheduleConstructor"
+          } 2>> "$BLUEPRINT__DEBUG"
+
+          sed -i "s~\[id\^]~""${identifier^}""~g" $ArtisanCommandConstructor
+
+          CONSOLE_ENTRY_SIGN="${CONSOLE_ENTRY_SIGN//&/\\&}"
+          CONSOLE_ENTRY_DESC="${CONSOLE_ENTRY_DESC//&/\\&}"
+          CONSOLE_ENTRY_SIGN="${CONSOLE_ENTRY_SIGN//\'/\\\'}"
+          CONSOLE_ENTRY_DESC="${CONSOLE_ENTRY_DESC//\'/\\\'}"
+
+          # Console entry identifier
+          CONSOLE_ENTRY_IDEN=$(tr -dc '[:lower:]' < /dev/urandom | fold -w 10 | head -n 1)
+          CONSOLE_ENTRY_IDEN="${identifier^}${CONSOLE_ENTRY_IDEN^}"
+
+          echo -e "SIGN: $CONSOLE_ENTRY_SIGN\nDESC: $CONSOLE_ENTRY_DESC\nPATH: $CONSOLE_ENTRY_PATH\nINTE: $CONSOLE_ENTRY_INTE\nIDEN: $CONSOLE_ENTRY_IDEN" >> "$BLUEPRINT__DEBUG"
+
+
+          # Prevent escaping console folder.
+          if [[
+            ( ${CONSOLE_ENTRY_PATH} == "/"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"/.."* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"../"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"/../"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"\n"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"@"* ) ||
+            ( ${CONSOLE_ENTRY_PATH} == *"\\"* )
+          ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Console entry paths may not escape the console directory."
+            exit 1
+          fi
+
+          # Validate file names for console entries.
+          if [[ ${CONSOLE_ENTRY_PATH} != *".php" ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Console entry paths may not end with a file extension other than '.php'."
+            exit 1
+          fi
+
+          # Validate file path.
+          if [[ ! -f ".blueprint/tmp/$n/$data_console/${CONSOLE_ENTRY_PATH}" ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Console configuration points towards one or more files that do not exist."
+            exit 1
+          fi
+
+          # Return error if identifier is generated incorrectly.
+          if [[ $CONSOLE_ENTRY_IDEN == "" ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "Failed to generate extension console entry identifier, halting process."
+            exit 1
+          fi
+
+          # Return error if console entries are defined incorrectly.
+          if [[ $CONSOLE_ENTRY_SIGN == "" ]] \
+          || [[ $CONSOLE_ENTRY_DESC == "" ]] \
+          || [[ $CONSOLE_ENTRY_INTE == "" ]]; then
+            rm -R ".blueprint/tmp/$n"
+            PRINT FATAL "One or more extension console entries appear to have undefined fields."
+            exit 1
+          fi
+
+          # Assign value to certain variables if empty/invalid
+          if [[ $CONSOLE_ENTRY_INTE == "" ]]; then CONSOLE_ENTRY_INTE="false";  fi
+
+          # Apply variables to contructors.
+          sed -i \
+            -e "s~\[IDENTIFIER\]~$identifier~g" \
+            -e "s~\[SIGNATURE\]~$CONSOLE_ENTRY_SIGN~g" \
+            -e "s~\[DESCRIPTION\]~$CONSOLE_ENTRY_DESC~g" \
+            -e "s~\[FILENAME\]~$CONSOLE_ENTRY_PATH~g" \
+            -e "s~__ArtisanCommand__~${CONSOLE_ENTRY_IDEN}Command~g" \
+            "$ArtisanCommandConstructor"
+          sed -i \
+            -e "s~\[IDENTIFIER\]~$identifier~g" \
+            -e "s~\[SIGNATURE\]~$CONSOLE_ENTRY_SIGN~g" \
+            "$ScheduleConstructor"
+          
+          cp "$ArtisanCommandConstructor" "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}/${CONSOLE_ENTRY_IDEN}Command.php"
+
+          # Detect schedule definition and apply it
+          SCHEDULE_SET=false
+          if [[ 
+            ( $CONSOLE_ENTRY_INTE != "" ) &&
+            ( $CONSOLE_ENTRY_INTE != "false" )
+          ]]; then
+            SCHEDULE_SET="false"
+            ApplyConsoleInterval() {
+              sed -i "s~\[SCHEDULE\]~${1}()~g" "$ScheduleConstructor"
+            }
+            if [[ $CONSOLE_ENTRY_INTE == "everyMinute"         ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyMinute";         fi
+            if [[ $CONSOLE_ENTRY_INTE == "everyTwoMinutes"     ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyTwoMinutes";     fi
+            if [[ $CONSOLE_ENTRY_INTE == "everyThreeMinutes"   ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyThreeMinutes";   fi
+            if [[ $CONSOLE_ENTRY_INTE == "everyFourMinutes"    ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyFourMinutes";    fi
+            if [[ $CONSOLE_ENTRY_INTE == "everyFiveMinutes"    ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyFiveMinutes";    fi
+            if [[ $CONSOLE_ENTRY_INTE == "everyTenMinutes"     ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyTenMinutes";     fi
+            if [[ $CONSOLE_ENTRY_INTE == "everyFifteenMinutes" ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyFifteenMinutes"; fi
+            if [[ $CONSOLE_ENTRY_INTE == "everyThirtyMinutes"  ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyThirtyMinutes";  fi
+            if [[ $CONSOLE_ENTRY_INTE == "hourly"              ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "hourly";              fi
+            if [[ $CONSOLE_ENTRY_INTE == "daily"               ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily";               fi
+            if [[ $CONSOLE_ENTRY_INTE == "weekdays"            ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->weekdays";   fi
+            if [[ $CONSOLE_ENTRY_INTE == "weekends"            ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->weekends";   fi
+            if [[ $CONSOLE_ENTRY_INTE == "sundays"             ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->sundays";    fi
+            if [[ $CONSOLE_ENTRY_INTE == "mondays"             ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->mondays";    fi
+            if [[ $CONSOLE_ENTRY_INTE == "tuesdays"            ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->tuesdays";   fi
+            if [[ $CONSOLE_ENTRY_INTE == "wednesdays"          ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->wednesdays"; fi
+            if [[ $CONSOLE_ENTRY_INTE == "thursdays"           ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->thursdays";  fi
+            if [[ $CONSOLE_ENTRY_INTE == "fridays"             ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->fridays";    fi
+            if [[ $CONSOLE_ENTRY_INTE == "saturdays"           ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->saturdays";  fi
+            if [[ $CONSOLE_ENTRY_INTE == "weekly"              ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "weekly";              fi
+            if [[ $CONSOLE_ENTRY_INTE == "monthly"             ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "monthly";             fi
+            if [[ $CONSOLE_ENTRY_INTE == "quarterly"           ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "quarterly";           fi
+            if [[ $CONSOLE_ENTRY_INTE == "yearly"              ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "yearly";              fi
+            
+            if [[ "$SCHEDULE_SET" == "false" ]]; then
+              sed -i "s~\[SCHEDULE\]~cron('$CONSOLE_ENTRY_INTE')~g" "$ScheduleConstructor"
+            fi
+            cat "$ScheduleConstructor" >> "app/BlueprintFramework/Schedules/${identifier^}Schedules.php"
+          fi
+
+          # Clear variables after doing all console entry stuff for a defined entry.
+          CONSOLE_ENTRY_SIGN=""
+          CONSOLE_ENTRY_DESC=""
+          CONSOLE_ENTRY_PATH=""
+          CONSOLE_ENTRY_INTE=""
+          CONSOLE_ENTRY_IDEN=""
+
+          rm \
+            "$ArtisanCommandConstructor" \
+            "$ScheduleConstructor" \
+            2>> "$BLUEPRINT__DEBUG"
+        done
+      fi
+
+    fi
   fi
 
   # Create, link and connect components directory.
@@ -1115,11 +1298,11 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
         # Fix line breaks by removing all of them.
         sed -i -E "s~~~g" "resources/scripts/blueprint/extends/routers/routes.ts"
 
-        {
-          rm "$ImportConstructor"
-          rm "$AccountRouteConstructor"
-          rm "$ServerRouteConstructor"
-        } 2>> "$BLUEPRINT__DEBUG"
+        rm \
+          "$ImportConstructor" \
+          "$AccountRouteConstructor" \
+          "$ServerRouteConstructor" \
+          2>> "$BLUEPRINT__DEBUG"
       fi
     else
       # warn about missing components.yml file
@@ -1165,10 +1348,21 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
   if [[ $data_directory != "" ]]; then cp -R ".blueprint/tmp/$n/$data_directory/"* ".blueprint/extensions/$identifier/private/"; fi
 
-  cp ".blueprint/tmp/$n/conf.yml" ".blueprint/extensions/$identifier/private/.store/conf.yml" #backup conf.yml
-  if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]]; then
-    cp ".blueprint/tmp/$n/$dashboard_components/Components.yml" ".blueprint/extensions/$identifier/private/.store/Components.yml" #backup Components.yml
+  #backup conf.yml
+  cp ".blueprint/tmp/$n/conf.yml" ".blueprint/extensions/$identifier/private/.store/conf.yml"
+
+  #backup Components.yml
+  if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]] \
+  && [[ $dashboard_components != "" ]]; then
+    cp ".blueprint/tmp/$n/$dashboard_components/Components.yml" ".blueprint/extensions/$identifier/private/.store/Components.yml"
   fi
+
+  #backup Console.yml
+  if [[ -f ".blueprint/tmp/$n/$data_console/Console.yml" ]] \
+  && [[ $data_console != "" ]]; then
+    cp ".blueprint/tmp/$n/$data_console/Console.yml" ".blueprint/extensions/$identifier/private/.store/Console.yml"
+  fi
+
   # End creating data directory.
 
 

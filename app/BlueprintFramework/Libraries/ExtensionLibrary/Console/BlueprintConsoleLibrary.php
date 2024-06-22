@@ -1,13 +1,13 @@
 <?php
 
-// Core file for the admin-side library for Blueprint Extensions
+// Core file for the console library for Blueprint Extensions
 
 
-namespace Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin;
+namespace Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console;
 
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 
-class BlueprintAdminLibrary
+class BlueprintConsoleLibrary
 {
   // Construct core
   public function __construct(
@@ -51,49 +51,6 @@ class BlueprintAdminLibrary
    */
   public function dbForget($table, $record) {
     return $this->settings->forget($table."::".$record);
-  }
-
-  /**
-   * Display a notification on the Pterodactyl admin panel (on next page load).
-   * 
-   * @param string $text Notification contents
-   * @return void Nothing is returned
-   * 
-   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
-   */
-  public function notify($text): void {
-    $this->dbSet("blueprint", "notification:text", $text);
-    return;
-  }
-
-  /**
-   * Display a notification on the Pterodactyl admin panel and refresh the page after a certain delay.
-   * 
-   * @param string $delay Refresh after (in seconds)
-   * @param string $text Notification contents
-   * @return void Nothing is returned
-   * 
-   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
-   */
-  public function notifyAfter($delay, $text): void {
-    $this->dbSet("blueprint", "notification:text", $text);
-    header("Refresh:$delay");
-    return;
-  }
-
-  /**
-   * Display a notification on the Pterodactyl admin panel and refresh the page instantly.
-   * Behaves the same as calling `notifyAfter()` with a delay of zero.
-   * 
-   * @param string $text Notification contents
-   * @return void Nothing is returned
-   * 
-   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
-   */
-  public function notifyNow($text): void {
-    $this->dbSet("blueprint", "notification:text", $text);
-    header("Refresh:0");
-    return;
   }
 
   /**
