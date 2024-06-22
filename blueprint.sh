@@ -16,7 +16,7 @@
   USERSHELL="/bin/bash" #;
 
 # Defines the version Blueprint will display as the active one.
-  VERSION="beta-F248"
+  VERSION="beta-F248-1"
 
 # Default GitHub repository to use when upgrading Blueprint.
   REPOSITORY="BlueprintFramework/framework"
@@ -56,10 +56,10 @@ __BuildDir=".blueprint/extensions/blueprint/private/build"
 cd "$FOLDER" || return
 
 # Import libraries.
-source .blueprint/lib/parse_yaml.sh || missinglibs+="[parse_yaml]"
-source .blueprint/lib/grabenv.sh    || missinglibs+="[grabenv]"
-source .blueprint/lib/logFormat.sh  || missinglibs+="[logFormat]"
-source .blueprint/lib/misc.sh       || missinglibs+="[misc]"
+source .blueprint/lib/parse_yaml.sh   || missinglibs+="[parse_yaml]"
+source .blueprint/lib/grabenv.sh      || missinglibs+="[grabenv]"
+source .blueprint/lib/logFormat.sh    || missinglibs+="[logFormat]"
+source .blueprint/lib/misc.sh         || missinglibs+="[misc]"
 
 
 # -config
@@ -148,10 +148,10 @@ depend() {
     if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ]; then PRINT FATAL "Required dependency \"webpack\" is not installed or detected.";   fi
     if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ]; then PRINT FATAL "Required dependency \"react\" is not installed or detected.";     fi
 
-    if [[ $missinglibs == *"[parse_yaml]"*               ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected.";               fi
-    if [[ $missinglibs == *"[grabEnv]"*                  ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";                  fi
-    if [[ $missinglibs == *"[logFormat]"*                ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";                fi
-    if [[ $missinglibs == *"[misc]"*                     ]]; then PRINT FATAL "Required internal dependency \"internal:misc\" is not installed or detected.";                     fi
+    if [[ $missinglibs == *"[parse_yaml]"*  ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected.";   fi
+    if [[ $missinglibs == *"[grabEnv]"*     ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";      fi
+    if [[ $missinglibs == *"[logFormat]"*   ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";    fi
+    if [[ $missinglibs == *"[misc]"*        ]]; then PRINT FATAL "Required internal dependency \"internal:misc\" is not installed or detected.";         fi
 
     exit 1
   fi
@@ -226,11 +226,11 @@ if [[ $1 != "-bash" ]]; then
     PRINT INPUT "Would you like to put your application into maintenance while Blueprint is installing? (Y/n)"
     read -r YN
     if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then
-      MAINTENANCE=true
+      MAINTENANCE="true"
       PRINT INFO "Put application into maintenance mode."
       php artisan down &>> "$BLUEPRINT__DEBUG"
     else
-      MAINTENANCE=false
+      MAINTENANCE="false"
       PRINT INFO "Putting application into maintenance has been skipped."
     fi
 
@@ -266,16 +266,16 @@ if [[ $1 != "-bash" ]]; then
     PRINT INFO "Rebuilding panel assets.."
     yarn run build:production --progress
 
-    if [[ $DOCKER != "y" ]] && ! $MAINTENANCE; then
-      # Put application into production.
-      PRINT INFO "Put application into production."
-      php artisan up &>> "$BLUEPRINT__DEBUG"
-    fi
-
     if [[ $DOCKER != "y" ]]; then
       # Sync some database values.
       PRINT INFO "Syncing Blueprint-related database values.."
       php artisan bp:sync
+    fi
+
+    if [[ $DOCKER != "y" ]] && [[ $MAINTENANCE == "true" ]]; then
+      # Put application into production.
+      PRINT INFO "Put application into production."
+      php artisan up &>> "$BLUEPRINT__DEBUG"
     fi
 
     # Finish installation
@@ -1355,6 +1355,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]] \
   && [[ $dashboard_components != "" ]]; then
     cp ".blueprint/tmp/$n/$dashboard_components/Components.yml" ".blueprint/extensions/$identifier/private/.store/Components.yml"
+<<<<<<< HEAD
   fi
 
   #backup Console.yml
@@ -1363,6 +1364,16 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     cp ".blueprint/tmp/$n/$data_console/Console.yml" ".blueprint/extensions/$identifier/private/.store/Console.yml"
   fi
 
+=======
+  fi
+
+  #backup Console.yml
+  if [[ -f ".blueprint/tmp/$n/$data_console/Console.yml" ]] \
+  && [[ $data_console != "" ]]; then
+    cp ".blueprint/tmp/$n/$data_console/Console.yml" ".blueprint/extensions/$identifier/private/.store/Console.yml"
+  fi
+
+>>>>>>> console-api
   # End creating data directory.
 
 
@@ -1631,6 +1642,7 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
   if [[ $(( $# - 2 )) != 1 ]]; then PRINT FATAL "Expected 1 argument but got $(( $# - 2 )).";exit 2;fi
 
   # Check if the extension is installed.
+  FILE=$3
   if [[ $FILE == *".blueprint" ]]; then FILE="${FILE::-10}"; fi
   set -- "${@:1:2}" "$FILE" "${@:4}"
 
@@ -1907,8 +1919,9 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     PRINT INFO "Removing and unlinking console folder.."
     rm -R \
       ".blueprint/extensions/$identifier/console" \
-      "app/Console/Commands/BlueprintFramework/Extensions/$identifier"
-      # add more files if needed
+      "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}" \
+      "app/BlueprintFramework/Schedules/${identifier^}Schedules.php" \
+      2>> "$BLUEPRINT__DEBUG"
   fi
 
   # Remove private folder
@@ -2241,7 +2254,7 @@ if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"
     cp "${identifier}".blueprint .blueprint/extensions/blueprint/assets/exports/${randstr}/"${identifier}".blueprint
 
     PRINT SUCCESS "Extension has been exported to '$(grabAppUrl)/assets/extensions/blueprint/exports/${randstr}/${identifier}.blueprint' and '${FOLDER}/${identifier}.blueprint'."
-    eval "$(sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> "$BLUEPRINT__DEBUG")" &
+    sleep 120 && rm -R .blueprint/extensions/blueprint/assets/exports/${randstr} 2>> "$BLUEPRINT__DEBUG" &
   else
     PRINT SUCCESS "Extension has been exported to '${FOLDER}/${identifier}.blueprint'."
   fi
