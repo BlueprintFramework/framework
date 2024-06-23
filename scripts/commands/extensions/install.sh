@@ -147,7 +147,7 @@ InstallCommand() {
     fi
 
     eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/conf.yml old_)"
-    DUPLICATE="y"
+    local DUPLICATE="y"
 
     # Clean up some old extension files.
     if [[ $old_data_public != "" ]]; then
@@ -171,19 +171,19 @@ InstallCommand() {
   if [[ $website != "" ]]; then
     if [[ ( $website != "https://"* ) && ( $website != "http://"* ) ]] \
     && [[ ( $website != "/"*        ) && ( $website != "."*       ) ]]; then
-      website="http://${conf_info_website}"
-      conf_info_website="${website}"
+      local website="http://${conf_info_website}"
+      local conf_info_website="${website}"
     fi
 
 
     # Change link icon depending on website url.
-    websiteiconclass="bx bx-link-external"
+    local websiteiconclass="bx bx-link-external"
 
     # git
     if [[ $website == *"://github.com/"*        ]] || [[ $website == *"://www.github.com/"*        ]] \
     || [[ $website == *"://github.com"          ]] || [[ $website == *"://www.github.com"          ]] \
     || [[ $website == *"://gitlab.com/"*        ]] || [[ $website == *"://www.gitlab.com/"*        ]] \
-    || [[ $website == *"://gitlab.com"          ]] || [[ $website == *"://www.gitlab.com"          ]]; then websiteiconclass="bx bx-git-branch";fi
+    || [[ $website == *"://gitlab.com"          ]] || [[ $website == *"://www.gitlab.com"          ]]; then local websiteiconclass="bx bx-git-branch";fi
     # marketplaces
     if [[ $website == *"://sourcexchange.net/"* ]] || [[ $website == *"://www.sourcexchange.net/"* ]] \
     || [[ $website == *"://sourcexchange.net"   ]] || [[ $website == *"://www.sourcexchange.net"   ]] \
@@ -192,21 +192,21 @@ InstallCommand() {
     || [[ $website == *"://builtbyb.it/"*       ]] || [[ $website == *"://www.builtbyb.it/"*       ]] \
     || [[ $website == *"://builtbyb.it"         ]] || [[ $website == *"://www.builtbyb.it"         ]] \
     || [[ $website == *"://bbyb.it/"*           ]] || [[ $website == *"://www.bbyb.it/"*           ]] \
-    || [[ $website == *"://bbyb.it"             ]] || [[ $website == *"://www.bbyb.it"             ]]; then websiteiconclass="bx bx-store";fi
+    || [[ $website == *"://bbyb.it"             ]] || [[ $website == *"://www.bbyb.it"             ]]; then local websiteiconclass="bx bx-store";fi
     # discord
     if [[ $website == *"://discord.com/"*       ]] || [[ $website == *"://www.discord.com/"*       ]] \
     || [[ $website == *"://discord.com"         ]] || [[ $website == *"://www.discord.com"         ]] \
     || [[ $website == *"://discord.gg/"*        ]] || [[ $website == *"://www.discord.gg/"*        ]] \
-    || [[ $website == *"://discord.gg"          ]] || [[ $website == *"://www.discord.gg"          ]]; then websiteiconclass="bx bxl-discord-alt";fi
+    || [[ $website == *"://discord.gg"          ]] || [[ $website == *"://www.discord.gg"          ]]; then local websiteiconclass="bx bxl-discord-alt";fi
     # patreon
     if [[ $website == *"://patreon.com/"*       ]] || [[ $website == *"://www.patreon.com/"*       ]] \
-    || [[ $website == *"://patreon.com"         ]] || [[ $website == *"://www.patreon.com"         ]]; then websiteiconclass="bx bxl-patreon";fi
+    || [[ $website == *"://patreon.com"         ]] || [[ $website == *"://www.patreon.com"         ]]; then local websiteiconclass="bx bxl-patreon";fi
     # reddit
     if [[ $website == *"://reddit.com/"*        ]] || [[ $website == *"://www.reddit.com/"*        ]] \
-    || [[ $website == *"://reddit.com"          ]] || [[ $website == *"://www.reddit.com"          ]]; then websiteiconclass="bx bxl-reddit";fi
+    || [[ $website == *"://reddit.com"          ]] || [[ $website == *"://www.reddit.com"          ]]; then local websiteiconclass="bx bxl-reddit";fi
     # trello
     if [[ $website == *"://trello.com/"*        ]] || [[ $website == *"://www.trello.com/"*        ]] \
-    || [[ $website == *"://trello.com"          ]] || [[ $website == *"://www.trello.com"          ]]; then websiteiconclass="bx bxl-trello";fi
+    || [[ $website == *"://trello.com"          ]] || [[ $website == *"://www.trello.com"          ]]; then local websiteiconclass="bx bxl-trello";fi
   fi
 
   if [[ $dev == true ]]; then
@@ -217,14 +217,14 @@ InstallCommand() {
   if ! $F_ignorePlaceholders; then
     # Prepare variables for placeholders
     PRINT INFO "Writing extension placeholders.."
-    DIR=".blueprint/tmp/$n"
+    local DIR=".blueprint/tmp/$n"
     INSTALL_STAMP=$(date +%s)
-    INSTALL_MODE="local"
+    local INSTALL_MODE="local"
     if $dev; then INSTALL_MODE="develop"; fi
-    EXT_AUTHOR="$author"
-    if [[ $author == "" ]]; then EXT_AUTHOR="undefined"; fi
-    IS_TARGET=true
-    if [[ $target != "$VERSION" ]]; then IS_TARGET=false; fi
+    local EXT_AUTHOR="$author"
+    if [[ $author == "" ]]; then local EXT_AUTHOR="undefined"; fi
+    local IS_TARGET=true
+    if [[ $target != "$VERSION" ]]; then local IS_TARGET=false; fi
 
     # Use either legacy or stable placeholders for backwards compatibility.
     if [[ $target == "alpha-"* ]] \
@@ -232,8 +232,8 @@ InstallCommand() {
     || $F_forceLegacyPlaceholders; then
 
       # (v1) Legacy placeholders
-      INSTALLMODE="normal"
-      if [[ $dev == true ]]; then INSTALLMODE="developer"; fi
+      local INSTALLMODE="normal"
+      if [[ $dev == true ]]; then local INSTALLMODE="developer"; fi
       PLACE_PLACEHOLDERS() {
         local dir="$1"
         for file in "$dir"/*; do
