@@ -350,8 +350,8 @@ InstallCommand() {
   if [[ $target == "" ]]; then rm -R ".blueprint/tmp/$n";               PRINT FATAL "'info_target' is a required configuration option.";return 1;fi
   if [[ $admin_view == "" ]]; then rm -R ".blueprint/tmp/$n";           PRINT FATAL "'admin_view' is a required configuration option.";return 1;fi
 
-  if [[ $icon == "" ]]; then                                            PRINT WARNING "This extension does not come with an icon, consider adding one.";fi
-  if [[ $target != "$VERSION" ]]; then                                  PRINT WARNING "This extension is built for version $target, but your version is $VERSION.";fi
+  if [[ $icon == "" ]]; then                                            PRINT WARNING "${identifier^} does not come with an icon, consider adding one.";fi
+  if [[ $target != "$VERSION" ]]; then                                  PRINT WARNING "${identifier^} is built for version $target, but your version is $VERSION.";fi
   if [[ $identifier != "$n" ]]; then rm -R ".blueprint/tmp/$n";         PRINT FATAL "Extension file name must be the same as your identifier. (example: identifier.blueprint)";return 1;fi
   if ! [[ $identifier =~ [a-z] ]]; then rm -R ".blueprint/tmp/$n";      PRINT FATAL "Extension identifier should be lowercase and only contain characters a-z.";return 1;fi
   if [[ $identifier == "blueprint" ]]; then rm -R ".blueprint/tmp/$n";  PRINT FATAL "Extensions can not have the identifier 'blueprint'.";return 1;fi
@@ -1201,43 +1201,18 @@ InstallCommand() {
     "$ConfigExtensionFS"
   rm -R ".blueprint/tmp/$n"
 
-  if [[ ( $database_migrations != "" ) && ( $DOCKER != "y" ) ]]; then
-    if [[ ( $F_developerForceMigrate == true ) && ( $dev == true ) ]]; then
-      YN="y"
-    else
-      PRINT INPUT "Would you like to migrate your database? (Y/n)"
-      read -r YN
-    fi
-    if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then
-      PRINT INFO "Running database migrations.."
-      php artisan migrate --force
-    else
-      PRINT INFO "Database migrations have been skipped."
-    fi
+  
+  if [[ ( $F_developerForceMigrate == true ) && ( $dev == true ) ]]; then
+    DeveloperForcedMigrate="true"
   fi
 
   if [[ ( $YARN == "y" ) && ( $F_developerIgnoreRebuild == true ) && ( $dev == true ) ]]; then
-    YARN=""
+    IgnoreRebuild="true"
   fi
 
-  # Link filesystems
-  PRINT INFO "Linking filesystems.."
-  php artisan storage:link &>> "$BLUEPRINT__DEBUG"
-
-  # Flush cache.
-  PRINT INFO "Flushing view, config and route cache.."
-  {
-    php artisan view:cache
-    php artisan config:cache
-    php artisan route:clear
-    if ! $dev || ! $F_developerKeepApplicationCache; then php artisan cache:clear; fi
-  } &>> "$BLUEPRINT__DEBUG"
-
-  # Make sure all files have correct permissions.
-  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-  find "$FOLDER/" \
-  -path "$FOLDER/node_modules" -prune \
-  -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
+  if [[ ( $dev == "true" ) && ( $F_developerKeepApplicationCache == "true" ) ]]; then
+    KeepApplicationCache="true"
+  fi
 
   chown -R "$OWNERSHIP" "$FOLDER/.blueprint/extensions/$identifier/private"
   chmod --silent -R +x ".blueprint/extensions/"* 2>> "$BLUEPRINT__DEBUG"
@@ -1268,15 +1243,20 @@ InstallCommand() {
   fi
 
   if [[ $dev != true ]]; then
-    if [[ $DUPLICATE == "y" ]]; then
-      PRINT SUCCESS "$identifier has been updated."
+    if [[ $InstalledExtensions == "" ]]; then
+      InstalledExtensions="$identifier"
     else
-      PRINT SUCCESS "$identifier has been installed."
+      InstalledExtensions+=", $identifier"
     fi
-    sendTelemetry "FINISH_EXTENSION_INSTALLATION" >> "$BLUEPRINT__DEBUG"
+    #PRINT SUCCESS "$identifier has been installed."
   elif [[ $dev == true ]]; then
     PRINT SUCCESS "$identifier has been built."
-    sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
+    BuiltExtensions="$identifier"
   fi
 
+
+
+  # Unset variables
+  PRINT INFO "Unsetting variables.."
+  unsetVariables
 }

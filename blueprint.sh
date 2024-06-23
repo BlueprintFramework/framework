@@ -359,15 +359,56 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     InstallCommand "$extension" "$current" "$total"
   done
 
-  # Finalize transaction
-  PRINT INFO "Finalizing transaction.."
-  if [[ $YARN == "y" ]]; then
-    PRINT INFO "Rebuilding panel assets.."
-    yarn run build:production --progress
-  fi
+  if [[ $InstalledExtensions != "" ]]; then
+    # Finalize transaction
+    PRINT INFO "Finalizing transaction.."
 
-  exit 0 # success
+    if [[ ( $YARN == "y" ) && ( $IgnoreRebuild != "true" ) ]]; then
+      PRINT INFO "Rebuilding panel assets.."
+      yarn run build:production --progress
+    fi
+
+    # Link filesystems
+    PRINT INFO "Linking filesystems.."
+    php artisan storage:link &>> "$BLUEPRINT__DEBUG"
+
+    # Flush cache.
+    PRINT INFO "Flushing view, config and route cache.."
+    {
+      php artisan view:cache
+      php artisan config:cache
+      php artisan route:clear
+      if [[ $KeepApplicationCache != "true" ]]; then php artisan cache:clear; fi
+    } &>> "$BLUEPRINT__DEBUG"
+
+    # Make sure all files have correct permissions.
+    PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+    find "$FOLDER/" \
+    -path "$FOLDER/node_modules" -prune \
+    -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
+
+    # Database migrations
+    if [[ ( $database_migrations != "" ) && ( $DOCKER != "y" ) ]] || [[ $DeveloperForcedMigrate == "true" ]]; then
+      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]] || [[ $DeveloperForcedMigrate == "true" ]]; then
+        PRINT INFO "Running database migrations.."
+        php artisan migrate --force
+      else
+        PRINT INFO "Database migrations have been skipped."
+      fi
+    fi
+
+    sendTelemetry "INSTALL_EXTENSIONS" >> "$BLUEPRINT__DEBUG"
+
+    CorrectPhrasing="have"
+    if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
+    PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
+
+    exit 0
+  else
+    exit 1
+  fi
 fi
+
 
 # -r, -remove
 if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
