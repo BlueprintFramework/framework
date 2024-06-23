@@ -1355,7 +1355,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
   if [[ -f ".blueprint/tmp/$n/$dashboard_components/Components.yml" ]] \
   && [[ $dashboard_components != "" ]]; then
     cp ".blueprint/tmp/$n/$dashboard_components/Components.yml" ".blueprint/extensions/$identifier/private/.store/Components.yml"
-<<<<<<< HEAD
   fi
 
   #backup Console.yml
@@ -1364,16 +1363,6 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     cp ".blueprint/tmp/$n/$data_console/Console.yml" ".blueprint/extensions/$identifier/private/.store/Console.yml"
   fi
 
-=======
-  fi
-
-  #backup Console.yml
-  if [[ -f ".blueprint/tmp/$n/$data_console/Console.yml" ]] \
-  && [[ $data_console != "" ]]; then
-    cp ".blueprint/tmp/$n/$data_console/Console.yml" ".blueprint/extensions/$identifier/private/.store/Console.yml"
-  fi
-
->>>>>>> console-api
   # End creating data directory.
 
 
