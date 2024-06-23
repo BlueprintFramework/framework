@@ -4,20 +4,20 @@ InstallCommand() {
   # The following code does some magic to allow for extensions with a
   # different root folder structure than expected by Blueprint.
   if [[ $1 == "[developer-build]" ]]; then
-    local dev=true
-    local n="dev"
+    dev=true
+    n="dev"
     mkdir -p ".blueprint/tmp/dev"
     cp -R ".blueprint/dev/"* ".blueprint/tmp/dev/"
   else
-    local dev=false
-    local n="$1"
+    dev=false
+    n="$1"
 
-    if [[ $n == *".blueprint" ]]; then local n="${n::-10}";fi
-    local FILE="${n}.blueprint"
+    if [[ $n == *".blueprint" ]]; then n="${n::-10}";fi
+    FILE="${n}.blueprint"
 
     if [[ ! -f "$FILE" ]]; then PRINT FATAL "$FILE could not be found or detected.";return 2;fi
 
-    local ZIP="${n}.zip"
+    ZIP="${n}.zip"
     cp "$FILE" ".blueprint/tmp/$ZIP"
     cd ".blueprint/tmp" || cdhalt
     unzip -o -qq "$ZIP"
@@ -217,14 +217,14 @@ InstallCommand() {
   if ! $F_ignorePlaceholders; then
     # Prepare variables for placeholders
     PRINT INFO "Writing extension placeholders.."
-    local DIR=".blueprint/tmp/$n"
+    DIR=".blueprint/tmp/$n"
     INSTALL_STAMP=$(date +%s)
     local INSTALL_MODE="local"
-    if $dev; then INSTALL_MODE="develop"; fi
-    local EXT_AUTHOR="$author"
-    if [[ $author == "" ]]; then local EXT_AUTHOR="undefined"; fi
-    local IS_TARGET=true
-    if [[ $target != "$VERSION" ]]; then local IS_TARGET=false; fi
+    if $dev; then local INSTALL_MODE="develop"; fi
+    EXT_AUTHOR="$author"
+    if [[ $author == "" ]]; then EXT_AUTHOR="undefined"; fi
+    IS_TARGET=true
+    if [[ $target != "$VERSION" ]]; then IS_TARGET=false; fi
 
     # Use either legacy or stable placeholders for backwards compatibility.
     if [[ $target == "alpha-"* ]] \
@@ -366,7 +366,8 @@ InstallCommand() {
   fi
 
   # Validate paths to files and directories defined in conf.yml.
-  if [[ ( ! -f ".blueprint/tmp/$n/$icon"                         ) && ( ${icon} != ""                         ) ]] ||    # file:   icon                         (optional)
+  if \
+    [[ ( ! -f ".blueprint/tmp/$n/$icon"                         ) && ( ${icon} != ""                         ) ]] ||    # file:   icon                         (optional)
     [[ ( ! -f ".blueprint/tmp/$n/$admin_view"                   )                                              ]] ||    # file:   admin_view
     [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"             ) && ( ${admin_controller} != ""             ) ]] ||    # file:   admin_controller             (optional)
     [[ ( ! -f ".blueprint/tmp/$n/$admin_css"                    ) && ( ${admin_css} != ""                    ) ]] ||    # file:   admin_css                    (optional)
@@ -509,7 +510,7 @@ InstallCommand() {
             cp "$__BuildDir/extensions/console/ScheduleConstructor" "$ScheduleConstructor"
           } 2>> "$BLUEPRINT__DEBUG"
 
-          sed -i "s~\[id\^]~""${identifier^}""~g" $ArtisanCommandConstructor
+          sed -i "s~\[id\^]~""${identifier^}""~g" "$ArtisanCommandConstructor"
 
           CONSOLE_ENTRY_SIGN="${CONSOLE_ENTRY_SIGN//&/\\&}"
           CONSOLE_ENTRY_DESC="${CONSOLE_ENTRY_DESC//&/\\&}"
@@ -919,15 +920,15 @@ InstallCommand() {
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI, identifier: '$identifier' },"
 
-            sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
-            sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" $AccountRouteConstructor
+            sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" "$ImportConstructor"
+            sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" "$AccountRouteConstructor"
           elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # Server routes
             COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', permission: $COMPONENTS_ROUTE_PERM, name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI, identifier: '$identifier' },"
 
-            sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" $ImportConstructor
-            sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" $ServerRouteConstructor
+            sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" "$ImportConstructor"
+            sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" "$ServerRouteConstructor"
           fi
 
           # Clear variables after doing all route stuff for a defined route.
@@ -943,14 +944,14 @@ InstallCommand() {
           COMPONENTS_ROUTE_ADMI=""
         done
 
-        sed -i "s~/\* \[import] \*/~~g" $ImportConstructor
-        sed -i "s~/\* \[routes] \*/~~g" $AccountRouteConstructor
-        sed -i "s~/\* \[routes] \*/~~g" $ServerRouteConstructor
+        sed -i "s~/\* \[import] \*/~~g" "$ImportConstructor"
+        sed -i "s~/\* \[routes] \*/~~g" "$AccountRouteConstructor"
+        sed -i "s~/\* \[routes] \*/~~g" "$ServerRouteConstructor"
 
         sed -i \
-          -e "s~\/\* blueprint\/import \*\/~/* blueprint/import */""$(tr '\n' '\001' <${ImportConstructor})""~g" \
-          -e "s~\/\* routes/account \*\/~/* routes/account */""$(tr '\n' '\001' <${AccountRouteConstructor})""~g" \
-          -e "s~\/\* routes/server \*\/~/* routes/server */""$(tr '\n' '\001' <${ServerRouteConstructor})""~g" \
+          -e "s~\/\* blueprint\/import \*\/~/* blueprint/import */""$(tr '\n' '\001' <"${ImportConstructor}")""~g" \
+          -e "s~\/\* routes/account \*\/~/* routes/account */""$(tr '\n' '\001' <"${AccountRouteConstructor}")""~g" \
+          -e "s~\/\* routes/server \*\/~/* routes/server */""$(tr '\n' '\001' <"${ServerRouteConstructor}")""~g" \
           "resources/scripts/blueprint/extends/routers/routes.ts"
 
         # Fix line breaks by removing all of them.
@@ -1215,11 +1216,8 @@ InstallCommand() {
     fi
   fi
 
-  if [[ $YARN == "y" ]]; then
-    if ! [[ ( $F_developerIgnoreRebuild == true ) && ( $dev == true ) ]]; then
-      PRINT INFO "Rebuilding panel assets.."
-      yarn run build:production --progress
-    fi
+  if [[ ( $YARN == "y" ) && ( $F_developerIgnoreRebuild == true ) && ( $dev == true ) ]]; then
+    YARN=""
   fi
 
   # Link filesystems
@@ -1241,7 +1239,7 @@ InstallCommand() {
   -path "$FOLDER/node_modules" -prune \
   -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
-  chown -R $OWNERSHIP "$FOLDER/.blueprint/extensions/$identifier/private"
+  chown -R "$OWNERSHIP" "$FOLDER/.blueprint/extensions/$identifier/private"
   chmod --silent -R +x ".blueprint/extensions/"* 2>> "$BLUEPRINT__DEBUG"
 
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then

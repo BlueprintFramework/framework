@@ -359,6 +359,13 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
     InstallCommand "$extension" "$current" "$total"
   done
 
+  # Finalize transaction
+  PRINT INFO "Finalizing transaction.."
+  if [[ $YARN == "y" ]]; then
+    PRINT INFO "Rebuilding panel assets.."
+    yarn run build:production --progress
+  fi
+
   exit 0 # success
 fi
 
