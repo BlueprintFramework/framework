@@ -903,8 +903,7 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
 
           # Return error if console entries are defined incorrectly.
           if [[ $CONSOLE_ENTRY_SIGN == "" ]] \
-          || [[ $CONSOLE_ENTRY_DESC == "" ]] \
-          || [[ $CONSOLE_ENTRY_INTE == "" ]]; then
+          || [[ $CONSOLE_ENTRY_DESC == "" ]]; then
             rm -R ".blueprint/tmp/$n"
             PRINT FATAL "One or more extension console entries appear to have undefined fields."
             exit 1
