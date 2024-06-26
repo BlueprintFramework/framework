@@ -1242,18 +1242,10 @@ InstallCommand() {
   fi
 
   if [[ $dev != true ]]; then
-    if [[ $InstalledExtensions == "" ]]; then
-      InstalledExtensions="$identifier"
-    else
-      InstalledExtensions+=", $identifier"
-    fi
-    #PRINT SUCCESS "$identifier has been installed."
-  elif [[ $dev == true ]]; then
-    PRINT SUCCESS "$identifier has been built."
+    if [[ $InstalledExtensions == "" ]]; then InstalledExtensions="$identifier"; else InstalledExtensions+=", $identifier"; fi
+  else
     BuiltExtensions="$identifier"
   fi
-
-
 
   # Unset variables
   PRINT INFO "Unsetting variables.."

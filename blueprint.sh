@@ -397,11 +397,15 @@ if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="
       fi
     fi
 
-    sendTelemetry "INSTALL_EXTENSIONS" >> "$BLUEPRINT__DEBUG"
-
-    CorrectPhrasing="have"
-    if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
-    PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
+    if [[ $BuiltExtensions == "" ]]; then
+      sendTelemetry "FINISH_EXTENSION_INSTALLATION" >> "$BLUEPRINT__DEBUG"
+      CorrectPhrasing="have"
+      if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
+      PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
+    else
+      sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
+      PRINT SUCCESS "$BuiltExtensionbs has been built."
+    fi
 
     exit 0
   else
@@ -425,7 +429,44 @@ if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
     RemoveCommand "$extension" "$current" "$total"
   done
 
-  exit 0 # success
+  if [[ $RemovedExtensions != "" ]]; then
+    # Finalize transaction
+    PRINT INFO "Finalizing transaction.."
+
+    # Rebuild panel
+    if [[ $YARN == "y" ]]; then
+      PRINT INFO "Rebuilding panel assets.."
+      yarn run build:production --progress
+    fi
+
+    # Link filesystems
+    PRINT INFO "Linking filesystems.."
+    php artisan storage:link &>> "$BLUEPRINT__DEBUG"
+
+    # Flush cache.
+    PRINT INFO "Flushing view, config and route cache.."
+    {
+      php artisan view:cache
+      php artisan config:cache
+      php artisan route:clear
+      php artisan cache:clear
+    } &>> "$BLUEPRINT__DEBUG"
+
+    # Make sure all files have correct permissions.
+    PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+    find "$FOLDER/" \
+    -path "$FOLDER/node_modules" -prune \
+    -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
+
+    sendTelemetry "FINISH_EXTENSION_REMOVAL" >> "$BLUEPRINT__DEBUG"
+    CorrectPhrasing="have"
+    if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
+    PRINT SUCCESS "$RemovedExtensions $CorrectPhrasing been removed."
+
+    exit 0
+  else
+    exit 1
+  fi
 fi
 
 

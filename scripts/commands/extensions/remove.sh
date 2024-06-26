@@ -14,37 +14,37 @@ RemoveCommand() {
   if [[ -f ".blueprint/extensions/$1/private/.store/conf.yml" ]]; then
     eval "$(parse_yaml ".blueprint/extensions/$1/private/.store/conf.yml" conf_)"
     # Add aliases for config values to make working with them easier.
-    name="${conf_info_name//&/\\&}"
-    identifier="${conf_info_identifier//&/\\&}"
-    description="${conf_info_description//&/\\&}"
-    flags="${conf_info_flags//&/\\&}" #(optional)
-    version="${conf_info_version//&/\\&}"
-    target="${conf_info_target//&/\\&}"
-    author="${conf_info_author//&/\\&}" #(optional)
-    icon="${conf_info_icon//&/\\&}" #(optional)
-    website="${conf_info_website//&/\\&}"; #(optional)
+    local name="${conf_info_name//&/\\&}"
+    local identifier="${conf_info_identifier//&/\\&}"
+    local description="${conf_info_description//&/\\&}"
+    local flags="${conf_info_flags//&/\\&}" #(optional)
+    local version="${conf_info_version//&/\\&}"
+    local target="${conf_info_target//&/\\&}"
+    local author="${conf_info_author//&/\\&}" #(optional)
+    local icon="${conf_info_icon//&/\\&}" #(optional)
+    local website="${conf_info_website//&/\\&}"; #(optional)
 
-    admin_view="$conf_admin_view"
-    admin_controller="$conf_admin_controller"; #(optional)
-    admin_css="$conf_admin_css"; #(optional)
-    admin_wrapper="$conf_admin_wrapper"; #(optional)
+    local admin_view="$conf_admin_view"
+    local admin_controller="$conf_admin_controller"; #(optional)
+    local admin_css="$conf_admin_css"; #(optional)
+    local admin_wrapper="$conf_admin_wrapper"; #(optional)
 
-    dashboard_css="$conf_dashboard_css"; #(optional)
-    dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
-    dashboard_components="$conf_dashboard_components"; #(optional)
+    local dashboard_css="$conf_dashboard_css"; #(optional)
+    local dashboard_wrapper="$conf_dashboard_wrapper"; #(optional)
+    local dashboard_components="$conf_dashboard_components"; #(optional)
 
-    data_directory="$conf_data_directory"; #(optional)
-    data_public="$conf_data_public"; #(optional)
-    data_console="$conf_data_console"; #(optional)
+    local data_directory="$conf_data_directory"; #(optional)
+    local data_public="$conf_data_public"; #(optional)
+    local data_console="$conf_data_console"; #(optional)
 
-    requests_views="$conf_requests_views"; #(optional)
-    requests_controllers="$conf_requests_controllers"; #(optional)
-    requests_routers="$conf_requests_routers"; #(optional)
-    requests_routers_application="$conf_requests_routers_application"; #(optional)
-    requests_routers_client="$conf_requests_routers_client"; #(optional)
-    requests_routers_web="$conf_requests_routers_web"; #(optional)
+    local requests_views="$conf_requests_views"; #(optional)
+    local requests_controllers="$conf_requests_controllers"; #(optional)
+    local requests_routers="$conf_requests_routers"; #(optional)
+    local requests_routers_application="$conf_requests_routers_application"; #(optional)
+    local requests_routers_client="$conf_requests_routers_client"; #(optional)
+    local requests_routers_web="$conf_requests_routers_web"; #(optional)
 
-    database_migrations="$conf_database_migrations"; #(optional)
+    local database_migrations="$conf_database_migrations"; #(optional)
   else
     PRINT FATAL "Extension configuration file not found or detected."
     exit 1
@@ -320,35 +320,13 @@ RemoveCommand() {
   PRINT INFO "Removing extension folder.."
   rm -R ".blueprint/extensions/$identifier"
 
-  # Rebuild panel
-  if [[ $YARN == "y" ]]; then
-    PRINT INFO "Rebuilding panel assets.."
-    yarn run build:production --progress
-  fi
-
-  # Link filesystems
-  PRINT INFO "Linking filesystems.."
-  php artisan storage:link &>> "$BLUEPRINT__DEBUG"
-
-  # Flush cache.
-  PRINT INFO "Flushing view, config and route cache.."
-  {
-    php artisan view:cache
-    php artisan config:cache
-    php artisan route:clear
-    php artisan cache:clear
-  } &>> "$BLUEPRINT__DEBUG"
-
-  # Make sure all files have correct permissions.
-  PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-  find "$FOLDER/" \
-   -path "$FOLDER/node_modules" -prune \
-   -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
-
   # Remove from installed list
   PRINT INFO "Removing '$identifier' from active extensions list.."
   sed -i "s~$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
 
-  PRINT SUCCESS "'$identifier' has been removed."
-  sendTelemetry "FINISH_EXTENSION_REMOVAL" >> "$BLUEPRINT__DEBUG"
+  if [[ $RemovedExtensions == "" ]]; then RemovedExtensions="$identifier"; else RemovedExtensions+=", $identifier"; fi
+
+  # Unset variables
+  PRINT INFO "Unsetting variables.."
+  unsetVariables
 }
