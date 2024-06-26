@@ -1,6 +1,15 @@
 #!/bin/bash
 
 RemoveCommand() {
+  if [[ $USER_CONFIRMED_REMOVAL != "yes" ]]; then
+    PRINT INPUT "Do you want to proceed with this transaction? Some files might not be removed properly. (y/N)"
+    read -r YN
+    if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then PRINT INFO "Extension removal cancelled.";exit 1;fi
+  fi
+  export USER_CONFIRMED_REMOVAL="yes"
+
+  PRINT INFO "\x1b[34;mRemoving $1...\x1b[0m \x1b[37m($current/$total)\x1b[0m"
+
   # Check if the extension is installed.
   FILE=$1
   if [[ $FILE == *".blueprint" ]]; then FILE="${FILE::-10}"; fi
@@ -8,7 +17,7 @@ RemoveCommand() {
 
   if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$1,"* ]]; then
     PRINT FATAL "'$1' is not installed or detected."
-    exit 2
+    return 2
   fi
 
   if [[ -f ".blueprint/extensions/$1/private/.store/conf.yml" ]]; then
@@ -47,15 +56,8 @@ RemoveCommand() {
     local database_migrations="$conf_database_migrations"; #(optional)
   else
     PRINT FATAL "Extension configuration file not found or detected."
-    exit 1
+    return 1
   fi
-
-  if [[ $USER_CONFIRMED_REMOVAL != "yes" ]]; then
-    PRINT INPUT "Do you want to proceed with this transaction? Some files might not be removed properly. (y/N)"
-    read -r YN
-    if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then PRINT INFO "Extension removal cancelled.";exit 1;fi
-  fi
-  export USER_CONFIRMED_REMOVAL="yes"
 
   PRINT INFO "Searching and validating framework dependencies.."
   depend

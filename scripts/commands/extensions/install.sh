@@ -1,6 +1,8 @@
 #!/bin/bash
 
 InstallCommand() {
+  PRINT INFO "\x1b[34;mInstalling $1...\x1b[0m \x1b[37m($current/$total)\x1b[0m"
+
   # The following code does some magic to allow for extensions with a
   # different root folder structure than expected by Blueprint.
   if [[ $1 == "[developer-build]" ]]; then
