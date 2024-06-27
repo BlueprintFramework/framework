@@ -1,6 +1,6 @@
 #!/bin/bash
 
-InstallCommand() {
+InstallExtension() {
   PRINT INFO "\x1b[34;mInstalling $1...\x1b[0m \x1b[37m($current/$total)\x1b[0m"
 
   # The following code does some magic to allow for extensions with a
@@ -1252,4 +1252,77 @@ InstallCommand() {
   # Unset variables
   PRINT INFO "Unsetting variables.."
   unsetVariables
+}
+
+Command() {
+  if [[ $1 == "" ]]; then PRINT FATAL "Expected at least 1 argument but got 0.";exit 2;fi
+  if [[ ( $1 == "./"* ) || ( $1 == "../"* ) || ( $1 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";exit 2;fi
+
+  PRINT INFO "Searching and validating framework dependencies.."
+  # Check if required programs and libraries are installed.
+  depend
+
+  source ./scripts/commands/extensions/install.sh
+
+  # Install selected extensions
+  current=0
+  extensions=$(shiftArgs "$@")
+  total=$(echo "$extensions" | wc -w)
+  for extension in $extensions; do
+    (( current++ ))
+    InstallExtension "$extension" "$current" "$total"
+  done
+
+  if [[ $InstalledExtensions != "" ]]; then
+    # Finalize transaction
+    PRINT INFO "Finalizing transaction.."
+
+    if [[ ( $YARN == "y" ) && ( $IgnoreRebuild != "true" ) ]]; then
+      PRINT INFO "Rebuilding panel assets.."
+      yarn run build:production --progress
+    fi
+
+    # Link filesystems
+    PRINT INFO "Linking filesystems.."
+    php artisan storage:link &>> "$BLUEPRINT__DEBUG"
+
+    # Flush cache.
+    PRINT INFO "Flushing view, config and route cache.."
+    {
+      php artisan view:cache
+      php artisan config:cache
+      php artisan route:clear
+      if [[ $KeepApplicationCache != "true" ]]; then php artisan cache:clear; fi
+    } &>> "$BLUEPRINT__DEBUG"
+
+    # Make sure all files have correct permissions.
+    PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+    find "$FOLDER/" \
+    -path "$FOLDER/node_modules" -prune \
+    -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
+
+    # Database migrations
+    if [[ ( $database_migrations != "" ) && ( $DOCKER != "y" ) ]] || [[ $DeveloperForcedMigrate == "true" ]]; then
+      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]] || [[ $DeveloperForcedMigrate == "true" ]]; then
+        PRINT INFO "Running database migrations.."
+        php artisan migrate --force
+      else
+        PRINT INFO "Database migrations have been skipped."
+      fi
+    fi
+
+    if [[ $BuiltExtensions == "" ]]; then
+      sendTelemetry "FINISH_EXTENSION_INSTALLATION" >> "$BLUEPRINT__DEBUG"
+      CorrectPhrasing="have"
+      if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
+      PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
+    else
+      sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
+      PRINT SUCCESS "$BuiltExtensionbs has been built."
+    fi
+
+    exit 0
+  else
+    exit 1
+  fi
 }

@@ -328,90 +328,17 @@ if [[ $1 != "-bash" ]]; then
 fi
 
 
-# help, -help, --help,
-# h,    -h,    --h
-if [[ ( $2 == "help" ) || ( $2 == "-help" ) || ( $2 == "--help" ) ||
-      ( $2 == "h" )    || ( $2 == "-h" )    || ( $2 == "--h" )    || ( $2 == "" ) ]]; then VCMD="y"
+case "${2}" in
+  -add|-install|-i) source ./scripts/commands/extensions/install.sh ;;
+  -remove|-r) source ./scripts/commands/extensions/remove.sh ;;
+  -init|-I) source ./scripts/commands/developer/init.sh ;;
+  
+  *) source ./scripts/commands/misc/help.sh ;;
+esac
 
-  source ./scripts/commands/misc/help.sh
-
-  HelpCommand
-fi
-
-
-# -i, -install, -add
-if [[ ( $2 == "-i" ) || ( $2 == "-install" ) || ( $2 == "-add" ) ]]; then VCMD="y"
-  if [[ $3 == "" ]]; then PRINT FATAL "Expected at least 1 argument but got 0.";exit 2;fi
-  if [[ ( $3 == "./"* ) || ( $3 == "../"* ) || ( $3 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";exit 2;fi
-
-  PRINT INFO "Searching and validating framework dependencies.."
-  # Check if required programs and libraries are installed.
-  depend
-
-  source ./scripts/commands/extensions/install.sh
-
-  # Install selected extensions
-  current=0
-  extensions=$(shiftArgs "$@")
-  total=$(echo "$extensions" | wc -w)
-  for extension in $extensions; do
-    (( current++ ))
-    InstallCommand "$extension" "$current" "$total"
-  done
-
-  if [[ $InstalledExtensions != "" ]]; then
-    # Finalize transaction
-    PRINT INFO "Finalizing transaction.."
-
-    if [[ ( $YARN == "y" ) && ( $IgnoreRebuild != "true" ) ]]; then
-      PRINT INFO "Rebuilding panel assets.."
-      yarn run build:production --progress
-    fi
-
-    # Link filesystems
-    PRINT INFO "Linking filesystems.."
-    php artisan storage:link &>> "$BLUEPRINT__DEBUG"
-
-    # Flush cache.
-    PRINT INFO "Flushing view, config and route cache.."
-    {
-      php artisan view:cache
-      php artisan config:cache
-      php artisan route:clear
-      if [[ $KeepApplicationCache != "true" ]]; then php artisan cache:clear; fi
-    } &>> "$BLUEPRINT__DEBUG"
-
-    # Make sure all files have correct permissions.
-    PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-    find "$FOLDER/" \
-    -path "$FOLDER/node_modules" -prune \
-    -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
-
-    # Database migrations
-    if [[ ( $database_migrations != "" ) && ( $DOCKER != "y" ) ]] || [[ $DeveloperForcedMigrate == "true" ]]; then
-      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]] || [[ $DeveloperForcedMigrate == "true" ]]; then
-        PRINT INFO "Running database migrations.."
-        php artisan migrate --force
-      else
-        PRINT INFO "Database migrations have been skipped."
-      fi
-    fi
-
-    if [[ $BuiltExtensions == "" ]]; then
-      sendTelemetry "FINISH_EXTENSION_INSTALLATION" >> "$BLUEPRINT__DEBUG"
-      CorrectPhrasing="have"
-      if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
-      PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
-    else
-      sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
-      PRINT SUCCESS "$BuiltExtensionbs has been built."
-    fi
-
-    exit 0
-  else
-    exit 1
-  fi
-fi
+shift 2
+Command "$@"
+#exit 0
 
 
 # -r, -remove
@@ -472,197 +399,21 @@ fi
 
 # -v, -version
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then VCMD="y"
-  echo -e ${VERSION}
+  source ./scripts/commands/misc/help.sh
+  VersionCommand
 fi
 
 
 # -debug
 if [[ $2 == "-debug" ]]; then VCMD="y"
-  if ! [[ $3 =~ [0-9] ]] && [[ $3 != "" ]]; then PRINT FATAL "Amount of debug lines must be a number."; exit 2; fi
-  if [[ $3 -lt 1 ]]; then PRINT FATAL "Provide the amount of debug lines to print as an argument, which must be greater than one (1)."; exit 2; fi
-  echo -e "\x1b[30;47;1m  --- DEBUG START ---  \x1b[0m"
-  echo -e "$(v="$(<.blueprint/extensions/blueprint/private/debug/logs.txt)";printf -- "%s" "$v"|tail -"$3")"
-  echo -e "\x1b[30;47;1m  ---  DEBUG END  ---  \x1b[0m"
+  source ./scripts/commands/misc/debug.sh
+  DebugCommand "$3"
 fi
-
-
-# -init
-if [[ ( $2 == "-init" || $2 == "-I" ) ]]; then VCMD="y"
-  # Check for developer mode through the database library.
-  if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
-
-  # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
-  # until you wipe the contents of the .blueprint/dev directory.
-  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    PRINT FATAL "Development directory contains files. To protect you against accidental data loss, you are unable to initialize another extension unless you clear the '.blueprint/dev' folder."
-    exit 2
-  fi
-
-  ask_template() {
-    PRINT INPUT "Choose an extension template:"
-    echo -e "$(curl 'https://raw.githubusercontent.com/BlueprintFramework/templates/main/repository' 2>> "$BLUEPRINT__DEBUG")"
-    read -r ASKTEMPLATE
-    REDO_TEMPLATE=false
-
-    # Template should not be empty
-    if [[ ${ASKTEMPLATE} == "" ]]; then
-      PRINT WARNING "Template should not be empty."
-      REDO_TEMPLATE=true
-    fi
-    # Unknown template.
-    if [[ $(echo -e "$(curl "https://raw.githubusercontent.com/BlueprintFramework/templates/main/${ASKTEMPLATE}/TemplateConfiguration.yml" 2>> "$BLUEPRINT__DEBUG")") == "404: Not Found" ]]; then
-      PRINT WARNING "Unknown template, please choose a valid option."
-      REDO_TEMPLATE=true
-    fi
-
-    # Ask again if response does not pass validation.
-    if [[ ${REDO_TEMPLATE} == true ]]; then ASKTEMPLATE=""; ask_template; fi
-  }
-
-  ask_name() {
-    INPUT_DEFAULT="SpaceInvaders"
-    PRINT INPUT "Name [$INPUT_DEFAULT]:"
-    read -r ASKNAME
-    REDO_NAME=false
-
-    # Name should not be empty
-    if [[ ${ASKNAME} == "" ]]; then
-      ASKNAME="$INPUT_DEFAULT"
-    fi
-
-    # Ask again if response does not pass validation.
-    if [[ ${REDO_NAME} == true ]]; then ASKNAME=""; ask_name; fi
-  }
-
-  ask_identifier() {
-    INPUT_DEFAULT="spaceinvaders"
-    PRINT INPUT "Identifier [$INPUT_DEFAULT]:"
-    read -r ASKIDENTIFIER
-    REDO_IDENTIFIER=false
-
-    # Identifier should not be empty
-    if [[ ${ASKIDENTIFIER} == "" ]]; then
-      ASKIDENTIFIER="$INPUT_DEFAULT"
-    fi
-    # Identifier should be a-z.
-    if ! [[ ${ASKIDENTIFIER} =~ [a-z] ]]; then
-      PRINT WARNING "Identifier should only contain a-z characters."
-      REDO_IDENTIFIER=true
-    fi
-
-    # Ask again if response does not pass validation.
-    if [[ ${REDO_IDENTIFIER} == true ]]; then ASKIDENTIFIER=""; ask_identifier; fi
-  }
-
-  ask_description() {
-    INPUT_DEFAULT="Shoot down space aliens!"
-    PRINT INPUT "Description [$INPUT_DEFAULT]:"
-    read -r ASKDESCRIPTION
-    REDO_DESCRIPTION=false
-
-    # Description should not be empty
-    if [[ ${ASKDESCRIPTION} == "" ]]; then
-      ASKDESCRIPTION="$INPUT_DEFAULT"
-    fi
-
-    # Ask again if response does not pass validation.
-    if [[ ${REDO_DESCRIPTION} == true ]]; then ASKDESCRIPTION=""; ask_description; fi
-  }
-
-  ask_version() {
-    INPUT_DEFAULT="1.0"
-    PRINT INPUT "Version [$INPUT_DEFAULT]:"
-    read -r ASKVERSION
-    REDO_VERSION=false
-
-    # Version should not be empty
-    if [[ ${ASKVERSION} == "" ]]; then
-      ASKVERSION="$INPUT_DEFAULT"
-    fi
-
-    # Ask again if response does not pass validation.
-    if [[ ${REDO_VERSION} == true ]]; then ASKVERSION=""; ask_version; fi
-  }
-
-  ask_author() {
-    INPUT_DEFAULT="byte"
-    PRINT INPUT "Author [$INPUT_DEFAULT]:"
-    read -r ASKAUTHOR
-    REDO_AUTHOR=false
-
-    # Author should not be empty
-    if [[ ${ASKAUTHOR} == "" ]]; then
-      ASKAUTHOR="$INPUT_DEFAULT"
-    fi
-
-    # Ask again if response does not pass validation.
-    if [[ ${REDO_AUTHOR} == true ]]; then ASKAUTHOR=""; ask_author; fi
-  }
-
-  ask_template
-  ask_name
-  ask_identifier
-  ask_description
-  ask_version
-  ask_author
-
-  tnum=${ASKTEMPLATE}
-  PRINT INFO "Fetching templates.."
-  if [[ $(php artisan bp:latest) != "$VERSION" ]]; then PRINT WARNING "Active Blueprint version is not latest, you might run into compatibility issues."; fi
-  cd .blueprint/tmp || cdhalt
-  git clone "https://github.com/BlueprintFramework/templates.git"
-  cd "${FOLDER}"/.blueprint || cdhalt
-  cp -R tmp/templates/* extensions/blueprint/private/build/templates/
-  rm -R tmp/templates
-  cd "${FOLDER}" || cdhalt
-
-  eval "$(parse_yaml $__BuildDir/templates/"${tnum}"/TemplateConfiguration.yml t_)"
-
-  PRINT INFO "Building template.."
-  mkdir -p .blueprint/tmp/init
-  cp -R $__BuildDir/templates/"${tnum}"/contents/* .blueprint/tmp/init/
-
-  sed -i \
-    -e "s~␀name␀~${ASKNAME}~g" \
-    -e "s~␀identifier␀~${ASKIDENTIFIER}~g" \
-    -e "s~␀description␀~${ASKDESCRIPTION}~g" \
-    -e "s~␀ver␀~${ASKVERSION}~g" \
-    -e "s~␀author␀~${ASKAUTHOR}~g" \
-    -e "s~␀version␀~${VERSION}~g" \
-    -e "s~\[name\]~${ASKNAME}~g" \
-    -e "s~\[identifier\]~${ASKIDENTIFIER}~g" \
-    -e "s~\[description\]~${ASKDESCRIPTION}~g" \
-    -e "s~\[ver\]~${ASKVERSION}~g" \
-    -e "s~\[author\]~${ASKAUTHOR}~g" \
-    -e "s~\[version\]~${VERSION}~g" \
-    ".blueprint/tmp/init/conf.yml"
-
-  # Return files to folder.
-  cp -R .blueprint/tmp/init/* .blueprint/dev/
-
-  # Remove tmp files.
-  PRINT INFO "Cleaning up build files.."
-  rm -R \
-    ".blueprint/tmp" \
-    "$__BuildDir/templates/"*
-  mkdir -p .blueprint/tmp
-
-  PRINT SUCCESS "Extension files initialized and imported to '.blueprint/dev'."
-  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
-fi
-
 
 # -build
 if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
-  # Check for developer mode through the database library.
-  if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
-
-  if [[ -z $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    PRINT FATAL "Development directory is empty."
-    exit 2
-  fi
-  PRINT INFO "Starting developer extension installation.."
-  blueprint -i "[developer-build]"
+  source ./scripts/commands/developer/build.sh
+  BuildCommand
 fi
 
 
@@ -765,187 +516,22 @@ fi
 
 # -info
 if [[ ( $2 == "-info" || $2 == "-f" ) ]]; then VCMD="y"
-  fetchversion()    { printf "\x1b[0m\x1b[37m"; if [[ $VERSION != "" ]]; then echo $VERSION; else echo "none"; fi }
-  fetchfolder()     { printf "\x1b[0m\x1b[37m"; if [[ $FOLDER != "" ]]; then echo "$FOLDER"; else echo "none"; fi }
-  fetchurl()        { printf "\x1b[0m\x1b[37m"; if [[ $(grabAppUrl) != "" ]]; then grabAppUrl; else echo "none"; fi }
-  fetchlocale()     { printf "\x1b[0m\x1b[37m"; if [[ $(grabAppLocale) != "" ]]; then grabAppLocale; else echo "none"; fi }
-  fetchtimezone()   { printf "\x1b[0m\x1b[37m"; if [[ $(grabAppTimezone) != "" ]]; then grabAppTimezone; else echo "none"; fi }
-  fetchextensions() { printf "\x1b[0m\x1b[37m"; tr -cd ',' <.blueprint/extensions/blueprint/private/db/installed_extensions | wc -c | tr -d ' '; }
-  fetchdeveloper()  { printf "\x1b[0m\x1b[37m"; if dbValidate "blueprint.developerEnabled"; then echo "true"; else echo "false"; fi }
-  fetchtelemetry()  { printf "\x1b[0m\x1b[37m"; if [[ $(cat .blueprint/extensions/blueprint/private/db/telemetry_id) == "KEY_NOT_UPDATED" ]]; then echo "false"; else echo "true"; fi }
-  fetchnode()       { printf "\x1b[0m\x1b[37m"; if [[ $(node -v) != "" ]]; then node -v; else echo "none"; fi }
-  fetchyarn()       { printf "\x1b[0m\x1b[37m"; if [[ $(yarn -v) != "" ]]; then yarn -v; else echo "none"; fi }
-
-  echo    " "
-  echo -e "\x1b[34;1m    ⣿⣿    Version: $(fetchversion)"
-  echo -e "\x1b[34;1m  ⣿⣿  ⣿⣿  Folder: $(fetchfolder)"
-  echo -e "\x1b[34;1m    ⣿⣿⣿⣿  URL: $(fetchurl)"
-  echo -e "\x1b[34;1m          Locale: $(fetchlocale)"
-  echo -e "\x1b[34;1m          Timezone: $(fetchtimezone)"
-  echo -e "\x1b[34;1m          Extensions: $(fetchextensions)"
-  echo -e "\x1b[34;1m          Developer: $(fetchdeveloper)"
-  echo -e "\x1b[34;1m          Telemetry: $(fetchtelemetry)"
-  echo -e "\x1b[34;1m          Node: $(fetchnode)"
-  echo -e "\x1b[34;1m          Yarn: $(fetchyarn)"
-  echo -e "\x1b[0m"
+  source ./scripts/commands/misc/info.sh
+  Command
 fi
 
 
 # -rerun-install
 if [[ $2 == "-rerun-install" ]]; then VCMD="y"
-  PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
-  dbRemove "blueprint.setupFinished"
-  cd "${FOLDER}" || cdhalt
-  bash blueprint.sh
+  source ./scripts/commands/advanced/rerun-install.sh
+  Command
 fi
 
 
 # -upgrade
 if [[ $2 == "-upgrade" ]]; then VCMD="y"
-  PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
-
-  # Confirmation question for developer upgrade.
-  if [[ $3 == "remote" ]]; then
-    PRINT INPUT "Upgrading to the latest development build will update Blueprint to a remote version which might differ from the latest release. Continue? (y/N)"
-    read -r YN
-    if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
-    YN=""
-  fi
-
-  # Confirmation question for both developer and stable upgrade.
-  PRINT INPUT "Upgrading will wipe your .blueprint folder and will deactivate all active extensions. Continue? (y/N)"
-  read -r YN
-  if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
-  YN=""
-
-  # Last confirmation question for both developer and stable upgrade.
-  PRINT INPUT "This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'."
-  read -r YN
-  if [[ ${YN} != "continue" ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
-  YN=""
-
-
-  if [[ $3 == "remote" ]]; then PRINT INFO "Fetching and pulling latest commit.."
-  else                          PRINT INFO "Fetching and pulling latest release.."; fi
-
-  mkdir "$FOLDER/.tmp"
-  cp blueprint.sh .blueprint.sh.bak
-
-  HAS_DEV=false
-  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    PRINT INFO "Backing up extension development files.."
-    mkdir -p "$FOLDER/.tmp/dev"
-    cp .blueprint/dev/* "$FOLDER/.tmp/dev/" -Rf
-    HAS_DEV=true
-  fi
-
-  mkdir -p "$FOLDER/.tmp/files"
-  cd "$FOLDER/.tmp/files" || cdhalt
-  if [[ $3 == "remote" ]]; then
-    if [[ $4 == "" ]]; then REMOTE_REPOSITORY="$REPOSITORY"
-    else REMOTE_REPOSITORY="$4"; fi
-    # download latest commit
-    git clone https://github.com/"$REMOTE_REPOSITORY".git main
-  else
-    # download latest release
-    LOCATION=$(curl -s https://api.github.com/repos/"$REPOSITORY"/releases/latest \
-  | grep "zipball_url" \
-  | awk '{ print $2 }' \
-  | sed 's/,$//'       \
-  | sed 's/"//g' )     \
-  ; curl -L -o main.zip "$LOCATION"
-
-    unzip main.zip
-    rm main.zip
-    mv ./* main
-  fi
-
-  if [[ ! -d "main" ]]; then
-    cd "$FOLDER" || cdhalt
-    rm -r "$FOLDER/.tmp" &>> "$BLUEPRINT__DEBUG"
-    rm "$FOLDER/.blueprint.sh.bak" &>> "$BLUEPRINT__DEBUG"
-    PRINT FATAL "Remote does not exist or encountered an error, try again later."
-    exit 1
-  fi
-
-  # Remove some files/directories that don't have to be moved to the Pterodactyl folder.
-  rm -r \
-    "main/.github" \
-    "main/.git" \
-    "main/.gitignore" \
-    "main/README.md" \
-    &>> "$BLUEPRINT__DEBUG"
-
-  # Copy fetched release files to the Pterodactyl directory and remove temp files.
-  cp -r main/* "$FOLDER"/
-  rm -r \
-    "main" \
-    "$FOLDER"/.blueprint \
-    "$FOLDER"/.tmp/files
-  cd "$FOLDER" || cdhalt
-
-  # Clean up folders with potentially broken symlinks.
-  rm \
-    "resources/views/blueprint/admin/wrappers/"* \
-    "resources/views/blueprint/dashboard/wrappers/"* \
-    "routes/blueprint/application/"* \
-    "routes/blueprint/client/"* \
-    "routes/blueprint/web/"* \
-    &>> /dev/null # cannot forward to debug dir because it does not exist
-
-  chmod +x blueprint.sh
-  sed -i -E \
-    -e "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" \
-    -e "s|WEBUSER=\"www-data\" #;|WEBUSER=\"$WEBUSER\" #;|g" \
-    -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
-    "$FOLDER/blueprint.sh"
-  mv "$FOLDER/blueprint" "$FOLDER/.blueprint"
-  bash blueprint.sh --post-upgrade
-
-  # Ask user if they'd like to migrate their database.
-  PRINT INPUT "Would you like to migrate your database? (Y/n)"
-  read -r YN
-  if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then
-    PRINT INFO "Running database migrations.."
-    php artisan migrate --force
-    php artisan up &>> "$BLUEPRINT__DEBUG"
-  else
-    PRINT INFO "Database migrations have been skipped."
-  fi
-  YN=""
-
-  if [[ ${HAS_DEV} == true ]]; then
-    PRINT INFO "Restoring extension development files.."
-    mkdir -p .blueprint/dev
-    cp "$FOLDER/.tmp/dev/"* .blueprint/dev -r
-    rm "$FOLDER/.tmp/dev" -rf
-  fi
-
-  rm -r "$FOLDER/.tmp"
-
-  # Post-upgrade checks.
-  PRINT INFO "Validating update.."
-  score=0
-
-  if dbValidate "blueprint.setupFinished"; then score=$((score+1))
-  else PRINT WARNING "'blueprint.setupFinished' could not be detected or found."; fi
-
-  # Finalize upgrade.
-  if [[ ${score} == 1 ]]; then
-    PRINT SUCCESS "Upgrade finished."
-    rm .blueprint.sh.bak
-    exit 0 # success
-  elif [[ ${score} == 0 ]]; then
-    PRINT FATAL "All checks have failed. The 'blueprint.sh' file has been reverted."
-    rm blueprint.sh
-    mv .blueprint.sh.bak blueprint.sh
-    exit 1 # error
-  else
-    PRINT FATAL "Some checks have failed. The 'blueprint.sh' file has been reverted."
-    rm blueprint.sh
-    mv .blueprint.sh.bak blueprint.sh
-    exit 1 # error
-  fi
+  source ./scripts/commands/advanced/upgrade.sh
+  UpgradeCommand "$1" "$2"
 fi
 
 

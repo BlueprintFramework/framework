@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RemoveCommand() {
+Command() {
   if [[ $USER_CONFIRMED_REMOVAL != "yes" ]]; then
     PRINT INPUT "Do you want to proceed with this transaction? Some files might not be removed properly. (y/N)"
     read -r YN

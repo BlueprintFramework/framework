@@ -41,7 +41,7 @@ updateCacheReminder() {
 
 # === SHIFTARGS ===
 shiftArgs() {
-  shift 2
+  shift 1
   args=""
   for arg in "$@"; do
     args+="$arg "
