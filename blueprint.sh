@@ -399,7 +399,7 @@ fi
 
 # -v, -version
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then VCMD="y"
-  source ./scripts/commands/misc/help.sh
+  source ./scripts/commands/misc/version.sh
   VersionCommand
 fi
 
