@@ -332,8 +332,12 @@ case "${2}" in
   -add|-install|-i) source ./scripts/commands/extensions/install.sh ;;
   -remove|-r) source ./scripts/commands/extensions/remove.sh ;;
   -init|-I) source ./scripts/commands/developer/init.sh ;;
+  -info|-f) source ./scripts/commands/misc/info.sh ;;
+  -debug) source ./scripts/commands/misc/debug.sh ;;
+  -rerun-install) source ./scripts/commands/advanced/rerun-install.sh ;;
+  -upgrade) source ./scripts/commands/advanced/upgrade.sh ;;
   
-  *) source ./scripts/commands/misc/help.sh ;;
+  *) source ./scripts/commands/unknown.sh ;;
 esac
 
 shift 2
@@ -401,13 +405,6 @@ fi
 if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then VCMD="y"
   source ./scripts/commands/misc/version.sh
   VersionCommand
-fi
-
-
-# -debug
-if [[ $2 == "-debug" ]]; then VCMD="y"
-  source ./scripts/commands/misc/debug.sh
-  DebugCommand "$3"
 fi
 
 # -build
@@ -511,34 +508,4 @@ if [[ ( $2 == "-wipe" || $2 == "-w" ) ]]; then VCMD="y"
     2>> "$BLUEPRINT__DEBUG"
 
   PRINT SUCCESS "Development folder has been cleared."
-fi
-
-
-# -info
-if [[ ( $2 == "-info" || $2 == "-f" ) ]]; then VCMD="y"
-  source ./scripts/commands/misc/info.sh
-  Command
-fi
-
-
-# -rerun-install
-if [[ $2 == "-rerun-install" ]]; then VCMD="y"
-  source ./scripts/commands/advanced/rerun-install.sh
-  Command
-fi
-
-
-# -upgrade
-if [[ $2 == "-upgrade" ]]; then VCMD="y"
-  source ./scripts/commands/advanced/upgrade.sh
-  UpgradeCommand "$1" "$2"
-fi
-
-
-
-# When the users attempts to run an invalid command.
-if [[ ${VCMD} != "y" && $1 == "-bash" ]]; then
-  # This is logged as a "fatal" error since it's something that is making Blueprint run unsuccessfully.
-  PRINT FATAL "'$2' is not a valid command or argument. Use argument '-help' for a list of commands."
-  exit 2
 fi
