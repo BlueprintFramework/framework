@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Command() {
+RemoveExtension() {
   if [[ $USER_CONFIRMED_REMOVAL != "yes" ]]; then
     PRINT INPUT "Do you want to proceed with this transaction? Some files might not be removed properly. (y/N)"
     read -r YN
@@ -331,4 +331,56 @@ Command() {
   # Unset variables
   PRINT INFO "Unsetting variables.."
   unsetVariables
+}
+
+Command() {
+  if [[ $1 == "" ]]; then PRINT FATAL "Expected at least 1 argument but got 0.";exit 2;fi
+
+  # Remove selected extensions
+  current=0
+  extensions="$*"
+  total=$(echo "$extensions" | wc -w)
+  for extension in $extensions; do
+    (( current++ ))
+    RemoveExtension "$extension" "$current" "$total"
+  done
+
+  if [[ $RemovedExtensions != "" ]]; then
+    # Finalize transaction
+    PRINT INFO "Finalizing transaction.."
+
+    # Rebuild panel
+    if [[ $YARN == "y" ]]; then
+      PRINT INFO "Rebuilding panel assets.."
+      yarn run build:production --progress
+    fi
+
+    # Link filesystems
+    PRINT INFO "Linking filesystems.."
+    php artisan storage:link &>> "$BLUEPRINT__DEBUG"
+
+    # Flush cache.
+    PRINT INFO "Flushing view, config and route cache.."
+    {
+      php artisan view:cache
+      php artisan config:cache
+      php artisan route:clear
+      php artisan cache:clear
+    } &>> "$BLUEPRINT__DEBUG"
+
+    # Make sure all files have correct permissions.
+    PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+    find "$FOLDER/" \
+    -path "$FOLDER/node_modules" -prune \
+    -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
+
+    sendTelemetry "FINISH_EXTENSION_REMOVAL" >> "$BLUEPRINT__DEBUG"
+    CorrectPhrasing="have"
+    if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
+    PRINT SUCCESS "$RemovedExtensions $CorrectPhrasing been removed."
+
+    exit 0
+  else
+    exit 1
+  fi
 }

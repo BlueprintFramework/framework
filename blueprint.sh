@@ -332,8 +332,10 @@ case "${2}" in
   -add|-install|-i) source ./scripts/commands/extensions/install.sh ;;
   -remove|-r) source ./scripts/commands/extensions/remove.sh ;;
   -init|-I) source ./scripts/commands/developer/init.sh ;;
+  -build|-b) source ./scripts/commands/developer/build.sh ;;
   -info|-f) source ./scripts/commands/misc/info.sh ;;
   -debug) source ./scripts/commands/misc/debug.sh ;;
+  -version|-v) source ./scripts/commands/misc/version.sh ;;
   -rerun-install) source ./scripts/commands/advanced/rerun-install.sh ;;
   -upgrade) source ./scripts/commands/advanced/upgrade.sh ;;
   
@@ -342,77 +344,7 @@ esac
 
 shift 2
 Command "$@"
-#exit 0
-
-
-# -r, -remove
-if [[ ( $2 == "-r" ) || ( $2 == "-remove" ) ]]; then VCMD="y"
-  if [[ $3 == "" ]]; then PRINT FATAL "Expected at least 1 argument but got 0.";exit 2;fi
-
-  source ./scripts/commands/extensions/remove.sh
-
-  # Remove selected extensions
-  current=0
-  extensions=$(shiftArgs "$@")
-  total=$(echo "$extensions" | wc -w)
-  for extension in $extensions; do
-    (( current++ ))
-    RemoveCommand "$extension" "$current" "$total"
-  done
-
-  if [[ $RemovedExtensions != "" ]]; then
-    # Finalize transaction
-    PRINT INFO "Finalizing transaction.."
-
-    # Rebuild panel
-    if [[ $YARN == "y" ]]; then
-      PRINT INFO "Rebuilding panel assets.."
-      yarn run build:production --progress
-    fi
-
-    # Link filesystems
-    PRINT INFO "Linking filesystems.."
-    php artisan storage:link &>> "$BLUEPRINT__DEBUG"
-
-    # Flush cache.
-    PRINT INFO "Flushing view, config and route cache.."
-    {
-      php artisan view:cache
-      php artisan config:cache
-      php artisan route:clear
-      php artisan cache:clear
-    } &>> "$BLUEPRINT__DEBUG"
-
-    # Make sure all files have correct permissions.
-    PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-    find "$FOLDER/" \
-    -path "$FOLDER/node_modules" -prune \
-    -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
-
-    sendTelemetry "FINISH_EXTENSION_REMOVAL" >> "$BLUEPRINT__DEBUG"
-    CorrectPhrasing="have"
-    if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
-    PRINT SUCCESS "$RemovedExtensions $CorrectPhrasing been removed."
-
-    exit 0
-  else
-    exit 1
-  fi
-fi
-
-
-# -v, -version
-if [[ ( $2 == "-v" ) || ( $2 == "-version" ) ]]; then VCMD="y"
-  source ./scripts/commands/misc/version.sh
-  VersionCommand
-fi
-
-# -build
-if [[ ( $2 == "-build" || $2 == "-b" ) ]]; then VCMD="y"
-  source ./scripts/commands/developer/build.sh
-  BuildCommand
-fi
-
+exit 0
 
 # -export
 if [[ ( $2 == "-export" || $2 == "-e" ) ]]; then VCMD="y"

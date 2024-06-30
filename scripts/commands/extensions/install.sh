@@ -1262,11 +1262,9 @@ Command() {
   # Check if required programs and libraries are installed.
   depend
 
-  source ./scripts/commands/extensions/install.sh
-
   # Install selected extensions
   current=0
-  extensions=$(shiftArgs "$@")
+  extensions="$*"
   total=$(echo "$extensions" | wc -w)
   for extension in $extensions; do
     (( current++ ))
