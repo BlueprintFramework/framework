@@ -327,6 +327,9 @@ if [[ $1 != "-bash" ]]; then
   fi
 fi
 
+Command() {
+  PRINT FATAL "'$1' is not a valid command or argument. Use argument '-help' for a list of commands."
+}
 
 case "${2}" in
   -add|-install|-i) source ./scripts/commands/extensions/install.sh ;;
@@ -335,15 +338,14 @@ case "${2}" in
   -build|-b) source ./scripts/commands/developer/build.sh ;;
   -info|-f) source ./scripts/commands/misc/info.sh ;;
   -debug) source ./scripts/commands/misc/debug.sh ;;
+  -help|-h|help) source ./scripts/commands/misc/help.sh ;;
   -version|-v) source ./scripts/commands/misc/version.sh ;;
   -rerun-install) source ./scripts/commands/advanced/rerun-install.sh ;;
   -upgrade) source ./scripts/commands/advanced/upgrade.sh ;;
-  
-  *) source ./scripts/commands/unknown.sh ;;
 esac
 
-shift 2
-Command "$@"
+shift
+Command "$*"
 exit 0
 
 # -export
