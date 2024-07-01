@@ -80,7 +80,7 @@ export NODE_OPTIONS=--openssl-legacy-provider
 # Write internal variables.
 __BuildDir=".blueprint/extensions/blueprint/private/build"
 
-# Automatically navigate to the Pterodactyl directory when running the core.
+# Automatically navigate to the Pterodactyl directory when running the script.
 cd "$FOLDER" || return
 
 # Import libraries.
