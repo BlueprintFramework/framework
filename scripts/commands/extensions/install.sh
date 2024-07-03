@@ -1,8 +1,6 @@
 #!/bin/bash
 
 InstallExtension() {
-  PRINT INFO "\x1b[34;mInstalling $1...\x1b[0m \x1b[37m($current/$total)\x1b[0m"
-
   # The following code does some magic to allow for extensions with a
   # different root folder structure than expected by Blueprint.
   if [[ $1 == "[developer-build]" ]]; then
@@ -11,6 +9,7 @@ InstallExtension() {
     mkdir -p ".blueprint/tmp/dev"
     cp -R ".blueprint/dev/"* ".blueprint/tmp/dev/"
   else
+    PRINT INFO "\x1b[34;mInstalling $1...\x1b[0m \x1b[37m($current/$total)\x1b[0m"
     dev=false
     n="$1"
 
@@ -1245,13 +1244,13 @@ InstallExtension() {
 
   if [[ $dev != true ]]; then
     if [[ $InstalledExtensions == "" ]]; then InstalledExtensions="$identifier"; else InstalledExtensions+=", $identifier"; fi
+    
+    # Unset variables
+    PRINT INFO "Unsetting variables.."
+    unsetVariables
   else
     BuiltExtensions="$identifier"
   fi
-
-  # Unset variables
-  PRINT INFO "Unsetting variables.."
-  unsetVariables
 }
 
 Command() {
@@ -1271,7 +1270,7 @@ Command() {
     InstallExtension "$extension" "$current" "$total"
   done
 
-  if [[ $InstalledExtensions != "" ]]; then
+  if [[ ( $InstalledExtensions != "" ) || ( $BuiltExtensions != "" ) ]]; then
     # Finalize transaction
     PRINT INFO "Finalizing transaction.."
 
@@ -1316,7 +1315,7 @@ Command() {
       PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
     else
       sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
-      PRINT SUCCESS "$BuiltExtensionbs has been built."
+      PRINT SUCCESS "$BuiltExtensions has been built."
     fi
 
     exit 0
