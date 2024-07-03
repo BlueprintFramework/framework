@@ -337,7 +337,7 @@ case "${2}" in
   -init|-I) source ./scripts/commands/developer/init.sh ;;
   -build|-b) source ./scripts/commands/developer/build.sh ;;
   -wipe|-w) source ./scripts/commands/developer/wipe.sh ;;
-  -export|-e) source ./scripts/commands/developer/wipe.sh ;;
+  -export|-e) source ./scripts/commands/developer/export.sh ;;
   -info|-f) source ./scripts/commands/misc/info.sh ;;
   -debug) source ./scripts/commands/misc/debug.sh ;;
   -help|-h|help) source ./scripts/commands/misc/help.sh ;;
