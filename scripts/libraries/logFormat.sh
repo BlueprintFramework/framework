@@ -13,13 +13,13 @@ PRINT() {
   RESET=$(tput sgr0)
   SECONDARY="\033[2m"
 
-  if [[ $TYPE == "INFO"    ]]; then PRIMARY=$(tput setaf 4); fi
-  if [[ $TYPE == "WARNING" ]]; then PRIMARY=$(tput setaf 3); fi
-  if [[ $TYPE == "FATAL"   ]]; then PRIMARY=$(tput setaf 1); fi
-  if [[ $TYPE == "SUCCESS" ]]; then PRIMARY=$(tput setaf 2); fi
-  if [[ $TYPE == "INPUT"   ]]; then PRIMARY=$(tput setaf 5); fi
+  if [[ $TYPE == "INFO"    ]]; then ICON="󰋼"; READABLETYPE="Info"; PRIMARY=$(tput setaf 4); fi
+  if [[ $TYPE == "WARNING" ]]; then ICON=""; READABLETYPE="Warning"; PRIMARY=$(tput setaf 3); fi
+  if [[ $TYPE == "FATAL"   ]]; then ICON="󰅙"; READABLETYPE="Fatal"; PRIMARY=$(tput setaf 1); fi
+  if [[ $TYPE == "SUCCESS" ]]; then ICON="󰗠"; READABLETYPE="Success"; PRIMARY=$(tput setaf 2); fi
+  if [[ $TYPE == "INPUT"   ]]; then ICON="󰋗"; READABLETYPE="Input"; PRIMARY=$(tput setaf 5); fi
   if [[ $TYPE == "DEBUG"   ]]; then PRIMARY="$SECONDARY"; fi
 
-  if [[ $TYPE != "DEBUG" ]]; then echo -e "${BOLD}${SECONDARY}$DATE${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE"; fi
+  if [[ $TYPE != "DEBUG" ]]; then echo -e "${SECONDARY}${DATE}${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE${RESET}"; fi
   echo -e "${BOLD}${SECONDARY}$DATEDEBUG${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE" >> "$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
 }
