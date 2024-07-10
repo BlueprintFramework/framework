@@ -255,7 +255,6 @@ if [[ $1 != "-bash" ]]; then
     } 2>> "$BLUEPRINT__DEBUG"
     php artisan storage:link &>> "$BLUEPRINT__DEBUG"
 
-    PRINT INFO "Replacing internal placeholders.."
     # Copy "Blueprint" extension page logo from assets.
     cp "$FOLDER/.blueprint/assets/logo.jpg" "$FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg"
 
