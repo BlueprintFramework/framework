@@ -16,7 +16,7 @@
   USERSHELL="/bin/bash" #;
 
 # Defines the version Blueprint will display as the active one.
-  VERSION="beta-F248-1"
+  VERSION="beta-2024-07"
 
 # Default GitHub repository to use when upgrading Blueprint.
   REPOSITORY="BlueprintFramework/framework"
