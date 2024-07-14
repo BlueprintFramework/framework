@@ -115,8 +115,6 @@ if [[ "$1" == "-config" ]]; then
 fi
 
 cdhalt() { PRINT FATAL "Attempted navigation into nonexistent directory, halting process."; exit 1; }
-
-
 depend() {
   # Check for compatible node versions
   nodeVer=$(node -v)
@@ -209,7 +207,6 @@ assignflags() {
   if [[ ( $flags == *"developerEscalateExportScript,"* ) || ( $flags == *"developerEscalateExportScript" ) ]]; then F_developerEscalateExportScript=true ;fi
 }
 
-
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 placeshortcut() {
   PRINT INFO "Placing Blueprint command shortcut.."
@@ -240,11 +237,9 @@ if [[ $1 != "-bash" ]]; then
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
-    # Check if required dependencies are installed
-    depend
-
-    # Place Blueprint shortcut
-    placeshortcut
+    depend # Check if required dependencies are installed
+    
+    placeshortcut # Place Blueprint shortcut
 
     # Link directories.
     PRINT INFO "Linking directories and filesystems.."
@@ -321,7 +316,7 @@ if [[ $1 != "-bash" ]]; then
 
     dbAdd "blueprint.setupFinished"
     # Let the panel know the user has finished installation.
-    sed -i "s/NOTINSTALLED/INSTALLED/g" "$FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php"
+    sed -i "s~NOTINSTALLED~INSTALLED~g" "$FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php"
     exit 0
   fi
 fi
