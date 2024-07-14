@@ -1094,7 +1094,7 @@ InstallExtension() {
       -e "s~\[webicon\]~$websiteiconclass~g" \
       "$AdminBladeConstructor"
   fi
-  echo -e "$(<.blueprint/tmp/"$n"/"$admin_view")\n@endsection" >> "$AdminBladeConstructor"
+  echo -e "$(<".blueprint/tmp/$n/$admin_view")\n@endsection" >> "$AdminBladeConstructor"
 
   # Construct admin route
   sed -i "s~\[id\]~$identifier~g" "$AdminRouteConstructor"
@@ -1132,7 +1132,7 @@ InstallExtension() {
     echo "$ADMINCONTROLLER_RESULT" > "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   else
     # Use default extension controller.
-    cp .blueprint/tmp/"$n"/"$admin_controller" "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
+    cp ".blueprint/tmp/$n/$admin_controller" "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   fi
 
   if [[ $DUPLICATE != "y" ]]; then
