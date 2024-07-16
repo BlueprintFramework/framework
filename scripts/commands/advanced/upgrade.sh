@@ -41,10 +41,17 @@ Command() {
   mkdir -p "$FOLDER/.tmp/files"
   cd "$FOLDER/.tmp/files" || cdhalt
   if [[ $1 == "remote" ]]; then
-    if [[ $2 == "" ]]; then REMOTE_REPOSITORY="$REPOSITORY"
-    else REMOTE_REPOSITORY="$2"; fi
-    # download latest commit
-    git clone https://github.com/"$REMOTE_REPOSITORY".git main
+    if [[ $2 == "" ]]; then
+      REMOTE_REPOSITORY="$REPOSITORY"
+    else
+      if [[ $2 != "http://"* ]] && [[ $2 != "https://"* ]]; then
+        REMOTE_REPOSITORY="https://github.com/$2.git"
+      else
+        REMOTE_REPOSITORY="$2"
+      fi
+    fi
+    # download release
+    git clone "$REMOTE_REPOSITORY" main
   else
     # download latest release
     LOCATION=$(curl -s https://api.github.com/repos/"$REPOSITORY"/releases/latest \
