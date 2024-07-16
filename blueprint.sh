@@ -84,35 +84,16 @@ __BuildDir=".blueprint/extensions/blueprint/private/build"
 cd "$FOLDER" || return
 
 # Import libraries.
-source scripts/libraries/parse_yaml.sh || missinglibs+="[parse_yaml]"
-source scripts/libraries/grabenv.sh    || missinglibs+="[grabenv]"
-source scripts/libraries/logFormat.sh  || missinglibs+="[logFormat]"
-source scripts/libraries/misc.sh       || missinglibs+="[misc]"
+source scripts/libraries/parse_yaml.sh    || missinglibs+="[parse_yaml]"
+source scripts/libraries/grabenv.sh       || missinglibs+="[grabenv]"
+source scripts/libraries/logFormat.sh     || missinglibs+="[logFormat]"
+source scripts/libraries/misc.sh          || missinglibs+="[misc]"
+source scripts/libraries/configutility.sh || missinglibs+="[configutility]"
 
 
 # -config
 # usage: "cITEM=VALUE bash blueprint.sh -config"
-if [[ "$1" == "-config" ]]; then
-
-  # cTELEMETRY_ID
-  # Update the telemetry id.
-  if [[ "$cTELEMETRY_ID" != "" ]]; then
-    echo "$cTELEMETRY_ID" > .blueprint/extensions/blueprint/private/db/telemetry_id
-  fi
-
-  # cDEVELOPER
-  # Enable/Disable developer mode.
-  if [[ "$cDEVELOPER" != "" ]]; then
-    if [[ "$cDEVELOPER" == "true" ]]; then
-      dbAdd "blueprint.developerEnabled"
-    else
-      dbRemove "blueprint.developerEnabled"
-    fi
-  fi
-
-  echo .
-  exit 0
-fi
+if [[ "$1" == "-config" ]]; then ConfigUtility; fi
 
 cdhalt() { PRINT FATAL "Attempted navigation into nonexistent directory, halting process."; exit 1; }
 depend() {
@@ -174,10 +155,11 @@ depend() {
     if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ]; then PRINT FATAL "Required dependency \"webpack\" is not installed or detected.";   fi
     if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ]; then PRINT FATAL "Required dependency \"react\" is not installed or detected.";     fi
 
-    if [[ $missinglibs == *"[parse_yaml]"* ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected."; fi
-    if [[ $missinglibs == *"[grabEnv]"*    ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";    fi
-    if [[ $missinglibs == *"[logFormat]"*  ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";  fi
-    if [[ $missinglibs == *"[misc]"*       ]]; then PRINT FATAL "Required internal dependency \"internal:misc\" is not installed or detected.";       fi
+    if [[ $missinglibs == *"[parse_yaml]"*    ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected."; fi
+    if [[ $missinglibs == *"[grabEnv]"*       ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";    fi
+    if [[ $missinglibs == *"[logFormat]"*     ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";  fi
+    if [[ $missinglibs == *"[misc]"*          ]]; then PRINT FATAL "Required internal dependency \"internal:misc\" is not installed or detected.";       fi
+    if [[ $missinglibs == *"[configutility]"* ]]; then PRINT FATAL "Required internal dependency \"internal:configutility\" is not installed or detected.";       fi
 
     exit 1
   fi
@@ -322,10 +304,11 @@ if [[ $1 != "-bash" ]]; then
 fi
 
 Command() {
-  PRINT FATAL "'$2' is not a valid command or argument. Use argument '-help' for a list of commands."
+  PRINT FATAL "'$cmd' is not a valid command or argument. Use argument '-help' for a list of commands."
 }
 
-case "${2}" in
+cmd="${2}"
+case "$cmd" in
   -add|-install|-i) source ./scripts/commands/extensions/install.sh ;;
   -remove|-r) source ./scripts/commands/extensions/remove.sh ;;
   -init|-I) source ./scripts/commands/developer/init.sh ;;
