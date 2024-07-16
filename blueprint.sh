@@ -216,13 +216,14 @@ if [[ $1 != "-bash" ]]; then
     if [[ $1 != "--post-upgrade" ]]; then
       # Print Blueprint icon with ascii characters.
       C0="\x1b[0m"
-      C1="\x1b[31;1m"
-      C2="\x1b[33;42;1m"
+      C1="\x1b[31;43;1m"
+      C2="\x1b[32;44;1m"
       C3="\x1b[34;45;1m"
-      echo -e \
-      "$C0$C1  ██$C1▌$C2▌$C3▌" \
-      "\n$C0$C1██  ██$C1▌$C2▌$C3▌" \
-      "\n$C0$C1  ████$C1▌$C2▌$C3▌$C0";
+      C3="\x1b[0;37;1m"
+      echo -e "$C0" \
+        "\n$C4  ██$C1▌$C2▌$C3▌$C0   Blueprint Framework" \
+        "\n$C4██  ██$C1▌$C2▌$C3▌$C0 https://blueprint.zip" \
+        "\n$C4  ████$C1▌$C2▌$C3▌$C0 © 2023-2024 Ivy (prpl.wtf)\n";
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
