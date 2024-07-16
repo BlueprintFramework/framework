@@ -20,10 +20,10 @@ function parse_yaml {
         indexfix=0
     fi
 
-    local s='[[:space:]]*' sm='[ \t]*' w='[a-zA-Z0-9_]*' fs=${fs:-$(echo @|tr @ '\034')} i=${i:-  }
+    local s='[[:space:]]*' sm='[ \t]*' w='[a-zA-Z0-9_.]*' fs=${fs:-$(echo @|tr @ '\034')} i=${i:-  }
 
     ###############################################################################
-    # cat:   read the yaml file into the stream
+    # cat:   read the yaml file (or stdin) into the stream
     # awk 1: process multi-line text
     # sed 1: remove comments and empty lines
     # sed 2: process lists
@@ -33,7 +33,7 @@ function parse_yaml {
     # awk 2: convert the formatted data to variable assignments
     ###############################################################################
 
-    < "$1" \
+    echo | cat "${1:--}" - | \
     awk -F"$fs" "{multi=0;
         if(match(\$0,/$sm\|$sm$/)){multi=1; sub(/$sm\|$sm$/,\"\");}
         if(match(\$0,/$sm>$sm$/)){multi=2; sub(/$sm>$sm$/,\"\");}
@@ -123,12 +123,15 @@ function parse_yaml {
             if(vn==\"$prefix\")vn=\"$prefix$separator\";
             if(vn==\"_\")vn=\"__\";
         }
+        gsub(/\./,\"$separator\",full_vn);
+	gsub(/\\\\\"/,\"\\\"\",value);
+	gsub(/'/,\"'\\\"'\\\"'\",value);
         assignment[full_vn]=value;
         if(!match(assignment[vn], full_vn))assignment[vn]=assignment[vn] \" \" full_vn;
         if(match(value,/^\*/)){
             ref=anchor[substr(value,2)];
             if(length(ref)==0){
-                printf(\"%s=\\\"%s\\\"\n\", full_vn, value);
+                printf(\"%s='%s'\n\", full_vn, value);
             } else {
                 for(val in assignment){
                     if((length(ref)>0)&&index(val, ref)==1){
@@ -137,19 +140,19 @@ function parse_yaml {
                         if(match(val,\"$separator\$\")){
                             gsub(ref,full_vn,tmpval);
                         } else if (length(tmpval) > 0) {
-                            printf(\"%s=\\\"%s\\\"\n\", val, tmpval);
+                            printf(\"%s='%s'\n\", val, tmpval);
                         }
                         assignment[val]=tmpval;
                     }
                 }
             }
         } else if (length(value) > 0) {
-            printf(\"%s=\\\"%s\\\"\n\", full_vn, value);
+            printf(\"%s='%s'\n\", full_vn, value);
         }
     }END{
         for(val in assignment){
             if(match(val,\"$separator\$\"))
-                printf(\"%s=\\\"%s\\\"\n\", val, assignment[val]);
+                printf(\"%s='%s'\n\", val, assignment[val]);
         }
     }"
 }
