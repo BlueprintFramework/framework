@@ -42,7 +42,7 @@ Command() {
   cd "$FOLDER/.tmp/files" || cdhalt
   if [[ $1 == "remote" ]]; then
     if [[ $2 == "" ]]; then
-      REMOTE_REPOSITORY="$REPOSITORY"
+      REMOTE_REPOSITORY="https://github.com/$REPOSITORY.git"
     else
       if [[ $2 != "http://"* ]] && [[ $2 != "https://"* ]]; then
         REMOTE_REPOSITORY="https://github.com/$2.git"
