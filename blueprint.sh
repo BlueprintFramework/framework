@@ -220,9 +220,9 @@ if [[ $1 != "-bash" ]]; then
       C2="\x1b[33;42;1m"
       C3="\x1b[34;45;1m"
       echo -e \
-      "\x1b[31;1m  ██\n" \
-      "\x1b[31;1m██  ██\n" \
-      "\x1b[31;1m  ████\n";
+      "$C0$C1  ██$C1▌$C2▌$C3▌" \
+      "\n$C0$C1██  ██$C1▌$C2▌$C3▌" \
+      "\n$C0$C1  ████$C1▌$C2▌$C3▌$C0";
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
