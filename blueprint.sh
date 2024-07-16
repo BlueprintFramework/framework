@@ -241,7 +241,7 @@ if [[ $1 != "-bash" ]]; then
     php artisan storage:link &>> "$BLUEPRINT__DEBUG"
 
     # Copy "Blueprint" extension page logo from assets.
-    cp "$FOLDER/.blueprint/assets/logo.jpg" "$FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg"
+    cp "$FOLDER/.blueprint/assets/Emblem/emblem.jpg" "$FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg"
 
     # Put application into maintenance.
     PRINT INPUT "Would you like to put your application into maintenance while Blueprint is installing? (Y/n)"

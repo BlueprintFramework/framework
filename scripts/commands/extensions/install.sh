@@ -1038,7 +1038,7 @@ InstallExtension() {
     # use random placeholder icon if extension does not
     # come with an icon.
     icnNUM=$(( 1 + RANDOM % 5 ))
-    cp ".blueprint/assets/defaultExtensionLogo$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
+    cp ".blueprint/assets/Extensions/Defaults/$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
   else
     if [[ $icon == *".svg" ]]; then ICON_EXT='svg'; fi
     if [[ $icon == *".png" ]]; then ICON_EXT='png'; fi
