@@ -1,5 +1,5 @@
 @section("extension.header")
-  <img src="{{ $EXTENSION_ICON }}" alt="logo" style="float:left;width:30px;height:30px;border-radius:3px;margin-right:5px;"/>
+  <img src="{{ $EXTENSION_ICON }}" alt="{{ $EXTENSION_ID }}" style="float:left;width:30px;height:30px;border-radius:3px;margin-right:5px;"/>
 
   <button class="btn btn-gray-alt pull-right" style="padding: 5px 10px; margin-left: 7px" data-toggle="modal" data-target="#extensionConfigModal">
     <i class="bx bx-slider"></i>
