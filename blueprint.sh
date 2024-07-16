@@ -215,10 +215,14 @@ if [[ $1 != "-bash" ]]; then
     # Only run if Blueprint is not in the process of upgrading.
     if [[ $1 != "--post-upgrade" ]]; then
       # Print Blueprint icon with ascii characters.
+      C0="\x1b[0m"
+      C1="\x1b[31;1m"
+      C2="\x1b[33;42;1m"
+      C3="\x1b[34;45;1m"
       echo -e \
-      "  ██\n" \
-      "██  ██\n" \
-      "  ████\n";
+      "\x1b[31;1m  ██\n" \
+      "\x1b[31;1m██  ██\n" \
+      "\x1b[31;1m  ████\n";
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
