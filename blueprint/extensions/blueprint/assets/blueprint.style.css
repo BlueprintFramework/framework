@@ -74,9 +74,9 @@ tag[blue] {background-color:#288afb;}
 .extension-btn-image2 {
   position: absolute;
   height: 53%;
-  left: 28px;
+  left: 14px;
   z-index: 4;
-  top: 13px;
+  top: 14px;
   border-radius: 9px;
 }
 .extension-btn-image {

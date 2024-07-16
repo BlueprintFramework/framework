@@ -5,7 +5,12 @@
 @endsection
 
 @section('content-header')
-  <h1>Extensions<small>Manage and configure all of your installed extensions.</small></h1>
+  <h1>
+    Extensions
+    <small>
+      Manage and configure all of your installed extensions.
+    </small>
+  </h1>
   <ol class="breadcrumb">
     <li><a href="{{ route('admin.index') }}">Admin</a></li>
     <li class="active">Extensions</li>
@@ -15,7 +20,7 @@
 @section('content')
   @if(($PlaceholderService->installed() != "NOTINSTALLED") && ($PlaceholderService->version() != "::"."v"))
 
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center" style="padding-left: 0px; padding-right: 20px;">
       <a href="{{ route('admin.extensions.blueprint.index') }}">
         <button class="btn extension-btn" style="width:100%;margin-bottom:17px;">
           <div class="extension-btn-overlay"></div>
@@ -29,7 +34,7 @@
             </span>
             {{ $PlaceholderService->version() }}
           </p>
-          <i class="bi bi-arrow-right-short" style="font-size: 34px;position: absolute;top: 15px;right: 30px;"></i>
+          <i class="bi bi-arrow-right-short" style="font-size: 34px;position: absolute;top: 15px;right: 35px;"></i>
         </button>
       </a>
     </div>
