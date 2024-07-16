@@ -322,7 +322,7 @@ if [[ $1 != "-bash" ]]; then
 fi
 
 Command() {
-  PRINT FATAL "'$1' is not a valid command or argument. Use argument '-help' for a list of commands."
+  PRINT FATAL "'$2' is not a valid command or argument. Use argument '-help' for a list of commands."
 }
 
 case "${2}" in
@@ -334,7 +334,7 @@ case "${2}" in
   -export|-e) source ./scripts/commands/developer/export.sh ;;
   -info|-f) source ./scripts/commands/misc/info.sh ;;
   -debug) source ./scripts/commands/misc/debug.sh ;;
-  -help|-h|help) source ./scripts/commands/misc/help.sh ;;
+  -help|-h|help|'') source ./scripts/commands/misc/help.sh ;;
   -version|-v) source ./scripts/commands/misc/version.sh ;;
   -rerun-install) source ./scripts/commands/advanced/rerun-install.sh ;;
   -upgrade) source ./scripts/commands/advanced/upgrade.sh ;;
