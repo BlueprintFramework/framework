@@ -62,5 +62,13 @@
         ");
       }
     ?>
+
+    /* style content */
+    .content {
+      padding-right: 0px !important;
+    }
+    div.wrapper > div.content-wrapper {
+      min-height: calc(100vh + 15px) !important;
+    }
   </style>
 @endsection
