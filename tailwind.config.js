@@ -1,16 +1,16 @@
 const colors = require('tailwindcss/colors');
 
 const gray = {
-    50: 'var(--tw-50)',
-    100: 'var(--tw-100)',
-    200: 'var(--tw-200)',
-    300: 'var(--tw-300)',
-    400: 'var(--tw-400)',
-    500: 'var(--tw-500)',
-    600: 'var(--tw-600)',
-    700: 'var(--tw-700)',
-    800: 'var(--tw-800)',
-    900: 'var(--tw-900)',
+    50: 'var(--tw-gray-50)',
+    100: 'var(--tw-gray-100)',
+    200: 'var(--tw-gray-200)',
+    300: 'var(--tw-gray-300)',
+    400: 'var(--tw-gray-400)',
+    500: 'var(--tw-gray-500)',
+    600: 'var(--tw-gray-600)',
+    700: 'var(--tw-gray-700)',
+    800: 'var(--tw-gray-800)',
+    900: 'var(--tw-gray-900)',
 };
 
 module.exports = {

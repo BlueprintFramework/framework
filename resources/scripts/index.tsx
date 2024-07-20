@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '@/components/App';
 import { setConfig } from 'react-hot-loader';
+
+// Import Blueprint stylesheets
+import './blueprint/css/tailwind.css';
 import './blueprint/css/extensions.css';
 
 // Enable language support.

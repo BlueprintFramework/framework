@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --tw-gray-50: hsl(216, 33%, 97%);
+  --tw-gray-100: hsl(214, 15%, 91%);
+  --tw-gray-200: hsl(210, 16%, 82%);
+  --tw-gray-300: hsl(211, 13%, 65%);
+  --tw-gray-400: hsl(211, 10%, 53%);
+  --tw-gray-500: hsl(211, 12%, 43%);
+  --tw-gray-600: hsl(209, 14%, 37%);
+  --tw-gray-700: hsl(209, 18%, 30%);
+  --tw-gray-800: hsl(209, 20%, 25%);
+  --tw-gray-900: hsl(210, 24%, 16%);
+}
