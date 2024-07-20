@@ -19,6 +19,6 @@ Route::group(['prefix' => 'extensions/blueprint'], function () {
   Route::get('/', [Admin\Extensions\Blueprint\BlueprintExtensionController::class, 'index'])->name('admin.extensions.blueprint.index');
   Route::patch('/', [Admin\Extensions\Blueprint\BlueprintExtensionController::class, 'update']);
 
-  /* Extension configuration */
+  /* Extension permissions endpoint */
   Route::patch('/config', [Pterodactyl\BlueprintFramework\Controllers\ExtensionConfigurationController::class, 'update']);
 });
