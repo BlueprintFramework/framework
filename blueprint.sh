@@ -4,8 +4,7 @@
 # Learn more @ blueprint.zip
 # Source code available on github.com/blueprintframework/framework
 
-# This should allow Blueprint to run in Docker. Please note that changing the $FOLDER variable after running
-# the Blueprint installation script will not change anything in any files besides blueprint.sh.
+# Variable for telling Blueprint which folder Pterodactyl lives in.
   FOLDER=$(realpath "$(dirname "$0")")
 
 # This stores the webserver ownership user which Blueprint uses when applying webserver permissions.
@@ -16,7 +15,7 @@
   USERSHELL="/bin/bash" #;
 
 # Defines the version Blueprint will display as the active one.
-  VERSION="beta-2024-07"
+  VERSION="beta-2024-08"
 
 # Default GitHub repository to use when upgrading Blueprint.
   REPOSITORY="BlueprintFramework/framework"
