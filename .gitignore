@@ -41,4 +41,3 @@ docker-compose.yaml
 # Ignore Blueprint internal folder and extensions
 .blueprint/
 *.blueprint
-!scripts/commands/misc
