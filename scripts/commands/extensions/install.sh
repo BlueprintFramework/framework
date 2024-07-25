@@ -410,6 +410,7 @@ InstallExtension() {
   if [[ $database_migrations != "" ]]; then
     PRINT INFO "Cloning database migration files.."
     cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2>> "$BLUEPRINT__DEBUG"
+    dbmigrations="true"
   fi
 
   # Place views directory.
@@ -1299,7 +1300,7 @@ Command() {
     -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
     # Database migrations
-    if [[ ( $database_migrations != "" ) && ( $DOCKER != "y" ) ]] || [[ $DeveloperForcedMigrate == "true" ]]; then
+    if [[ ( $db_migrations == "true" ) && ( $DOCKER != "y" ) ]] || [[ $DeveloperForcedMigrate == "true" ]]; then
       if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]] || [[ $DeveloperForcedMigrate == "true" ]]; then
         PRINT INFO "Running database migrations.."
         php artisan migrate --force
