@@ -32,8 +32,8 @@ body:
   id: blueprint-version
   attributes:
     label: Blueprint Version
-    description: Version ID of your Blueprint installation. (`blueprint -v`)
-    placeholder: alpha-NLM
+    description: Version ID of your Blueprint installation. (`blueprint -version`)
+    placeholder: beta-2024-07
   validations:
     required: true
 
@@ -42,7 +42,7 @@ body:
   attributes:
     label: Panel Version
     description: Version number of your Panel. (latest is not a version)
-    placeholder: 1.11.5
+    placeholder: 1.11.7
   validations:
     required: true
 
