@@ -22,6 +22,12 @@
 
 
 
+# Set environment variables.
+export BLUEPRINT__FOLDER=$FOLDER
+export BLUEPRINT__VERSION=$VERSION
+export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
+export NODE_OPTIONS=--openssl-legacy-provider
+
 # Check if the script is being sourced - and if so - load bash autocompletion.
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
   _blueprint_completions() {
@@ -31,8 +37,8 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
     cmd="${COMP_WORDS[1]}"
 
     case "${cmd}" in
-      -install|-add|-i) opts="$(find "$FOLDER"/*.blueprint | sed -e "s|^$FOLDER/||g" -e "s|.blueprint$||g")" ;;
-      -remove|-r) opts="$(sed "s|,||g" "$FOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions")" ;;
+      -install|-add|-i) opts="$(find "$BLUEPRINT__FOLDER"/*.blueprint | sed -e "s|^$BLUEPRINT__FOLDER/||g" -e "s|.blueprint$||g")" ;;
+      -remove|-r) opts="$(sed "s|,||g" "$BLUEPRINT__FOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions")" ;;
       -export) opts="expose" ;;
       -debug) opts="100 200" ;;
       -upgrade) opts="remote" ;;
@@ -71,12 +77,7 @@ if [[ $VERSION != "" ]]; then
   fi
 fi
 
-# Write environment variables.
-export BLUEPRINT__FOLDER=$FOLDER
-export BLUEPRINT__VERSION=$VERSION
-export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
-export NODE_OPTIONS=--openssl-legacy-provider
-# Write internal variables.
+# Set internal variables.
 __BuildDir=".blueprint/extensions/blueprint/private/build"
 
 # Automatically navigate to the Pterodactyl directory when running the script.
