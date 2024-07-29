@@ -28,6 +28,7 @@ export BLUEPRINT__VERSION=$VERSION
 export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
 export NODE_OPTIONS=--openssl-legacy-provider
 
+# FIXME: $BLUEPRINT__FOLDER is undefined in bash, works in zsh
 # Check if the script is being sourced - and if so - load bash autocompletion.
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
   _blueprint_completions() {
