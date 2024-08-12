@@ -33,13 +33,14 @@ export NODE_OPTIONS=--openssl-legacy-provider
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
   _blueprint_completions() {
     local cur cmd opts
+    local folder=$(realpath "$(dirname "$0")")
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     cmd="${COMP_WORDS[1]}"
 
     case "${cmd}" in
-      -install|-add|-i) opts="$(find "$BLUEPRINT__FOLDER"/*.blueprint | sed -e "s|^$BLUEPRINT__FOLDER/||g" -e "s|.blueprint$||g")" ;;
-      -remove|-r) opts="$(sed "s|,||g" "$BLUEPRINT__FOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions")" ;;
+      -install|-add|-i) opts="$(find "$folder"/*.blueprint | sed -e "s|^$folder/||g" -e "s|.blueprint$||g")" ;;
+      -remove|-r) opts="$(sed "s|,||g" "$folder/.blueprint/extensions/blueprint/private/db/installed_extensions")" ;;
       -export) opts="expose" ;;
       -debug) opts="100 200" ;;
       -upgrade) opts="remote" ;;
