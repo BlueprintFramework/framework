@@ -33,14 +33,13 @@ export NODE_OPTIONS=--openssl-legacy-provider
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
   _blueprint_completions() {
     local cur cmd opts
-    local folder=$(realpath "$(dirname "$0")")
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     cmd="${COMP_WORDS[1]}"
 
     case "${cmd}" in
-      -install|-add|-i) opts="$(find "$folder"/*.blueprint | sed -e "s|^$folder/||g" -e "s|.blueprint$||g")" ;;
-      -remove|-r) opts="$(sed "s|,||g" "$folder/.blueprint/extensions/blueprint/private/db/installed_extensions")" ;;
+      -install|-add|-i) opts="$(find "$BLUEPRINT__SOURCEFOLDER"/*.blueprint | sed -e "s|^$BLUEPRINT__SOURCEFOLDER/||g" -e "s|.blueprint$||g")" ;;
+      -remove|-r) opts="$(sed "s|,||g" "$BLUEPRINT__SOURCEFOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions")" ;;
       -export) opts="expose" ;;
       -debug) opts="100 200" ;;
       -upgrade) opts="remote" ;;
@@ -202,7 +201,7 @@ placeshortcut() {
   } >> "$BLUEPRINT__DEBUG"
   echo -e \
     "#!/bin/bash \n" \
-    "if [[ \"\${BASH_SOURCE[0]}\" != \"\${0}\" ]]; then source \"$FOLDER/blueprint.sh\"; return 0; fi; "\
+    "if [[ \"\${BASH_SOURCE[0]}\" != \"\${0}\" ]]; then export BLUEPRINT__SOURCEFOLDER=\"$FOLDER\"; source \"$FOLDER/blueprint.sh\"; return 0; fi; "\
     "bash $FOLDER/blueprint.sh -bash \$@;" \
     > /usr/local/bin/blueprint
 }
