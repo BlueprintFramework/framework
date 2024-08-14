@@ -12,16 +12,22 @@ Command() {
   fetchnode()       { printf "\x1b[0m\x1b[37m"; if [[ $(node -v) != "" ]]; then node -v; else echo "none"; fi }
   fetchyarn()       { printf "\x1b[0m\x1b[37m"; if [[ $(yarn -v) != "" ]]; then yarn -v; else echo "none"; fi }
 
+  local C0="\x1b[0;34;1m"
+  local C1="\x1b[31;43;1m"
+  local C2="\x1b[32;44;1m"
+  local C3="\x1b[34;45;1m"
+  local C3="\x1b[0;37;1m"
+
   echo    " "
-  echo -e "\x1b[34;1m    ⣿⣿    Version: $(fetchversion)"
-  echo -e "\x1b[34;1m  ⣿⣿  ⣿⣿  Folder: $(fetchfolder)"
-  echo -e "\x1b[34;1m    ⣿⣿⣿⣿  URL: $(fetchurl)"
-  echo -e "\x1b[34;1m          Locale: $(fetchlocale)"
-  echo -e "\x1b[34;1m          Timezone: $(fetchtimezone)"
-  echo -e "\x1b[34;1m          Extensions: $(fetchextensions)"
-  echo -e "\x1b[34;1m          Developer: $(fetchdeveloper)"
-  echo -e "\x1b[34;1m          Telemetry: $(fetchtelemetry)"
-  echo -e "\x1b[34;1m          Node: $(fetchnode)"
-  echo -e "\x1b[34;1m          Yarn: $(fetchyarn)"
+  echo -e "  ${C4}██    ${C0}Version: $(fetchversion)"
+  echo -e "${C4}██  ██  ${C0}Folder: $(fetchfolder)"
+  echo -e "${C1}▀▀${C4}████  ${C0}URL: $(fetchurl)"
+  echo -e "  ${C1}▀▀▀▀  ${C0}Locale: $(fetchlocale)"
+  echo -e "        ${C0}Timezone: $(fetchtimezone)"
+  echo -e "        ${C0}Extensions: $(fetchextensions)"
+  echo -e "        ${C0}Developer: $(fetchdeveloper)"
+  echo -e "        ${C0}Telemetry: $(fetchtelemetry)"
+  echo -e "        ${C0}Node: $(fetchnode)"
+  echo -e "        ${C0}Yarn: $(fetchyarn)"
   echo -e "\x1b[0m"
 }
