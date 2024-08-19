@@ -109,4 +109,30 @@ class BlueprintClientLibrary
       return false;
     }
   }
+
+  /**
+   * Returns a HTML link tag importing the specified stylesheet with additional URL params to avoid issues with stylesheet cache.
+   * 
+   * @param string $url Stylesheet URL
+   * @return string HTML <link> tag
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function importStylesheet($url): string {
+    $cache = $this->dbGet("blueprint", "cache");
+    return "<link rel=\"stylesheet\" href=\"$url?v=$cache\">";
+  }
+
+  /**
+   * Returns a HTML script tag importing the specified script with additional URL params to avoid issues with script cache.
+   * 
+   * @param string $url Script URL
+   * @return string HTML <script> tag
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function importScript($url): string {
+    $cache = $this->dbGet("blueprint", "cache");
+    return "<script src=\"$url?v=$cache\"></script>";
+  }
 }
