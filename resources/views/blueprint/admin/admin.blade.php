@@ -10,35 +10,10 @@
 @endsection
 
 @section("blueprint.import")
-  <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="/assets/extensions/blueprint/admin.extensions.css">
-  <link rel="stylesheet" href="/assets/extensions/blueprint/blueprint.style.css">
-@endsection
-
-@section("blueprint.cache")
-  <!-- Begin Blueprint cache-refresh requirement -->
-  <div 
-    id="I0TWHOPKAB-1"
-    class="I0TWHOPKAB-1"
-    style="
-      position: fixed;
-      bottom: 0px;
-      left: 0px;
-      background: rgb(23,23,23);
-      background: linear-gradient(180deg, rgba(23,23,23,1) 0%, rgba(8,8,8,1) 100%);
-      color: white;
-      padding: 0px 10px;
-      width: 100vw;
-      z-index: 6000001;
-      height: auto;"
-    >
-    <p style="font-size: 20px;">
-      <code style="background: none; border: none; color: white !important;">[<i style="margin-left:20px">.</i> <i style="margin-right:3px">.</i>]</code>
-      <code style="background: none; border: none;">Outdated stylesheets detected.</code>
-    </p>
-  </div>
-  <!-- End Blueprint cache-refresh requirement -->
+  {!! $blueprint->importStylesheet('https://unpkg.com/boxicons@latest/css/boxicons.min.css') !!}
+  {!! $blueprint->importStylesheet('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css') !!}
+  {!! $blueprint->importStylesheet('/assets/extensions/blueprint/admin.extensions.css') !!}
+  {!! $blueprint->importStylesheet('/assets/extensions/blueprint/blueprint.style.css') !!}
 @endsection
 
 @section("blueprint.navigation")
