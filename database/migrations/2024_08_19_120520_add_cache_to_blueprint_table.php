@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBlueprintTable extends Migration
+class AddCacheToBlueprintTable extends Migration
 {
   /**
    * Run the migrations.
