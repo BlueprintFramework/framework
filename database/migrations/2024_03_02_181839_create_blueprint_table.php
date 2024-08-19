@@ -15,7 +15,6 @@ class CreateBlueprintTable extends Migration
    */
   public function up()
   {
-    Schema::dropIfExists('blueprint');
     Schema::create('blueprint', function (Blueprint $table) {
       $table->id();
       $table->timestamp('timestamp')->useCurrent()->onUpdate(null);
