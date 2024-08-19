@@ -2,7 +2,7 @@
 # © 2023-2024 Ivy (prpl.wtf)
 
 # Learn more @ blueprint.zip
-# Source code available on github.com/blueprintframework/framework
+# Source code available at github.com/blueprintframework/framework
 
 # Variable for telling Blueprint which folder Pterodactyl lives in.
   FOLDER=$(realpath "$(dirname "$0")")
