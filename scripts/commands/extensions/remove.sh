@@ -109,7 +109,6 @@ RemoveExtension() {
   # Remove admin css
   if [[ $admin_css != "" ]]; then
     PRINT INFO "Removing and unlinking admin css.."
-    updateCacheReminder
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"
   fi
 
@@ -366,6 +365,7 @@ Command() {
       php artisan config:cache
       php artisan route:clear
       php artisan cache:clear
+      php artisan bp:cache
     } &>> "$BLUEPRINT__DEBUG"
 
     # Make sure all files have correct permissions.

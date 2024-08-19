@@ -262,8 +262,8 @@ if [[ $1 != "-bash" ]]; then
       php artisan config:cache
       php artisan route:clear
       php artisan cache:clear
+      php artisan bp:cache
     } &>> "$BLUEPRINT__DEBUG"
-    updateCacheReminder
 
     # Run migrations if Blueprint is not upgrading.
     if [[ ( $1 != "--post-upgrade" ) && ( $DOCKER != "y" ) ]]; then

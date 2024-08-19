@@ -1050,7 +1050,6 @@ InstallExtension() {
 
   if [[ $admin_css != "" ]]; then
     PRINT INFO "Cloning and linking admin css.."
-    updateCacheReminder
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"
     echo -e "@import url(/assets/extensions/$identifier/admin.style.css);" >> ".blueprint/extensions/blueprint/assets/admin.extensions.css"
     cp ".blueprint/tmp/$n/$admin_css" ".blueprint/extensions/$identifier/assets/admin.style.css"
@@ -1289,6 +1288,7 @@ Command() {
       php artisan config:cache
       php artisan route:clear
       if [[ $KeepApplicationCache != "true" ]]; then php artisan cache:clear; fi
+      php artisan bp:cache
     } &>> "$BLUEPRINT__DEBUG"
 
     # Make sure all files have correct permissions.
