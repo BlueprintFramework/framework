@@ -5,7 +5,7 @@ namespace Pterodactyl\Console\Commands\BlueprintFramework;
 use Illuminate\Console\Command;
 use Pterodactyl\BlueprintFramework\Services\ConfigService\BlueprintConfigService;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
-use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
+use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 
 class SyncCommand extends Command
