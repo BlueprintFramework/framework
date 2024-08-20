@@ -1308,7 +1308,7 @@ Command() {
         read -r YN
       fi
 
-      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]] || [[ ( $DeveloperForcedMigrate == "true" ) || ( $dev != true ) ]]; then
+      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]] || [[ ( $DeveloperForcedMigrate == "true" ) && ( $dev == true ) ]]; then
         PRINT INFO "Running database migrations.."
         php artisan migrate --force
       else
