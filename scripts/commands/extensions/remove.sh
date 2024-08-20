@@ -166,6 +166,8 @@ RemoveExtension() {
     REMOVE_REACT "$Components_Navigation_SubNavigation_AfterSubNavigation" "Navigation/SubNavigation/AfterSubNavigation.tsx"
 
     # dashboard
+    REMOVE_REACT "$Components_Dashboard_BeforeContent" "Dashboard/BeforeContent.tsx"
+    REMOVE_REACT "$Components_Dashboard_AfterContent" "Dashboard/AfterContent.tsx"
     REMOVE_REACT "$Components_Dashboard_ServerRow_BeforeEntryName" "Dashboard/ServerRow/BeforeEntryName.tsx"
     REMOVE_REACT "$Components_Dashboard_ServerRow_AfterEntryName" "Dashboard/ServerRow/AfterEntryName.tsx"
     REMOVE_REACT "$Components_Dashboard_ServerRow_BeforeEntryDescription" "Dashboard/ServerRow/BeforeEntryDescription.tsx"

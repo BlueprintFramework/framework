@@ -748,6 +748,8 @@ InstallExtension() {
       PLACE_REACT "$Components_Navigation_SubNavigation_AfterSubNavigation" "Navigation/SubNavigation/AfterSubNavigation.tsx" "$OldComponents_Navigation_SubNavigation_AfterSubNavigation"
 
       # dashboard
+      PLACE_REACT "$Components_Dashboard_BeforeContent" "Dashboard/BeforeContent.tsx" "$OldComponents_Dashboard_BeforeContent"
+      PLACE_REACT "$Components_Dashboard_AfterContent" "Dashboard/AfterContent.tsx" "$OldComponents_Dashboard_AfterContent"
       PLACE_REACT "$Components_Dashboard_ServerRow_BeforeEntryName" "Dashboard/ServerRow/BeforeEntryName.tsx" "$OldComponents_Dashboard_ServerRow_BeforeEntryName"
       PLACE_REACT "$Components_Dashboard_ServerRow_AfterEntryName" "Dashboard/ServerRow/AfterEntryName.tsx" "$OldComponents_Dashboard_ServerRow_AfterEntryName"
       PLACE_REACT "$Components_Dashboard_ServerRow_BeforeEntryDescription" "Dashboard/ServerRow/BeforeEntryDescription.tsx" "$OldComponents_Dashboard_ServerRow_BeforeEntryDescription"
