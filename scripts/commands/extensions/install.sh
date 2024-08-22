@@ -1138,8 +1138,7 @@ InstallExtension() {
   if [[ $DUPLICATE != "y" ]]; then
     # Place admin route if extension is not updating.
     PRINT INFO "Editing admin routes.."
-    { echo "
-    // $identifier:start";
+    { echo "// $identifier:start";
     echo "$ADMINROUTE_RESULT";
     echo // "$identifier":stop; } >> "routes/blueprint.php"
   else
