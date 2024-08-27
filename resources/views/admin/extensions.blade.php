@@ -67,8 +67,8 @@
     .content {
       padding-right: 0px !important;
     }
-    div.wrapper > div.content-wrapper {
-      min-height: calc(100vh + 15px) !important;
+    footer.main-footer {
+      display: none; /* duct-tape fix for weird element related bugs*/
     }
   </style>
 @endsection
