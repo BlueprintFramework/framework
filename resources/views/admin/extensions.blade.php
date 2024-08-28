@@ -64,11 +64,14 @@
     ?>
 
     /* style content */
-    .content {
-      padding-right: 0px !important;
+    a:has(button.btn.extension-btn) { 
+      height: 96px;
+      display: inline-block;
+      width: 100%;
     }
-    footer.main-footer {
-      display: none; /* duct-tape fix for weird element related bugs*/
+    section.content {
+      padding-right: 0px !important;
+      display: inline-block !important;
     }
   </style>
 @endsection
