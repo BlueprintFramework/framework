@@ -17,7 +17,7 @@
 @endsection
 
 @section("extension.description")
-  <p>{{ $EXTENSION_DESCRIPTION }}</p>
+  <p class="ext-description">{{ $EXTENSION_DESCRIPTION }}</p>
 @endsection
 
 @section("extension.config")
@@ -106,5 +106,9 @@
       border-bottom-left-radius: 0px !important;
       border-bottom-right-radius: 0px !important;
     }
+
+    section.content { padding-top: 7px !important; }
+    section.content-header > h1 { margin-top: 3px !important; }
+    .ext-description { padding-bottom: 10px; }
   </style>
 @endsection

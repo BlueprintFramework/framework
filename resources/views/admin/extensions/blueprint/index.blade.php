@@ -31,7 +31,7 @@
 @endsection
 
 @section('content')
-  <p>Blueprint is the framework that powers all Blueprint-compatible extensions, enabling multiple extensions to be installed and used simultaneously.</p>
+  <p class="ext-description">Blueprint is the framework that powers all Blueprint-compatible extensions, enabling multiple extensions to be installed and used simultaneously.</p>
   <div class="row">
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
 
@@ -89,4 +89,11 @@
   </div>
 
   <p style="text-align: center"><img src="/assets/extensions/blueprint/byte.png" class="byte-img"></p>
+
+
+  <style>
+    section.content { padding-top: 7px !important; }
+    section.content-header > h1 { margin-top: 3px !important; }
+    .ext-description { padding-bottom: 10px; }
+  </style>
 @endsection
