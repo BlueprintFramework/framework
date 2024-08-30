@@ -74,6 +74,7 @@
     section.content {
       padding-right: 0px !important;
       display: inline-block !important;
+      width: 100% !important;
     }
   </style>
 @endsection
