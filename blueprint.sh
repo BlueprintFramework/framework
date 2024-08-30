@@ -40,7 +40,6 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
       -install|-add|-i) opts="$(find "$BLUEPRINT__SOURCEFOLDER"/*.blueprint | sed -e "s|^$BLUEPRINT__SOURCEFOLDER/||g" -e "s|.blueprint$||g")" ;;
       -remove|-r) opts="$(sed "s|,||g" "$BLUEPRINT__SOURCEFOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions")" ;;
       -export) opts="expose" ;;
-      -debug) opts="100 200" ;;
       -upgrade) opts="remote" ;;
       
       *) opts="-install -add -remove -init -build -export -wipe -version -help -info -debug -upgrade -rerun-install" ;;
