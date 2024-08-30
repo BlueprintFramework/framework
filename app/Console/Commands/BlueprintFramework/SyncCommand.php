@@ -10,7 +10,7 @@ use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 
 class SyncCommand extends Command
 {
-  protected $description = 'Sync Blueprint database values.';
+  protected $description = 'Sync Blueprint configuration settings with Blueprint\'s command line utility.';
   protected $signature = 'bp:sync';
 
   /**
