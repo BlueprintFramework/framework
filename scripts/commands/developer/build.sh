@@ -8,6 +8,11 @@ Command() {
     PRINT FATAL "Development directory is empty."
     exit 2
   fi
+
+  if [[ -f ".blueprint/dev/.gitkeep" ]]; then
+    rm .blueprint/dev/.gitkeep 2>> "$BLUEPRINT__DEBUG"
+  fi
+
   PRINT INFO "Starting developer extension installation.."
   blueprint -add "[developer-build]"
 }
