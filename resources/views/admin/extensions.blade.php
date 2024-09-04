@@ -50,7 +50,7 @@
   @endif
 
   <style>
-    /* backwards compatibility */
+    /* backwards compatibility - waiting on slate implementation */
     <?php
       if($ExtensionLibrary->extension("slate")) {
         echo("
