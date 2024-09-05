@@ -16,7 +16,7 @@ import { ip } from '@/lib/formatters';
 import { Button } from '@/components/elements/button/index';
 
 import BeforeContent from '@/blueprint/components/Server/Settings/BeforeContent';
-import AfterContent  from '@/blueprint/components/Server/Settings/AfterContent';
+import AfterContent from '@/blueprint/components/Server/Settings/AfterContent';
 
 export default () => {
     const username = useStoreState((state) => state.user.data!.username);

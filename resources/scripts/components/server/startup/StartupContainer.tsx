@@ -17,7 +17,7 @@ import InputSpinner from '@/components/elements/InputSpinner';
 import useFlash from '@/plugins/useFlash';
 
 import BeforeContent from '@/blueprint/components/Server/Startup/BeforeContent';
-import AfterContent  from '@/blueprint/components/Server/Startup/AfterContent';
+import AfterContent from '@/blueprint/components/Server/Startup/AfterContent';
 
 const StartupContainer = () => {
     const [loading, setLoading] = useState(false);

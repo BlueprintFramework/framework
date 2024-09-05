@@ -12,7 +12,7 @@ import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import Pagination from '@/components/elements/Pagination';
 
 import BeforeContent from '@/blueprint/components/Server/Backups/BeforeContent';
-import AfterContent  from '@/blueprint/components/Server/Backups/AfterContent';
+import AfterContent from '@/blueprint/components/Server/Backups/AfterContent';
 
 const BackupContainer = () => {
     const { page, setPage } = useContext(ServerBackupContext);

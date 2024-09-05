@@ -14,7 +14,7 @@ import isEqual from 'react-fast-compare';
 import { useDeepCompareEffect } from '@/plugins/useDeepCompareEffect';
 
 import BeforeContent from '@/blueprint/components/Server/Network/BeforeContent';
-import AfterContent  from '@/blueprint/components/Server/Network/AfterContent';
+import AfterContent from '@/blueprint/components/Server/Network/AfterContent';
 
 const NetworkContainer = () => {
     const [loading, setLoading] = useState(false);

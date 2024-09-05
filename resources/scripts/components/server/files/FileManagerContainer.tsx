@@ -24,8 +24,8 @@ import { hashToPath } from '@/helpers';
 import style from './style.module.css';
 
 import BeforeContent from '@/blueprint/components/Server/Files/Browse/BeforeContent';
-import FileButtons   from '@/blueprint/components/Server/Files/Browse/FileButtons';
-import AfterContent  from '@/blueprint/components/Server/Files/Browse/AfterContent';
+import FileButtons from '@/blueprint/components/Server/Files/Browse/FileButtons';
+import AfterContent from '@/blueprint/components/Server/Files/Browse/AfterContent';
 
 const sortFiles = (files: FileObject[]): FileObject[] => {
     const sortedFiles: FileObject[] = files

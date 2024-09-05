@@ -17,8 +17,8 @@ import useWebsocketEvent from '@/plugins/useWebsocketEvent';
 import classNames from 'classnames';
 import { capitalize } from '@/lib/strings';
 
-import BeforeInformation  from '@/blueprint/components/Server/Terminal/BeforeInformation';
-import AfterInformation  from '@/blueprint/components/Server/Terminal/AfterInformation';
+import BeforeInformation from '@/blueprint/components/Server/Terminal/BeforeInformation';
+import AfterInformation from '@/blueprint/components/Server/Terminal/AfterInformation';
 
 type Stats = Record<'memory' | 'cpu' | 'disk' | 'uptime' | 'rx' | 'tx', number>;
 

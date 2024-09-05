@@ -15,7 +15,7 @@ import { Button } from '@/components/elements/button/index';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 
 import BeforeContent from '@/blueprint/components/Server/Schedules/List/BeforeContent';
-import AfterContent  from '@/blueprint/components/Server/Schedules/List/AfterContent';
+import AfterContent from '@/blueprint/components/Server/Schedules/List/AfterContent';
 
 export default () => {
     const match = useRouteMatch();
