@@ -6,7 +6,7 @@ import FlashMessageRender from '@/components/FlashMessageRender';
 import tw from 'twin.macro';
 
 import BeforeContent from '@/blueprint/components/Authentication/Container/BeforeContent';
-import AfterContent  from '@/blueprint/components/Authentication/Container/AfterContent';
+import AfterContent from '@/blueprint/components/Authentication/Container/AfterContent';
 
 type Props = React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> & {
     title?: string;
