@@ -11,11 +11,11 @@ import Spinner from '@/components/elements/Spinner';
 import styled from 'styled-components/macro';
 import isEqual from 'react-fast-compare';
 
-import BeforeEntryName        from '@/blueprint/components/Dashboard/ServerRow/BeforeEntryName';
-import AfterEntryName         from '@/blueprint/components/Dashboard/ServerRow/AfterEntryName';
+import BeforeEntryName from '@/blueprint/components/Dashboard/ServerRow/BeforeEntryName';
+import AfterEntryName from '@/blueprint/components/Dashboard/ServerRow/AfterEntryName';
 import BeforeEntryDescription from '@/blueprint/components/Dashboard/ServerRow/BeforeEntryDescription';
-import AfterEntryDescription  from '@/blueprint/components/Dashboard/ServerRow/AfterEntryDescription';
-import ResourceLimits         from '@/blueprint/components/Dashboard/ServerRow/ResourceLimits';
+import AfterEntryDescription from '@/blueprint/components/Dashboard/ServerRow/AfterEntryDescription';
+import ResourceLimits from '@/blueprint/components/Dashboard/ServerRow/ResourceLimits';
 
 // Determines if the current value is in an alarm threshold so we can show it in red rather
 // than the more faded default style.

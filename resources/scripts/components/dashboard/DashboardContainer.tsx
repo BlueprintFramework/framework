@@ -15,7 +15,7 @@ import Pagination from '@/components/elements/Pagination';
 import { useLocation } from 'react-router-dom';
 
 import BeforeContent from '@/blueprint/components/Dashboard/BeforeContent';
-import AfterContent  from '@/blueprint/components/Dashboard/AfterContent';
+import AfterContent from '@/blueprint/components/Dashboard/AfterContent';
 
 export default () => {
     const { search } = useLocation();

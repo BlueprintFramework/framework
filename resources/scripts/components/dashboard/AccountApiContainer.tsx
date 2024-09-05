@@ -16,7 +16,7 @@ import { useFlashKey } from '@/plugins/useFlash';
 import Code from '@/components/elements/Code';
 
 import BeforeContent from '@/blueprint/components/Account/API/BeforeContent';
-import AfterContent  from '@/blueprint/components/Account/API/AfterContent';
+import AfterContent from '@/blueprint/components/Account/API/AfterContent';
 
 export default () => {
     const [deleteIdentifier, setDeleteIdentifier] = useState('');

@@ -14,7 +14,7 @@ import CreateSSHKeyForm from '@/components/dashboard/ssh/CreateSSHKeyForm';
 import DeleteSSHKeyButton from '@/components/dashboard/ssh/DeleteSSHKeyButton';
 
 import BeforeContent from '@/blueprint/components/Account/SSH/BeforeContent';
-import AfterContent  from '@/blueprint/components/Account/SSH/AfterContent';
+import AfterContent from '@/blueprint/components/Account/SSH/AfterContent';
 
 export default () => {
     const { clearAndAddHttpError } = useFlashKey('account');
