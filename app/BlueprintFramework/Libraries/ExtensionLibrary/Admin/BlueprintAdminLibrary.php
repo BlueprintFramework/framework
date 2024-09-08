@@ -165,7 +165,6 @@ class BlueprintAdminLibrary
     $extensions = array_filter($array, function($value) {
       return !empty($value);
     });
-    if($extensions == []) { return [""]; }
     return $extensions;
   }
 
