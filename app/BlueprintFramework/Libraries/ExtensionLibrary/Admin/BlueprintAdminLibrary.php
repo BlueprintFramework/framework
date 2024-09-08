@@ -110,7 +110,7 @@ class BlueprintAdminLibrary
   }
 
   /**
-   * Attempts to (non-recursively) create a file.
+   * Attempts to create a file.
    * 
    * @param string $path File name/path
    * @return void
@@ -124,17 +124,23 @@ class BlueprintAdminLibrary
   }
 
   /**
-   * Attempts to (recursively) remove a file/folder.
-   * It's good practice to terminate this function after a certain timeout, to prevent infinite page loads upon input. Blueprint attempts to use `yes` as an input for all questions, but might not succeed.
+   * Attempts to remove a file or directory.
    * 
-   * @param string $path Path to file/folder
-   * @return string Empty string unless error
-   * @throws string Errors encountered by `rm` shell utility
+   * @param string $path Path to file/directory
+   * @return void
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function fileWipe($path) {
-    return shell_exec("yes | rm -r ".escapeshellarg($path).";");
+    if(is_dir($path)) {
+      $files = array_diff(scandir($path), ['.', '..']);
+      foreach ($files as $file) {
+        $this->fileWipe($path . DIRECTORY_SEPARATOR . $file);
+      }
+      rmdir($path);
+    } elseif (is_file($path)) {
+      unlink($path);
+    }
   }
 
   /**
