@@ -70,14 +70,14 @@ class BlueprintClientLibrary
    * Attempts to (non-recursively) create a file.
    * 
    * @param string $path File name/path
-   * @return string Empty string unless error
-   * @throws string Errors encountered by `touch` shell utility
+   * @return void
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function fileMake($path) {
+  public function fileMake($path): void {
     $file = fopen($path, "w");
     fclose($file);
+    return;
   }
 
   /**
