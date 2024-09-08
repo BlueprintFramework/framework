@@ -58,12 +58,19 @@ class BlueprintConsoleLibrary
    * 
    * @param string $path Path to file
    * @return string File contents
-   * @throws string Errors encountered by `cat` shell utility
+   * @throws string File cannot be read or found
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function fileRead($path) {
-    return shell_exec("cat ".escapeshellarg($path).";");
+    if (!file_exists($path)) {
+      return "File not found: " . $path;
+    }
+    if (!is_readable($path)) {
+      return "File is not readable: " . $path;
+    }
+
+    return file_get_contents($path);
   }
 
   /**
