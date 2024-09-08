@@ -1248,7 +1248,7 @@ InstallExtension() {
 
   if [[ $DUPLICATE != "y" ]]; then
     PRINT INFO "Adding '$identifier' to active extensions list.."
-    echo "${identifier}," >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
+    printf "%s," "${identifier}" >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
   fi
 
   if [[ $dev != true ]]; then
