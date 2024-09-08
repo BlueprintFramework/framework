@@ -111,6 +111,21 @@ class BlueprintClientLibrary
   }
 
   /**
+   * Returns an array containing all installed extensions's identifiers.
+   * 
+   * @return array Array
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function extensionList(): array {
+    $array = explode(',', $this->fileRead(base_path(".blueprint/extensions/blueprint/private/db/installed_extensions")));
+    $extensions = array_filter($array, function($value) {
+      return !empty($value);
+    });
+    return $extensions;
+  }
+
+  /**
    * Returns a HTML link tag importing the specified stylesheet with additional URL params to avoid issues with stylesheet cache.
    * 
    * @param string $url Stylesheet URL
