@@ -77,6 +77,6 @@ Contributors help shape the future of the Blueprint modding framework. To start 
 
 <br/><br/>
 <p align="center">
-  $\color{#4b4950}{\textsf{© 2023-2024 Ivy (prpl.wtf)}}$
+  $\color{#4b4950}{\textsf{© 2023-2024 Emma (prpl.wtf)}}$
   <br/><br/><img src="https://github.com/BlueprintFramework/framework/assets/103201875/a04ba717-fb6c-4bb6-9cd2-71643c0b659b"/>
 </p>
