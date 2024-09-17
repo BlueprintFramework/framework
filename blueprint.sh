@@ -1,5 +1,5 @@
 #!/bin/bash
-# © 2023-2024 Ivy (prpl.wtf)
+# © 2023-2024 Emma (prpl.wtf)
 
 # Learn more @ blueprint.zip
 # Source code available at github.com/blueprintframework/framework
@@ -224,7 +224,7 @@ if [[ $1 != "-bash" ]]; then
       echo -e "$C0" \
         "\n$C4  ██$C1▌$C2▌$C3▌$C0   Blueprint Framework" \
         "\n$C4██  ██$C1▌$C2▌$C3▌$C0 https://blueprint.zip" \
-        "\n$C4  ████$C1▌$C2▌$C3▌$C0 © 2023-2024 Ivy (prpl.wtf)\n";
+        "\n$C4  ████$C1▌$C2▌$C3▌$C0 © 2023-2024 Emma (prpl.wtf)\n";
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
