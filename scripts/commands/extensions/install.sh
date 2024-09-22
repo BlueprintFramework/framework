@@ -579,33 +579,35 @@ InstallExtension() {
             ApplyConsoleInterval() {
               sed -i "s~\[SCHEDULE\]~${1}()~g" "$ScheduleConstructor"
             }
-            if [[ $CONSOLE_ENTRY_INTE == "everyMinute"         ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyMinute";         fi
-            if [[ $CONSOLE_ENTRY_INTE == "everyTwoMinutes"     ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyTwoMinutes";     fi
-            if [[ $CONSOLE_ENTRY_INTE == "everyThreeMinutes"   ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyThreeMinutes";   fi
-            if [[ $CONSOLE_ENTRY_INTE == "everyFourMinutes"    ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyFourMinutes";    fi
-            if [[ $CONSOLE_ENTRY_INTE == "everyFiveMinutes"    ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyFiveMinutes";    fi
-            if [[ $CONSOLE_ENTRY_INTE == "everyTenMinutes"     ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyTenMinutes";     fi
-            if [[ $CONSOLE_ENTRY_INTE == "everyFifteenMinutes" ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyFifteenMinutes"; fi
-            if [[ $CONSOLE_ENTRY_INTE == "everyThirtyMinutes"  ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "everyThirtyMinutes";  fi
-            if [[ $CONSOLE_ENTRY_INTE == "hourly"              ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "hourly";              fi
-            if [[ $CONSOLE_ENTRY_INTE == "daily"               ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily";               fi
-            if [[ $CONSOLE_ENTRY_INTE == "weekdays"            ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->weekdays";   fi
-            if [[ $CONSOLE_ENTRY_INTE == "weekends"            ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->weekends";   fi
-            if [[ $CONSOLE_ENTRY_INTE == "sundays"             ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->sundays";    fi
-            if [[ $CONSOLE_ENTRY_INTE == "mondays"             ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->mondays";    fi
-            if [[ $CONSOLE_ENTRY_INTE == "tuesdays"            ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->tuesdays";   fi
-            if [[ $CONSOLE_ENTRY_INTE == "wednesdays"          ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->wednesdays"; fi
-            if [[ $CONSOLE_ENTRY_INTE == "thursdays"           ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->thursdays";  fi
-            if [[ $CONSOLE_ENTRY_INTE == "fridays"             ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->fridays";    fi
-            if [[ $CONSOLE_ENTRY_INTE == "saturdays"           ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "daily()->saturdays";  fi
-            if [[ $CONSOLE_ENTRY_INTE == "weekly"              ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "weekly";              fi
-            if [[ $CONSOLE_ENTRY_INTE == "monthly"             ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "monthly";             fi
-            if [[ $CONSOLE_ENTRY_INTE == "quarterly"           ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "quarterly";           fi
-            if [[ $CONSOLE_ENTRY_INTE == "yearly"              ]]; then SCHEDULE_SET="true"; ApplyConsoleInterval "yearly";              fi
+
+            case "${CONSOLE_ENTRY_INTE}" in
+              everyMinute)         ApplyConsoleInterval "everyMinute" ;;
+              everyTwoMinutes)     ApplyConsoleInterval "everyTwoMinutes" ;;
+              everyThreeMinutes)   ApplyConsoleInterval "everyThreeMinutes" ;;
+              everyFourMinutes)    ApplyConsoleInterval "everyFourMinutes" ;;
+              everyFiveMinutes)    ApplyConsoleInterval "everyFiveMinutes" ;;
+              everyTenMinutes)     ApplyConsoleInterval "everyTenMinutes" ;;
+              everyFifteenMinutes) ApplyConsoleInterval "everyFifteenMinutes" ;;
+              everyThirtyMinutes)  ApplyConsoleInterval "everyThirtyMinutes" ;;
+              hourly)              ApplyConsoleInterval "hourly" ;;
+              daily)               ApplyConsoleInterval "daily" ;;
+              weekdays)            ApplyConsoleInterval "daily()->weekdays" ;;
+              weekends)            ApplyConsoleInterval "daily()->weekends" ;;
+              sundays)             ApplyConsoleInterval "daily()->sundays" ;;
+              mondays)             ApplyConsoleInterval "daily()->mondays" ;;
+              tuesdays)            ApplyConsoleInterval "daily()->tuesdays" ;;
+              wednesdays)          ApplyConsoleInterval "daily()->wednesdays" ;;
+              thursdays)           ApplyConsoleInterval "daily()->thursdays" ;;
+              fridays)             ApplyConsoleInterval "daily()->fridays" ;;
+              saturdays)           ApplyConsoleInterval "daily()->saturdays" ;;
+              weekly)              ApplyConsoleInterval "weekly" ;;
+              monthly)             ApplyConsoleInterval "monthly" ;;
+              quarterly)           ApplyConsoleInterval "quarterly" ;;
+              yearly)              ApplyConsoleInterval "yearly" ;;
             
-            if [[ "$SCHEDULE_SET" == "false" ]]; then
-              sed -i "s~\[SCHEDULE\]~cron('$CONSOLE_ENTRY_INTE')~g" "$ScheduleConstructor"
-            fi
+              *)                   sed -i "s~\[SCHEDULE\]~cron('$CONSOLE_ENTRY_INTE')~g" "$ScheduleConstructor" ;;
+            esac
+            
             cat "$ScheduleConstructor" >> "app/BlueprintFramework/Schedules/${identifier^}Schedules.php"
           fi
 
