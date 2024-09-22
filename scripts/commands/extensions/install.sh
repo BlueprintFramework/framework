@@ -179,14 +179,13 @@ InstallExtension() {
 
     # FIXME: Use case statements instead!
 
-    # Change link icon depending on website url.
-    local websiteiconclass="bx bx-link-external"
+    case "${website}" in
+      *"://github.com"* | *"://"*".github.com"*) local websiteiconclass="bx bx-git-branch" ;;  # GitHub
+      *"://gitlab.io"* | *"://"*".gitlab.io"*) local websiteiconclass="bx bx-git-branch" ;;    # GitLab
+      
+      *) local websiteiconclass="bx bx-link-external" ;;
+    esac
 
-    # git
-    if [[ $website == *"://github.com/"*        ]] || [[ $website == *"://www.github.com/"*        ]] \
-    || [[ $website == *"://github.com"          ]] || [[ $website == *"://www.github.com"          ]] \
-    || [[ $website == *"://gitlab.com/"*        ]] || [[ $website == *"://www.gitlab.com/"*        ]] \
-    || [[ $website == *"://gitlab.com"          ]] || [[ $website == *"://www.gitlab.com"          ]]; then local websiteiconclass="bx bx-git-branch";fi
     # marketplaces
     if [[ $website == *"://sourcexchange.net/"* ]] || [[ $website == *"://www.sourcexchange.net/"* ]] \
     || [[ $website == *"://sourcexchange.net"   ]] || [[ $website == *"://www.sourcexchange.net"   ]] \
