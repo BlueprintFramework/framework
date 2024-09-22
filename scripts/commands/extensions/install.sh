@@ -180,21 +180,14 @@ InstallExtension() {
     # FIXME: Use case statements instead!
 
     case "${website}" in
-      *"://github.com"* | *"://"*".github.com"*) local websiteiconclass="bx bx-git-branch" ;;  # GitHub
-      *"://gitlab.io"* | *"://"*".gitlab.io"*) local websiteiconclass="bx bx-git-branch" ;;    # GitLab
+      *"://github.com"* | *"://"*".github.com"*)               local websiteiconclass="bx bx-git-branch" ;; # GitHub
+      *"://gitlab.io"* | *"://"*".gitlab.io"*)                 local websiteiconclass="bx bx-git-branch" ;; # GitLab
+      *"://sourcexchange.net"* | *"://"*".sourcexchange.net"*) local websiteiconclass="bx bx-store" ;;      # sourceXchange
+      *"://builtbybit.com"* | *"://"*".builtbybit.com"*)       local websiteiconclass="bx bx-store" ;;      # BuiltByBit
       
       *) local websiteiconclass="bx bx-link-external" ;;
     esac
-
-    # marketplaces
-    if [[ $website == *"://sourcexchange.net/"* ]] || [[ $website == *"://www.sourcexchange.net/"* ]] \
-    || [[ $website == *"://sourcexchange.net"   ]] || [[ $website == *"://www.sourcexchange.net"   ]] \
-    || [[ $website == *"://builtbybit.com/"*    ]] || [[ $website == *"://www.builtbybit.com/"*    ]] \
-    || [[ $website == *"://builtbybit.com"      ]] || [[ $website == *"://www.builtbybit.com"      ]] \
-    || [[ $website == *"://builtbyb.it/"*       ]] || [[ $website == *"://www.builtbyb.it/"*       ]] \
-    || [[ $website == *"://builtbyb.it"         ]] || [[ $website == *"://www.builtbyb.it"         ]] \
-    || [[ $website == *"://bbyb.it/"*           ]] || [[ $website == *"://www.bbyb.it/"*           ]] \
-    || [[ $website == *"://bbyb.it"             ]] || [[ $website == *"://www.bbyb.it"             ]]; then local websiteiconclass="bx bx-store";fi
+    
     # discord
     if [[ $website == *"://discord.com/"*       ]] || [[ $website == *"://www.discord.com/"*       ]] \
     || [[ $website == *"://discord.com"         ]] || [[ $website == *"://www.discord.com"         ]] \
