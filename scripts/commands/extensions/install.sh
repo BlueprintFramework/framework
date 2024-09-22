@@ -177,6 +177,8 @@ InstallExtension() {
     fi
 
 
+    # FIXME: Use case statements instead!
+
     # Change link icon depending on website url.
     local websiteiconclass="bx bx-link-external"
 
