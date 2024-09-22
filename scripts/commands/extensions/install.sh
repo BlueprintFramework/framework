@@ -176,9 +176,6 @@ InstallExtension() {
       local conf_info_website="${website}"
     fi
 
-
-    # FIXME: Use case statements instead!
-
     case "${website}" in
       *"://github.com"* | *"://"*".github.com"*)               local websiteiconclass="bx bx-git-branch" ;;   # GitHub
       *"://gitlab.io"* | *"://"*".gitlab.io"*)                 local websiteiconclass="bx bx-git-branch" ;;   # GitLab
@@ -189,13 +186,6 @@ InstallExtension() {
       
       *) local websiteiconclass="bx bx-link-external" ;;
     esac
-
-    # reddit
-    if [[ $website == *"://reddit.com/"*        ]] || [[ $website == *"://www.reddit.com/"*        ]] \
-    || [[ $website == *"://reddit.com"          ]] || [[ $website == *"://www.reddit.com"          ]]; then local websiteiconclass="bx bxl-reddit";fi
-    # trello
-    if [[ $website == *"://trello.com/"*        ]] || [[ $website == *"://www.trello.com/"*        ]] \
-    || [[ $website == *"://trello.com"          ]] || [[ $website == *"://www.trello.com"          ]]; then local websiteiconclass="bx bxl-trello";fi
   fi
 
   if [[ $dev == true ]]; then
