@@ -1017,18 +1017,20 @@ InstallExtension() {
   fi
   ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/assets" "$FOLDER/public/assets/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
 
-  ICON_EXT="jpg"
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
     # come with an icon.
     icnNUM=$(( 1 + RANDOM % 5 ))
     cp ".blueprint/assets/Extensions/Defaults/$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
   else
-    if [[ $icon == *".svg" ]]; then ICON_EXT='svg'; fi
-    if [[ $icon == *".png" ]]; then ICON_EXT='png'; fi
-    if [[ $icon == *".gif" ]]; then ICON_EXT='gif'; fi
-    if [[ $icon == *".jpeg" ]]; then ICON_EXT='jpeg'; fi
-    if [[ $icon == *".webp" ]]; then ICON_EXT='webp'; fi
+    case "${icon}" in
+      *.svg) local ICON_EXT="svg" ;;
+      *.png) local ICON_EXT="png" ;;
+      *.gif) local ICON_EXT="gif" ;;
+      *.jpeg) local ICON_EXT="jpeg" ;;
+      *.webp) local ICON_EXT="webp" ;;
+      *) local ICON_EXT="jpg" ;;
+    esac
     cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
   fi;
   ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
