@@ -185,13 +185,11 @@ InstallExtension() {
       *"://sourcexchange.net"* | *"://"*".sourcexchange.net"*) local websiteiconclass="bx bx-store" ;;        # sourceXchange
       *"://builtbybit.com"* | *"://"*".builtbybit.com"*)       local websiteiconclass="bx bx-store" ;;        # BuiltByBit
       *"://discord.gg"* | *"://"*".discord.gg"*)               local websiteiconclass="bx bxl-discord-alt" ;; # Discord
+      *"://patreon.com"* | *"://"*".patreon.com"*)             local websiteiconclass="bx bxl-patreon" ;;     # Patreon
       
       *) local websiteiconclass="bx bx-link-external" ;;
     esac
 
-    # patreon
-    if [[ $website == *"://patreon.com/"*       ]] || [[ $website == *"://www.patreon.com/"*       ]] \
-    || [[ $website == *"://patreon.com"         ]] || [[ $website == *"://www.patreon.com"         ]]; then local websiteiconclass="bx bxl-patreon";fi
     # reddit
     if [[ $website == *"://reddit.com/"*        ]] || [[ $website == *"://www.reddit.com/"*        ]] \
     || [[ $website == *"://reddit.com"          ]] || [[ $website == *"://www.reddit.com"          ]]; then local websiteiconclass="bx bxl-reddit";fi
