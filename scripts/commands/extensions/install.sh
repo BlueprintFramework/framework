@@ -183,6 +183,9 @@ InstallExtension() {
       *"://builtbybit.com"* | *"://"*".builtbybit.com"*)       local websiteiconclass="bx bx-store" ;;        # BuiltByBit
       *"://discord.gg"* | *"://"*".discord.gg"*)               local websiteiconclass="bx bxl-discord-alt" ;; # Discord
       *"://patreon.com"* | *"://"*".patreon.com"*)             local websiteiconclass="bx bxl-patreon" ;;     # Patreon
+      *"://twitch.tv"* | *"://"*".twitch.tv"*)                 local websiteiconclass="bx bxl-twitch" ;;      # Twitch
+      *"://youtube.com"* | *"://"*".youtube.com"*)             local websiteiconclass="bx bxl-youtube" ;;     # YouTube
+      *"://ko-fi.com"* | *"://"*".ko-fi.com"*)                 local websiteiconclass="bx bxs-heart" ;;       # Ko-fi
       
       *) local websiteiconclass="bx bx-link-external" ;;
     esac
