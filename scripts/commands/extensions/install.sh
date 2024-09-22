@@ -180,19 +180,15 @@ InstallExtension() {
     # FIXME: Use case statements instead!
 
     case "${website}" in
-      *"://github.com"* | *"://"*".github.com"*)               local websiteiconclass="bx bx-git-branch" ;; # GitHub
-      *"://gitlab.io"* | *"://"*".gitlab.io"*)                 local websiteiconclass="bx bx-git-branch" ;; # GitLab
-      *"://sourcexchange.net"* | *"://"*".sourcexchange.net"*) local websiteiconclass="bx bx-store" ;;      # sourceXchange
-      *"://builtbybit.com"* | *"://"*".builtbybit.com"*)       local websiteiconclass="bx bx-store" ;;      # BuiltByBit
+      *"://github.com"* | *"://"*".github.com"*)               local websiteiconclass="bx bx-git-branch" ;;   # GitHub
+      *"://gitlab.io"* | *"://"*".gitlab.io"*)                 local websiteiconclass="bx bx-git-branch" ;;   # GitLab
+      *"://sourcexchange.net"* | *"://"*".sourcexchange.net"*) local websiteiconclass="bx bx-store" ;;        # sourceXchange
+      *"://builtbybit.com"* | *"://"*".builtbybit.com"*)       local websiteiconclass="bx bx-store" ;;        # BuiltByBit
+      *"://discord.gg"* | *"://"*".discord.gg"*)               local websiteiconclass="bx bxl-discord-alt" ;; # Discord
       
       *) local websiteiconclass="bx bx-link-external" ;;
     esac
-    
-    # discord
-    if [[ $website == *"://discord.com/"*       ]] || [[ $website == *"://www.discord.com/"*       ]] \
-    || [[ $website == *"://discord.com"         ]] || [[ $website == *"://www.discord.com"         ]] \
-    || [[ $website == *"://discord.gg/"*        ]] || [[ $website == *"://www.discord.gg/"*        ]] \
-    || [[ $website == *"://discord.gg"          ]] || [[ $website == *"://www.discord.gg"          ]]; then local websiteiconclass="bx bxl-discord-alt";fi
+
     # patreon
     if [[ $website == *"://patreon.com/"*       ]] || [[ $website == *"://www.patreon.com/"*       ]] \
     || [[ $website == *"://patreon.com"         ]] || [[ $website == *"://www.patreon.com"         ]]; then local websiteiconclass="bx bxl-patreon";fi
