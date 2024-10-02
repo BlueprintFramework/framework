@@ -18,7 +18,7 @@ body:
     
 - type: textarea      
   attributes:
-    label: Explaination
+    label: Explanation
     description: Please explain what your feature request aims to achieve in detail.
   validations:
     required: true
