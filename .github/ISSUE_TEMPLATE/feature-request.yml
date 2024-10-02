@@ -1,0 +1,32 @@
+name: Feature request
+description: Request a new feature or enhancement
+labels: [enhancement]
+body:
+- type: dropdown
+  id: scope
+  attributes:
+    label: Scope
+    description: Provide which scope this feature request is about.
+    options:
+      - CLI
+      - Extension development
+      - Extension API
+      - Compatibility
+      - Other
+  validations:
+    required: true
+    
+- type: textarea      
+  attributes:
+    label: Explaination
+    description: Please explain what your feature request aims to achieve in detail.
+  validations:
+    required: true
+
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please [search here](https://github.com/BlueprintFramework/framework/issues) to see if an issue already exists for your feature request.
+    options:
+    - label: I have searched the existing issues before opening this issue.
+      required: true
