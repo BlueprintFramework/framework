@@ -1,11 +1,11 @@
-name: Bug Report
+name: Bug report
 description: Something isn't working quite right.
 labels: [bug]
 body:
 - type: markdown
   attributes:
     value: |
-      Bug reports should only be used for reporting issues with how the software works. For installation help or general support, please create a forum post in our [Discord community](https://discord.gg/RQQkdZQwEJ).
+      Bug reports should only be used for reporting issues with how the software works. For installation help or general support, please open a [discussion post](https://github.com/orgs/BlueprintFramework/discussions).
 
 - type: textarea      
   attributes:
@@ -33,7 +33,7 @@ body:
   attributes:
     label: Blueprint Version
     description: Version ID of your Blueprint installation. (`blueprint -version`)
-    placeholder: beta-2024-07
+    placeholder: beta-2024-08
   validations:
     required: true
 
