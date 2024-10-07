@@ -22,3 +22,5 @@ Route::group(['prefix' => 'extensions/blueprint'], function () {
   /* Extension permissions endpoint */
   Route::patch('/config', [Pterodactyl\BlueprintFramework\Controllers\ExtensionConfigurationController::class, 'update']);
 });
+
+//
