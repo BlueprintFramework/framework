@@ -38,7 +38,7 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
 
     case "${cmd}" in
       -install|-add|-i) opts="$(find "$BLUEPRINT__SOURCEFOLDER"/*.blueprint | sed -e "s|^$BLUEPRINT__SOURCEFOLDER/||g" -e "s|.blueprint$||g")" ;;
-      -remove|-r) opts="$(sed "s|,||g" "$BLUEPRINT__SOURCEFOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions")" ;;
+      -remove|-r) opts="$(sed "s|,| |g" "$BLUEPRINT__SOURCEFOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions")" ;;
       -export) opts="expose" ;;
       -upgrade) opts="remote" ;;
       
