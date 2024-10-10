@@ -47,13 +47,20 @@ RemoveExtension() {
     local data_console="$conf_data_console"; #(optional)
 
     local requests_views="$conf_requests_views"; #(optional)
-    local requests_controllers="$conf_requests_controllers"; #(optional)
+    local requests_app="$conf_requests_app"; #(optional)
     local requests_routers="$conf_requests_routers"; #(optional)
     local requests_routers_application="$conf_requests_routers_application"; #(optional)
     local requests_routers_client="$conf_requests_routers_client"; #(optional)
     local requests_routers_web="$conf_requests_routers_web"; #(optional)
 
     local database_migrations="$conf_database_migrations"; #(optional)
+
+
+    # Add backwards compatibility
+    if [[ $conf_requests_controllers != "" ]]; then
+      local requests_app="$conf_requests_controllers"
+      PRINT WARNING "Config value 'requests_controllers' is deprecated, use 'requests_app' instead."
+    fi
   else
     PRINT FATAL "Extension configuration file not found or detected."
     return 1
@@ -258,11 +265,11 @@ RemoveExtension() {
       "resources/views/blueprint/extensions/$identifier"
   fi
 
-  # Remove controllers folder
-  if [[ $requests_controllers != "" ]]; then
-    PRINT INFO "Removing and unlinking controllers folder.."
+  # Remove app folder
+  if [[ $requests_app != "" ]]; then
+    PRINT INFO "Removing and unlinking app folder.."
     rm -R \
-      ".blueprint/extensions/$identifier/controllers" \
+      ".blueprint/extensions/$identifier/app" \
       "app/BlueprintFramework/Extensions/$identifier"
   fi
 
