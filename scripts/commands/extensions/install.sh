@@ -76,7 +76,7 @@ InstallExtension() {
   local data_console="$conf_data_console"; #(optional)
 
   local requests_views="$conf_requests_views"; #(optional)
-  local requests_controllers="$conf_requests_controllers"; #(optional)
+  local requests_app="$conf_requests_app"; #(optional)
   local requests_routers="$conf_requests_routers"; #(optional)
   local requests_routers_application="$conf_requests_routers_application"; #(optional)
   local requests_routers_client="$conf_requests_routers_client"; #(optional)
@@ -92,6 +92,10 @@ InstallExtension() {
   && [[ $requests_routers             != "" ]]; then
     local requests_routers_application="$requests_routers"
   fi
+  if [[ $conf_requests_controllers != "" ]]; then
+    local requests_app="$conf_requests_controllers"
+    PRINT WARNING "Config value 'requests_controllers' is deprecated, use 'requests_app' instead."
+  fi
 
   # "prevent" folder "escaping"
   if [[ ( $icon                         == "/"* ) || ( $icon                         == *"/.."* ) || ( $icon                         == *"../"* ) || ( $icon                         == *"/../"* ) || ( $icon                         == *"~"* ) || ( $icon                         == *"\\"* ) ]] \
@@ -106,7 +110,7 @@ InstallExtension() {
   || [[ ( $data_public                  == "/"* ) || ( $data_public                  == *"/.."* ) || ( $data_public                  == *"../"* ) || ( $data_public                  == *"/../"* ) || ( $data_public                  == *"~"* ) || ( $data_public                  == *"\\"* ) ]] \
   || [[ ( $data_console                 == "/"* ) || ( $data_console                 == *"/.."* ) || ( $data_console                 == *"../"* ) || ( $data_console                 == *"/../"* ) || ( $data_console                 == *"~"* ) || ( $data_console                 == *"\\"* ) ]] \
   || [[ ( $requests_views               == "/"* ) || ( $requests_views               == *"/.."* ) || ( $requests_views               == *"../"* ) || ( $requests_views               == *"/../"* ) || ( $requests_views               == *"~"* ) || ( $requests_views               == *"\\"* ) ]] \
-  || [[ ( $requests_controllers         == "/"* ) || ( $requests_controllers         == *"/.."* ) || ( $requests_controllers         == *"../"* ) || ( $requests_controllers         == *"/../"* ) || ( $requests_controllers         == *"~"* ) || ( $requests_controllers         == *"\\"* ) ]] \
+  || [[ ( $requests_app                 == "/"* ) || ( $requests_app                 == *"/.."* ) || ( $requests_app                 == *"../"* ) || ( $requests_app                 == *"/../"* ) || ( $requests_app                 == *"~"* ) || ( $requests_app                 == *"\\"* ) ]] \
   || [[ ( $requests_routers_application == "/"* ) || ( $requests_routers_application == *"/.."* ) || ( $requests_routers_application == *"../"* ) || ( $requests_routers_application == *"/../"* ) || ( $requests_routers_application == *"~"* ) || ( $requests_routers_application == *"\\"* ) ]] \
   || [[ ( $requests_routers_client      == "/"* ) || ( $requests_routers_client      == *"/.."* ) || ( $requests_routers_client      == *"../"* ) || ( $requests_routers_client      == *"/../"* ) || ( $requests_routers_client      == *"~"* ) || ( $requests_routers_client      == *"\\"* ) ]] \
   || [[ ( $requests_routers_web         == "/"* ) || ( $requests_routers_web         == *"/.."* ) || ( $requests_routers_web         == *"../"* ) || ( $requests_routers_web         == *"/../"* ) || ( $requests_routers_web         == *"~"* ) || ( $requests_routers_web         == *"\\"* ) ]] \
@@ -122,7 +126,7 @@ InstallExtension() {
   || [[ ( $data_public == *"/"          ) ]] \
   || [[ ( $data_console == *"/"         ) ]] \
   || [[ ( $requests_views == *"/"       ) ]] \
-  || [[ ( $requests_controllers == *"/" ) ]] \
+  || [[ ( $requests_app == *"/"         ) ]] \
   || [[ ( $database_migrations == *"/"  ) ]]; then
     rm -R ".blueprint/tmp/$n"
     PRINT FATAL "Directory paths in conf.yml should not end with a slash."
@@ -360,7 +364,7 @@ InstallExtension() {
     [[ ( ! -d ".blueprint/tmp/$n/$data_directory"               ) && ( ${data_directory} != ""               ) ]] ||    # folder: data_directory               (optional)
     [[ ( ! -d ".blueprint/tmp/$n/$data_public"                  ) && ( ${data_public} != ""                  ) ]] ||    # folder: data_public                  (optional)
     [[ ( ! -d ".blueprint/tmp/$n/$requests_views"               ) && ( ${requests_views} != ""               ) ]] ||    # folder: requests_views               (optional)
-    [[ ( ! -d ".blueprint/tmp/$n/$requests_controllers"         ) && ( ${requests_controllers} != ""         ) ]] ||    # folder: requests_controllers         (optional)
+    [[ ( ! -d ".blueprint/tmp/$n/$requests_app"                 ) && ( ${requests_app} != ""                 ) ]] ||    # folder: requests_app                 (optional)
     [[ ( ! -f ".blueprint/tmp/$n/$requests_routers_application" ) && ( ${requests_routers_application} != "" ) ]] ||    # file:   requests_routers_application (optional)
     [[ ( ! -f ".blueprint/tmp/$n/$requests_routers_client"      ) && ( ${requests_routers_client} != ""      ) ]] ||    # file:   requests_routers_client      (optional)
     [[ ( ! -f ".blueprint/tmp/$n/$requests_routers_web"         ) && ( ${requests_routers_web} != ""         ) ]] ||    # file:   requests_routers_web         (optional)
@@ -402,12 +406,12 @@ InstallExtension() {
     ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/views" "$FOLDER/resources/views/blueprint/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
   fi
 
-  # Place controllers directory.
-  if [[ $requests_controllers != "" ]]; then
-    PRINT INFO "Cloning and linking controllers directory.."
-    mkdir -p ".blueprint/extensions/$identifier/controllers"
-    cp -R ".blueprint/tmp/$n/$requests_controllers/"* ".blueprint/extensions/$identifier/controllers/" 2>> "$BLUEPRINT__DEBUG"
-    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/controllers" "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
+  # Place app directory.
+  if [[ $requests_app != "" ]]; then
+    PRINT INFO "Cloning and linking app directory.."
+    mkdir -p ".blueprint/extensions/$identifier/app"
+    cp -R ".blueprint/tmp/$n/$requests_app/"* ".blueprint/extensions/$identifier/app/" 2>> "$BLUEPRINT__DEBUG"
+    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/app" "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
   fi
 
   # Place routes directory.
