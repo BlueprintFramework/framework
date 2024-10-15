@@ -1,14 +1,25 @@
 <?php
 
-// THIS IS FOR BACKWARDS COMPATABILITY ONLY!
-// 
-// This file will be removed in later versions of Blueprint to
-// give developers the time to move to the new location of the
-// extension library.
-
-
-
-
+/**
+ * BlueprintExtensionLibrary (Backwards compatibility)
+ *
+ * BlueprintLegacyLibrary provides backwards-compatibility for older
+ * extensions. Functions are deprecated, unmaintained and slowly phased out.
+ * Consider using maintained versions of BlueprintExtensionLibrary.
+ *
+ * Certain functions are being phased out and return "false" instead of the
+ * correct value. Consider switching to maintained versions to prevent your
+ * extension from breaking with future updates.
+ *
+ * @category   BlueprintExtensionLibrary
+ * @package    BlueprintLegacyLibrary
+ * @author     Emma <hello@prpl.wtf>
+ * @copyright  2023-2024 Emma (prpl.wtf)
+ * @license    https://blueprint.zip/docs/?page=about/License MIT License
+ * @link       https://blueprint.zip/docs/?page=documentation/$blueprint
+ * @since      indev
+ * @deprecated alpha
+ */
 
 namespace Pterodactyl\Services\Helpers;
 
@@ -17,73 +28,24 @@ use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlacehol
 
 class BlueprintExtensionLibrary
 {
-  // Construct BlueprintExtensionLibrary
   public function __construct(
     private SettingsRepositoryInterface $settings,
     private BlueprintPlaceholderService $placeholder,
   ) {
   }
 
-
-  /*
-  | Databasing
-  |
-  | dbGet("table", "record");
-  | dbSet("table", "record", "value");
-  */
   public function dbGet($table, $record) {
     return $this->settings->get($table."::".$record);
   }
-
   public function dbSet($table, $record, $value) {
     return $this->settings->set($table."::".$record, $value);
   }
 
+  public function notify($text) { return false; }
+  public function notifyAfter($delay, $text) { return false; }
+  public function notifyNow($text) { return false; }
 
-  /*
-  | Notifications
-  |
-  | notify("text");
-  | notifyAfter(delay, "text");
-  | notifyNow("text");
-  */
-  public function notify($text) {
-    $this->dbSet("blueprint", "notification:text", $text);
-    shell_exec("cd ".escapeshellarg($this->placeholder->folder()).";echo ".escapeshellarg($text)." > .blueprint/extensions/blueprint/private/db/notification;");
-    return;
-  }
-
-  public function notifyAfter($delay, $text) {
-    $this->dbSet("blueprint", "notification:text", $text);
-    shell_exec("cd ".escapeshellarg($this->placeholder->folder()).";echo ".escapeshellarg($text)." > .blueprint/extensions/blueprint/private/db/notification;");
-    header("Refresh:$delay");
-    return;
-  }
-
-  public function notifyNow($text) {
-    $this->dbSet("blueprint", "notification:text", $text);
-    shell_exec("cd ".escapeshellarg($this->placeholder->folder()).";echo ".escapeshellarg($text)." > .blueprint/extensions/blueprint/private/db/notification;");
-    header("Refresh:0");
-    return;
-  }
-
-
-  /*
-  | Files
-  | 
-  | fileRead("path");
-  | fileMake("path");
-  | fileWipe("path");
-  */
-  public function fileRead($path) {
-    return shell_exec("cat ".escapeshellarg($path).";");
-  }
-
-  public function fileMake($path) {
-    return shell_exec("touch ".escapeshellarg($path).";");
-  }
-
-  public function fileWipe($path) {
-    return shell_exec("rm ".escapeshellarg($path).";");
-  }
+  public function fileRead($path) { return false; }
+  public function fileMake($path) { return false; }
+  public function fileWipe($path) { return false; }
 }
