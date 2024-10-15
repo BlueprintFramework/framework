@@ -1,7 +1,16 @@
 <?php
 
-// Core file for the admin-side library for Blueprint Extensions
-
+/**
+ * BlueprintExtensionLibrary (Admin variation)
+ *
+ * @category   BlueprintExtensionLibrary
+ * @package    BlueprintAdminLibrary
+ * @author     Emma <hello@prpl.wtf>
+ * @copyright  2023-2024 Emma (prpl.wtf)
+ * @license    https://blueprint.zip/docs/?page=about/License MIT License
+ * @link       https://blueprint.zip/docs/?page=documentation/$blueprint
+ * @since      alpha
+ */
 
 namespace Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin;
 
