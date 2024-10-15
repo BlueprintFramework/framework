@@ -20,12 +20,18 @@ class BlueprintConsoleLibrary
    * 
    * @param string $table Database table
    * @param string $record Database record
+   * @param mixed $default Optional. Returns this value when value is null.
    * @return mixed Database value
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function dbGet($table, $record): mixed {
-    return $this->settings->get($table."::".$record);
+  public function dbGet($table, $record, $default = null): mixed {
+    $value = $this->settings->get($table."::".$record);
+    if($value) {
+      return $value;
+    } else {
+      return $default;
+    }
   }
 
   /**
