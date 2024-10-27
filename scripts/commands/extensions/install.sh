@@ -1298,20 +1298,9 @@ Command() {
     -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
     # Database migrations
-    if [[ ( $dbmigrations == "true" ) && ( $DOCKER != "y" ) ]] \
-    || [[ ( $DeveloperForcedMigrate == "true" ) && ( $dev == true ) ]]; then
-
-      if [[ ( $DeveloperForcedMigrate != "true" ) || ( $dev != true ) ]]; then
-        PRINT INPUT "Would you like to migrate your database? (Y/n)"
-        read -r YN
-      fi
-
-      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]] || [[ ( $DeveloperForcedMigrate == "true" ) && ( $dev == true ) ]]; then
+    if [[ ( $dbmigrations == "true" ) && ( $DOCKER != "y" ) ]]; then
         PRINT INFO "Running database migrations.."
         php artisan migrate --force
-      else
-        PRINT INFO "Database migrations have been skipped."
-      fi
     fi
 
     if [[ $BuiltExtensions == "" ]]; then
