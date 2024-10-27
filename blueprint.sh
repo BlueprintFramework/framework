@@ -173,7 +173,6 @@ assignflags() {
   F_hasExportScript=false
   F_developerIgnoreInstallScript=false
   F_developerIgnoreRebuild=false
-  F_developerForceMigrate=false
   F_developerKeepApplicationCache=false
   F_developerEscalateInstallScript=false
   F_developerEscalateExportScript=false
@@ -184,7 +183,6 @@ assignflags() {
   if [[ ( $flags == *"hasExportScript,"*                ) || ( $flags == *"hasExportScript"                ) ]]; then F_hasExportScript=true                ;fi
   if [[ ( $flags == *"developerIgnoreInstallScript,"*   ) || ( $flags == *"developerIgnoreInstallScript"   ) ]]; then F_developerIgnoreInstallScript=true   ;fi
   if [[ ( $flags == *"developerIgnoreRebuild,"*         ) || ( $flags == *"developerIgnoreRebuild"         ) ]]; then F_developerIgnoreRebuild=true         ;fi
-  if [[ ( $flags == *"developerForceMigrate,"*          ) || ( $flags == *"developerForceMigrate"          ) ]]; then F_developerForceMigrate=true          ;fi
   if [[ ( $flags == *"developerKeepApplicationCache,"*  ) || ( $flags == *"developerKeepApplicationCache"  ) ]]; then F_developerKeepApplicationCache=true  ;fi
   if [[ ( $flags == *"developerEscalateInstallScript,"* ) || ( $flags == *"developerEscalateInstallScript" ) ]]; then F_developerEscalateInstallScript=true ;fi
   if [[ ( $flags == *"developerEscalateExportScript,"*  ) || ( $flags == *"developerEscalateExportScript"  ) ]]; then F_developerEscalateExportScript=true  ;fi
