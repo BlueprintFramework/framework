@@ -90,7 +90,7 @@ InstallExtension() {
   && [[ $requests_routers_client      == "" ]] \
   && [[ $requests_routers_web         == "" ]] \
   && [[ $requests_routers             != "" ]]; then
-    local requests_routers_application="$requests_routers"
+    local requests_routers_web="$requests_routers"
   fi
   if [[ $conf_requests_controllers != "" ]]; then
     local requests_app="$conf_requests_controllers"
