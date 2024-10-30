@@ -168,9 +168,6 @@ depend() {
 assignflags() {
   F_ignorePlaceholders=false
   F_forceLegacyPlaceholders=false
-  F_hasInstallScript=false
-  F_hasRemovalScript=false
-  F_hasExportScript=false
   F_developerIgnoreInstallScript=false
   F_developerIgnoreRebuild=false
   F_developerKeepApplicationCache=false
@@ -178,14 +175,38 @@ assignflags() {
   F_developerEscalateExportScript=false
   if [[ ( $flags == *"ignorePlaceholders,"*             ) || ( $flags == *"ignorePlaceholders"             ) ]]; then F_ignorePlaceholders=true             ;fi
   if [[ ( $flags == *"forceLegacyPlaceholders,"*        ) || ( $flags == *"forceLegacyPlaceholders"        ) ]]; then F_forceLegacyPlaceholders=true        ;fi
-  if [[ ( $flags == *"hasInstallScript,"*               ) || ( $flags == *"hasInstallScript"               ) ]]; then F_hasInstallScript=true               ;fi
-  if [[ ( $flags == *"hasRemovalScript,"*               ) || ( $flags == *"hasRemovalScript"               ) ]]; then F_hasRemovalScript=true               ;fi
-  if [[ ( $flags == *"hasExportScript,"*                ) || ( $flags == *"hasExportScript"                ) ]]; then F_hasExportScript=true                ;fi
   if [[ ( $flags == *"developerIgnoreInstallScript,"*   ) || ( $flags == *"developerIgnoreInstallScript"   ) ]]; then F_developerIgnoreInstallScript=true   ;fi
   if [[ ( $flags == *"developerIgnoreRebuild,"*         ) || ( $flags == *"developerIgnoreRebuild"         ) ]]; then F_developerIgnoreRebuild=true         ;fi
   if [[ ( $flags == *"developerKeepApplicationCache,"*  ) || ( $flags == *"developerKeepApplicationCache"  ) ]]; then F_developerKeepApplicationCache=true  ;fi
   if [[ ( $flags == *"developerEscalateInstallScript,"* ) || ( $flags == *"developerEscalateInstallScript" ) ]]; then F_developerEscalateInstallScript=true ;fi
   if [[ ( $flags == *"developerEscalateExportScript,"*  ) || ( $flags == *"developerEscalateExportScript"  ) ]]; then F_developerEscalateExportScript=true  ;fi
+
+
+  warn_deprecated_flag() { PRINT WARNING "Extension flag '$1' is deprecated."; }
+  
+  F_hasInstallScript=false
+  if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
+    warn_deprecated_flag "hasInstallScript"
+    F_hasInstallScript=true
+  fi
+
+  F_hasRemovalScript=false
+  if [[ ( $flags == *"hasRemovalScript,"* ) || ( $flags == *"hasRemovalScript" ) ]]; then
+    warn_deprecated_flag "hasRemovalScript"
+    F_hasRemovalScript=true
+  fi
+  
+  F_hasExportScript=false
+  if [[ ( $flags == *"hasExportScript,"* ) || ( $flags == *"hasExportScript" ) ]]; then
+    warn_deprecated_flag "hasExportScript"
+    F_hasExportScript=true
+  fi
+  
+  F_developerForceMigrate=false
+  if [[ ( $flags == *"developerForceMigrate,"* ) || ( $flags == *"developerForceMigrate" ) ]]; then
+    warn_deprecated_flag "developerForceMigrate"
+    F_developerForceMigrate=true
+  fi
 }
 
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
