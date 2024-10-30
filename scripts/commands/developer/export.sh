@@ -24,8 +24,8 @@ Command() {
   PRINT INFO "Reading and assigning extension flags.."
   assignflags
 
-  if $F_hasExportScript; then
-    chmod +x "${conf_data_directory}""/export.sh"
+  if [[ -f "${conf_data_directory}/export.sh" ]]; then
+    chmod +x "${conf_data_directory}/export.sh"
 
     # Run script while also parsing some useful variables for the export script to use.
     if $F_developerEscalateExportScript; then

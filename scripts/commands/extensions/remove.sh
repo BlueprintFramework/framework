@@ -73,7 +73,7 @@ RemoveExtension() {
   PRINT INFO "Reading and assigning extension flags.."
   assignflags
 
-  if $F_hasRemovalScript; then
+  if [[ -f ".blueprint/extensions/$identifier/private/remove.sh" ]]; then
     PRINT WARNING "Extension uses a custom removal script, proceed with caution."
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
 

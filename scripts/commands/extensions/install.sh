@@ -374,23 +374,6 @@ InstallExtension() {
     return 1
   fi
 
-  # Validate custom script paths.
-  if [[ $F_hasInstallScript == true || $F_hasRemovalScript == true || $F_hasExportScript == true ]]; then
-    if [[ $data_directory == "" ]]; then
-      rm -R ".blueprint/tmp/$n"
-      PRINT FATAL "Install/Remove/Export script requires private folder to be enabled."
-      return 1
-    fi
-
-    if [[ $F_hasInstallScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/install.sh" ]] \
-    || [[ $F_hasRemovalScript == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/remove.sh"  ]] \
-    || [[ $F_hasExportScript  == true ]] && [[ ! -f ".blueprint/tmp/$n/$data_directory/export.sh"  ]]; then
-      rm -R ".blueprint/tmp/$n"
-      PRINT FATAL "Install/Remove/Export script could not be found or detected, even though enabled."
-      return 1
-    fi
-  fi
-
   # Place database migrations.
   if [[ $database_migrations != "" ]]; then
     PRINT INFO "Cloning database migration files.."
@@ -1206,7 +1189,7 @@ InstallExtension() {
   chmod --silent -R +x ".blueprint/extensions/"* 2>> "$BLUEPRINT__DEBUG"
 
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
-    if $F_hasInstallScript; then
+    if [[ -f ".blueprint/extensions/$identifier/private/install.sh" ]]; then
       PRINT WARNING "Extension uses a custom installation script, proceed with caution."
       chmod --silent +x ".blueprint/extensions/$identifier/private/install.sh" 2>> "$BLUEPRINT__DEBUG"
 
