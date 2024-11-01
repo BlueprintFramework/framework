@@ -1148,14 +1148,12 @@ InstallExtension() {
   # Create extension filesystem (ExtensionFS/PrivateFS)
   PRINT INFO "Creating and linking extension filesystem.."
 
-  # ExtensionFS
   mkdir -p ".blueprint/extensions/$identifier/fs"
-  ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/fs" "$FOLDER/storage/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
-  ln -s -r -T "$FOLDER/storage/extensions/$identifier" "$FOLDER/public/fs/$identifier" 2>> "$BLUEPRINT__DEBUG"
-
-  # PrivateFS
-  mkdir -p ".blueprint/extensions/$identifier/.fs"
-  ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/.fs" "$FOLDER/storage/.extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
+  {
+    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/fs" "$FOLDER/storage/extensions/$identifier"
+    ln -s -r -T "$FOLDER/storage/extensions/$identifier" "$FOLDER/public/fs/$identifier"
+    ln -s -r -T "$FOLDER/storage/.extensions/$identifier" "$FOLDER/.blueprint/extensions/$identifier/private"
+  } 2>> "$BLUEPRINT__DEBUG"
 
   if [[ $DUPLICATE == "y" ]]; then
     sed -i \
