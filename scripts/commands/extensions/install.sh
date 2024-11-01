@@ -828,9 +828,9 @@ InstallExtension() {
           cp "$__BuildDir/extensions/routes/serverRouteConstructor" "$ServerRouteConstructor"
         } 2>> "$BLUEPRINT__DEBUG"
 
-        sed -i "s~\[id\^]~""${identifier^}""~g" $ImportConstructor
-        sed -i "s~\[id\^]~""${identifier^}""~g" $AccountRouteConstructor
-        sed -i "s~\[id\^]~""${identifier^}""~g" $ServerRouteConstructor
+        sed -i "s~\[id\^]~""${identifier^}""~g" "$ImportConstructor"
+        sed -i "s~\[id\^]~""${identifier^}""~g" "$AccountRouteConstructor"
+        sed -i "s~\[id\^]~""${identifier^}""~g" "$ServerRouteConstructor"
 
         for parent in $Components_Navigation_Routes_; do
           parent="${parent}_"
