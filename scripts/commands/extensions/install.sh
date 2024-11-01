@@ -712,6 +712,10 @@ InstallExtension() {
       # -> PLACE_REACT "$Components_" "path/.tsx" "$OldComponents_"
 
 
+      # global
+      PLACE_REACT "$Components_Global_BeforeApplication" "Global/BeforeApplication.tsx" "$OldComponents_Global_BeforeApplication"
+      PLACE_REACT "$Components_Global_AfterApplication" "Global/AfterApplication.tsx" "$OldComponents_Global_AfterApplication"
+
       # navigation
       PLACE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx" "$OldComponents_Navigation_NavigationBar_BeforeNavigation"
       PLACE_REACT "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx" "$OldComponents_Navigation_NavigationBar_AdditionalItems"

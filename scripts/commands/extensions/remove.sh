@@ -163,6 +163,10 @@ RemoveExtension() {
     # -> REMOVE_REACT "$Components_" "path/.tsx" "$OldComponents_"
 
 
+    # global
+    REMOVE_REACT "$Components_Global_BeforeApplication" "Global/BeforeApplication.tsx"
+    REMOVE_REACT "$Components_Global_AfterApplication" "Global/AfterApplication.tsx"
+
     # navigation
     REMOVE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
     REMOVE_REACT "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
