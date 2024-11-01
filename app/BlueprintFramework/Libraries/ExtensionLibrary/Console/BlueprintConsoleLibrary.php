@@ -78,14 +78,14 @@ class BlueprintConsoleLibrary
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function fileRead($path) {
-    if (!file_exists($path)) {
+    if (!file_exists(filename: $path)) {
       return "File not found: " . $path;
     }
-    if (!is_readable($path)) {
+    if (!is_readable(filename: $path)) {
       return "File is not readable: " . $path;
     }
 
-    return file_get_contents($path);
+    return file_get_contents(filename: $path);
   }
 
   /**
@@ -97,8 +97,8 @@ class BlueprintConsoleLibrary
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function fileMake($path): void {
-    $file = fopen($path, "w");
-    fclose($file);
+    $file = fopen(filename: $path, mode: "w");
+    fclose(stream: $file);
     return;
   }
 
@@ -110,15 +110,15 @@ class BlueprintConsoleLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function fileWipe($path) {
-    if(is_dir($path)) {
-      $files = array_diff(scandir($path), ['.', '..']);
+  public function fileWipe($path): void {
+    if(is_dir(filename: $path)) {
+      $files = array_diff(array: scandir(directory: $path), arrays: ['.', '..']);
       foreach ($files as $file) {
-        $this->fileWipe($path . DIRECTORY_SEPARATOR . $file);
+        $this->fileWipe(path: $path . DIRECTORY_SEPARATOR . $file);
       }
-      rmdir($path);
-    } elseif (is_file($path)) {
-      unlink($path);
+      rmdir(directory: $path);
+    } elseif (is_file(filename: $path)) {
+      unlink(filename: $path);
     }
   }
 
@@ -131,7 +131,7 @@ class BlueprintConsoleLibrary
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function extension($identifier): bool {
-    if(str_contains($this->fileRead(base_path(".blueprint/extensions/blueprint/private/db/installed_extensions")), $identifier.',')) {
+    if(str_contains(haystack: $this->fileRead(path: base_path(".blueprint/extensions/blueprint/private/db/installed_extensions")), needle: $identifier.',')) {
       return true;
     } else {
       return false;
@@ -146,8 +146,8 @@ class BlueprintConsoleLibrary
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function extensionList(): array {
-    $array = explode(',', $this->fileRead(base_path(".blueprint/extensions/blueprint/private/db/installed_extensions")));
-    $extensions = array_filter($array, function($value) {
+    $array = explode(separator: ',', string: $this->fileRead(path: base_path(".blueprint/extensions/blueprint/private/db/installed_extensions")));
+    $extensions = array_filter(array: $array, callback: function($value): bool {
       return !empty($value);
     });
     return $extensions;
