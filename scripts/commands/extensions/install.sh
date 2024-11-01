@@ -1272,6 +1272,7 @@ Command() {
       php artisan route:clear
       if [[ $KeepApplicationCache != "true" ]]; then php artisan cache:clear; fi
       php artisan bp:cache
+      php artisan queue:restart
     } &>> "$BLUEPRINT__DEBUG"
 
     # Make sure all files have correct permissions.
