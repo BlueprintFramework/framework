@@ -82,34 +82,28 @@ class BlueprintAdminLibrary
   }
 
   /**
-   * Display a notification on the Pterodactyl admin panel and refresh the page after a certain delay.
+   * (Deprecated) Display a notification on the Pterodactyl admin panel and refresh the page after a certain delay.
    * 
+   * @deprecated beta-2024-11
    * @param string $delay Refresh after (in seconds)
    * @param string $text Notification contents
    * @return void Nothing is returned
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function notifyAfter($delay, $text): void {
-    $this->dbSet("blueprint", "notification:text", $text);
-    header("Refresh:$delay");
-    return;
-  }
+  public function notifyAfter($delay, $text): void {return;}
 
   /**
-   * Display a notification on the Pterodactyl admin panel and refresh the page instantly.
+   * (Deprecated) Display a notification on the Pterodactyl admin panel and refresh the page instantly.
    * Behaves the same as calling `notifyAfter()` with a delay of zero.
    * 
+   * @deprecated beta-2024-11
    * @param string $text Notification contents
    * @return void Nothing is returned
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function notifyNow($text): void {
-    $this->dbSet("blueprint", "notification:text", $text);
-    header("Refresh:0");
-    return;
-  }
+  public function notifyNow($text): void {return;}
 
   /**
    * Read and returns the content of a given file.
