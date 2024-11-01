@@ -300,6 +300,7 @@ InstallExtension() {
               -e "s~{name!}~${name^^}~g" \
               -e "s~{root/public}~$FOLDER/.blueprint/extensions/$identifier/public~g" \
               -e "s~{root/data}~$FOLDER/.blueprint/extensions/$identifier/private~g" \
+              -e "s~{root/fs}~$FOLDER/.blueprint/extensions/$identifier/fs~g" \
               -e "s~{webroot/public}~/extensions/$identifier~g" \
               -e "s~{webroot/fs}~/fs/extensions/$identifier~g" \
               \
