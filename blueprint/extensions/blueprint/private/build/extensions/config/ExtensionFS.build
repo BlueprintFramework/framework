@@ -1,5 +1,1 @@
-<?php
-/* [id^]Start */
-'blueprint:[id]' => [ 'driver' => 'local', 'root' => storage_path('extensions/[id]'), 'url' => env('APP_URL') . '/fs/extensions/[id]', 'visibility' => 'public', 'throw' => false, ],
-'.blueprint:[id]' => [ 'driver' => 'local', 'root' => storage_path('.extensions/[id]'), 'throw' => false, ],
-/* [id^]End */
+/* [id^]Start */ 'blueprint:[id]' => [ 'driver' => 'local', 'root' => storage_path('extensions/[id]'), 'url' => env('APP_URL') . '/fs/extensions/[id]', 'visibility' => 'public', 'throw' => false, ], '.blueprint:[id]' => [ 'driver' => 'local', 'root' => storage_path('.extensions/[id]'), 'throw' => false, ], /* [id^]End */
