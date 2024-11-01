@@ -282,6 +282,7 @@ InstallExtension() {
               -e "s~!{target~{!!!!target~g" \
               -e "s~!{root~{!!!!root~g" \
               -e "s~!{webroot~{!!!!webroot~g" \
+              -e "s~!{engine_~{!!!!engine_~g" \
               -e "s~!{is_~{!!!!is_~g" \
               \
               -e "s~{identifier}~$identifier~g" \
@@ -294,6 +295,7 @@ InstallExtension() {
               -e "s~{target}~$VERSION~g" \
               -e "s~{root}~$FOLDER~g" \
               -e "s~{webroot}~/~g" \
+              -e "s~{engine}~solstice~g" \
               \
               -e "s~{identifier^}~${identifier^}~g" \
               -e "s~{identifier!}~${identifier^^}~g" \
@@ -316,6 +318,7 @@ InstallExtension() {
               -e "s~{!!!!target~{target~g" \
               -e "s~{!!!!root~{root~g" \
               -e "s~{!!!!webroot~{webroot~g" \
+              -e "s~{!!!!engine_~{engine~g" \
               -e "s~{!!!!is_~{is~g" \
               "$file"
 
