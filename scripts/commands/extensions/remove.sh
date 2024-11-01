@@ -319,7 +319,9 @@ RemoveExtension() {
   PRINT INFO "Removing and unlinking extension filesystem.."
   rm -r \
     ".blueprint/extensions/$identifier/fs" \
-    "storage/extensions/$identifier"
+    ".blueprint/extensions/$identifier/.fs" \
+    "storage/extensions/$identifier" \
+    "storage/.extensions/$identifier"
   sed -i \
     -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
     -e "s~/\* ${identifier^}Start \*/~~g" \

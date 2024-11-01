@@ -1141,11 +1141,18 @@ InstallExtension() {
     ln -s -r -T ".blueprint/extensions/$identifier/wrappers/admin.blade.php" "$FOLDER/resources/views/blueprint/admin/wrappers/$identifier.blade.php"
   fi
 
-  # Create extension filesystem (ExtensionFS)
+  # Create extension filesystem (ExtensionFS/PrivateFS)
   PRINT INFO "Creating and linking extension filesystem.."
+
+  # ExtensionFS
   mkdir -p ".blueprint/extensions/$identifier/fs"
   ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/fs" "$FOLDER/storage/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
   ln -s -r -T "$FOLDER/storage/extensions/$identifier" "$FOLDER/public/fs/$identifier" 2>> "$BLUEPRINT__DEBUG"
+
+  # PrivateFS
+  mkdir -p ".blueprint/extensions/$identifier/.fs"
+  ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/.fs" "$FOLDER/storage/.extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
+
   if [[ $DUPLICATE == "y" ]]; then
     sed -i \
       -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
