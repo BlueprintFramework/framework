@@ -80,6 +80,7 @@ RemoveExtension() {
     # Run script while also parsing some useful variables for the uninstall script to use.
     su "$WEBUSER" -s "$USERSHELL" -c "
         cd \"$FOLDER\";
+        ENGINE=\"$BLUEPRINT_ENGINE\"         \
         EXTENSION_IDENTIFIER=\"$identifier\" \
         EXTENSION_TARGET=\"$target\"         \
         EXTENSION_VERSION=\"$version\"       \

@@ -295,7 +295,7 @@ InstallExtension() {
               -e "s~{target}~$VERSION~g" \
               -e "s~{root}~$FOLDER~g" \
               -e "s~{webroot}~/~g" \
-              -e "s~{engine}~solstice~g" \
+              -e "s~{engine}~$BLUEPRINT_ENGINE~g" \
               \
               -e "s~{identifier^}~${identifier^}~g" \
               -e "s~{identifier!}~${identifier^^}~g" \
@@ -679,9 +679,9 @@ InstallExtension() {
 
           # validate file name
           if [[ ${1} == *".tsx" ]] ||
-            [[ ${1} == *".ts"  ]] ||
-            [[ ${1} == *".jsx" ]] ||
-            [[ ${1} == *".js"  ]]; then
+            [[ ${1} == *".ts"   ]] ||
+            [[ ${1} == *".jsx"  ]] ||
+            [[ ${1} == *".js"   ]]; then
             rm -R ".blueprint/tmp/$n"
             PRINT FATAL "Component paths may not end with a file extension."
             return 1
@@ -689,9 +689,9 @@ InstallExtension() {
 
           # validate path
           if [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.tsx" ]] &&
-            [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.ts"  ]] &&
-            [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.jsx" ]] &&
-            [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.js"  ]]; then
+            [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.ts"   ]] &&
+            [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.jsx"  ]] &&
+            [[ ! -f ".blueprint/tmp/$n/$dashboard_components/${1}.js"   ]]; then
             rm -R ".blueprint/tmp/$n"
             PRINT FATAL "Components configuration points towards one or more files that do not exist."
             return 1
@@ -707,6 +707,29 @@ InstallExtension() {
             "$co"/"$2"
         fi
       }
+
+      # Backwards compatibility
+      if [ -n "$Components_Dashboard_BeforeContent" ]; then Components_Dashboard_Serverlist_BeforeContent="$Components_Dashboard_BeforeContent"; fi
+      if [ -n "$Components_Dashboard_AfterContent" ]; then Components_Dashboard_Serverlist_AfterContent="$Components_Dashboard_AfterContent"; fi
+      if [ -n "$Components_Dashboard_ServerRow_" ]; then 
+        Components_Dashboard_Serverlist_ServerRow_BeforeEntryName="$Components_Dashboard_ServerRow_BeforeEntryName"
+        Components_Dashboard_Serverlist_ServerRow_AfterEntryName="$Components_Dashboard_ServerRow_AfterEntryName"
+        Components_Dashboard_Serverlist_ServerRow_BeforeEntryDescription="$Components_Dashboard_ServerRow_BeforeEntryDescription"
+        Components_Dashboard_Serverlist_ServerRow_AfterEntryDescription="$Components_Dashboard_ServerRow_AfterEntryDescription"
+        Components_Dashboard_Serverlist_ServerRow_ResourceLimits="$Components_Dashboard_ServerRow_ResourceLimits"
+      fi
+
+      if [[ $DUPLICATE == "y" ]]; then
+        if [ -n "$OldComponents_Dashboard_BeforeContent" ]; then OldComponents_Dashboard_Serverlist_BeforeContent="$OldComponents_Dashboard_BeforeContent"; fi
+        if [ -n "$OldComponents_Dashboard_AfterContent" ]; then OldComponents_Dashboard_Serverlist_AfterContent="$OldComponents_Dashboard_AfterContent"; fi
+        if [ -n "$OldComponents_Dashboard_ServerRow_" ]; then 
+          OldComponents_Dashboard_Serverlist_ServerRow_BeforeEntryName="$OldComponents_Dashboard_ServerRow_BeforeEntryName"
+          OldComponents_Dashboard_Serverlist_ServerRow_AfterEntryName="$OldComponents_Dashboard_ServerRow_AfterEntryName"
+          OldComponents_Dashboard_Serverlist_ServerRow_BeforeEntryDescription="$OldComponents_Dashboard_ServerRow_BeforeEntryDescription"
+          OldComponents_Dashboard_Serverlist_ServerRow_AfterEntryDescription="$OldComponents_Dashboard_ServerRow_AfterEntryDescription"
+          OldComponents_Dashboard_Serverlist_ServerRow_ResourceLimits="$OldComponents_Dashboard_ServerRow_ResourceLimits"
+        fi
+      fi
 
       # place component items
       # -> PLACE_REACT "$Components_" "path/.tsx" "$OldComponents_"
@@ -726,13 +749,15 @@ InstallExtension() {
       PLACE_REACT "$Components_Navigation_SubNavigation_AfterSubNavigation" "Navigation/SubNavigation/AfterSubNavigation.tsx" "$OldComponents_Navigation_SubNavigation_AfterSubNavigation"
 
       # dashboard
-      PLACE_REACT "$Components_Dashboard_BeforeContent" "Dashboard/BeforeContent.tsx" "$OldComponents_Dashboard_BeforeContent"
-      PLACE_REACT "$Components_Dashboard_AfterContent" "Dashboard/AfterContent.tsx" "$OldComponents_Dashboard_AfterContent"
-      PLACE_REACT "$Components_Dashboard_ServerRow_BeforeEntryName" "Dashboard/ServerRow/BeforeEntryName.tsx" "$OldComponents_Dashboard_ServerRow_BeforeEntryName"
-      PLACE_REACT "$Components_Dashboard_ServerRow_AfterEntryName" "Dashboard/ServerRow/AfterEntryName.tsx" "$OldComponents_Dashboard_ServerRow_AfterEntryName"
-      PLACE_REACT "$Components_Dashboard_ServerRow_BeforeEntryDescription" "Dashboard/ServerRow/BeforeEntryDescription.tsx" "$OldComponents_Dashboard_ServerRow_BeforeEntryDescription"
-      PLACE_REACT "$Components_Dashboard_ServerRow_AfterEntryDescription" "Dashboard/ServerRow/AfterEntryDescription.tsx" "$OldComponents_Dashboard_ServerRow_AfterEntryDescription"
-      PLACE_REACT "$Components_Dashboard_ServerRow_ResourceLimits" "Dashboard/ServerRow/ResourceLimits.tsx" "$OldComponents_Dashboard_ServerRow_ResourceLimits"
+      PLACE_REACT "$Components_Dashboard_Global_BeforeSection" "Dashboard/Global/BeforeContent.tsx" "$OldComponents_Dashboard_Global_BeforeSection"
+      PLACE_REACT "$Components_Dashboard_Global_AfterSection" "Dashboard/Global/AfterContent.tsx" "$OldComponents_Dashboard_Global_AfterSection"
+      PLACE_REACT "$Components_Dashboard_Serverlist_BeforeContent" "Dashboard/Serverlist/BeforeContent.tsx" "$OldComponents_Dashboard_Serverlist_BeforeContent"
+      PLACE_REACT "$Components_Dashboard_Serverlist_AfterContent" "Dashboard/Serverlist/AfterContent.tsx" "$OldComponents_Dashboard_Serverlist_AfterContent"
+      PLACE_REACT "$Components_Dashboard_Serverlist_ServerRow_BeforeEntryName" "Dashboard/Serverlist/ServerRow/BeforeEntryName.tsx" "$OldComponents_Dashboard_Serverlist_ServerRow_BeforeEntryName"
+      PLACE_REACT "$Components_Dashboard_Serverlist_ServerRow_AfterEntryName" "Dashboard/Serverlist/ServerRow/AfterEntryName.tsx" "$OldComponents_Dashboard_Serverlist_ServerRow_AfterEntryName"
+      PLACE_REACT "$Components_Dashboard_Serverlist_ServerRow_BeforeEntryDescription" "Dashboard/Serverlist/ServerRow/BeforeEntryDescription.tsx" "$OldComponents_Dashboard_Serverlist_ServerRow_BeforeEntryDescription"
+      PLACE_REACT "$Components_Dashboard_Serverlist_ServerRow_AfterEntryDescription" "Dashboard/Serverlist/ServerRow/AfterEntryDescription.tsx" "$OldComponents_Dashboard_Serverlist_ServerRow_AfterEntryDescription"
+      PLACE_REACT "$Components_Dashboard_Serverlist_ServerRow_ResourceLimits" "Dashboard/Serverlist/ServerRow/ResourceLimits.tsx" "$OldComponents_Dashboard_Serverlist_ServerRow_ResourceLimits"
 
       # authentication
       PLACE_REACT "$Components_Authentication_Container_BeforeContent" "Authentication/Container/BeforeContent.tsx" "$OldComponents_Authentication_Container_BeforeContent"
@@ -1208,6 +1233,7 @@ InstallExtension() {
 
       # Run script while also parsing some useful variables for the install script to use.
       if $F_developerEscalateInstallScript; then
+        ENGINE="$BLUEPRINT_ENGINE"         \
         EXTENSION_IDENTIFIER="$identifier" \
         EXTENSION_TARGET="$target"         \
         EXTENSION_VERSION="$version"       \
@@ -1218,6 +1244,7 @@ InstallExtension() {
       else
         su "$WEBUSER" -s "$USERSHELL" -c "
           cd \"$FOLDER\";
+          ENGINE=\"$BLUEPRINT_ENGINE\"         \
           EXTENSION_IDENTIFIER=\"$identifier\" \
           EXTENSION_TARGET=\"$target\"         \
           EXTENSION_VERSION=\"$version\"       \

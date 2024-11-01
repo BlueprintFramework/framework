@@ -29,6 +29,7 @@ Command() {
 
     # Run script while also parsing some useful variables for the export script to use.
     if $F_developerEscalateExportScript; then
+      ENGINE="$BLUEPRINT_ENGINE"                          \
       EXTENSION_IDENTIFIER="$conf_info_identifier"        \
       EXTENSION_TARGET="$conf_info_target"                \
       EXTENSION_VERSION="$conf_info_version"              \
@@ -39,6 +40,7 @@ Command() {
     else
       su "$WEBUSER" -s "$USERSHELL" -c "
           cd \"$FOLDER\"/.blueprint/tmp;
+          BLUEPRINT_ENGINE=\"$BLUEPRINT_ENGINE\"                \
           EXTENSION_IDENTIFIER=\"$conf_info_identifier\"        \
           EXTENSION_TARGET=\"$conf_info_target\"                \
           EXTENSION_VERSION=\"$conf_info_version\"              \

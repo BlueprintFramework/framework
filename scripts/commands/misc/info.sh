@@ -1,6 +1,7 @@
 #!/bin/bash
 
 Command() {
+  fetchengine()     { printf "\x1b[0m\x1b[37;2m"; if [[ $BLUEPRINT_ENGINE != "" ]]; then echo "$BLUEPRINT_ENGINE"; else echo "unknown"; fi }
   fetchversion()    { printf "\x1b[0m\x1b[37;2m"; if [[ $VERSION != "" ]]; then echo "$VERSION"; else echo "none"; fi }
   fetchfolder()     { printf "\x1b[0m\x1b[37;2m"; if [[ $FOLDER != "" ]]; then echo "$FOLDER"; else echo "none"; fi }
   fetchurl()        { printf "\x1b[0m\x1b[37;2m"; if [[ $(grabAppUrl) != "" ]]; then grabAppUrl; else echo "none"; fi }
@@ -19,12 +20,13 @@ Command() {
   local C4="\x1b[0;37;1m"
 
   echo    " "
-  echo -e "${C0}  ${C4}██${C0}    Version: $(fetchversion)${C0}"
-  echo -e "${C0}${C4}██  ██${C0}  Folder: $(fetchfolder)${C0}"
-  echo -e "${C0}${C1}▀▀${C0}${C4}████${C0}  URL: $(fetchurl)${C0}"
-  echo -e "${C0}${C2}▀▀${C0}${C1}▀▀▀▀${C0}  Locale: $(fetchlocale)${C0}"
-  echo -e "${C0}${C3}▀▀${C0}${C2}▀▀▀▀${C0}  Timezone: $(fetchtimezone)${C0}"
-  echo -e "${C0}  ${C3}▀▀▀▀${C0}  Extensions: $(fetchextensions)${C0}"
+  echo -e "${C0}  ${C4}██${C0}    Engine: $(fetchengine)${C0}"
+  echo -e "${C0}${C4}██  ██${C0}  Version: $(fetchversion)${C0}"
+  echo -e "${C0}${C1}▀▀${C0}${C4}████${C0}  Folder: $(fetchfolder)${C0}"
+  echo -e "${C0}${C2}▀▀${C0}${C1}▀▀▀▀${C0}  URL: $(fetchurl)${C0}"
+  echo -e "${C0}${C3}▀▀${C0}${C2}▀▀▀▀${C0}  Locale: $(fetchlocale)${C0}"
+  echo -e "${C0}  ${C3}▀▀▀▀${C0}  Timezone: $(fetchtimezone)${C0}"
+  echo -e "        ${C0}Extensions: $(fetchextensions)${C0}"
   echo -e "        ${C0}Developer: $(fetchdeveloper)${C0}"
   echo -e "        ${C0}Telemetry: $(fetchtelemetry)${C0}"
   echo -e "        ${C0}Node: $(fetchnode)${C0}"
