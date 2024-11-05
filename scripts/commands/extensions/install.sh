@@ -733,9 +733,9 @@ InstallExtension() {
 
       # place component items
       # -> PLACE_REACT "$Components_" "path/.tsx" "$OldComponents_"
+  
 
-
-      # global
+      # global (fixme: whoops)
       PLACE_REACT "$Components_Global_BeforeApplication" "Global/BeforeApplication.tsx" "$OldComponents_Global_BeforeApplication"
       PLACE_REACT "$Components_Global_AfterApplication" "Global/AfterApplication.tsx" "$OldComponents_Global_AfterApplication"
 
