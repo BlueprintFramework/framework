@@ -169,6 +169,7 @@ InstallExtension() {
         PTERODACTYL_DIRECTORY=\"$FOLDER\"    \
         BLUEPRINT_VERSION=\"$VERSION\"       \
         BLUEPRINT_DEVELOPER=\"$dev\"         \
+        BLUEPRINT_TMP=\".blueprint/tmp/$n\"  \
         bash .blueprint/extensions/$identifier/private/update.sh
       "
       echo -e "\e[0m\x1b[0m\033[0m"
