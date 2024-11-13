@@ -154,6 +154,26 @@ InstallExtension() {
     eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/conf.yml old_)"
     local DUPLICATE="y"
 
+    # run extension update script
+    if [[ -f ".blueprint/extensions/$identifier/private/update.sh" ]]; then
+      PRINT WARNING "Extension uses a custom update script, proceed with caution."
+      chmod --silent +x ".blueprint/extensions/$identifier/private/update.sh" 2>> "$BLUEPRINT__DEBUG"
+
+
+      su "$WEBUSER" -s "$USERSHELL" -c "
+        cd \"$FOLDER\";
+        ENGINE=\"$BLUEPRINT_ENGINE\"         \
+        EXTENSION_IDENTIFIER=\"$identifier\" \
+        EXTENSION_TARGET=\"$target\"         \
+        EXTENSION_VERSION=\"$version\"       \
+        PTERODACTYL_DIRECTORY=\"$FOLDER\"    \
+        BLUEPRINT_VERSION=\"$VERSION\"       \
+        BLUEPRINT_DEVELOPER=\"$dev\"         \
+        bash .blueprint/extensions/$identifier/private/update.sh
+      "
+      echo -e "\e[0m\x1b[0m\033[0m"
+    fi
+
     # Clean up some old extension files.
     if [[ $old_data_public != "" ]]; then
       # Clean up old public folder.
