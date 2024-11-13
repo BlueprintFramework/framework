@@ -1,4 +1,4 @@
-![](https://github.com/user-attachments/assets/e69f8b32-6362-4c28-bf08-c4b0c717784e)
+![Code of conduct](https://github.com/user-attachments/assets/c65201ac-400b-41c4-9fdf-a0abeb82048e)
 
 
 ## Community Code of Conduct
