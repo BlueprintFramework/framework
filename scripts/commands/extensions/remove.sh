@@ -326,7 +326,8 @@ RemoveExtension() {
     ".blueprint/extensions/$identifier/fs" \
     ".blueprint/extensions/$identifier/.fs" \
     "storage/extensions/$identifier" \
-    "storage/.extensions/$identifier"
+    "storage/.extensions/$identifier" \
+    "public/fs/$identifier"
   sed -i \
     -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
     -e "s~/\* ${identifier^}Start \*/~~g" \
