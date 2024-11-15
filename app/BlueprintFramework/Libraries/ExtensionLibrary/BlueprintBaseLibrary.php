@@ -44,7 +44,7 @@ class BlueprintBaseLibrary
    * @param string $table Database table
    * @param array $records Database records
    * @param mixed $default Optional. Returns this value when value is null.
-   * @return array Database values
+   * @return array Database values as an associative array
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
@@ -80,7 +80,7 @@ class BlueprintBaseLibrary
    * Set many database records.
    * 
    * @param string $table Database table
-   * @param array $records Database records
+   * @param array $records Database records as an associative array
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
