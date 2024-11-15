@@ -48,8 +48,12 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function dbGetMany(string $table, array $records, mixed $default = null): array {
-    $values = DB::table('settings')->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))->get();
+  public function dbGetMany(string $table, array $records = [], mixed $default = null): array {
+    if (empty($records)) {
+      $values = DB::table('settings')->where('key', 'like', "$table::%")->get();
+    } else {
+      $values = DB::table('settings')->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))->get();
+    }
 
     $output = [];
     foreach ($records as $record) {
