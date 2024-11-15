@@ -54,7 +54,7 @@ class BlueprintBaseLibrary
     $output = [];
     foreach ($records as $record) {
       $value = $values->firstWhere('key', $this->getRecordName($table, $record));
-      $output[] = $value ? $value->value : $default;
+      $output[$record] = $value ? $value->value : $default;
     }
 
     return $output;
