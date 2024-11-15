@@ -19,6 +19,39 @@ use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\BlueprintBaseLibra
 class BlueprintAdminLibrary extends BlueprintBaseLibrary
 {
   /**
+   * Display a notification on the Pterodactyl admin panel (on next page load).
+   * 
+   * @param string $text Notification contents
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function notify($text): void {
+    $this->dbSet('blueprint', 'notification:text', $text);
+  }
+
+  /**
+   * (Deprecated) Display a notification on the Pterodactyl admin panel and refresh the page after a certain delay.
+   * 
+   * @deprecated beta-2024-11
+   * @param string $delay Refresh after (in seconds)
+   * @param string $text Notification contents
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function notifyAfter($delay, $text): void {}
+
+  /**
+   * (Deprecated) Display a notification on the Pterodactyl admin panel and refresh the page instantly.
+   * Behaves the same as calling `notifyAfter()` with a delay of zero.
+   * 
+   * @deprecated beta-2024-11
+   * @param string $text Notification contents
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function notifyNow($text): void {}
+
+  /**
    * Returns a HTML link tag importing the specified stylesheet with additional URL params to avoid issues with stylesheet cache.
    * 
    * @param string $url Stylesheet URL
