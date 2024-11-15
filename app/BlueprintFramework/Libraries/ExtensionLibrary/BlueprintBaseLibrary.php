@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BlueprintExtensionLibrary (Admin variation)
+ * BlueprintExtensionLibrary (Base code, do not use directly)
  *
  * @category   BlueprintExtensionLibrary
  * @package    BlueprintBaseLibrary

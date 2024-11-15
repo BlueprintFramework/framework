@@ -25,7 +25,7 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function notify($text): void {
+  public function notify(string $text): void {
     $this->dbSet('blueprint', 'notification:text', $text);
   }
 
