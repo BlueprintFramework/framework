@@ -55,6 +55,10 @@ class BlueprintBaseLibrary
       $values = DB::table('settings')->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))->get();
     }
 
+    if (empty($records)) {
+      $records = $values->map(fn($value) => substr($value->key, strlen($table) + 2))->toArray();
+    }
+
     $output = [];
     foreach ($records as $record) {
       $value = $values->firstWhere('key', $this->getRecordName($table, $record));
