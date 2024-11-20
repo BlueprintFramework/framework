@@ -174,8 +174,12 @@ class BlueprintBaseLibrary
       }
 
       rmdir($path);
+
+      return true;
     } elseif (is_file($path)) {
       unlink($path);
+
+      return true;
     } else {
       return false;
     }
