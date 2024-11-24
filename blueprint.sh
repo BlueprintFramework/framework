@@ -97,15 +97,11 @@ if [[ "$1" == "-config" ]]; then ConfigUtility; fi
 
 cdhalt() { PRINT FATAL "Attempted navigation into nonexistent directory, halting process."; exit 1; }
 depend() {
-  # Check for compatible node versions
-  nodeVer=$(node -v)
-  if [[ $nodeVer != "v17."* ]] \
-  && [[ $nodeVer != "v18."* ]] \
-  && [[ $nodeVer != "v19."* ]] \
-  && [[ $nodeVer != "v20."* ]] \
-  && [[ $nodeVer != "v21."* ]] \
-  && [[ $nodeVer != "v22."* ]]; then
-    DEPEND_MISSING=true
+  # Make sure Node.js is version 17 or higher.
+  nodeMajor=$(node -v | awk -F. '{print $1}' | sed 's/[^0-9]*//g')
+  if [[ $nodeMajor -lt 17 ]]; then
+    PRINT FATAL "Blueprint requires Node.js version 17 or higher to run."
+    exit 1
   fi
 
   # Check for required (both internal and external) dependencies.
@@ -132,11 +128,7 @@ depend() {
   if [[ $DEPEND_MISSING == true ]]; then
     PRINT FATAL "Some framework dependencies are not installed or detected."
 
-    if [[ $nodeVer != "v18."* ]] \
-    && [[ $nodeVer != "v19."* ]] \
-    && [[ $nodeVer != "v20."* ]] \
-    && [[ $nodeVer != "v21."* ]] \
-    && [[ $nodeVer != "v22."* ]]; then
+    if [[ $nodeMajor -lt 17 ]]; then
       PRINT FATAL "Required dependency \"node\" is using an unsupported version."
     fi
 
@@ -306,6 +298,7 @@ if [[ $1 != "-bash" ]]; then
 
     # Rebuild panel assets.
     PRINT INFO "Rebuilding panel assets.."
+    cd "$FOLDER" || cdhalt
     yarn run build:production --progress
 
     if [[ $DOCKER != "y" ]]; then

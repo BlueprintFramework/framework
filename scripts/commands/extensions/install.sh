@@ -1318,6 +1318,7 @@ Command() {
 
     if [[ ( $YARN == "y" ) && ( $IgnoreRebuild != "true" ) ]]; then
       PRINT INFO "Rebuilding panel assets.."
+      cd "$FOLDER" || cdhalt
       yarn run build:production --progress
     fi
 
