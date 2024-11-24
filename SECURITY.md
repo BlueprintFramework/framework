@@ -5,7 +5,7 @@
 ### Supported Versions
 
 `BlueprintFramework/web` has a list of [supported versions](https://blueprint.zip/docs/?page=about/Changelog).
-Only the latest version of the framework is able to receive rapid security updates as of right now.
+As of right now, only the latest version of the framework is able to receive rapid security updates.
 
 ### Reporting a Vulnerability
 
