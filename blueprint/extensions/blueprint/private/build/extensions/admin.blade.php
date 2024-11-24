@@ -2,9 +2,9 @@
 <?php 
     // Define extension information.
     $EXTENSION_ID = "[id]";
-    $EXTENSION_NAME = "[name]";
+    $EXTENSION_NAME = stripslashes("[name]");
     $EXTENSION_VERSION = "[version]";
-    $EXTENSION_DESCRIPTION = "[description]";
+    $EXTENSION_DESCRIPTION = stripslashes("[description]");
     $EXTENSION_ICON = "[icon]";
     $EXTENSION_WEBSITE = "[website]";
     $EXTENSION_WEBICON = "[webicon]";

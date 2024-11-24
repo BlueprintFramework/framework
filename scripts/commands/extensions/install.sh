@@ -1,9 +1,15 @@
 #!/bin/bash
 
-# replaces ' with \'
 php_escape_string() {
   local string="$1"
-  sed -e "s/'/\\\'/g" <<< "$string"
+
+  # Escape ampersands.
+  string="${string//&/\\\\&}"
+
+  # Escape double quotes.
+  string="${string//\"/\\\\\\\\\\\"}"
+
+  echo "$string"
 }
 
 InstallExtension() {
@@ -1121,6 +1127,7 @@ InstallExtension() {
     -e "s~\[icon\]~$ICON~g" \
     -e "s~\[id\]~$identifier~g" \
     "$AdminBladeConstructor"
+  sed -i -e "s/\\\\\\\\/\\\\/g" "$AdminBladeConstructor"
   if [[ $website != "" ]]; then
     sed -i \
       -e "s~\[website\]~$website~g" \
