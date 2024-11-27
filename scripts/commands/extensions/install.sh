@@ -1,5 +1,17 @@
 #!/bin/bash
 
+php_escape_string() {
+  local string="$1"
+
+  # Escape ampersands.
+  string="${string//&/\\\\&}"
+
+  # Escape double quotes.
+  string="${string//\"/\\\\\\\\\\\"}"
+
+  echo "$string"
+}
+
 InstallExtension() {
   # The following code does some magic to allow for extensions with a
   # different root folder structure than expected by Blueprint.
@@ -1096,9 +1108,12 @@ InstallExtension() {
   if [[ $ICON == *"~"* ]]; then        PRINT WARNING "'ICON' contains '~' and may result in an error.";fi
   if [[ $identifier == *"~"* ]]; then  PRINT WARNING "'identifier' contains '~' and may result in an error.";fi
 
+  escaped_name=$(php_escape_string "$name")
+  escaped_description=$(php_escape_string "$description")
+
   # Construct admin button
   sed -i \
-    -e "s~\[name\]~$name~g" \
+    -e "s~\[name\]~$escaped_name~g" \
     -e "s~\[version\]~$version~g" \
     -e "s~\[id\]~$identifier~g" \
     -e "s~\[icon\]~$ICON~g" \
@@ -1106,12 +1121,13 @@ InstallExtension() {
 
   # Construct admin view
   sed -i \
-    -e "s~\[name\]~$name~g" \
-    -e "s~\[description\]~$description~g" \
+    -e "s~\[name\]~$escaped_name~g" \
+    -e "s~\[description\]~$escaped_description~g" \
     -e "s~\[version\]~$version~g" \
     -e "s~\[icon\]~$ICON~g" \
     -e "s~\[id\]~$identifier~g" \
     "$AdminBladeConstructor"
+  sed -i -e "s/\\\\\\\\/\\\\/g" "$AdminBladeConstructor"
   if [[ $website != "" ]]; then
     sed -i \
       -e "s~\[website\]~$website~g" \
@@ -1318,6 +1334,7 @@ Command() {
 
     if [[ ( $YARN == "y" ) && ( $IgnoreRebuild != "true" ) ]]; then
       PRINT INFO "Rebuilding panel assets.."
+      cd "$FOLDER" || cdhalt
       yarn run build:production --progress
     fi
 
