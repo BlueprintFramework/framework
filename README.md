@@ -37,10 +37,11 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 <br/><h2 align="center">💖 Sponsors</h2>
 
 Sponsors help fund development, upkeep and maintenance. [Interested in sponsoring Blueprint?](https://github.com/sponsors/prplwtf)
+<!--
 | Company | About |
 |---------|-------|
-| [**`HostEZ`**](https://hostez.io?utm_source=blueprint) | US & EU Rust & Minecraft Hosting. DDoS Protected bare metal, VPS and colocation with low latency, high uptime and maximum availability. EZ! |
-
+|         |       |
+-->
 
 
 <!-- Contributors -->
