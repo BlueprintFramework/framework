@@ -735,10 +735,6 @@ InstallExtension() {
       # -> PLACE_REACT "$Components_" "path/.tsx" "$OldComponents_"
   
 
-      # global (fixme: whoops)
-      PLACE_REACT "$Components_Global_BeforeApplication" "Global/BeforeApplication.tsx" "$OldComponents_Global_BeforeApplication"
-      PLACE_REACT "$Components_Global_AfterApplication" "Global/AfterApplication.tsx" "$OldComponents_Global_AfterApplication"
-
       # navigation
       PLACE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx" "$OldComponents_Navigation_NavigationBar_BeforeNavigation"
       PLACE_REACT "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx" "$OldComponents_Navigation_NavigationBar_AdditionalItems"
@@ -749,8 +745,8 @@ InstallExtension() {
       PLACE_REACT "$Components_Navigation_SubNavigation_AfterSubNavigation" "Navigation/SubNavigation/AfterSubNavigation.tsx" "$OldComponents_Navigation_SubNavigation_AfterSubNavigation"
 
       # dashboard
-      PLACE_REACT "$Components_Dashboard_Global_BeforeSection" "Dashboard/Global/BeforeContent.tsx" "$OldComponents_Dashboard_Global_BeforeSection"
-      PLACE_REACT "$Components_Dashboard_Global_AfterSection" "Dashboard/Global/AfterContent.tsx" "$OldComponents_Dashboard_Global_AfterSection"
+      PLACE_REACT "$Components_Dashboard_Global_BeforeSection" "Dashboard/Global/BeforeSection.tsx" "$OldComponents_Dashboard_Global_BeforeSection"
+      PLACE_REACT "$Components_Dashboard_Global_AfterSection" "Dashboard/Global/AfterSection.tsx" "$OldComponents_Dashboard_Global_AfterSection"
       PLACE_REACT "$Components_Dashboard_Serverlist_BeforeContent" "Dashboard/Serverlist/BeforeContent.tsx" "$OldComponents_Dashboard_Serverlist_BeforeContent"
       PLACE_REACT "$Components_Dashboard_Serverlist_AfterContent" "Dashboard/Serverlist/AfterContent.tsx" "$OldComponents_Dashboard_Serverlist_AfterContent"
       PLACE_REACT "$Components_Dashboard_Serverlist_ServerRow_BeforeEntryName" "Dashboard/Serverlist/ServerRow/BeforeEntryName.tsx" "$OldComponents_Dashboard_Serverlist_ServerRow_BeforeEntryName"

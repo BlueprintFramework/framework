@@ -164,10 +164,6 @@ RemoveExtension() {
     # -> REMOVE_REACT "$Components_" "path/.tsx" "$OldComponents_"
 
 
-    # global
-    REMOVE_REACT "$Components_Global_BeforeApplication" "Global/BeforeApplication.tsx"
-    REMOVE_REACT "$Components_Global_AfterApplication" "Global/AfterApplication.tsx"
-
     # navigation
     REMOVE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx"
     REMOVE_REACT "$Components_Navigation_NavigationBar_AdditionalItems" "Navigation/NavigationBar/AdditionalItems.tsx"
@@ -178,6 +174,8 @@ RemoveExtension() {
     REMOVE_REACT "$Components_Navigation_SubNavigation_AfterSubNavigation" "Navigation/SubNavigation/AfterSubNavigation.tsx"
 
     # dashboard
+    REMOVE_REACT "$Components_Dashboard_Global_BeforeSection" "Dashboard/Global/BeforeSection.tsx"
+    REMOVE_REACT "$Components_Dashboard_Global_AfterSection" "Dashboard/Global/AfterSection.tsx"
     REMOVE_REACT "$Components_Dashboard_BeforeContent" "Dashboard/BeforeContent.tsx"
     REMOVE_REACT "$Components_Dashboard_AfterContent" "Dashboard/AfterContent.tsx"
     REMOVE_REACT "$Components_Dashboard_ServerRow_BeforeEntryName" "Dashboard/ServerRow/BeforeEntryName.tsx"
