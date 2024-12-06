@@ -11,17 +11,17 @@ RemoveExtension() {
   PRINT INFO "\x1b[34;mRemoving $1...\x1b[0m \x1b[37m($current/$total)\x1b[0m"
 
   # Check if the extension is installed.
-  FILE=$1
-  if [[ $FILE == *".blueprint" ]]; then FILE="${FILE::-10}"; fi
-  set -- "${@:1:2}" "$FILE" "${@:4}"
+  EXTENSION=$1
+  if [[ $EXTENSION == *".blueprint" ]]; then EXTENSION="${EXTENSION::-10}"; fi
+  set -- "${@:1:2}" "$EXTENSION" "${@:4}"
 
-  if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$1,"* ]]; then
-    PRINT FATAL "'$1' is not installed or detected."
+  if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$EXTENSION,"* ]]; then
+    PRINT FATAL "'$EXTENSION' is not installed or detected."
     return 2
   fi
 
-  if [[ -f ".blueprint/extensions/$1/private/.store/conf.yml" ]]; then
-    eval "$(parse_yaml ".blueprint/extensions/$1/private/.store/conf.yml" conf_)"
+  if [[ -f ".blueprint/extensions/$EXTENSION/private/.store/conf.yml" ]]; then
+    eval "$(parse_yaml ".blueprint/extensions/$EXTENSION/private/.store/conf.yml" conf_)"
     # Add aliases for config values to make working with them easier.
     local name="${conf_info_name//&/\\&}"
     local identifier="${conf_info_identifier//&/\\&}"
@@ -151,10 +151,10 @@ RemoveExtension() {
     s="import ${identifier^}Component from '"; e="';"
 
     REMOVE_REACT() {
-      if [[ ! $1 == "" ]]; then
+      if [[ ! $EXTENSION == "" ]]; then
         # remove components
         sed -i \
-          -e "s~""${s}@/blueprint/extensions/${identifier}/$1${e}""~~g" \
+          -e "s~""${s}@/blueprint/extensions/${identifier}/$EXTENSION${e}""~~g" \
           -e "s~""<${identifier^}Component />""~~g" \
           "$co"/"$2"
       fi
@@ -324,7 +324,8 @@ RemoveExtension() {
     ".blueprint/extensions/$identifier/fs" \
     ".blueprint/extensions/$identifier/.fs" \
     "storage/extensions/$identifier" \
-    "storage/.extensions/$identifier"
+    "storage/.extensions/$identifier" \
+    "public/fs/$identifier" > /dev/null 2>&1
   sed -i \
     -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
     -e "s~/\* ${identifier^}Start \*/~~g" \
@@ -365,6 +366,7 @@ Command() {
     # Rebuild panel
     if [[ $YARN == "y" ]]; then
       PRINT INFO "Rebuilding panel assets.."
+      cd "$FOLDER" || cdhalt
       yarn run build:production --progress
     fi
 

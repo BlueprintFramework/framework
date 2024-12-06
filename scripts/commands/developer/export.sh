@@ -34,8 +34,9 @@ Command() {
       EXTENSION_TARGET="$conf_info_target"                \
       EXTENSION_VERSION="$conf_info_version"              \
       PTERODACTYL_DIRECTORY="$FOLDER"                     \
-      BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" \
       BLUEPRINT_VERSION="$VERSION"                        \
+      BLUEPRINT_TMP="$FOLDER/.blueprint/tmp"              \
+      BLUEPRINT_EXPORT_DIRECTORY="$FOLDER/.blueprint/tmp" \
       bash "${conf_data_directory}"/export.sh
     else
       su "$WEBUSER" -s "$USERSHELL" -c "
@@ -45,8 +46,9 @@ Command() {
           EXTENSION_TARGET=\"$conf_info_target\"                \
           EXTENSION_VERSION=\"$conf_info_version\"              \
           PTERODACTYL_DIRECTORY=\"$FOLDER\"                     \
-          BLUEPRINT_EXPORT_DIRECTORY=\"$FOLDER/.blueprint/tmp\" \
           BLUEPRINT_VERSION=\"$VERSION\"                        \
+          BLUEPRINT_TMP=\"$FOLDER/.blueprint/tmp\"              \
+          BLUEPRINT_EXPORT_DIRECTORY=\"$FOLDER/.blueprint/tmp\" \
           bash \"${conf_data_directory}\"/export.sh
         "
     fi

@@ -1,5 +1,17 @@
 #!/bin/bash
 
+php_escape_string() {
+  local string="$1"
+
+  # Escape ampersands.
+  string="${string//&/\\\\&}"
+
+  # Escape double quotes.
+  string="${string//\"/\\\\\\\\\\\"}"
+
+  echo "$string"
+}
+
 InstallExtension() {
   # The following code does some magic to allow for extensions with a
   # different root folder structure than expected by Blueprint.
@@ -153,6 +165,27 @@ InstallExtension() {
 
     eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/conf.yml old_)"
     local DUPLICATE="y"
+
+    # run extension update script
+    if [[ -f ".blueprint/extensions/$identifier/private/update.sh" ]]; then
+      PRINT WARNING "Extension uses a custom update script, proceed with caution."
+      chmod --silent +x ".blueprint/extensions/$identifier/private/update.sh" 2>> "$BLUEPRINT__DEBUG"
+
+
+      su "$WEBUSER" -s "$USERSHELL" -c "
+        cd \"$FOLDER\";
+        ENGINE=\"$BLUEPRINT_ENGINE\"         \
+        EXTENSION_IDENTIFIER=\"$identifier\" \
+        EXTENSION_TARGET=\"$target\"         \
+        EXTENSION_VERSION=\"$version\"       \
+        PTERODACTYL_DIRECTORY=\"$FOLDER\"    \
+        BLUEPRINT_VERSION=\"$VERSION\"       \
+        BLUEPRINT_DEVELOPER=\"$dev\"         \
+        BLUEPRINT_TMP=\".blueprint/tmp/$n\"  \
+        bash .blueprint/extensions/$identifier/private/update.sh
+      "
+      echo -e "\e[0m\x1b[0m\033[0m"
+    fi
 
     # Clean up some old extension files.
     if [[ $old_data_public != "" ]]; then
@@ -1071,9 +1104,12 @@ InstallExtension() {
   if [[ $ICON == *"~"* ]]; then        PRINT WARNING "'ICON' contains '~' and may result in an error.";fi
   if [[ $identifier == *"~"* ]]; then  PRINT WARNING "'identifier' contains '~' and may result in an error.";fi
 
+  escaped_name=$(php_escape_string "$name")
+  escaped_description=$(php_escape_string "$description")
+
   # Construct admin button
   sed -i \
-    -e "s~\[name\]~$name~g" \
+    -e "s~\[name\]~$escaped_name~g" \
     -e "s~\[version\]~$version~g" \
     -e "s~\[id\]~$identifier~g" \
     -e "s~\[icon\]~$ICON~g" \
@@ -1081,12 +1117,13 @@ InstallExtension() {
 
   # Construct admin view
   sed -i \
-    -e "s~\[name\]~$name~g" \
-    -e "s~\[description\]~$description~g" \
+    -e "s~\[name\]~$escaped_name~g" \
+    -e "s~\[description\]~$escaped_description~g" \
     -e "s~\[version\]~$version~g" \
     -e "s~\[icon\]~$ICON~g" \
     -e "s~\[id\]~$identifier~g" \
     "$AdminBladeConstructor"
+  sed -i -e "s/\\\\\\\\/\\\\/g" "$AdminBladeConstructor"
   if [[ $website != "" ]]; then
     sed -i \
       -e "s~\[website\]~$website~g" \
@@ -1293,6 +1330,7 @@ Command() {
 
     if [[ ( $YARN == "y" ) && ( $IgnoreRebuild != "true" ) ]]; then
       PRINT INFO "Rebuilding panel assets.."
+      cd "$FOLDER" || cdhalt
       yarn run build:production --progress
     fi
 
