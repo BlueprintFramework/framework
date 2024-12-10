@@ -15,7 +15,7 @@
   USERSHELL="/bin/bash" #;
 
 # Defines the version Blueprint will display as the active one.
-  VERSION="beta-2024-11"
+  VERSION="beta-2024-12"
   BLUEPRINT_ENGINE="solstice"
 
 # Default GitHub repository to use when upgrading Blueprint.

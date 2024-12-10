@@ -32,7 +32,7 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
   /**
    * (Deprecated) Display a notification on the Pterodactyl admin panel and refresh the page after a certain delay.
    * 
-   * @deprecated beta-2024-11
+   * @deprecated beta-2024-12
    * @param string $delay Refresh after (in seconds)
    * @param string $text Notification contents
    * 
@@ -44,7 +44,7 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    * (Deprecated) Display a notification on the Pterodactyl admin panel and refresh the page instantly.
    * Behaves the same as calling `notifyAfter()` with a delay of zero.
    * 
-   * @deprecated beta-2024-11
+   * @deprecated beta-2024-12
    * @param string $text Notification contents
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
