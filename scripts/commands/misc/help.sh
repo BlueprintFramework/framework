@@ -1,7 +1,7 @@
 #!/bin/bash
 
 Command() {
-  if dbValidate "blueprint.developerEnabled"; then
+  if is_developer; then
     help_dev_status=""
     help_dev_primary="\e[34;1m"
     help_dev_secondary="\e[34m"

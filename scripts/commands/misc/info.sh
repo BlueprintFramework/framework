@@ -8,7 +8,7 @@ Command() {
   fetchlocale()     { printf "\x1b[0m\x1b[37;2m"; if [[ $(grabAppLocale) != "" ]]; then grabAppLocale; else echo "none"; fi }
   fetchtimezone()   { printf "\x1b[0m\x1b[37;2m"; if [[ $(grabAppTimezone) != "" ]]; then grabAppTimezone; else echo "none"; fi }
   fetchextensions() { printf "\x1b[0m\x1b[37;2m"; tr -cd ',' <.blueprint/extensions/blueprint/private/db/installed_extensions | wc -c | tr -d ' '; }
-  fetchdeveloper()  { printf "\x1b[0m\x1b[37;2m"; if dbValidate "blueprint.developerEnabled"; then echo "true"; else echo "false"; fi }
+  fetchdeveloper()  { printf "\x1b[0m\x1b[37;2m"; if is_developer; then echo "true"; else echo "false"; fi }
   fetchnode()       { printf "\x1b[0m\x1b[37;2m"; if [[ $(node -v) != "" ]]; then node -v; else echo "none"; fi }
   fetchyarn()       { printf "\x1b[0m\x1b[37;2m"; if [[ $(yarn -v) != "" ]]; then yarn -v; else echo "none"; fi }
 

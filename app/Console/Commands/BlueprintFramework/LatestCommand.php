@@ -7,7 +7,7 @@ use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlacehol
 
 class LatestCommand extends Command
 {
-  protected $description = 'Get the version name of the newest release of Blueprint.';
+  protected $description = 'Fetches latest Blueprint version name';
   protected $signature = 'bp:latest';
 
   /**

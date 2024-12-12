@@ -75,7 +75,7 @@ Blueprint
               <p class="text-muted small">Enable or disable developer-oriented features.</p>
             </div>
             <!-- UUID -->
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
               <label class="control-label">UUID</label>
               <input type="text" value="{{ $ExtensionLibrary->dbGet('blueprint', 'uuid') }}" class="form-control"
                 readonly />

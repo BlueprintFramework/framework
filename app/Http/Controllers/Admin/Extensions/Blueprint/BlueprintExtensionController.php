@@ -60,8 +60,6 @@ class BlueprintExtensionController extends Controller
 
     // Confirm that the database value changes have been applied.
     $this->ExtensionLibrary->notify("Your changes have been saved.");
-    // Sync database values with the bash side of Blueprint.
-    Artisan::call("bp:sync");
     // Redirect back to the page the user was on.
     return redirect()->route('admin.extensions.blueprint.index');
   }

@@ -88,12 +88,7 @@ source scripts/libraries/parse_yaml.sh    || missinglibs+="[parse_yaml]"
 source scripts/libraries/grabenv.sh       || missinglibs+="[grabenv]"
 source scripts/libraries/logFormat.sh     || missinglibs+="[logFormat]"
 source scripts/libraries/misc.sh          || missinglibs+="[misc]"
-source scripts/libraries/configutility.sh || missinglibs+="[configutility]"
 
-
-# -config
-# usage: "cITEM=VALUE bash blueprint.sh -config"
-if [[ "$1" == "-config" ]]; then ConfigUtility; fi
 
 cdhalt() { PRINT FATAL "Attempted navigation into nonexistent directory, halting process."; exit 1; }
 depend() {
@@ -151,7 +146,6 @@ depend() {
     if [[ $missinglibs == *"[grabEnv]"*       ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";    fi
     if [[ $missinglibs == *"[logFormat]"*     ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";  fi
     if [[ $missinglibs == *"[misc]"*          ]]; then PRINT FATAL "Required internal dependency \"internal:misc\" is not installed or detected.";       fi
-    if [[ $missinglibs == *"[configutility]"* ]]; then PRINT FATAL "Required internal dependency \"internal:configutility\" is not installed or detected.";       fi
 
     exit 1
   fi
@@ -294,12 +288,6 @@ if [[ $1 != "-bash" ]]; then
     PRINT INFO "Rebuilding panel assets.."
     cd "$FOLDER" || cdhalt
     yarn run build:production --progress
-
-    if [[ $DOCKER != "y" ]]; then
-      # Sync some database values.
-      PRINT INFO "Syncing Blueprint-related database values.."
-      php artisan bp:sync
-    fi
 
     if [[ $DOCKER != "y" ]] && [[ $MAINTENANCE == "true" ]]; then
       # Put application into production.

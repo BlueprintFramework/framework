@@ -30,7 +30,7 @@ class BlueprintTelemetryCollectionService
       return;
     }
 
-    Http::post('https://api.blueprintframe.work/api/telemetry', $data);
+    Http::post($this->placeholderService->api_url() . '/api/telemetry', $data);
   }
 
   /**
@@ -53,6 +53,7 @@ class BlueprintTelemetryCollectionService
       'blueprint' => [
         'version' => $this->placeholderService->version(),
         'extensions' => $this->blueprint->extensions()->toArray(),
+        'developer' => $this->blueprint->dbGet('blueprint', 'developer', 'false') === "true",
       ],
 
       'panel' => [

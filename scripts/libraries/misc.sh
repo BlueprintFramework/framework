@@ -4,7 +4,7 @@
 # and uses the same license as the rest of the codebase.
 
 
-# === DATABASE ===
+# (will remove these in the future) Functions to have a 'database' in bash
 FLDR=".blueprint/extensions/blueprint/private/db/database"
 # dbAdd "database.record"
 dbAdd() { echo "* ${1};" >> $FLDR; }
@@ -14,7 +14,7 @@ dbValidate() { grep -Fxq "* ${1};" $FLDR > /dev/null; }
 dbRemove() { sed -i "s/* ${1};//g" $FLDR > /dev/null; }
 
 
-# === SHIFTARGS ===
+# Function to shift arguments
 shiftArgs() {
   shift 1
   args=""
@@ -25,7 +25,7 @@ shiftArgs() {
 }
 
 
-# === UNSETVARS ===
+# Function to unset a bunch of variables
 unsetVariables() {
   patterns=("^conf_" "^old_" "^Console_" "^OldConsole_" "^Components_" "^OldComponents_" "^F_")
   for pattern in "${patterns[@]}"; do
@@ -33,4 +33,20 @@ unsetVariables() {
       unset "$var"
     done
   done
+}
+
+
+# Function to fetch developer status
+is_developer() {
+  if $is_developer; then
+    echo "$is_developer"
+    return
+  fi
+  if [[ $(php artisan bp:developer) == "true" ]]; then
+    export is_developer=true
+    echo true
+  else
+    export is_developer=false
+    echo false
+  fi
 }

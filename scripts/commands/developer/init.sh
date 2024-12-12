@@ -2,7 +2,7 @@
 
 Command() {
   # Check for developer mode through the database library.
-  if ! dbValidate "blueprint.developerEnabled"; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
+  if ! is_developer; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
 
   # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
   # until you wipe the contents of the .blueprint/dev directory.

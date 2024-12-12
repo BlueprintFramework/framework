@@ -5,13 +5,13 @@ namespace Pterodactyl\Console\Commands\BlueprintFramework;
 use Illuminate\Console\Command;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
 
-class CacheCommand extends Command
+class DeveloperCommand extends Command
 {
-  protected $description = 'Flush Blueprint stylesheet and scripts cache';
-  protected $signature = 'bp:cache';
+  protected $description = 'Check if Blueprint developer mode is enabled';
+  protected $signature = 'bp:developer';
 
   /**
-   * CacheCommand constructor.
+   * DeveloperCommand constructor.
    */
   public function __construct(
     private BlueprintExtensionLibrary $blueprint,
@@ -24,8 +24,7 @@ class CacheCommand extends Command
    */
   public function handle()
   {
-    $cache = time();
-    $this->blueprint->dbSet("blueprint", "cache", "$cache");
-    echo "Flushed Blueprint stylesheet and scripts cache.";
+    $developer = $this->blueprint->dbGet('blueprint', 'developer', 'false') === 'true';
+    echo ($developer);
   }
 }
