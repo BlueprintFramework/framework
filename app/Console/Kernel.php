@@ -10,10 +10,10 @@ use Pterodactyl\Repositories\Eloquent\SettingsRepository;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Pterodactyl\BlueprintFramework\GetExtensionSchedules;
 use Pterodactyl\Services\Telemetry\TelemetryCollectionService;
-use Pterodactyl\Services\Telemetry\BlueprintTelemetryCollectionService;
 use Pterodactyl\Console\Commands\Schedule\ProcessRunnableCommand;
 use Pterodactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
 use Pterodactyl\Console\Commands\Maintenance\CleanServiceBackupFilesCommand;
+use Pterodactyl\Services\Telemetry\RegisterBlueprintTelemetry;
 
 class Kernel extends ConsoleKernel
 {
@@ -46,8 +46,15 @@ class Kernel extends ConsoleKernel
             $schedule->command(PruneCommand::class, ['--model' => [ActivityLog::class]])->daily();
         }
 
+        // Pterodactyl telemetry
         if (config('pterodactyl.telemetry.enabled')) {
             $this->registerTelemetry($schedule);
+        }
+
+        // Blueprint telemetry
+        if (config('blueprint.telemetry')) {
+            $registerBlueprintTelemetry = app()->make(RegisterBlueprintTelemetry::class);
+            $registerBlueprintTelemetry->register($schedule);
         }
 
         GetExtensionSchedules::schedules($schedule);
@@ -76,6 +83,5 @@ class Kernel extends ConsoleKernel
 
         // Run the telemetry collector.
         $schedule->call(app()->make(TelemetryCollectionService::class))->description('Collect Telemetry')->dailyAt("$hour:$minute");
-        $schedule->call(app()->make(BlueprintTelemetryCollectionService::class))->description('Collect Blueprint Telemetry')->dailyAt("$hour:$minute");
     }
 }
