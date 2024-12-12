@@ -280,14 +280,8 @@ if [[ $1 != "-bash" ]]; then
 
     # Run migrations if Blueprint is not upgrading.
     if [[ ( $1 != "--post-upgrade" ) && ( $DOCKER != "y" ) ]]; then
-      PRINT INPUT "Would you like to migrate your database? (Y/n)"
-      read -r YN
-      if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then
-        PRINT INFO "Running database migrations.."
-        php artisan migrate --force
-      else
-        PRINT INFO "Database migrations have been skipped."
-      fi
+      PRINT INFO "Running database migrations.."
+      php artisan migrate --force
     fi
 
     # Make sure all files have correct permissions.
