@@ -74,16 +74,6 @@ Blueprint
               </select>
               <p class="text-muted small">Enable or disable developer-oriented features.</p>
             </div>
-            <!-- Telemetry -->
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-              <label class="control-label">Telemetry</label>
-              <select class="form-control" name="telemetry">
-                <option value="true">Enabled</option>
-                <option value="false" @if($ExtensionLibrary->dbGet('blueprint', 'telemetry') != "true") selected @endif>
-                  Disabled</option>
-              </select>
-              <p class="text-muted small">Share usage data to further improve Blueprint.</p>
-            </div>
             <!-- UUID -->
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
               <label class="control-label">UUID</label>
