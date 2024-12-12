@@ -54,6 +54,7 @@ class BlueprintTelemetryCollectionService
         'version' => $this->placeholderService->version(),
         'extensions' => $this->blueprint->extensions()->toArray(),
         'developer' => $this->blueprint->dbGet('blueprint', 'developer', 'false') === "true",
+        'docker' => file_exists('/.dockerenv'),
       ],
 
       'panel' => [
