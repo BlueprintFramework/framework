@@ -15,7 +15,9 @@ class CacheCommand extends Command
    */
   public function __construct(
     private BlueprintExtensionLibrary $blueprint,
-  ) { parent::__construct(); }
+  ) {
+    parent::__construct();
+  }
 
   /**
    * Handle execution of command.

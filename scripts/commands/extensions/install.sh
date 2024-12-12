@@ -1362,12 +1362,10 @@ Command() {
     fi
 
     if [[ $BuiltExtensions == "" ]]; then
-      sendTelemetry "FINISH_EXTENSION_INSTALLATION" >> "$BLUEPRINT__DEBUG"
       CorrectPhrasing="have"
       if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
       PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
     else
-      sendTelemetry "BUILD_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
       PRINT SUCCESS "$BuiltExtensions has been built."
     fi
 

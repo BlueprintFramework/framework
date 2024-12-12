@@ -14,17 +14,6 @@ dbValidate() { grep -Fxq "* ${1};" $FLDR > /dev/null; }
 dbRemove() { sed -i "s/* ${1};//g" $FLDR > /dev/null; }
 
 
-# === TELEMETRY ===
-sendTelemetry() {
-  cd "${BLUEPRINT__FOLDER}" || return
-  key=$(cat .blueprint/extensions/blueprint/private/db/telemetry_id)
-  if [[ $key == "KEY_NOT_UPDATED" ]]; then 
-    return 0
-  fi
-  curl --location --silent --connect-timeout 3 "http://api.blueprint.zip:50000/send/$key/$1" &
-}
-
-
 # === SHIFTARGS ===
 shiftArgs() {
   shift 1

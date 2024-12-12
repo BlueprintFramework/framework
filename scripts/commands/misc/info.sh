@@ -9,7 +9,6 @@ Command() {
   fetchtimezone()   { printf "\x1b[0m\x1b[37;2m"; if [[ $(grabAppTimezone) != "" ]]; then grabAppTimezone; else echo "none"; fi }
   fetchextensions() { printf "\x1b[0m\x1b[37;2m"; tr -cd ',' <.blueprint/extensions/blueprint/private/db/installed_extensions | wc -c | tr -d ' '; }
   fetchdeveloper()  { printf "\x1b[0m\x1b[37;2m"; if dbValidate "blueprint.developerEnabled"; then echo "true"; else echo "false"; fi }
-  fetchtelemetry()  { printf "\x1b[0m\x1b[37;2m"; if [[ $(cat .blueprint/extensions/blueprint/private/db/telemetry_id) == "KEY_NOT_UPDATED" ]]; then echo "false"; else echo "true"; fi }
   fetchnode()       { printf "\x1b[0m\x1b[37;2m"; if [[ $(node -v) != "" ]]; then node -v; else echo "none"; fi }
   fetchyarn()       { printf "\x1b[0m\x1b[37;2m"; if [[ $(yarn -v) != "" ]]; then yarn -v; else echo "none"; fi }
 
@@ -28,7 +27,6 @@ Command() {
   echo -e "${C0}  ${C3}▀▀▀▀${C0}  Timezone: $(fetchtimezone)${C0}"
   echo -e "        ${C0}Extensions: $(fetchextensions)${C0}"
   echo -e "        ${C0}Developer: $(fetchdeveloper)${C0}"
-  echo -e "        ${C0}Telemetry: $(fetchtelemetry)${C0}"
   echo -e "        ${C0}Node: $(fetchnode)${C0}"
   echo -e "        ${C0}Yarn: $(fetchyarn)${C0}"
   echo -e "\x1b[0m"

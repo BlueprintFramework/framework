@@ -25,7 +25,8 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function notify(string $text): void {
+  public function notify(string $text): void
+  {
     $this->dbSet('blueprint', 'notification:text', $text);
   }
 
@@ -38,7 +39,9 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function notifyAfter($delay, $text): void {}
+  public function notifyAfter($delay, $text): void
+  {
+  }
 
   /**
    * (Deprecated) Display a notification on the Pterodactyl admin panel and refresh the page instantly.
@@ -49,7 +52,9 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function notifyNow($text): void {}
+  public function notifyNow($text): void
+  {
+  }
 
   /**
    * Returns a HTML link tag importing the specified stylesheet with additional URL params to avoid issues with stylesheet cache.
@@ -59,7 +64,8 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function importStylesheet(string $url): string {
+  public function importStylesheet(string $url): string
+  {
     $cache = $this->dbGet('blueprint', 'cache', 0);
 
     return "<link rel=\"stylesheet\" href=\"$url?v=$cache\">";
@@ -73,7 +79,8 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function importScript(string $url): string {
+  public function importScript(string $url): string
+  {
     $cache = $this->dbGet('blueprint', 'cache', 0);
 
     return "<script src=\"$url?v=$cache\"></script>";

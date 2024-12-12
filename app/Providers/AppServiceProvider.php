@@ -59,10 +59,10 @@ class AppServiceProvider extends ServiceProvider
     {
         // Merge Blueprint configurations with existing configurations.
         $this->mergeConfigFrom(base_path('config/ExtensionFS.php'), 'filesystems');
-        
+
         // Load Blueprint's route service provider.
         $this->app->register(RouteServiceProvider::class);
-        
+
         // Only load the settings service provider if the environment
         // is configured to allow it.
         if (!config('pterodactyl.load_environment_only', false) && $this->app->environment() !== 'testing') {

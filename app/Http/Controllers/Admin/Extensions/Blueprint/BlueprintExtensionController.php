@@ -8,7 +8,6 @@ use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 use Pterodactyl\BlueprintFramework\Services\ConfigService\BlueprintConfigService;
-use Pterodactyl\BlueprintFramework\Services\TelemetryService\BlueprintTelemetryService;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
@@ -21,14 +20,13 @@ class BlueprintExtensionController extends Controller
    * BlueprintExtensionController constructor.
    */
   public function __construct(
-    private BlueprintTelemetryService $TelemetryService,
     private BlueprintExtensionLibrary $ExtensionLibrary,
     private BlueprintPlaceholderService $PlaceholderService,
     private BlueprintConfigService $ConfigService,
 
     private ViewFactory $view,
     private SettingsRepositoryInterface $settings,
-    ) {
+  ) {
   }
 
   /**
@@ -38,13 +36,13 @@ class BlueprintExtensionController extends Controller
   {
     $LatestVersion = $this->ConfigService->latest();
     return $this->view->make(
-      'admin.extensions.blueprint.index', [
+      'admin.extensions.blueprint.index',
+      [
         'ExtensionLibrary' => $this->ExtensionLibrary,
-        'TelemetryService' => $this->TelemetryService,
         'PlaceholderService' => $this->PlaceholderService,
         'ConfigService' => $this->ConfigService,
         'LatestVersion' => $LatestVersion,
-        
+
         'root' => "/admin/extensions/blueprint",
       ]
     );
@@ -74,7 +72,8 @@ class BlueprintAdminFormRequest extends AdminFormRequest
   // Form validation for settings on the Blueprint admin page.
   // This is included in the controller directly as that
   // simplifies my work.
-  public function rules(): array {
+  public function rules(): array
+  {
     return [
       'placeholder' => 'string',
       'developer' => 'string|in:true,false',
@@ -82,7 +81,8 @@ class BlueprintAdminFormRequest extends AdminFormRequest
     ];
   }
 
-  public function attributes(): array {
+  public function attributes(): array
+  {
     return [
       'placeholder' => 'Placeholder Value',
       'developer' => 'Developer Mode',

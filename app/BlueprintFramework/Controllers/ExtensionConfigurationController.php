@@ -12,7 +12,9 @@ class ExtensionConfigurationController extends Controller
   /**
    * BlueprintExtensionController constructor.
    */
-  public function __construct(private SettingsRepositoryInterface $settings,) {}
+  public function __construct(private SettingsRepositoryInterface $settings, )
+  {
+  }
 
   /**
    * @throws \Pterodactyl\Exceptions\Model\DataValidationException
@@ -26,7 +28,7 @@ class ExtensionConfigurationController extends Controller
     foreach ($request->normalize() as $key => $value) {
       if (str_ends_with($key, '_eggs')) {
         // if there are other eggs set, remove the -1 'egg'
-        $eggs = (array)$value['*'];
+        $eggs = (array) $value['*'];
         if (count($eggs) > 1 && in_array('-1', $eggs)) {
           $eggs = array_diff($eggs, ['-1']);
         }
@@ -36,26 +38,28 @@ class ExtensionConfigurationController extends Controller
 
       $this->settings->set('blueprint::extensionconfig_' . $key, $value);
     }
-  
-    return redirect()->route('admin.extensions.'.$request->input('_identifier', 'blueprint').'.index');
+
+    return redirect()->route('admin.extensions.' . $request->input('_identifier', 'blueprint') . '.index');
   }
 }
 
 class ExtensionConfigurationRequest extends AdminFormRequest
 {
-  public function rules(): array {
+  public function rules(): array
+  {
     return [
-      $this->input('_identifier', 'blueprint').'_adminlayouts' => 'boolean',
-      $this->input('_identifier', 'blueprint').'_dashboardwrapper' => 'boolean',
-      $this->input('_identifier', 'blueprint').'_eggs' => 'array',
-      $this->input('_identifier', 'blueprint').'_eggs.*' => 'numeric',
+      $this->input('_identifier', 'blueprint') . '_adminlayouts' => 'boolean',
+      $this->input('_identifier', 'blueprint') . '_dashboardwrapper' => 'boolean',
+      $this->input('_identifier', 'blueprint') . '_eggs' => 'array',
+      $this->input('_identifier', 'blueprint') . '_eggs.*' => 'numeric',
     ];
   }
 
-  public function attributes(): array {
+  public function attributes(): array
+  {
     return [
-      $this->input('_identifier', 'blueprint').'_adminlayouts' => 'admin layouts permission',
-      $this->input('_identifier', 'blueprint').'_dashboardwrapper' => 'dashboard wrapper permission',
+      $this->input('_identifier', 'blueprint') . '_adminlayouts' => 'admin layouts permission',
+      $this->input('_identifier', 'blueprint') . '_dashboardwrapper' => 'dashboard wrapper permission',
     ];
   }
 }

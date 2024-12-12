@@ -161,5 +161,4 @@ Command() {
   mkdir -p .blueprint/tmp
 
   PRINT SUCCESS "Extension files initialized and imported to '.blueprint/dev'."
-  sendTelemetry "INITIALIZE_DEVELOPMENT_EXTENSION" >> "$BLUEPRINT__DEBUG"
 }

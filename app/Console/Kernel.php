@@ -10,6 +10,7 @@ use Pterodactyl\Repositories\Eloquent\SettingsRepository;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Pterodactyl\BlueprintFramework\GetExtensionSchedules;
 use Pterodactyl\Services\Telemetry\TelemetryCollectionService;
+use Pterodactyl\Services\Telemetry\BlueprintTelemetryCollectionService;
 use Pterodactyl\Console\Commands\Schedule\ProcessRunnableCommand;
 use Pterodactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
 use Pterodactyl\Console\Commands\Maintenance\CleanServiceBackupFilesCommand;
@@ -75,5 +76,6 @@ class Kernel extends ConsoleKernel
 
         // Run the telemetry collector.
         $schedule->call(app()->make(TelemetryCollectionService::class))->description('Collect Telemetry')->dailyAt("$hour:$minute");
+        $schedule->call(app()->make(BlueprintTelemetryCollectionService::class))->description('Collect Blueprint Telemetry')->dailyAt("$hour:$minute");
     }
 }

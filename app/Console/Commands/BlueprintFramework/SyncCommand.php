@@ -21,24 +21,15 @@ class SyncCommand extends Command
     private BlueprintConfigService $ConfigService,
     private BlueprintPlaceholderService $PlaceholderService,
     private SettingsRepositoryInterface $settings,
-  ) { parent::__construct(); }
+  ) {
+    parent::__construct();
+  }
 
   /**
    * Handle execution of command.
    */
   public function handle()
   {
-    // TELEMETRY ID
-    if ($this->settings->get('blueprint::panel:id') == "" || $this->PlaceholderService->version() != $this->settings->get('blueprint::version:cache')) {
-      $this->settings->set('blueprint::panel:id', uniqid(rand())."@".$this->PlaceholderService->version());
-      $this->settings->set('blueprint::version:cache', $this->PlaceholderService->version());
-    }
-    
-    // TELEMETRY STATUS
-    if ($this->settings->get('blueprint::telemetry') == "") { $this->settings->set('blueprint::telemetry', "true"); }
-    if ($this->settings->get('blueprint::telemetry') == "false") { $this->ConfigService->config('TELEMETRY_ID','KEY_NOT_UPDATED');
-    } else { $this->ConfigService->config('TELEMETRY_ID',$this->settings->get("blueprint::panel:id")); }
-
     // DEVELOPER MODE
     $this->ConfigService->config('DEVELOPER', $this->settings->get('blueprint::developer'));
   }

@@ -22,7 +22,8 @@ class ExtensionRouteController extends ClientApiController
     }
 }
 
-class GetRouteEggsRequest extends ClientApiRequest {
+class GetRouteEggsRequest extends ClientApiRequest
+{
     public function authorize(): bool
     {
         return true;

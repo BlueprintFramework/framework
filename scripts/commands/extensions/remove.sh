@@ -391,7 +391,6 @@ Command() {
     -path "$FOLDER/node_modules" -prune \
     -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
-    sendTelemetry "FINISH_EXTENSION_REMOVAL" >> "$BLUEPRINT__DEBUG"
     CorrectPhrasing="have"
     if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
     PRINT SUCCESS "$RemovedExtensions $CorrectPhrasing been removed."

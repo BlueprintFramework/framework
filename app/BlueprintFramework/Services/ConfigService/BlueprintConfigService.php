@@ -11,12 +11,14 @@ class BlueprintConfigService
   ) {
   }
 
-  public function config($item, $value): string|null {
-    return shell_exec("cd ".escapeshellarg($this->PlaceholderService->folder()).";c$item=$value bash blueprint.sh -config");
+  public function config($item, $value): string|null
+  {
+    return shell_exec("cd " . escapeshellarg($this->PlaceholderService->folder()) . ";c$item=$value bash blueprint.sh -config");
   }
 
-  public function latest(): string {
-    $api_url = $this->PlaceholderService->api_url()."/api/latest";
+  public function latest(): string
+  {
+    $api_url = $this->PlaceholderService->api_url() . "/api/latest";
     $context = stream_context_create([
       'http' => [
         'method' => 'GET',

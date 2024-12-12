@@ -15,14 +15,16 @@ class LatestCommand extends Command
    */
   public function __construct(
     private BlueprintPlaceholderService $PlaceholderService,
-  ) { parent::__construct(); }
+  ) {
+    parent::__construct();
+  }
 
   /**
    * Handle execution of command.
    */
   public function handle()
   {
-    $api_url = $this->PlaceholderService->api_url()."/api/latest";
+    $api_url = $this->PlaceholderService->api_url() . "/api/latest";
     $context = stream_context_create([
       'http' => [
         'method' => 'GET',

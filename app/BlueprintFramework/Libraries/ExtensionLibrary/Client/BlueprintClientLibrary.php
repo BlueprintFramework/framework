@@ -26,7 +26,8 @@ class BlueprintClientLibrary extends BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function importStylesheet(string $url): string {
+  public function importStylesheet(string $url): string
+  {
     $cache = $this->dbGet('blueprint', 'cache', 0);
 
     return "<link rel=\"stylesheet\" href=\"$url?v=$cache\">";
@@ -40,7 +41,8 @@ class BlueprintClientLibrary extends BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function importScript(string $url): string {
+  public function importScript(string $url): string
+  {
     $cache = $this->dbGet('blueprint', 'cache', 0);
 
     return "<script src=\"$url?v=$cache\"></script>";

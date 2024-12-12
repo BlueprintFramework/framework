@@ -15,10 +15,13 @@
 namespace Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use Symfony\Component\Yaml\Yaml;
 
 class BlueprintBaseLibrary
 {
-  private function getRecordName(string $table, string $record) {
+  private function getRecordName(string $table, string $record)
+  {
     return "$table::$record";
   }
 
@@ -32,7 +35,8 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function dbGet(string $table, string $record, mixed $default = null): mixed {
+  public function dbGet(string $table, string $record, mixed $default = null): mixed
+  {
     $value = DB::table('settings')->where('key', $this->getRecordName($table, $record))->first();
 
     return $value ? $value->value : $default;
@@ -48,7 +52,8 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function dbGetMany(string $table, array $records = [], mixed $default = null): array {
+  public function dbGetMany(string $table, array $records = [], mixed $default = null): array
+  {
     if (empty($records)) {
       $values = DB::table('settings')->where('key', 'like', "$table::%")->get();
     } else {
@@ -77,7 +82,8 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function dbSet(string $table, string $record, mixed $value): void {
+  public function dbSet(string $table, string $record, mixed $value): void
+  {
     DB::table('settings')->updateOrInsert(
       ['key' => $this->getRecordName($table, $record)],
       ['value' => (string) $value]
@@ -92,7 +98,8 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function dbSetMany(string $table, array $records): void {
+  public function dbSetMany(string $table, array $records): void
+  {
     $data = [];
     foreach ($records as $record => $value) {
       $data[] = [
@@ -113,7 +120,8 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function dbForget(string $table, string $record): bool {
+  public function dbForget(string $table, string $record): bool
+  {
     return (bool) DB::table('settings')->where('key', $this->getRecordName($table, $record))->delete();
   }
 
@@ -126,7 +134,8 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function dbForgetMany(string $table, array $records): bool {
+  public function dbForgetMany(string $table, array $records): bool
+  {
     return (bool) DB::table('settings')->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))->delete();
   }
 
@@ -138,9 +147,12 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function fileRead(string $path): string {
-    if (!file_exists($path)) return '';
-    if (!is_readable($path)) return '';
+  public function fileRead(string $path): string
+  {
+    if (!file_exists($path))
+      return '';
+    if (!is_readable($path))
+      return '';
 
     return file_get_contents($path);
   }
@@ -152,7 +164,8 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function fileMake(string $path): void {
+  public function fileMake(string $path): void
+  {
     $file = fopen($path, 'w');
     fclose($file);
   }
@@ -165,7 +178,8 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function fileWipe(string $path): bool {
+  public function fileWipe(string $path): bool
+  {
     if (is_dir($path)) {
       $files = array_diff(scandir($path), ['.', '..']);
 
@@ -193,7 +207,8 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function extension(string $identifier): bool {
+  public function extension(string $identifier): bool
+  {
     return str_contains($this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')), $identifier);
   }
 
@@ -204,9 +219,23 @@ class BlueprintBaseLibrary
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function extensionList(): array {
+  public function extensions(): Collection
+  {
     $array = explode(',', $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')));
+    $collection = new Collection();
 
-    return array_filter($array, fn($value) => !empty($value));
+    foreach ($array as $extension) {
+      if (!$extension)
+        continue;
+
+      try {
+        $conf = Yaml::parse($this->fileRead(base_path(".blueprint/extensions/$extension/private/.store/conf.yml")));
+
+        $collection->push(array_filter($conf['info'], fn($v) => (bool) $v));
+      } catch (\Throwable $e) {
+      }
+    }
+
+    return $collection;
   }
 }

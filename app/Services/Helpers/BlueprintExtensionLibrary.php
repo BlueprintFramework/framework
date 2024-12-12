@@ -34,18 +34,38 @@ class BlueprintExtensionLibrary
   ) {
   }
 
-  public function dbGet($table, $record) {
-    return $this->settings->get($table."::".$record);
+  public function dbGet($table, $record)
+  {
+    return $this->settings->get($table . "::" . $record);
   }
-  public function dbSet($table, $record, $value) {
-    return $this->settings->set($table."::".$record, $value);
+  public function dbSet($table, $record, $value)
+  {
+    return $this->settings->set($table . "::" . $record, $value);
   }
 
-  public function notify($text) { return false; }
-  public function notifyAfter($delay, $text) { return false; }
-  public function notifyNow($text) { return false; }
+  public function notify($text)
+  {
+    return false;
+  }
+  public function notifyAfter($delay, $text)
+  {
+    return false;
+  }
+  public function notifyNow($text)
+  {
+    return false;
+  }
 
-  public function fileRead($path) { return false; }
-  public function fileMake($path) { return false; }
-  public function fileWipe($path) { return false; }
+  public function fileRead($path)
+  {
+    return false;
+  }
+  public function fileMake($path)
+  {
+    return false;
+  }
+  public function fileWipe($path)
+  {
+    return false;
+  }
 }
