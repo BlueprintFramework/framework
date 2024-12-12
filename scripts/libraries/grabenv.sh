@@ -10,23 +10,43 @@
 # - grabAppLocale           string
 
 
+source "${BLUEPRINT__FOLDER}"/.env 2>> "${BLUEPRINT__DEBUG}"
 
-cd "${BLUEPRINT__FOLDER}" || exit
-env_file=".env"
-while IFS= read -r line; do
-  if [[ $line == \#* ]]; then
-    continue
-  fi
-  if [[ $line == *"="* ]]; then
-    variable_name=$(echo "$line" | cut -d= -f1)
-    variable_value=$(echo "$line" | cut -d= -f2-)
-    variable_name=$(echo "$variable_name" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-    variable_value=$(echo "$variable_value" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | sed 's/^"\(.*\)"$/\1/')
-    declare "$variable_name=$variable_value"
-  fi
-done < "$env_file"
+slowEnv() {
+  cd "${BLUEPRINT__FOLDER}" || exit
+  env_file=".env"
+  while IFS= read -r line; do
+    if [[ $line == \#* ]]; then
+      continue
+    fi
+    if [[ $line == *"="* ]]; then
+      variable_name=$(echo "$line" | cut -d= -f1)
+      variable_value=$(echo "$line" | cut -d= -f2-)
+      variable_name=$(echo "$variable_name" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      variable_value=$(echo "$variable_value" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | sed 's/^"\(.*\)"$/\1/')
+      declare "$variable_name=$variable_value"
+    fi
+  done < "$env_file"
+}
 
-grabAppUrl() { echo "$APP_URL"; }
-grabAppDebug() { echo "$APP_DEBUG"; }
-grabAppTimezone() { echo "$APP_TIMEZONE"; }
-grabAppLocale() { echo "$APP_LOCALE"; }
+if [[
+  ( "$APP_URL" == "" ) ||
+  ( "$APP_DEBUG" == "" ) ||
+  ( "$APP_TIMEZONE" == "" ) ||
+  ( "$APP_LOCALE" == "" )
+]]; then
+  slowEnv
+fi
+
+grabAppUrl() { 
+  echo "$APP_URL";
+}
+grabAppDebug() {
+  echo "$APP_DEBUG";
+}
+grabAppTimezone() {
+  echo "$APP_TIMEZONE";
+}
+grabAppLocale() {
+  echo "$APP_LOCALE";
+}
