@@ -25,6 +25,10 @@ class DeveloperCommand extends Command
   public function handle()
   {
     $developer = $this->blueprint->dbGet('blueprint', 'developer', 'false') === 'true';
-    echo ($developer);
+    if ($developer) {
+      echo ("true");
+      return;
+    }
+    echo ("false");
   }
 }

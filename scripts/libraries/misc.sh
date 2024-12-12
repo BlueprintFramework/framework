@@ -38,15 +38,14 @@ unsetVariables() {
 
 # Function to fetch developer status
 is_developer() {
-  if $is_developer; then
-    echo "$is_developer"
-    return
+  if [[ $is_developer != "" ]]; then
+    return "$is_developer"
   fi
-  if [[ $(php artisan bp:developer) == "true" ]]; then
-    export is_developer=true
-    echo true
+  if [[ $(php artisan bp:developer) == "true"* ]]; then
+    export is_developer=0
+    return 0
   else
-    export is_developer=false
-    echo false
+    export is_developer=1
+    return 1
   fi
 }
