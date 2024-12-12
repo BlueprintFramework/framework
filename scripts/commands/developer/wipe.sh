@@ -14,10 +14,8 @@ Command() {
   if [[ ( ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ) || ( ( ${YN} == "" ) ) ]]; then PRINT INFO "Development files removal cancelled.";exit 1;fi
 
   PRINT INFO "Clearing development folder.."
-  rm -R \
-    .blueprint/dev/* \
-    .blueprint/dev/.* \
-    2>> "$BLUEPRINT__DEBUG"
+  rm -R .blueprint/dev 2>> "$BLUEPRINT__DEBUG"
+  mkdir -p .blueprint/dev
 
   PRINT SUCCESS "Development folder has been cleared."
 }
