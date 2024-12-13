@@ -10,7 +10,7 @@ use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintC
 class RegisterBlueprintTelemetry
 {
   /**
-   * I'm intrigued by this function's purpose.
+   * ¯\_(ツ)_/¯
    *
    * @throws \Pterodactyl\Exceptions\Model\DataValidationException
    * @throws \Illuminate\Contracts\Container\BindingResolutionException
