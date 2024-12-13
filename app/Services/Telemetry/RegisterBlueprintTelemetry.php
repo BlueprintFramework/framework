@@ -15,7 +15,7 @@ class RegisterBlueprintTelemetry
    * @throws \Pterodactyl\Exceptions\Model\DataValidationException
    * @throws \Illuminate\Contracts\Container\BindingResolutionException
    */
-  private function register(Schedule $schedule, BlueprintExtensionLibrary $blueprint): void
+  public function register(Schedule $schedule, BlueprintExtensionLibrary $blueprint): void
   {
     $uuid = $blueprint->dbGet('blueprint', 'uuid');
     if (is_null($uuid)) {
