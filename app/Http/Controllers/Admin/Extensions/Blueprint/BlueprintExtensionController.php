@@ -7,7 +7,6 @@ use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
-use Pterodactyl\BlueprintFramework\Services\ConfigService\BlueprintConfigService;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
 use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
@@ -22,7 +21,6 @@ class BlueprintExtensionController extends Controller
   public function __construct(
     private BlueprintExtensionLibrary $ExtensionLibrary,
     private BlueprintPlaceholderService $PlaceholderService,
-    private BlueprintConfigService $ConfigService,
 
     private ViewFactory $view,
     private SettingsRepositoryInterface $settings,
@@ -34,7 +32,7 @@ class BlueprintExtensionController extends Controller
    */
   public function index(): View
   {
-    $LatestVersion = $this->ConfigService->latest();
+    $LatestVersion = $this->call('bp:version:latest');
     return $this->view->make(
       'admin.extensions.blueprint.index',
       [
