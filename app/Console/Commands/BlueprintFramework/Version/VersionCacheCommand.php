@@ -1,6 +1,6 @@
 <?php
 
-namespace Pterodactyl\Console\Commands\BlueprintFramework;
+namespace Pterodactyl\Console\Commands\BlueprintFramework\Version;
 
 use Illuminate\Console\Command;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
