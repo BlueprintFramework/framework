@@ -32,7 +32,7 @@ class BlueprintExtensionController extends Controller
    */
   public function index(): View
   {
-    $LatestVersion = $this->call('bp:version:latest');
+    $LatestVersion = $this->blueprint->dbGet('blueprint', 'version:latest');
     return $this->view->make(
       'admin.extensions.blueprint.index',
       [
