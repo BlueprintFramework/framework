@@ -4,17 +4,19 @@ namespace Pterodactyl\Console\Commands\BlueprintFramework;
 
 use Illuminate\Console\Command;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
+use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
 
-class LatestCommand extends Command
+class VersionCacheCommand extends Command
 {
-  protected $description = 'Fetches latest Blueprint version name';
-  protected $signature = 'bp:latest';
+  protected $description = 'Fetches and caches the latest release name';
+  protected $signature = 'bp:version:cache';
 
   /**
-   * LatestCommand constructor.
+   * VersionFetchCommand constructor.
    */
   public function __construct(
     private BlueprintPlaceholderService $PlaceholderService,
+    private BlueprintExtensionLibrary $blueprint,
   ) {
     parent::__construct();
   }
@@ -37,15 +39,15 @@ class LatestCommand extends Command
       $data = json_decode($cleaned_response, true);
       if (isset($data['name'])) {
         $latest_version = $data['name'];
-        echo "$latest_version";
-        return "$latest_version";
+        $this->blueprint->dbSet('blueprint', 'version:latest', $latest_version);
+        return true;
       } else {
         echo "Error: Unable to fetch the latest release version.";
-        return "Error";
+        return false;
       }
     } else {
       echo "Error: Failed to make the API request.";
-      return "Error";
+      return false;
     }
   }
 }

@@ -121,7 +121,7 @@ Command() {
 
   tnum=${ASKTEMPLATE}
   PRINT INFO "Fetching templates.."
-  if [[ $(php artisan bp:latest) != "$VERSION" ]]; then PRINT WARNING "Active Blueprint version is not latest, you might run into compatibility issues."; fi
+  if [[ $(php artisan bp:version:latest) != "$VERSION" ]]; then PRINT WARNING "Active Blueprint version is not latest, you might run into compatibility issues."; fi
   cd .blueprint/tmp || cdhalt
   git clone "https://github.com/BlueprintFramework/templates.git"
   cd "${FOLDER}"/.blueprint || cdhalt

@@ -57,6 +57,9 @@ class Kernel extends ConsoleKernel
             $registerBlueprintTelemetry->register($schedule);
         }
 
+        // Blueprint-related utilities.
+        $schedule->command('bp:version:cache')->dailyAt(str_pad(rand(0, 23), 2, '0', STR_PAD_LEFT) . ':' . str_pad(rand(0, 59), 2, '0', STR_PAD_LEFT));
+
         GetExtensionSchedules::schedules($schedule);
     }
 
