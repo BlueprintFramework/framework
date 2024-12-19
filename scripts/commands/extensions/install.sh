@@ -1023,13 +1023,11 @@ InstallExtension() {
   AdminControllerConstructor="$__BuildDir/extensions/controller.build.bak"
   AdminBladeConstructor="$__BuildDir/extensions/admin.blade.php.bak"
   AdminRouteConstructor="$__BuildDir/extensions/route.php.bak"
-  AdminButtonConstructor="$__BuildDir/extensions/button.blade.php.bak"
   ConfigExtensionFS="$__BuildDir/extensions/config/ExtensionFS.build.bak"
   {
     if [[ $controller_type == "default" ]]; then cp "$__BuildDir/extensions/controller.build" "$AdminControllerConstructor"; fi
     cp "$__BuildDir/extensions/admin.blade.php" "$AdminBladeConstructor"
     cp "$__BuildDir/extensions/route.php" "$AdminRouteConstructor"
-    cp "$__BuildDir/extensions/button.blade.php" "$AdminButtonConstructor"
     cp "$__BuildDir/extensions/config/ExtensionFS.build" "$ConfigExtensionFS"
   } 2>> "$BLUEPRINT__DEBUG"
 
@@ -1072,6 +1070,7 @@ InstallExtension() {
     icnNUM=$(( 1 + RANDOM % 5 ))
     cp ".blueprint/assets/Extensions/Defaults/$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
   else
+    ICON_EXT="jpg"
     case "${icon}" in
       *.svg) local ICON_EXT="svg" ;;
       *.png) local ICON_EXT="png" ;;
@@ -1107,14 +1106,6 @@ InstallExtension() {
   escaped_name=$(php_escape_string "$name")
   escaped_description=$(php_escape_string "$description")
 
-  # Construct admin button
-  sed -i \
-    -e "s~\[name\]~$escaped_name~g" \
-    -e "s~\[version\]~$version~g" \
-    -e "s~\[id\]~$identifier~g" \
-    -e "s~\[icon\]~$ICON~g" \
-    "$AdminButtonConstructor"
-
   # Construct admin view
   sed -i \
     -e "s~\[name\]~$escaped_name~g" \
@@ -1149,7 +1140,6 @@ InstallExtension() {
   # Read final results.
   ADMINVIEW_RESULT=$(<"$AdminBladeConstructor")
   ADMINROUTE_RESULT=$(<"$AdminRouteConstructor")
-  ADMINBUTTON_RESULT=$(<"$AdminButtonConstructor")
   if [[ $controller_type == "default" ]]; then ADMINCONTROLLER_RESULT=$(<"$AdminControllerConstructor"); fi
   CONFIGEXTENSIONFS_RESULT=$(<"$ConfigExtensionFS")
   ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
@@ -1179,15 +1169,7 @@ InstallExtension() {
     { echo "// $identifier:start";
     echo "$ADMINROUTE_RESULT";
     echo // "$identifier":stop; } >> "routes/blueprint.php"
-  else
-    # Replace old extensions page button if extension is updating.
-    sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/admin/extensions.blade.php"
-    sed -i \
-      -e "s~<!--@$identifier:s@-->~~g" \
-      -e "s~<!--@$identifier:e@-->~~g" \
-      "resources/views/admin/extensions.blade.php"
   fi
-  sed -i "s~<!-- \[entryplaceholder\] -->~<!--@$identifier:s@-->\n$ADMINBUTTON_RESULT\n<!--@$identifier:e@-->\n<!-- \[entryplaceholder\] -->~g" "resources/views/admin/extensions.blade.php"
 
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
@@ -1239,7 +1221,6 @@ InstallExtension() {
   rm \
     "$AdminBladeConstructor" \
     "$AdminRouteConstructor" \
-    "$AdminButtonConstructor" \
     "$ConfigExtensionFS"
   rm -R ".blueprint/tmp/$n"
 

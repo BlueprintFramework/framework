@@ -5,18 +5,41 @@
 @endsection
 
 @section('content-header')
-  <a href="https://blueprint.zip/browse" target="_blank">
-    <button class="btn btn-gray-alt pull-right" style="padding: 5px 10px">
-      Find more extensions
-    </button>
-  </a>
+  <div class="blueprint-page-header">
+    <div class="row">
+      <div class="col-lg-8 col-md-9 col-sm-9 col-xs-12">
+        <p>
+          <span class="text-bold h4">Blueprint</span>
+        </p>
+        <span>
+          Powerful, fast and developer-friendly extension framework for Pterodactyl. Utilize extension APIs, inject HTML, modify stylesheets, package extensions and so much more. 
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12">
+        <a href="https://blueprint.zip/" target="_blank" class="pull-right text-bold">
+          Learn more
+          <i class='bx bx-link-external' ></i>
+        </a>
+      </div>
+    </div>
+  </div>
 
-  <h1 style="margin-top:5px">
-    Extensions
-    <small>
-      Manage and configure all of your installed extensions.
-    </small>
-  </h1>
+  <style>
+    .blueprint-page-header {
+      width: calc(100% - 4px);
+      background-color: #1f2933;
+      border-radius: 8px;
+      padding: 20px 20px;
+      background-image: linear-gradient(
+        to right,
+        #1f2933 50%,
+        transparent 100%
+      ), url('/assets/extensions/blueprint/promo-blur.jpg');
+      background-size: 100% 100%, cover;
+      background-position: left center, right center;
+      background-repeat: no-repeat;
+    }
+  </style>
 @endsection
 
 @section('content')
@@ -41,7 +64,16 @@
       </a>
     </div>
 
-    <!-- [entryplaceholder] -->
+    @foreach($blueprint->extensions() as $extension)
+      @include("blueprint.admin.entry", [
+        'EXTENSION_ID' => $extension['identifier'],
+        'EXTENSION_NAME' => $extension['name'],
+        'EXTENSION_VERSION' => $extension['version'],
+        'EXTENSION_ICON' => !empty($extension['icon']) 
+          ? '/assets/extensions/'.$extension['identifier'].'/icon.'.pathinfo($extension['icon'], PATHINFO_EXTENSION)
+          : '/assets/extensions/'.$extension['identifier'].'/icon.jpg'
+      ])
+    @endforeach
 
   @else 
     
@@ -52,7 +84,7 @@
   <style>
     /* backwards compatibility - waiting on slate implementation */
     <?php
-      if($ExtensionLibrary->extension("slate")) {
+      if($blueprint->extension("slate")) {
         echo("
           .extension-btn-overlay {
             background: linear-gradient(90deg, rgba(24,24,27,0.35) 0%, rgba(24,24,27,1) 95%);

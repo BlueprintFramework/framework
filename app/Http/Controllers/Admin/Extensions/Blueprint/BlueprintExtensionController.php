@@ -2,7 +2,6 @@
 
 namespace Pterodactyl\Http\Controllers\Admin\Extensions\Blueprint;
 
-use Artisan;
 use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
@@ -38,7 +37,6 @@ class BlueprintExtensionController extends Controller
       [
         'ExtensionLibrary' => $this->ExtensionLibrary,
         'PlaceholderService' => $this->PlaceholderService,
-        'ConfigService' => $this->ConfigService,
         'LatestVersion' => $LatestVersion,
 
         'root' => "/admin/extensions/blueprint",

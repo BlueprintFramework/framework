@@ -92,14 +92,6 @@ RemoveExtension() {
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
-  # Remove admin button
-  PRINT INFO "Editing 'extensions' admin page.."
-  sed -n -i "/<!--@$identifier:s@-->/{p; :a; N; /<!--@$identifier:e@-->/!ba; s/.*\n//}; p" "resources/views/admin/extensions.blade.php"
-  sed -i \
-    -e "s~<!--@$identifier:s@-->~~g" \
-    -e "s~<!--@$identifier:e@-->~~g" \
-    "resources/views/admin/extensions.blade.php"
-
   # Remove admin routes
   PRINT INFO "Removing admin routes.."
   sed -n -i "/\/\/ $identifier:start/{p; :a; N; /\/\/ $identifier:stop/!ba; s/.*\n//}; p" "routes/blueprint.php"

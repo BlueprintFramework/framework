@@ -17,7 +17,7 @@ class ExtensionsController extends Controller
   public function __construct(
     private SoftwareVersionService $version,
     private ViewFactory $view,
-    private BlueprintExtensionLibrary $ExtensionLibrary,
+    private BlueprintExtensionLibrary $blueprint,
     private BlueprintPlaceholderService $PlaceholderService)
   {
   }
@@ -28,7 +28,7 @@ class ExtensionsController extends Controller
   public function index(): View
   {
     return $this->view->make('admin.extensions', [
-      'ExtensionLibrary' => $this->ExtensionLibrary,
+      'blueprint' => $this->blueprint,
       'PlaceholderService' => $this->PlaceholderService,
       
       'version' => $this->version,
