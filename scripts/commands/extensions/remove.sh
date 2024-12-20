@@ -92,14 +92,6 @@ RemoveExtension() {
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
-  # Remove admin routes
-  PRINT INFO "Removing admin routes.."
-  sed -n -i "/\/\/ $identifier:start/{p; :a; N; /\/\/ $identifier:stop/!ba; s/.*\n//}; p" "routes/blueprint.php"
-  sed -i \
-    -e "/\/\/ $identifier:start/d" \
-    -e "/\/\/ $identifier:stop/d" \
-    "routes/blueprint.php"
-
   # Remove admin view and controller
   PRINT INFO "Removing admin view and controller.."
   rm -r \

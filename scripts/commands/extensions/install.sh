@@ -1022,12 +1022,10 @@ InstallExtension() {
   # Prepare build files.
   AdminControllerConstructor="$__BuildDir/extensions/controller.build.bak"
   AdminBladeConstructor="$__BuildDir/extensions/admin.blade.php.bak"
-  AdminRouteConstructor="$__BuildDir/extensions/route.php.bak"
   ConfigExtensionFS="$__BuildDir/extensions/config/ExtensionFS.build.bak"
   {
     if [[ $controller_type == "default" ]]; then cp "$__BuildDir/extensions/controller.build" "$AdminControllerConstructor"; fi
     cp "$__BuildDir/extensions/admin.blade.php" "$AdminBladeConstructor"
-    cp "$__BuildDir/extensions/route.php" "$AdminRouteConstructor"
     cp "$__BuildDir/extensions/config/ExtensionFS.build" "$ConfigExtensionFS"
   } 2>> "$BLUEPRINT__DEBUG"
 
@@ -1163,14 +1161,6 @@ InstallExtension() {
     cp ".blueprint/tmp/$n/$admin_controller" "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   fi
 
-  if [[ $DUPLICATE != "y" ]]; then
-    # Place admin route if extension is not updating.
-    PRINT INFO "Editing admin routes.."
-    { echo "// $identifier:start";
-    echo "$ADMINROUTE_RESULT";
-    echo // "$identifier":stop; } >> "routes/blueprint.php"
-  fi
-
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
     PRINT INFO "Cloning and linking dashboard wrapper.."
@@ -1212,7 +1202,6 @@ InstallExtension() {
   mkdir -p \
     ".blueprint/extensions/$identifier/private/.store/build" \
     ".blueprint/extensions/$identifier/private/.store/build/config"
-  cp "$__BuildDir/extensions/route.php.bak" ".blueprint/extensions/$identifier/private/.store/build/route.php"
   cp "$__BuildDir/extensions/config/ExtensionFS.build.bak" ".blueprint/extensions/$identifier/private/.store/build/config/ExtensionFS.build"
 
   # Remove temporary build files.
