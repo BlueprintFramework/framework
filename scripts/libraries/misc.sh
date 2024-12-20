@@ -4,17 +4,17 @@
 # and uses the same license as the rest of the codebase.
 
 
-# (will remove these in the future) Functions to have a 'database' in bash
-FLDR=".blueprint/extensions/blueprint/private/db/database"
-# dbAdd "database.record"
-dbAdd() { echo "* ${1};" >> $FLDR; }
-# dbValidate "database.record"
-dbValidate() { grep -Fxq "* ${1};" $FLDR > /dev/null; }
-# dbRemove "database.record"
-dbRemove() { sed -i "s/* ${1};//g" $FLDR > /dev/null; }
+dbAdd() {
+  echo "* ${1};" >> .blueprint/extensions/blueprint/private/db/database;
+}
+dbValidate() {
+  grep -Fxq "* ${1};" .blueprint/extensions/blueprint/private/db/database > /dev/null;
+}
+dbRemove() {
+  sed -i "s/* ${1};//g" .blueprint/extensions/blueprint/private/db/database > /dev/null;
+}
 
 
-# Function to shift arguments
 shiftArgs() {
   shift 1
   args=""
@@ -25,7 +25,6 @@ shiftArgs() {
 }
 
 
-# Function to unset a bunch of variables
 unsetVariables() {
   patterns=("^conf_" "^old_" "^Console_" "^OldConsole_" "^Components_" "^OldComponents_" "^F_")
   for pattern in "${patterns[@]}"; do
@@ -36,7 +35,6 @@ unsetVariables() {
 }
 
 
-# Function to fetch developer status
 is_developer() {
   if [[ $is_developer != "" ]]; then
     return "$is_developer"
@@ -48,4 +46,17 @@ is_developer() {
     export is_developer=1
     return 1
   fi
+}
+
+
+php_escape_string() {
+  local string="$1"
+
+  # Escape ampersands.
+  string="${string//&/\\\\&}"
+
+  # Escape double quotes.
+  string="${string//\"/\\\\\\\\\\\"}"
+
+  echo "$string"
 }

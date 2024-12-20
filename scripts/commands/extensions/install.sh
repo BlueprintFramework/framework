@@ -1,17 +1,5 @@
 #!/bin/bash
 
-php_escape_string() {
-  local string="$1"
-
-  # Escape ampersands.
-  string="${string//&/\\\\&}"
-
-  # Escape double quotes.
-  string="${string//\"/\\\\\\\\\\\"}"
-
-  echo "$string"
-}
-
 InstallExtension() {
   # The following code does some magic to allow for extensions with a
   # different root folder structure than expected by Blueprint.
