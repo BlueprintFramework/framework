@@ -7,7 +7,7 @@
 @section('content-header')
   <div class="blueprint-page-header">
     <div class="row">
-      <div class="col-lg-8 col-md-9 col-sm-9 col-xs-12">
+      <div class="col-lg-8 col-md-9 col-sm-9 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
         <p>
           <span class="text-bold h4">Blueprint</span>
         </p>
@@ -15,7 +15,7 @@
           Powerful, fast and developer-friendly extension framework for Pterodactyl. Utilize extension APIs, inject HTML, modify stylesheets, package extensions and so much more. 
         </span>
       </div>
-      <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12">
+      <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
         <a href="https://blueprint.zip/" target="_blank" class="pull-right text-bold">
           Learn more
           <i class='bx bx-link-external' ></i>
@@ -29,7 +29,7 @@
       width: calc(100% - 4px);
       background-color: #1f2933;
       border-radius: 8px;
-      padding: 20px 20px;
+      padding: 14px 20px;
       background-image: linear-gradient(
         to right,
         #1f2933 50%,
@@ -59,7 +59,7 @@
             </span>
             {{ $PlaceholderService->version() }}
           </p>
-          <i class="bi bi-arrow-right-short" style="font-size: 34px;position: absolute;top: 15px;right: 35px;"></i>
+          <i class="bi bi-three-dots-vertical" style="font-size: 20px;position: absolute;top: 25px;right: 42px;"></i>
         </button>
       </a>
     </div>
@@ -75,10 +75,77 @@
       ])
     @endforeach
 
-  @else 
-    
-    <p><i class='bx bxs-error-alt'></i> You need to finish installing Blueprint to start using extensions.</p>
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center" style="padding-left: 0px; padding-right: 20px;">
+      <a href="https://blueprint.zip/browse" target="_blank">
+        <button class="blueprint-add" style="margin-bottom:17px;">
+          <i class="bi bi-plus" style="font-size: 36px"></i>
+        </button>
+      </a>
+    </div>
 
+    <style>
+      .blueprint-add {
+        background-color:rgb(44, 55, 67);
+        border: transparent;
+        border-radius: 8px;
+        height: 79px;
+        width: 79px;
+        float: left;
+        color: #CAD1D8;
+      }
+    </style>
+
+
+
+    <!-- Blueprint configuration -->
+    <div class="modal fade" id="blueprintConfigModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color:transparent">
+          <form action="/admin/extensions/blueprint/config" method="POST" autocomplete="off">
+            <div class="modal-header" style="border-color:transparent; border-radius:7px; margin-bottom: 15px">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;box-shadow:none"><span aria-hidden="true"><i class="bi bi-x"></i></span></button>
+              <h3 class="modal-title">
+                <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" height="34" width="34" class="pull-left" style="border-radius:3px;margin-right:10px"/>
+                Configure <b>Blueprint</b>
+              </h3>
+            </div>
+
+            <div class="modal-body" style="border-color:transparent; border-radius:7px; margin-bottom: 15px">
+              <h4><b>Flags</b></h4>
+              <p class="text-muted text-left">eee</p><br>
+
+              <div class="row">
+                <div class="col-xs-6">
+                  <label class="control-label"><code>developer</code></label>
+                  <select class="form-control" name="flags:developer" style="border-radius:6px">
+                    <option value="1" selected>true</option>
+                    <option value="0">false</option>
+                  </select>
+                  <p class="text-muted small">Allow this extension to extend the admin panel layouts.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer" style="border-color:transparent; border-radius:7px">
+              {{ csrf_field() }}
+              <input type="hidden" name="_method" value="PATCH">
+              <div class="row">
+                <div class="col-sm-10">
+                  <p class="text-muted small text-left">work in progress</p>
+                </div>
+                <div class="col-sm-2">
+                  <button type="submit" class="btn btn-primary btn-sm" style="width:100%; margin-top:10px; margin-bottom:10px; border-radius:6px">Save</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @else 
+    <p><i class='bx bxs-error-alt'></i> You need to finish installing Blueprint to start using extensions.</p>
   @endif
 
   <style>
