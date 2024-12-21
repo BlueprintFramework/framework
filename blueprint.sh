@@ -286,6 +286,10 @@ if [[ $1 != "-bash" ]]; then
       php artisan migrate --force
     fi
 
+    # Seed Blueprint database records
+    PRINT INFO "Seeding Blueprint database records.."
+    php artisan db:seed --class=BlueprintSeeder --force
+
     # Make sure all files have correct permissions.
     PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
     find "$FOLDER/" \

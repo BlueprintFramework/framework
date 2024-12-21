@@ -65,19 +65,13 @@ class BlueprintSeeder extends Seeder
    */
   public function run(): void
   {
-    $this->info('Seeding Blueprint...');
-    
     $isSeeded = $this->blueprint->dbGet('blueprint', 'internal:seed', false);
-    
+
     if ($isSeeded) {
-      $this->info('Database already seeded - updating records');
       $this->updateRecords();
     } else {
-      $this->info('Fresh database detected - seeding records');
       $this->createRecords();
     }
-    
-    $this->info('Blueprint seeding completed successfully.');
   }
 
   /**
@@ -88,20 +82,16 @@ class BlueprintSeeder extends Seeder
     $records = [];
     
     foreach ($this->schema as $category => $values) {
-      $this->info("Processing category: {$category}");
       $categoryRecords = $this->buildCategoryRecords($category, $values);
       $records = array_merge($records, $categoryRecords);
     }
 
     if (!empty($records)) {
-      $this->info("Setting " . count($records) . " initial records...");
       $this->blueprint->dbSetMany('blueprint', $records);
-      $this->info("Initial records created successfully");
     }
 
     // Mark as seeded after successful creation
     $this->blueprint->dbSet('blueprint', 'internal:seed', true);
-    $this->info("Database marked as seeded");
   }
 
   /**
@@ -111,23 +101,17 @@ class BlueprintSeeder extends Seeder
   {
     // First, get all existing records
     $existingPaths = $this->getAllSchemaPaths();
-    $this->info("Fetching " . count($existingPaths) . " existing records...");
     $existingRecords = $this->blueprint->dbGetMany('blueprint', $existingPaths);
     
     $recordsToUpdate = [];
     
     foreach ($this->schema as $category => $values) {
-      $this->info("Checking category: {$category} for missing records");
       $categoryRecords = $this->buildUpdateRecords($category, $values, $existingRecords);
       $recordsToUpdate = array_merge($recordsToUpdate, $categoryRecords);
     }
 
     if (!empty($recordsToUpdate)) {
-      $this->info("Updating " . count($recordsToUpdate) . " missing records...");
       $this->blueprint->dbSetMany('blueprint', $recordsToUpdate);
-      $this->info("Missing records updated successfully");
-    } else {
-      $this->info("No missing records found - database is up to date");
     }
   }
 
@@ -169,7 +153,6 @@ class BlueprintSeeder extends Seeder
         // This is a leaf node - check if it exists
         if (!isset($existingRecords[$path]) && $config['default'] !== null) {
           $records[$path] = $config['default'];
-          $this->info("Found missing record: {$path}");
         }
       } else {
         // This is a nested category
@@ -212,15 +195,5 @@ class BlueprintSeeder extends Seeder
     }
 
     return $paths;
-  }
-
-  /**
-   * Output an info message.
-   */
-  private function info(string $message): void
-  {
-    if (app()->runningInConsole()) {
-      $this->command->info($message);
-    }
   }
 }
