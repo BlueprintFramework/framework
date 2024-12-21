@@ -26,7 +26,7 @@ class BlueprintBaseLibrary
   }
 
   /**
-   * Fetch a record from the database.
+   * Fetch a record from the database. (Data will be unserialized)
    * 
    * @param string $table Database table
    * @param string $record Database record
@@ -39,11 +39,17 @@ class BlueprintBaseLibrary
   {
     $value = DB::table('settings')->where('key', $this->getRecordName($table, $record))->first();
 
-    return $value ? $value->value : $default;
+    if (!$value) return $default;
+
+    try {
+      return unserialize($value->value);
+    } catch (\Exception $e) {
+      return $value->value;
+    }
   }
 
   /**
-   * Fetch many records from the database.
+   * Fetch many records from the database. (Data will be unserialized)
    * 
    * @param string $table Database table
    * @param array $records Database records
@@ -67,14 +73,24 @@ class BlueprintBaseLibrary
     $output = [];
     foreach ($records as $record) {
       $value = $values->firstWhere('key', $this->getRecordName($table, $record));
-      $output[$record] = $value ? $value->value : $default;
+
+      if (!$value) {
+        $output[$record] = $default;
+        continue;
+      }
+
+      try {
+        $output[$record] = unserialize($value->value);
+      } catch (\Exception $e) {
+        $output[$record] = $value->value;
+      }
     }
 
     return $output;
   }
 
   /**
-   * Set a database record.
+   * Set a database record. (Data will be serialized)
    * 
    * @param string $table Database table
    * @param string $record Database record
@@ -86,12 +102,12 @@ class BlueprintBaseLibrary
   {
     DB::table('settings')->updateOrInsert(
       ['key' => $this->getRecordName($table, $record)],
-      ['value' => (string) $value]
+      ['value' => serialize($value)]
     );
   }
 
   /**
-   * Set many database records.
+   * Set many database records. (Data will be serialized)
    * 
    * @param string $table Database table
    * @param array $records Database records as an associative array
@@ -104,7 +120,7 @@ class BlueprintBaseLibrary
     foreach ($records as $record => $value) {
       $data[] = [
         'key' => $this->getRecordName($table, $record),
-        'value' => (string) $value
+        'value' => serialize($value),
       ];
     }
 
@@ -231,8 +247,8 @@ class BlueprintBaseLibrary
       try {
         $conf = Yaml::parse($this->fileRead(base_path(".blueprint/extensions/$extension/private/.store/conf.yml")));
 
-        $collection->push(array_filter($conf['info'], fn($v) => (bool) $v));
-      } catch (\Throwable $e) {
+        $collection->push(array_filter($conf['info'], fn ($k) => !!$k));
+      } catch (\Exception $e) {
       }
     }
 
