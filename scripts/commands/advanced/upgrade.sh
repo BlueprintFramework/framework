@@ -106,19 +106,7 @@ Command() {
     -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
     "$FOLDER/blueprint.sh"
   mv "$FOLDER/blueprint" "$FOLDER/.blueprint"
-  bash blueprint.sh --post-upgrade
-
-  # Ask user if they'd like to migrate their database.
-  PRINT INPUT "Would you like to migrate your database? (Y/n)"
-  read -r YN
-  if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then
-    PRINT INFO "Running database migrations.."
-    php artisan migrate --force
-    php artisan up &>> "$BLUEPRINT__DEBUG"
-  else
-    PRINT INFO "Database migrations have been skipped."
-  fi
-  YN=""
+  BLUEPRINT_ENVIRONMENT="upgrade" bash blueprint.sh
 
   if [[ ${HAS_DEV} == true ]]; then
     PRINT INFO "Restoring extension development files.."

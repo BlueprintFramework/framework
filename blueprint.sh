@@ -228,7 +228,7 @@ if [[ $1 != "-bash" ]]; then
     exit 2
   else
     # Only run if Blueprint is not in the process of upgrading.
-    if [[ $1 != "--post-upgrade" ]]; then
+    if [[ $BLUEPRINT_ENVIRONMENT != "upgrade" ]]; then
       # Print Blueprint icon with ascii characters.
       C0="\x1b[0m"
       C1="\x1b[31;43;1m"
@@ -280,8 +280,8 @@ if [[ $1 != "-bash" ]]; then
       php artisan bp:cache
     } &>> "$BLUEPRINT__DEBUG"
 
-    # Run migrations if Blueprint is not upgrading.
-    if [[ ( $1 != "--post-upgrade" ) && ( $DOCKER != "y" ) ]]; then
+    # Run migrations if Blueprint is not running through Docker.
+    if [[ $DOCKER != "y" ]]; then
       PRINT INFO "Running database migrations.."
       php artisan migrate --force
     fi
@@ -304,12 +304,12 @@ if [[ $1 != "-bash" ]]; then
     fi
 
     # Finish installation
-    if [[ $1 != "--post-upgrade" ]]; then
+    if [[ $BLUEPRINT_ENVIRONMENT != "upgrade" ]]; then
       PRINT SUCCESS "Blueprint has completed its installation process."
     fi
 
-    dbAdd "blueprint.setupFinished"
     # Let the panel know the user has finished installation.
+    dbAdd "blueprint.setupFinished"
     sed -i "s~NOTINSTALLED~INSTALLED~g" "$FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php"
     exit 0
   fi
