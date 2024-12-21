@@ -96,7 +96,7 @@ tag[blue] {background-color:#288afb;}
   position: relative;
   left: -32px;
   z-index: 3;
-  width: calc( 100% - 20px );
+  width: calc( 100% - 15px );
   font-weight: 600;
   margin-top: 11px;
   overflow: clip;
@@ -109,7 +109,7 @@ tag[blue] {background-color:#288afb;}
   position: relative;
   left: -32px;
   z-index: 3;
-  width: calc( 100% - 20px );
+  width: calc( 100% - 15px );
   overflow: clip;
   text-overflow: ellipsis;
   opacity: .6;

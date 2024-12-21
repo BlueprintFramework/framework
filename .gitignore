@@ -40,3 +40,4 @@ docker-compose.yaml
 .blueprint/
 *.blueprint
 !scripts/commands/misc
+wak.toml

@@ -26,7 +26,7 @@
 
   <style>
     .blueprint-page-header {
-      width: calc(100% - 4px);
+      width: 100%;
       background-color: #1f2933;
       border-radius: 8px;
       padding: 14px 20px;
@@ -44,10 +44,9 @@
 
 @section('content')
   @if(($PlaceholderService->installed() != "NOTINSTALLED") && ($PlaceholderService->version() != "::"."v"))
-
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center" style="padding-left: 0px; padding-right: 20px;">
-      <a href="{{ route('admin.extensions.blueprint.index') }}">
-        <button class="btn extension-btn" style="width:100%;margin-bottom:17px;">
+    <div class="row" style="padding-left: 15px; padding-right: 10px;">
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center" style="padding-left: 0px; padding-right: 17px;">
+        <button class="btn extension-btn" style="width:100%;margin-bottom:17px;" data-toggle="modal" data-target="#blueprintConfigModal">
           <div class="extension-btn-overlay"></div>
           <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="extension-btn-image2"/>
           <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="extension-btn-image"/>
@@ -59,41 +58,41 @@
             </span>
             {{ $PlaceholderService->version() }}
           </p>
-          <i class="bi bi-three-dots-vertical" style="font-size: 20px;position: absolute;top: 25px;right: 42px;"></i>
+          <i class="bi bi-three-dots-vertical" style="font-size: 20px;position: absolute;top: 25px;right: 37px;"></i>
         </button>
-      </a>
+      </div>
+
+      @foreach($blueprint->extensions() as $extension)
+        @include("blueprint.admin.entry", [
+          'EXTENSION_ID' => $extension['identifier'],
+          'EXTENSION_NAME' => $extension['name'],
+          'EXTENSION_VERSION' => $extension['version'],
+          'EXTENSION_ICON' => !empty($extension['icon']) 
+            ? '/assets/extensions/'.$extension['identifier'].'/icon.'.pathinfo($extension['icon'], PATHINFO_EXTENSION)
+            : '/assets/extensions/'.$extension['identifier'].'/icon.jpg'
+        ])
+      @endforeach
+
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center" style="padding-left: 0px; padding-right: 20px;">
+        <a href="https://blueprint.zip/browse" target="_blank">
+          <button class="blueprint-add" style="margin-bottom:17px;">
+            <i class="bi bi-plus" style="font-size: 36px"></i>
+          </button>
+        </a>
+      </div>
+
+      <style>
+        .blueprint-add {
+          background-color:rgb(44, 55, 67);
+          border: transparent;
+          border-radius: 8px;
+          height: 79px;
+          width: 79px;
+          float: left;
+          color: #CAD1D8;
+        }
+      </style>
     </div>
-
-    @foreach($blueprint->extensions() as $extension)
-      @include("blueprint.admin.entry", [
-        'EXTENSION_ID' => $extension['identifier'],
-        'EXTENSION_NAME' => $extension['name'],
-        'EXTENSION_VERSION' => $extension['version'],
-        'EXTENSION_ICON' => !empty($extension['icon']) 
-          ? '/assets/extensions/'.$extension['identifier'].'/icon.'.pathinfo($extension['icon'], PATHINFO_EXTENSION)
-          : '/assets/extensions/'.$extension['identifier'].'/icon.jpg'
-      ])
-    @endforeach
-
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center" style="padding-left: 0px; padding-right: 20px;">
-      <a href="https://blueprint.zip/browse" target="_blank">
-        <button class="blueprint-add" style="margin-bottom:17px;">
-          <i class="bi bi-plus" style="font-size: 36px"></i>
-        </button>
-      </a>
-    </div>
-
-    <style>
-      .blueprint-add {
-        background-color:rgb(44, 55, 67);
-        border: transparent;
-        border-radius: 8px;
-        height: 79px;
-        width: 79px;
-        float: left;
-        color: #CAD1D8;
-      }
-    </style>
 
 
 
@@ -110,20 +109,43 @@
               </h3>
             </div>
 
-            <div class="modal-body" style="border-color:transparent; border-radius:7px; margin-bottom: 15px">
-              <h4><b>Flags</b></h4>
-              <p class="text-muted text-left">eee</p><br>
-
-              <div class="row">
-                <div class="col-xs-6">
-                  <label class="control-label"><code>developer</code></label>
-                  <select class="form-control" name="flags:developer" style="border-radius:6px">
-                    <option value="1" selected>true</option>
-                    <option value="0">false</option>
-                  </select>
-                  <p class="text-muted small">Allow this extension to extend the admin panel layouts.</p>
-                </div>
-              </div>
+            <div class="modal-body" style="border-color:transparent; border-radius:7px; margin-bottom: 15px; padding-bottom: 5px;">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Flag</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <code>
+                        is_developer
+                      </code>
+                    </td>
+                    <td>
+                      <select class="form-control" name="flags:is_developer" style="border-radius:6px">
+                        <option value="1" selected>true</option>
+                        <option value="0">false</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code>
+                        telemetry_enabled
+                      </code>
+                    </td>
+                    <td>
+                      <select class="form-control" name="flags:telemetry_enabled" style="border-radius:6px;">
+                        <option value="1" selected>true</option>
+                        <option value="0">false</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
             <div class="modal-footer" style="border-color:transparent; border-radius:7px">
@@ -131,7 +153,7 @@
               <input type="hidden" name="_method" value="PATCH">
               <div class="row">
                 <div class="col-sm-10">
-                  <p class="text-muted small text-left">work in progress</p>
+                  <p class="text-muted small text-left">Flags enable certain features that may be experimental, unstable, or in development. Modifying these values can affect Blueprint's functionality, stability, and security.</p>
                 </div>
                 <div class="col-sm-2">
                   <button type="submit" class="btn btn-primary btn-sm" style="width:100%; margin-top:10px; margin-bottom:10px; border-radius:6px">Save</button>
