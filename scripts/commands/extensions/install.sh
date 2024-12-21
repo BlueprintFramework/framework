@@ -1111,9 +1111,6 @@ InstallExtension() {
   fi
   echo -e "$(<".blueprint/tmp/$n/$admin_view")\n@endsection" >> "$AdminBladeConstructor"
 
-  # Construct admin route
-  sed -i "s~\[id\]~$identifier~g" "$AdminRouteConstructor"
-
   # Construct admin controller
   if [[ $controller_type == "default" ]]; then sed -i "s~\[id\]~$identifier~g" "$AdminControllerConstructor"; fi
 
@@ -1125,7 +1122,6 @@ InstallExtension() {
 
   # Read final results.
   ADMINVIEW_RESULT=$(<"$AdminBladeConstructor")
-  ADMINROUTE_RESULT=$(<"$AdminRouteConstructor")
   if [[ $controller_type == "default" ]]; then ADMINCONTROLLER_RESULT=$(<"$AdminControllerConstructor"); fi
   CONFIGEXTENSIONFS_RESULT=$(<"$ConfigExtensionFS")
   ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
@@ -1197,7 +1193,6 @@ InstallExtension() {
   if [[ $controller_type == "default" ]]; then rm "$__BuildDir/extensions/controller.build.bak"; fi
   rm \
     "$AdminBladeConstructor" \
-    "$AdminRouteConstructor" \
     "$ConfigExtensionFS"
   rm -R ".blueprint/tmp/$n"
 

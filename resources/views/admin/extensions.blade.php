@@ -5,6 +5,28 @@
 @endsection
 
 @section('content-header')
+  @if($PlaceholderService->version() != $latestBlueprintVersion)
+    <div class="blueprint-statusbar blueprint-statusbar-danger">
+      <div style="margin-right: 14px;">
+        <i class="bi bi-exclamation-triangle-fill" style="font-size: 24px; color: #f52e98"></i>
+      </div>
+      <div>
+        <span class="text-bold" style="color: #ff6ab9;">
+          Blueprint is out-of-date.
+        </span>
+        You're running Blueprint
+        <code style="border: unset; background-color: unset; color: #cad1d8;">
+          {{ $PlaceholderService->version() }}
+        </code>
+        which is outdated. Update to version
+        <code style="border: unset; background-color: unset; color: #cad1d8;">
+          {{ $latestBlueprintVersion }}
+        </code>
+        to access the latest features and improvements.
+      </div>
+    </div>
+  @endif
+
   <div class="blueprint-page-header">
     <div class="row">
       <div class="col-lg-8 col-md-9 col-sm-9 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
@@ -25,6 +47,24 @@
   </div>
 
   <style>
+    .blueprint-statusbar {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: #1f2933;
+      border-radius: 8px;
+      padding: 10px 20px;
+      margin-bottom: 15px;
+    }
+    .blueprint-statusbar.blueprint-statusbar-danger {
+      background-image: linear-gradient(
+        to left,
+        #1f2933 50%,
+        #5c143b 100%
+      );
+    }
+
     .blueprint-page-header {
       width: 100%;
       background-color: #1f2933;
@@ -171,21 +211,6 @@
   @endif
 
   <style>
-    /* backwards compatibility - waiting on slate implementation */
-    <?php
-      if($blueprint->extension("slate")) {
-        echo("
-          .extension-btn-overlay {
-            background: linear-gradient(90deg, rgba(24,24,27,0.35) 0%, rgba(24,24,27,1) 95%);
-          }
-          .btn.extension-btn:hover {
-            background-color: #18181b !important;
-            background: #18181b !important;
-          }
-        ");
-      }
-    ?>
-
     /* style content */
     a:has(button.btn.extension-btn) { 
       height: 96px;
@@ -196,6 +221,9 @@
       padding-right: 0px !important;
       display: inline-block !important;
       width: 100% !important;
+    }
+    .skin-blue .wrapper {
+      box-shadow: unset;
     }
   </style>
 @endsection

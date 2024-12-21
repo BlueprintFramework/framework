@@ -2,6 +2,7 @@
 
 namespace Pterodactyl\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\View\View;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
@@ -28,11 +29,19 @@ class ExtensionsController extends Controller
   public function index(): View
   {
     $configuration = $this->blueprint->dbGetMany('blueprint');
+    
+    if (($configuration['internal:version:latest'] ?? false) === false) {
+      Artisan::call('bp:version:cache');
+      $latestBlueprintVersion = $this->blueprint->dbGet('blueprint', 'internal:version:latest');
+    } else {
+      $latestBlueprintVersion = $configuration['internal:version:latest'];
+    }
 
     return $this->view->make('admin.extensions', [
       'blueprint' => $this->blueprint,
       'PlaceholderService' => $this->PlaceholderService,
       'configuration' => $configuration,
+      'latestBlueprintVersion' => $latestBlueprintVersion,
       
       'version' => $this->version,
       'root' => "/admin/extensions",
