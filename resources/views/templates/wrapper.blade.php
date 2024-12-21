@@ -8,6 +8,10 @@
 
         @yield('head')
 
+        <!-- Inter -->
+        <link rel="preconnect" href="https://rsms.me/">
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
         @section('meta')
             <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -39,6 +43,15 @@
         <style>
             @import url('//fonts.googleapis.com/css?family=Rubik:300,400,500&display=swap');
             @import url('//fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans:500&display=swap');
+
+            /* Inter */
+            :root {
+              font-family: Inter, sans-serif !important;
+              font-feature-settings: 'liga' 1, 'calt' 1;
+            }
+            @supports (font-variation-settings: normal) {
+              :root { font-family: InterVariable, sans-serif; }
+            }
         </style>
 
         @yield('assets')
