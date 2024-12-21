@@ -18,6 +18,8 @@
         <link rel="shortcut icon" href="/favicons/favicon.ico">
         <meta name="msapplication-config" content="/favicons/browserconfig.xml">
         <meta name="theme-color" content="#0e4688">
+        <link rel="preconnect" href="https://rsms.me/">
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
         @include('layouts.scripts')
 
@@ -36,6 +38,17 @@
             <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
             <![endif]-->
+            
+            <!-- Inter -->
+            <style>
+            :root {
+              font-family: Inter, sans-serif !important;
+              font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+            }
+            @supports (font-variation-settings: normal) {
+              :root { font-family: InterVariable, sans-serif; }
+            }
+            </style>
         @show
 
         @yield("blueprint.import")
