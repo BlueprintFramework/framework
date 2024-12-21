@@ -100,7 +100,7 @@
     <div class="modal fade" id="blueprintConfigModal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content" style="background-color:transparent">
-          <form action="/admin/extensions/blueprint/config" method="POST" autocomplete="off">
+          <form action="/admin/extensions/blueprint" method="POST" autocomplete="off">
             <div class="modal-header" style="border-color:transparent; border-radius:7px; margin-bottom: 15px">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;box-shadow:none"><span aria-hidden="true"><i class="bi bi-x"></i></span></button>
               <h3 class="modal-title">
@@ -126,8 +126,8 @@
                     </td>
                     <td>
                       <select class="form-control" name="flags:is_developer" style="border-radius:6px">
-                        <option value="1" selected>true</option>
-                        <option value="0">false</option>
+                        <option value="1">true</option>
+                        <option value="0" @if($configuration['flags:is_developer'] == false) selected @endif>false</option>
                       </select>
                     </td>
                   </tr>

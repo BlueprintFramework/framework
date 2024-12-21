@@ -19,10 +19,10 @@ class RegisterBlueprintTelemetry
   {
     $blueprint = app()->make(BlueprintExtensionLibrary::class);
 
-    $uuid = $blueprint->dbGet('blueprint', 'uuid');
+    $uuid = $blueprint->dbGet('blueprint', 'internal:uuid');
     if (is_null($uuid)) {
       $uuid = Uuid::uuid4()->toString();
-      $blueprint->dbSet('blueprint', 'uuid', $uuid);
+      $blueprint->dbSet('blueprint', 'internal:uuid', $uuid);
     }
 
     // Calculate a fixed time to run the data push at, this will be the same time every day.

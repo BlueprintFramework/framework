@@ -39,7 +39,7 @@ class VersionCacheCommand extends Command
       $data = json_decode($cleaned_response, true);
       if (isset($data['name'])) {
         $latest_version = $data['name'];
-        $this->blueprint->dbSet('blueprint', 'version:latest', $latest_version);
+        $this->blueprint->dbSet('blueprint', 'internal:version:latest', $latest_version);
         return true;
       } else {
         echo "Error: Unable to fetch the latest release version.";

@@ -27,9 +27,12 @@ class ExtensionsController extends Controller
    */
   public function index(): View
   {
+    $configuration = $this->blueprint->dbGetMany('blueprint');
+
     return $this->view->make('admin.extensions', [
       'blueprint' => $this->blueprint,
       'PlaceholderService' => $this->PlaceholderService,
+      'configuration' => $configuration,
       
       'version' => $this->version,
       'root' => "/admin/extensions",

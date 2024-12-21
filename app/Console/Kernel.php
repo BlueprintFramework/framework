@@ -14,6 +14,7 @@ use Pterodactyl\Console\Commands\Schedule\ProcessRunnableCommand;
 use Pterodactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
 use Pterodactyl\Console\Commands\Maintenance\CleanServiceBackupFilesCommand;
 use Pterodactyl\Services\Telemetry\RegisterBlueprintTelemetry;
+use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
 
 class Kernel extends ConsoleKernel
 {
@@ -52,7 +53,8 @@ class Kernel extends ConsoleKernel
         }
 
         // Blueprint telemetry
-        if (config('blueprint.telemetry')) {
+        $blueprint = app()->make(BlueprintExtensionLibrary::class);
+        if ($blueprint->dbGet('blueprint', 'flags:telemetry_enabled', 0)) {
             $registerBlueprintTelemetry = app()->make(RegisterBlueprintTelemetry::class);
             $registerBlueprintTelemetry->register($schedule);
         }

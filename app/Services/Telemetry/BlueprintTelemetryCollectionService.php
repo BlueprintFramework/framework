@@ -40,10 +40,10 @@ class BlueprintTelemetryCollectionService
    */
   public function collect(): array
   {
-    $uuid = $this->blueprint->dbGet('blueprint', 'uuid');
+    $uuid = $this->blueprint->dbGet('blueprint', 'internal:uuid');
     if (is_null($uuid)) {
       $uuid = Uuid::uuid4()->toString();
-      $this->blueprint->dbSet('blueprint', 'uuid', $uuid);
+      $this->blueprint->dbSet('blueprint', 'internal:uuid', $uuid);
     }
 
     return [
@@ -53,7 +53,7 @@ class BlueprintTelemetryCollectionService
       'blueprint' => [
         'version' => $this->placeholderService->version(),
         'extensions' => $this->blueprint->extensions()->toArray(),
-        'developer' => $this->blueprint->dbGet('blueprint', 'developer', 'false') === "true",
+        'developer' => $this->blueprint->dbGet('blueprint', 'flags:is_developer', 'false') === "true",
         'docker' => file_exists('/.dockerenv'),
       ],
 

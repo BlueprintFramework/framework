@@ -66,7 +66,7 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    */
   public function importStylesheet(string $url): string
   {
-    $cache = $this->dbGet('blueprint', 'cache', 0);
+    $cache = $this->dbGet('blueprint', 'internal:cache', 0);
 
     return "<link rel=\"stylesheet\" href=\"$url?v=$cache\">";
   }
@@ -81,7 +81,7 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    */
   public function importScript(string $url): string
   {
-    $cache = $this->dbGet('blueprint', 'cache', 0);
+    $cache = $this->dbGet('blueprint', 'internal:cache', 0);
 
     return "<script src=\"$url?v=$cache\"></script>";
   }

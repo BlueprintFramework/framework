@@ -228,7 +228,7 @@ if [[ $1 != "-bash" ]]; then
     exit 2
   else
     # Only run if Blueprint is not in the process of upgrading.
-    if [[ $BLUEPRINT_ENVIRONMENT != "upgrade" ]]; then
+    if [[ ( $BLUEPRINT_ENVIRONMENT != "upgrade" ) && ( $1 != "--post-upgrade" ) ]]; then
       # Print Blueprint icon with ascii characters.
       C0="\x1b[0m"
       C1="\x1b[31;43;1m"
@@ -303,14 +303,15 @@ if [[ $1 != "-bash" ]]; then
       php artisan up &>> "$BLUEPRINT__DEBUG"
     fi
 
-    # Finish installation
-    if [[ $BLUEPRINT_ENVIRONMENT != "upgrade" ]]; then
-      PRINT SUCCESS "Blueprint has completed its installation process."
-    fi
-
     # Let the panel know the user has finished installation.
     dbAdd "blueprint.setupFinished"
     sed -i "s~NOTINSTALLED~INSTALLED~g" "$FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php"
+
+    # Finish installation
+    if [[ ( $BLUEPRINT_ENVIRONMENT != "upgrade" ) && ( $1 != "--post-upgrade" ) ]]; then
+      PRINT SUCCESS "Blueprint has completed its installation process."
+    fi
+
     exit 0
   fi
 fi

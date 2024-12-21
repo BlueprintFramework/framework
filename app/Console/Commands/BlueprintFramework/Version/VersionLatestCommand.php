@@ -28,10 +28,10 @@ class VersionLatestCommand extends Command
    */
   public function handle()
   {
-    $latest = $this->blueprint->dbGet('blueprint', 'version:latest');
+    $latest = $this->blueprint->dbGet('blueprint', 'internal:version:latest');
     if ($latest == "") {
       $this->call('bp:version:cache');
-      $latest = $this->blueprint->dbGet('blueprint', 'version:latest');
+      $latest = $this->blueprint->dbGet('blueprint', 'internal:version:latest');
     }
 
     echo ($latest);
