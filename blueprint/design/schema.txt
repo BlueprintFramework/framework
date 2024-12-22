@@ -6,6 +6,7 @@ blueprint
     version
       latest                 *            string
   flags
+    disable_attribution      false        boolean
     is_developer             false        boolean
     telemetry_enabled        true         boolean
   notification

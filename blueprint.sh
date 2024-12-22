@@ -271,13 +271,14 @@ if [[ $1 != "-bash" ]]; then
     fi
 
     # Flush cache.
-    PRINT INFO "Flushing view, config and route cache.."
+    PRINT INFO "Flushing cache.."
     {
       php artisan view:cache
       php artisan config:cache
       php artisan route:clear
       php artisan cache:clear
       php artisan bp:cache
+      php artisan bp:version:cache
     } &>> "$BLUEPRINT__DEBUG"
 
     # Run migrations if Blueprint is not running through Docker.

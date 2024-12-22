@@ -30,6 +30,10 @@ class BlueprintSeeder extends Seeder
       ]
     ],
     'flags' => [
+      'disable_attribution' => [
+        'default' => false,
+        'type' => 'boolean'
+      ],
       'is_developer' => [
         'default' => false,
         'type' => 'boolean'
@@ -37,7 +41,7 @@ class BlueprintSeeder extends Seeder
       'telemetry_enabled' => [
         'default' => true,
         'type' => 'boolean'
-      ]
+      ],
     ],
     'notification' => [
       'text' => [
@@ -46,6 +50,26 @@ class BlueprintSeeder extends Seeder
       ]
     ]
   ];
+
+  public function getSchema(): array
+  {
+    return $this->schema;
+  }
+
+  public function getDefaultsForFlag(string $flag): mixed 
+  {
+    $parts = explode(':', $flag);
+    $current = $this->schema;
+    
+    foreach ($parts as $part) {
+      if (!isset($current[$part])) {
+        return null;
+      }
+      $current = $current[$part];
+    }
+    
+    return $current['default'] ?? null;
+  }
 
   /**
    * @var BlueprintExtensionLibrary

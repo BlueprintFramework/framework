@@ -9,6 +9,7 @@ use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
+use Database\Seeders\BlueprintSeeder;
 
 class ExtensionsController extends Controller
 {
@@ -19,9 +20,10 @@ class ExtensionsController extends Controller
     private SoftwareVersionService $version,
     private ViewFactory $view,
     private BlueprintExtensionLibrary $blueprint,
-    private BlueprintPlaceholderService $PlaceholderService)
-  {
-  }
+    private BlueprintPlaceholderService $PlaceholderService,
+    private BlueprintSeeder $seeder,
+  )
+  {}
 
   /**
    * Return the admin index view.
@@ -29,6 +31,7 @@ class ExtensionsController extends Controller
   public function index(): View
   {
     $configuration = $this->blueprint->dbGetMany('blueprint');
+    $defaults = [];
     
     if (($configuration['internal:version:latest'] ?? false) === false) {
       Artisan::call('bp:version:cache');
@@ -37,11 +40,20 @@ class ExtensionsController extends Controller
       $latestBlueprintVersion = $configuration['internal:version:latest'];
     }
 
+    // Get defaults for each flag
+    foreach ($configuration as $key => $value) {
+      if (strpos($key, 'flags:') === 0) {
+        $defaults[$key] = $this->seeder->getDefaultsForFlag($key);
+      }
+    }
+
     return $this->view->make('admin.extensions', [
       'blueprint' => $this->blueprint,
       'PlaceholderService' => $this->PlaceholderService,
       'configuration' => $configuration,
       'latestBlueprintVersion' => $latestBlueprintVersion,
+      'defaults' => $defaults,
+      'seeder' => $this->seeder,
       
       'version' => $this->version,
       'root' => "/admin/extensions",

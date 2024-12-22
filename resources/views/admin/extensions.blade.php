@@ -131,6 +131,12 @@
           float: left;
           color: #CAD1D8;
         }
+
+        .blueprint-flag-warning {
+          font-size: 14px;
+          vertical-align: middle;
+          margin-left: 8px;
+        }
       </style>
     </div>
 
@@ -153,37 +159,47 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>Flag</th>
+                    <th style="width:50%">Flag</th>
                     <th>Value</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>
-                      <code>
-                        is_developer
-                      </code>
-                    </td>
-                    <td>
-                      <select class="form-control" name="flags:is_developer" style="border-radius:6px">
-                        <option value="1">true</option>
-                        <option value="0" @if($configuration['flags:is_developer'] == false) selected @endif>false</option>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <code>
-                        telemetry_enabled
-                      </code>
-                    </td>
-                    <td>
-                      <select class="form-control" name="flags:telemetry_enabled" style="border-radius:6px;">
-                        <option value="1" selected>true</option>
-                        <option value="0">false</option>
-                      </select>
-                    </td>
-                  </tr>
+                  @foreach($configuration as $key => $value)
+                    @if(strpos($key, 'flags:') === 0)
+                      @php
+                        $flagKey = str_replace('flags:', '', $key);
+                        $schema = $seeder->getSchema();
+                        $flagConfig = $schema['flags'][$flagKey] ?? null;
+                        $flagType = $flagConfig['type'] ?? 'string';
+                      @endphp
+                      <tr data-flag-row data-flag-name="{{ $key }}" data-flag-type="{{ $flagType }}" data-default-value="{{ $defaults[$key] }}">
+                        <td>
+                          <code>
+                            {{ $flagKey }}
+                          </code>
+                        </td>
+                        <td>
+                          @switch($flagType)
+                            @case('boolean')
+                              <select class="form-control" name="{{ $key }}" style="border-radius:6px">
+                                <option value="1" {{ $value ? 'selected' : '' }}>true</option>
+                                <option value="0" {{ !$value ? 'selected' : '' }}>false</option>
+                              </select>
+                              @break
+                            @case('number')
+                              <input type="number" class="form-control" name="{{ $key }}" value="{{ $value }}" step="any" style="border-radius:6px">
+                              @break
+                            @case('integer')
+                              <input type="number" class="form-control" name="{{ $key }}" value="{{ $value }}" step="1" style="border-radius:6px">
+                              @break
+                            
+                            @default
+                              <input type="text" class="form-control" name="{{ $key }}" value="{{ $value }}" style="border-radius:6px">
+                          @endswitch
+                        </td>
+                      </tr>
+                    @endif
+                  @endforeach
                 </tbody>
               </table>
             </div>
@@ -225,5 +241,100 @@
     .skin-blue .wrapper {
       box-shadow: unset;
     }
+
+    .blueprint-button-link {
+      font-size: 14px;
+      background: unset;
+      border: unset;
+      color: #ec55ad;
+    }
   </style>
+@endsection
+
+@section('footer-scripts')
+  @parent
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const flagRows = document.querySelectorAll('[data-flag-row]');
+      
+      const createResetButton = (row, input) => {
+        const button = document.createElement('button');
+        button.className = 'blueprint-button-link reset-flag';
+        button.style.padding = '0';
+        button.style.marginLeft = '8px';
+        button.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i>';
+        
+        const defaultValue = getDefaultValue(row);
+        
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          input.value = defaultValue;
+          input.dispatchEvent(new Event('change'));
+        });
+        
+        return button;
+      };
+
+      const getDefaultValue = (row) => {
+        const flagType = row.dataset.flagType;
+        const defaultValue = row.dataset.defaultValue;
+
+        if (flagType === 'boolean' && (!defaultValue || defaultValue === '')) {
+          return '0';
+        }
+        
+        return defaultValue;
+      };
+
+      const compareValues = (input, defaultValue) => {
+        const flagType = input.closest('[data-flag-row]').dataset.flagType;
+        const currentValue = input.value;
+        
+        const effectiveDefault = flagType === 'boolean' && (!defaultValue || defaultValue === '') 
+          ? '0' 
+          : defaultValue;
+
+        switch (flagType) {
+          case 'boolean':
+            return currentValue !== effectiveDefault;
+          case 'number':
+          case 'integer':
+            return Number(currentValue) !== Number(effectiveDefault);
+          default:
+            return String(currentValue) !== String(effectiveDefault);
+        }
+      };
+      
+      const handleValueChange = (row, input) => {
+        const defaultValue = getDefaultValue(row);
+        
+        const existingButton = row.querySelector('td .reset-flag');
+        if (existingButton) {
+          existingButton.remove();
+        }
+        
+        if (compareValues(input, defaultValue)) {
+          const resetButton = createResetButton(row, input);
+          row.querySelector('td').appendChild(resetButton);
+        }
+      };
+      
+      flagRows.forEach(row => {
+        const input = row.querySelector('select, input');
+        if (!input) return; // Skip if no input found
+        
+        handleValueChange(row, input);
+        
+        input.addEventListener('change', () => {
+          handleValueChange(row, input);
+        });
+
+        if (input.tagName.toLowerCase() === 'input') {
+          input.addEventListener('keyup', () => {
+            handleValueChange(row, input);
+          });
+        }
+      });
+    });
+  </script>
 @endsection

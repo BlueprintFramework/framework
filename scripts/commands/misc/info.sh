@@ -19,9 +19,9 @@ Command() {
   local C4="\x1b[0;37;1m"
 
   echo    " "
-  echo -e "${C0}  ${C4}██${C0}    Engine: $(fetchengine)${C0}"
-  echo -e "${C0}${C4}██  ██${C0}  Version: $(fetchversion)${C0}"
-  echo -e "${C0}${C1}▀▀${C0}${C4}████${C0}  Folder: $(fetchfolder)${C0}"
+  echo -e "${C0}  ██${C0}    Engine: $(fetchengine)${C0}"
+  echo -e "${C0}██  ██${C0}  Version: $(fetchversion)${C0}"
+  echo -e "${C0}${C1}▀▀${C0}████${C0}  Folder: $(fetchfolder)${C0}"
   echo -e "${C0}${C2}▀▀${C0}${C1}▀▀▀▀${C0}  URL: $(fetchurl)${C0}"
   echo -e "${C0}${C3}▀▀${C0}${C2}▀▀▀▀${C0}  Locale: $(fetchlocale)${C0}"
   echo -e "${C0}  ${C3}▀▀▀▀${C0}  Timezone: $(fetchtimezone)${C0}"
