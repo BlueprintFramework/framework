@@ -10,6 +10,7 @@ export interface PageContentBlockProps {
     showFlashKey?: string;
 }
 
+import Attribution from '@/blueprint/extends/Attribution';
 import BeforeSection from '@/blueprint/components/Dashboard/Global/BeforeSection';
 import AfterSection from '@/blueprint/components/Dashboard/Global/AfterSection';
 
@@ -40,20 +41,7 @@ const PageContentBlock: React.FC<PageContentBlockProps> = ({ title, showFlashKey
                             Pterodactyl&reg;
                         </a>
                         &nbsp;&copy; 2015 - {new Date().getFullYear()}
-
-                        <span className={"mx-2"}>
-                        •
-                        </span>
-
-                        <a
-                            rel={'noopener nofollow noreferrer'}
-                            href={'https://blueprint.zip'}
-                            target={'_blank'}
-                            css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
-                        >
-                            Blueprint
-                        </a>
-                        &nbsp;&copy; 2023 - {new Date().getFullYear()}
+                        <Attribution />
                     </p>
                 </ContentContainer>
             </>

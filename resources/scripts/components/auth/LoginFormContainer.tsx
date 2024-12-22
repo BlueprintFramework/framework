@@ -5,6 +5,7 @@ import { breakpoint } from '@/theme';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import tw from 'twin.macro';
 
+import Attribution from '@/blueprint/extends/Attribution';
 import BeforeContent from '@/blueprint/components/Authentication/Container/BeforeContent';
 import AfterContent from '@/blueprint/components/Authentication/Container/AfterContent';
 
@@ -46,29 +47,16 @@ export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => 
         </Form>
         <AfterContent />
         <p css={tw`text-center text-neutral-500 text-xs mt-4`}>
-            &copy; 2015 - {new Date().getFullYear()}&nbsp;
             <a
                 rel={'noopener nofollow noreferrer'}
                 href={'https://pterodactyl.io'}
                 target={'_blank'}
                 css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
-            >
-                Pterodactyl Software
+                >
+                Pterodactyl&reg;
             </a>
-
-            <span className={"mx-2"}>
-                •
-            </span>
-
-            &copy; 2023 - {new Date().getFullYear()}&nbsp;
-            <a
-                rel={'noopener nofollow noreferrer'}
-                href={'https://blueprint.zip'}
-                target={'_blank'}
-                css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
-            >
-                Blueprint
-            </a>
+            &copy; 2015 - {new Date().getFullYear()}&nbsp;
+            <Attribution />
         </p>
     </Container>
 ));
