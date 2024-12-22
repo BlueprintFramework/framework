@@ -30,10 +30,6 @@ class BlueprintSeeder extends Seeder
       ]
     ],
     'flags' => [
-      'disable_attribution' => [
-        'default' => false,
-        'type' => 'boolean'
-      ],
       'is_developer' => [
         'default' => false,
         'type' => 'boolean'
