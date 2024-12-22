@@ -40,7 +40,6 @@
       <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
         <a href="https://blueprint.zip/" target="_blank" class="pull-right text-bold">
           Learn more
-          <i class='bx bx-link-external' ></i>
         </a>
       </div>
     </div>
@@ -48,7 +47,7 @@
 
   <style>
     .blueprint-statusbar {
-      width: 100%;
+      width: calc(100% + 3px);
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -66,7 +65,7 @@
     }
 
     .blueprint-page-header {
-      width: 100%;
+      width: calc(100% + 3px);
       background-color: #1f2933;
       border-radius: 8px;
       padding: 14px 20px;
