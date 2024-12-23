@@ -24,7 +24,7 @@ class BlueprintSeeder extends Seeder
       ],
       'version' => [
         'latest' => [
-          'default' => null, // Dynamic value
+          'default' => null,
           'type' => 'string'
         ]
       ]
