@@ -4,46 +4,52 @@
   Extensions
 @endsection
 
+@php
+$is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($PlaceholderService->version() != "::"."v"));
+@endphp
+
 @section('content-header')
-  @if($PlaceholderService->version() != $latestBlueprintVersion)
-    <div class="blueprint-statusbar blueprint-statusbar-danger">
-      <div style="margin-right: 14px;">
-        <i class="bi bi-exclamation-triangle-fill" style="font-size: 24px; color: #f52e98"></i>
+  @if($is_installed)
+    @if($PlaceholderService->version() != $latestBlueprintVersion)
+      <div class="blueprint-statusbar blueprint-statusbar-danger">
+        <div style="margin-right: 14px;">
+          <i class="bi bi-exclamation-triangle-fill" style="font-size: 24px; color: #f52e98"></i>
+        </div>
+        <div>
+          <span class="text-bold" style="color: #ff6ab9;">
+            Blueprint is out-of-date.
+          </span>
+          You're running Blueprint
+          <code style="border: unset; background-color: unset; color: #cad1d8;">
+            {{ $PlaceholderService->version() }}
+          </code>
+          which is outdated. Update to version
+          <code style="border: unset; background-color: unset; color: #cad1d8;">
+            {{ $latestBlueprintVersion }}
+          </code>
+          to access the latest features and improvements.
+        </div>
       </div>
-      <div>
-        <span class="text-bold" style="color: #ff6ab9;">
-          Blueprint is out-of-date.
-        </span>
-        You're running Blueprint
-        <code style="border: unset; background-color: unset; color: #cad1d8;">
-          {{ $PlaceholderService->version() }}
-        </code>
-        which is outdated. Update to version
-        <code style="border: unset; background-color: unset; color: #cad1d8;">
-          {{ $latestBlueprintVersion }}
-        </code>
-        to access the latest features and improvements.
+    @endif
+
+    <div class="blueprint-page-header">
+      <div class="row">
+        <div class="col-lg-8 col-md-9 col-sm-9 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
+          <p>
+            <span class="text-bold h4">Blueprint</span>
+          </p>
+          <span>
+            Powerful, fast and developer-friendly extension framework for Pterodactyl. Utilize extension APIs, inject HTML, modify stylesheets, package extensions and so much more. 
+          </span>
+        </div>
+        <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
+          <a href="https://blueprint.zip/" target="_blank" class="pull-right text-bold">
+            Learn more
+          </a>
+        </div>
       </div>
     </div>
   @endif
-
-  <div class="blueprint-page-header">
-    <div class="row">
-      <div class="col-lg-8 col-md-9 col-sm-9 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
-        <p>
-          <span class="text-bold h4">Blueprint</span>
-        </p>
-        <span>
-          Powerful, fast and developer-friendly extension framework for Pterodactyl. Utilize extension APIs, inject HTML, modify stylesheets, package extensions and so much more. 
-        </span>
-      </div>
-      <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
-        <a href="https://blueprint.zip/" target="_blank" class="pull-right text-bold">
-          Learn more
-        </a>
-      </div>
-    </div>
-  </div>
 
   <style>
     .blueprint-statusbar {
@@ -82,7 +88,7 @@
 @endsection
 
 @section('content')
-  @if(($PlaceholderService->installed() != "NOTINSTALLED") && ($PlaceholderService->version() != "::"."v"))
+  @if($is_installed)
     <div class="row" style="padding-left: 15px; padding-right: 10px;">
       <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-center" style="padding-left: 0px; padding-right: 17px;">
         <button class="btn extension-btn" style="width:100%;margin-bottom:17px;" data-toggle="modal" data-target="#blueprintConfigModal">
@@ -222,7 +228,24 @@
   </div>
 
   @else 
-    <p><i class='bx bxs-error-alt'></i> You need to finish installing Blueprint to start using extensions.</p>
+    <center>
+      <div style="padding-top: 50px;">
+        <span style="font-size: 36px">
+          <i class="bi bi-info-circle-fill"></i>
+        </span>
+        <br style="margin-bottom: 12px;">
+        <span style="font-size: 20px" class="text-bold">
+          Unfinished installation
+        </span>
+        <br style="margin-bottom: 12px;">
+        <span>
+          Blueprint is currently only partially installed.<br>
+          Finish the
+          <a href="https://blueprint.zip/docs/?page=getting-started/Installation">installation guide</a>,
+          then return to this page afterwards.
+        </span>
+      </div>
+    </center>
   @endif
 
   <style>
