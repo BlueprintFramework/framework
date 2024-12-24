@@ -91,6 +91,7 @@ Command() {
   ((PROGRESS_NOW++))
 
   # Remove some files/directories that don't have to be moved to the Pterodactyl folder.
+  PRINT INFO "Cleaning up fetched release.."
   rm -r \
     "main/.github" \
     "main/.git" \
@@ -101,6 +102,7 @@ Command() {
   ((PROGRESS_NOW++))
 
   # Copy fetched release files to the Pterodactyl directory and remove temp files.
+  PRINT INFO "Moving release files to Pterodactyl directory.."
   cp -r main/* "$FOLDER"/
   rm -r \
     "main" \
