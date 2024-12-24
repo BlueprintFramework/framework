@@ -38,6 +38,8 @@ InstallExtension() {
     fi
   fi
 
+  ((PROGRESS_NOW++))
+
   # Return to the Pterodactyl installation folder.
   cd "$FOLDER" || cdhalt
 
@@ -84,6 +86,7 @@ InstallExtension() {
 
   local database_migrations="$conf_database_migrations"; #(optional)
 
+  ((PROGRESS_NOW++))
 
   # assign config aliases
   if [[ $requests_routers_application == "" ]] \
@@ -96,6 +99,8 @@ InstallExtension() {
     local requests_app="$conf_requests_controllers"
     PRINT WARNING "Config value 'requests_controllers' is deprecated, use 'requests_app' instead."
   fi
+
+  ((PROGRESS_NOW++))
 
   # "prevent" folder "escaping"
   if [[ ( $icon                         == "/"* ) || ( $icon                         == *"/.."* ) || ( $icon                         == *"../"* ) || ( $icon                         == *"/../"* ) || ( $icon                         == *"~"* ) || ( $icon                         == *"\\"* ) ]] \
@@ -120,6 +125,8 @@ InstallExtension() {
     return 1
   fi
 
+  ((PROGRESS_NOW++))
+
   # prevent potentional problems during installation due to wrongly defined folders
   if [[ ( $dashboard_components == *"/" ) ]] \
   || [[ ( $data_directory == *"/"       ) ]] \
@@ -133,6 +140,8 @@ InstallExtension() {
     return 1
   fi
 
+  ((PROGRESS_NOW++))
+
   # check if extension still has placeholder values
   if [[ ( $name    == "[name]" ) || ( $identifier == "[identifier]" ) || ( $description == "[description]" ) ]] \
   || [[ ( $version == "[ver]"  ) || ( $target     == "[version]"    ) || ( $author      == "[author]"      ) ]]; then
@@ -140,6 +149,8 @@ InstallExtension() {
     PRINT FATAL "Extension contains placeholder values which need to be replaced."
     return 1
   fi
+
+  ((PROGRESS_NOW++))
 
   # Detect if extension is already installed and prepare the upgrading process.
   if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"$identifier,"* ]]; then
@@ -157,6 +168,7 @@ InstallExtension() {
     # run extension update script
     if [[ -f ".blueprint/extensions/$identifier/private/update.sh" ]]; then
       PRINT WARNING "Extension uses a custom update script, proceed with caution."
+      hide_progress # Hide progress bar
       chmod --silent +x ".blueprint/extensions/$identifier/private/update.sh" 2>> "$BLUEPRINT__DEBUG"
 
 
@@ -189,9 +201,13 @@ InstallExtension() {
     fi
   fi
 
+  ((PROGRESS_NOW++))
+
   # Assign variables to extension flags.
   PRINT INFO "Reading and assigning extension flags.."
   assignflags
+
+  ((PROGRESS_NOW++))
 
   # Force http/https url scheme for extension website urls when needed.
   if [[ $website != "" ]]; then
@@ -216,10 +232,14 @@ InstallExtension() {
     esac
   fi
 
+  ((PROGRESS_NOW++))
+
   if [[ $dev == true ]]; then
     mv ".blueprint/tmp/$n" ".blueprint/tmp/$identifier"
     n=$identifier
   fi
+
+  ((PROGRESS_NOW++))
 
   if ! $F_ignorePlaceholders; then
     # Prepare variables for placeholders
@@ -354,6 +374,8 @@ InstallExtension() {
     fi
   fi
 
+  ((PROGRESS_NOW++))
+
   if [[ $name == "" ]]; then rm -R ".blueprint/tmp/$n";                 PRINT FATAL "'info_name' is a required configuration option.";return 1;fi
   if [[ $identifier == "" ]]; then rm -R ".blueprint/tmp/$n";           PRINT FATAL "'info_identifier' is a required configuration option.";return 1;fi
   if [[ $description == "" ]]; then rm -R ".blueprint/tmp/$n";          PRINT FATAL "'info_description' is a required configuration option.";return 1;fi
@@ -375,6 +397,8 @@ InstallExtension() {
     PRINT FATAL "Extension identifier may not contain spaces, underscores, hyphens or periods."
     return 1
   fi
+
+  ((PROGRESS_NOW++))
 
   # Validate paths to files and directories defined in conf.yml.
   if \
@@ -399,12 +423,16 @@ InstallExtension() {
     return 1
   fi
 
+  ((PROGRESS_NOW++))
+
   # Place database migrations.
   if [[ $database_migrations != "" ]]; then
     PRINT INFO "Cloning database migration files.."
     cp -R ".blueprint/tmp/$n/$database_migrations/"* "database/migrations/" 2>> "$BLUEPRINT__DEBUG"
     dbmigrations="true"
   fi
+
+  ((PROGRESS_NOW++))
 
   # Place views directory.
   if [[ $requests_views != "" ]]; then
@@ -414,6 +442,8 @@ InstallExtension() {
     ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/views" "$FOLDER/resources/views/blueprint/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
   fi
 
+  ((PROGRESS_NOW++))
+
   # Place app directory.
   if [[ $requests_app != "" ]]; then
     PRINT INFO "Cloning and linking app directory.."
@@ -421,6 +451,8 @@ InstallExtension() {
     cp -R ".blueprint/tmp/$n/$requests_app/"* ".blueprint/extensions/$identifier/app/" 2>> "$BLUEPRINT__DEBUG"
     ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/app" "$FOLDER/app/BlueprintFramework/Extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
   fi
+
+  ((PROGRESS_NOW++))
 
   # Place routes directory.
   if [[ $requests_routers_application != "" ]] \
@@ -453,6 +485,8 @@ InstallExtension() {
       } 2>> "$BLUEPRINT__DEBUG"
     fi
   fi
+
+  ((PROGRESS_NOW++))
 
   # Place and link console directory and generate artisan files.
   if [[ $data_console != "" ]]; then
@@ -639,6 +673,8 @@ InstallExtension() {
 
     fi
   fi
+
+  ((PROGRESS_NOW++))
 
   # Create, link and connect components directory.
   if [[ $dashboard_components != "" ]]; then
@@ -992,6 +1028,8 @@ InstallExtension() {
     fi
   fi
 
+  ((PROGRESS_NOW++))
+
   # Create and link public directory.
   if [[ $data_public != "" ]]; then
     PRINT INFO "Cloning and linking public directory.."
@@ -1007,6 +1045,8 @@ InstallExtension() {
     controller_type="custom"
   fi
 
+  ((PROGRESS_NOW++))
+
   # Prepare build files.
   AdminControllerConstructor="$__BuildDir/extensions/controller.build.bak"
   AdminBladeConstructor="$__BuildDir/extensions/admin.blade.php.bak"
@@ -1017,6 +1057,7 @@ InstallExtension() {
     cp "$__BuildDir/extensions/config/ExtensionFS.build" "$ConfigExtensionFS"
   } 2>> "$BLUEPRINT__DEBUG"
 
+  ((PROGRESS_NOW++))
 
   # Start creating data directory.
   PRINT INFO "Cloning and linking private directory.."
@@ -1041,6 +1082,7 @@ InstallExtension() {
 
   # End creating data directory.
 
+  ((PROGRESS_NOW++))
 
   # Link and create assets folder
   PRINT INFO "Linking and writing assets directory.."
@@ -1049,6 +1091,8 @@ InstallExtension() {
     mkdir .blueprint/extensions/"$identifier"/assets
   fi
   ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/assets" "$FOLDER/public/assets/extensions/$identifier" 2>> "$BLUEPRINT__DEBUG"
+
+  ((PROGRESS_NOW++))
 
   if [[ $icon == "" ]]; then
     # use random placeholder icon if extension does not
@@ -1069,6 +1113,8 @@ InstallExtension() {
   fi;
   ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
 
+  ((PROGRESS_NOW++))
+
   if [[ $admin_css != "" ]]; then
     PRINT INFO "Cloning and linking admin css.."
     sed -i "s~@import url(/assets/extensions/$identifier/admin.style.css);~~g" ".blueprint/extensions/blueprint/assets/admin.extensions.css"
@@ -1082,6 +1128,8 @@ InstallExtension() {
     echo -e "@import url(./imported/$identifier.css);" >> "resources/scripts/blueprint/css/extensions.css"
     cp ".blueprint/tmp/$n/$dashboard_css" "resources/scripts/blueprint/css/imported/$identifier.css"
   fi
+
+  ((PROGRESS_NOW++))
 
   if [[ $name == *"~"* ]]; then        PRINT WARNING "'name' contains '~' and may result in an error.";fi
   if [[ $description == *"~"* ]]; then PRINT WARNING "'description' contains '~' and may result in an error.";fi
@@ -1126,6 +1174,8 @@ InstallExtension() {
   CONFIGEXTENSIONFS_RESULT=$(<"$ConfigExtensionFS")
   ADMINCONTROLLER_NAME="${identifier}ExtensionController.php"
 
+  ((PROGRESS_NOW++))
+
   # Place admin extension view.
   PRINT INFO "Cloning admin view.."
   mkdir -p "resources/views/admin/extensions/$identifier"
@@ -1145,6 +1195,8 @@ InstallExtension() {
     cp ".blueprint/tmp/$n/$admin_controller" "app/Http/Controllers/Admin/Extensions/$identifier/$ADMINCONTROLLER_NAME"
   fi
 
+  ((PROGRESS_NOW++))
+
   # Place dashboard wrapper
   if [[ $dashboard_wrapper != "" ]]; then
     PRINT INFO "Cloning and linking dashboard wrapper.."
@@ -1154,6 +1206,8 @@ InstallExtension() {
     ln -s -r -T ".blueprint/extensions/$identifier/wrappers/dashboard.blade.php" "$FOLDER/resources/views/blueprint/dashboard/wrappers/$identifier.blade.php"
   fi
 
+  ((PROGRESS_NOW++))
+
   # Place admin wrapper
   if [[ $admin_wrapper != "" ]]; then
     PRINT INFO "Cloning and linking admin wrapper.."
@@ -1162,6 +1216,8 @@ InstallExtension() {
     cp ".blueprint/tmp/$n/$admin_wrapper" ".blueprint/extensions/$identifier/wrappers/admin.blade.php"
     ln -s -r -T ".blueprint/extensions/$identifier/wrappers/admin.blade.php" "$FOLDER/resources/views/blueprint/admin/wrappers/$identifier.blade.php"
   fi
+
+  ((PROGRESS_NOW++))
 
   # Create extension filesystem (ExtensionFS/PrivateFS)
   PRINT INFO "Creating and linking extension filesystem.."
@@ -1182,6 +1238,8 @@ InstallExtension() {
   fi
   sed -i "s~\/\* blueprint/disks \*\/~/* blueprint/disks */$CONFIGEXTENSIONFS_RESULT~g" config/ExtensionFS.php
 
+  ((PROGRESS_NOW++))
+
   # Create backup of generated values.
   mkdir -p \
     ".blueprint/extensions/$identifier/private/.store/build" \
@@ -1196,6 +1254,7 @@ InstallExtension() {
     "$ConfigExtensionFS"
   rm -R ".blueprint/tmp/$n"
 
+  ((PROGRESS_NOW++))
   
   if [[ ( $F_developerForceMigrate == true ) && ( $dev == true ) ]]; then
     DeveloperForcedMigrate="true"
@@ -1212,9 +1271,12 @@ InstallExtension() {
   chown -R "$OWNERSHIP" "$FOLDER/.blueprint/extensions/$identifier/private"
   chmod --silent -R +x ".blueprint/extensions/"* 2>> "$BLUEPRINT__DEBUG"
 
+  ((PROGRESS_NOW++))
+
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
     if [[ -f ".blueprint/extensions/$identifier/private/install.sh" ]]; then
       PRINT WARNING "Extension uses a custom installation script, proceed with caution."
+      hide_progress # Hide progress bar
       chmod --silent +x ".blueprint/extensions/$identifier/private/install.sh" 2>> "$BLUEPRINT__DEBUG"
 
       # Run script while also parsing some useful variables for the install script to use.
@@ -1244,6 +1306,8 @@ InstallExtension() {
     fi
   fi
 
+  ((PROGRESS_NOW++))
+
   if [[ $DUPLICATE != "y" ]]; then
     PRINT INFO "Adding '$identifier' to active extensions list.."
     printf "%s," "${identifier}" >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
@@ -1258,6 +1322,8 @@ InstallExtension() {
   else
     BuiltExtensions="$identifier"
   fi
+
+  ((PROGRESS_NOW++))
 }
 
 Command() {
@@ -1272,24 +1338,39 @@ Command() {
   current=0
   extensions="$*"
   total=$(echo "$extensions" | wc -w)
+
+  local EXTENSIONS_STEPS=34 #Total amount of steps per extension
+  local FINISH_STEPS=6 #Total amount of finalization steps
+
+  export PROGRESS_TOTAL="$(("$FINISH_STEPS" + "$EXTENSIONS_STEPS" * "$total"))"
+  export PROGRESS_NOW=0
+
   for extension in $extensions; do
     (( current++ ))
     InstallExtension "$extension" "$current" "$total"
+    export PROGRESS_NOW="$(("$EXTENSIONS_STEPS" * "$current"))"
   done
 
   if [[ ( $InstalledExtensions != "" ) || ( $BuiltExtensions != "" ) ]]; then
+    ((PROGRESS_NOW++))
+
     # Finalize transaction
     PRINT INFO "Finalizing transaction.."
 
     if [[ ( $YARN == "y" ) && ( $IgnoreRebuild != "true" ) ]]; then
       PRINT INFO "Rebuilding panel assets.."
+      hide_progress
       cd "$FOLDER" || cdhalt
       yarn run build:production --progress
     fi
 
+    ((PROGRESS_NOW++))
+
     # Link filesystems
     PRINT INFO "Linking filesystems.."
     php artisan storage:link &>> "$BLUEPRINT__DEBUG"
+
+    ((PROGRESS_NOW++))
 
     # Flush cache.
     PRINT INFO "Flushing view, config and route cache.."
@@ -1302,24 +1383,33 @@ Command() {
       php artisan queue:restart
     } &>> "$BLUEPRINT__DEBUG"
 
+    ((PROGRESS_NOW++))
+
     # Make sure all files have correct permissions.
     PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
     find "$FOLDER/" \
     -path "$FOLDER/node_modules" -prune \
     -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
+    ((PROGRESS_NOW++))
+
     # Database migrations
     if [[ ( $dbmigrations == "true" ) && ( $DOCKER != "y" ) ]]; then
-        PRINT INFO "Running database migrations.."
-        php artisan migrate --force
+      PRINT INFO "Running database migrations.."
+      hide_progress
+      php artisan migrate --force
     fi
+
+    ((PROGRESS_NOW++))
 
     if [[ $BuiltExtensions == "" ]]; then
       CorrectPhrasing="have"
       if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
       PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
+      hide_progress
     else
       PRINT SUCCESS "$BuiltExtensions has been built."
+      hide_progress
     fi
 
     exit 0
