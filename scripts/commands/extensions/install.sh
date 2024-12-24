@@ -168,7 +168,7 @@ InstallExtension() {
     # run extension update script
     if [[ -f ".blueprint/extensions/$identifier/private/update.sh" ]]; then
       PRINT WARNING "Extension uses a custom update script, proceed with caution."
-      hide_progress # Hide progress bar
+      hide_progress
       chmod --silent +x ".blueprint/extensions/$identifier/private/update.sh" 2>> "$BLUEPRINT__DEBUG"
 
 
@@ -1276,7 +1276,7 @@ InstallExtension() {
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
     if [[ -f ".blueprint/extensions/$identifier/private/install.sh" ]]; then
       PRINT WARNING "Extension uses a custom installation script, proceed with caution."
-      hide_progress # Hide progress bar
+      hide_progress
       chmod --silent +x ".blueprint/extensions/$identifier/private/install.sh" 2>> "$BLUEPRINT__DEBUG"
 
       # Run script while also parsing some useful variables for the install script to use.
