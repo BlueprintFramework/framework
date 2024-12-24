@@ -239,12 +239,19 @@ if [[ $1 != "-bash" ]]; then
         "\n$C4  ██$C1▌$C2▌$C3▌$C0   Blueprint Framework" \
         "\n$C4██  ██$C1▌$C2▌$C3▌$C0 https://blueprint.zip" \
         "\n$C4  ████$C1▌$C2▌$C3▌$C0 © 2023-2024 Emma (prpl.wtf)\n";
+      
+      export PROGRESS_TOTAL=11
+      export PROGRESS_NOW=0
     fi
 
     PRINT INFO "Searching and validating framework dependencies.."
     depend # Check if required dependencies are installed
+
+    ((PROGRESS_NOW++))
     
     placeshortcut # Place Blueprint shortcut
+
+    ((PROGRESS_NOW++))
 
     # Link directories.
     PRINT INFO "Linking directories and filesystems.."
@@ -255,11 +262,16 @@ if [[ $1 != "-bash" ]]; then
     } 2>> "$BLUEPRINT__DEBUG"
     php artisan storage:link &>> "$BLUEPRINT__DEBUG"
 
+    ((PROGRESS_NOW++))
+
     # Copy "Blueprint" extension page logo from assets.
     cp "$FOLDER/.blueprint/assets/Emblem/emblem.jpg" "$FOLDER/.blueprint/extensions/blueprint/assets/logo.jpg"
 
+    ((PROGRESS_NOW++))
+
     # Put application into maintenance.
     PRINT INPUT "Would you like to put your application into maintenance while Blueprint is installing? (Y/n)"
+    hide_progress
     read -r YN
     if [[ ( $YN == "y"* ) || ( $YN == "Y"* ) || ( $YN == "" ) ]]; then
       MAINTENANCE="true"
@@ -269,6 +281,8 @@ if [[ $1 != "-bash" ]]; then
       MAINTENANCE="false"
       PRINT INFO "Putting application into maintenance has been skipped."
     fi
+
+    ((PROGRESS_NOW++))
 
     # Flush cache.
     PRINT INFO "Flushing cache.."
@@ -281,15 +295,22 @@ if [[ $1 != "-bash" ]]; then
       php artisan bp:version:cache
     } &>> "$BLUEPRINT__DEBUG"
 
+    ((PROGRESS_NOW++))
+
     # Run migrations if Blueprint is not running through Docker.
     if [[ $DOCKER != "y" ]]; then
       PRINT INFO "Running database migrations.."
+      hide_progress
       php artisan migrate --force
     fi
 
+    ((PROGRESS_NOW++))
+
     # Seed Blueprint database records
     PRINT INFO "Seeding Blueprint database records.."
-    php artisan db:seed --class=BlueprintSeeder --force
+    php artisan db:seed --class=BlueprintSeeder --force &>> "$BLUEPRINT__DEBUG"
+
+    ((PROGRESS_NOW++))
 
     # Make sure all files have correct permissions.
     PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
@@ -297,16 +318,23 @@ if [[ $1 != "-bash" ]]; then
       -path "$FOLDER/node_modules" -prune \
       -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
+    ((PROGRESS_NOW++))
+
     # Rebuild panel assets.
     PRINT INFO "Rebuilding panel assets.."
+    hide_progress
     cd "$FOLDER" || cdhalt
     yarn run build:production --progress
+
+    ((PROGRESS_NOW++))
 
     if [[ $DOCKER != "y" ]] && [[ $MAINTENANCE == "true" ]]; then
       # Put application into production.
       PRINT INFO "Put application into production."
       php artisan up &>> "$BLUEPRINT__DEBUG"
     fi
+
+    ((PROGRESS_NOW++))
 
     # Let the panel know the user has finished installation.
     dbAdd "blueprint.setupFinished"
@@ -315,6 +343,7 @@ if [[ $1 != "-bash" ]]; then
     # Finish installation
     if [[ ( $BLUEPRINT_ENVIRONMENT != "upgrade" ) && ( $1 != "--post-upgrade" ) ]]; then
       PRINT SUCCESS "Blueprint has completed its installation process."
+      hide_progress
     fi
 
     exit 0

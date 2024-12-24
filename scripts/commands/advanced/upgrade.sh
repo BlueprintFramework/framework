@@ -23,12 +23,19 @@ Command() {
   if [[ ${YN} != "continue" ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
   YN=""
 
+  INSTALL_STEPS=11
+  export PROGRESS_TOTAL="$((10 + "$INSTALL_STEPS"))"
+  export PROGRESS_NOW=0
 
   if [[ $1 == "remote" ]]; then PRINT INFO "Fetching and pulling latest commit.."
   else                          PRINT INFO "Fetching and pulling latest release.."; fi
 
+  ((PROGRESS_NOW++))
+
   mkdir "$FOLDER/.tmp"
   cp blueprint.sh .blueprint.sh.bak
+
+  ((PROGRESS_NOW++))
 
   HAS_DEV=false
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then

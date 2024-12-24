@@ -1413,7 +1413,8 @@ Command() {
     fi
 
     exit 0
-  else
-    exit 1
   fi
+
+  hide_progress
+  exit 1
 }
