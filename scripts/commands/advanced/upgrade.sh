@@ -45,6 +45,8 @@ Command() {
     HAS_DEV=true
   fi
 
+  ((PROGRESS_NOW++))
+
   mkdir -p "$FOLDER/.tmp/files"
   cd "$FOLDER/.tmp/files" || cdhalt
   if [[ $1 == "remote" ]]; then
@@ -58,9 +60,11 @@ Command() {
       fi
     fi
     # download release
+    hide_progress
     git clone "$REMOTE_REPOSITORY" main
   else
     # download latest release
+    hide_progress
     LOCATION=$(curl -s https://api.github.com/repos/"$REPOSITORY"/releases/latest \
   | grep "zipball_url" \
   | awk '{ print $2 }' \
@@ -73,13 +77,18 @@ Command() {
     mv ./* main
   fi
 
+  ((PROGRESS_NOW++))
+
   if [[ ! -d "main" ]]; then
     cd "$FOLDER" || cdhalt
     rm -r "$FOLDER/.tmp" &>> "$BLUEPRINT__DEBUG"
     rm "$FOLDER/.blueprint.sh.bak" &>> "$BLUEPRINT__DEBUG"
     PRINT FATAL "Remote does not exist or encountered an error, try again later."
+    hide_progress
     exit 1
   fi
+
+  ((PROGRESS_NOW++))
 
   # Remove some files/directories that don't have to be moved to the Pterodactyl folder.
   rm -r \
@@ -89,6 +98,8 @@ Command() {
     "main/README.md" \
     &>> "$BLUEPRINT__DEBUG"
 
+  ((PROGRESS_NOW++))
+
   # Copy fetched release files to the Pterodactyl directory and remove temp files.
   cp -r main/* "$FOLDER"/
   rm -r \
@@ -96,6 +107,8 @@ Command() {
     "$FOLDER"/.blueprint \
     "$FOLDER"/.tmp/files
   cd "$FOLDER" || cdhalt
+
+  ((PROGRESS_NOW++))
 
   # Clean up folders with potentially broken symlinks.
   rm \
@@ -105,6 +118,8 @@ Command() {
     "routes/blueprint/client/"* \
     "routes/blueprint/web/"* \
     &>> /dev/null # cannot forward to debug dir because it does not exist
+  
+  ((PROGRESS_NOW++))
 
   chmod +x blueprint.sh
   sed -i -E \
@@ -113,7 +128,10 @@ Command() {
     -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
     "$FOLDER/blueprint.sh"
   mv "$FOLDER/blueprint" "$FOLDER/.blueprint"
-  BLUEPRINT_ENVIRONMENT="upgrade" bash blueprint.sh
+  hide_progress
+  BLUEPRINT_ENVIRONMENT="upgrade" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh
+
+  ((PROGRESS_NOW++))
 
   if [[ ${HAS_DEV} == true ]]; then
     PRINT INFO "Restoring extension development files.."
@@ -123,6 +141,8 @@ Command() {
   fi
 
   rm -r "$FOLDER/.tmp"
+
+  ((PROGRESS_NOW++))
 
   # Post-upgrade checks.
   PRINT INFO "Validating update.."
@@ -134,15 +154,18 @@ Command() {
   # Finalize upgrade.
   if [[ ${score} == 1 ]]; then
     PRINT SUCCESS "Upgrade finished."
+    hide_progress
     rm .blueprint.sh.bak
     exit 0 # success
   elif [[ ${score} == 0 ]]; then
     PRINT FATAL "All checks have failed. The 'blueprint.sh' file has been reverted."
+    hide_progress
     rm blueprint.sh
     mv .blueprint.sh.bak blueprint.sh
     exit 1 # error
   else
     PRINT FATAL "Some checks have failed. The 'blueprint.sh' file has been reverted."
+    hide_progress
     rm blueprint.sh
     mv .blueprint.sh.bak blueprint.sh
     exit 1 # error
