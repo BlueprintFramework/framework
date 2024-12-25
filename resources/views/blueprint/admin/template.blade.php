@@ -63,7 +63,7 @@
             <div class="row">
               <div class="col-xs-12">
                 <label class="control-label">Route eggs</label>
-                <select multiple class="pOptions form-control" name="{{ $EXTENSION_ID }}_eggs[]">
+                <select multiple class="eggOptions form-control" name="{{ $EXTENSION_ID }}_eggs[]">
                   <option value="-1" @if(in_array('-1', json_decode($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_eggs') ?: '["-1"]'))) selected @endif>Show on all eggs</option>
                   @foreach ($eggs as $egg)
                     <option value="{{ $egg->id }}" @if(in_array(strval($egg->id), json_decode($blueprint->dbGet('blueprint', 'extensionconfig_'.$EXTENSION_ID.'_eggs') ?: '["-1"]'))) selected @endif>{{ $egg->name }}</option>
@@ -96,7 +96,7 @@
 @section('footer-scripts')
   @parent
   <script>
-    $('.pOptions').select2();
+    $('.eggOptions').select2();
   </script>
   <style>
     .select2-selection {
