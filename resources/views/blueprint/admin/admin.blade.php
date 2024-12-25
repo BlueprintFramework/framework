@@ -17,17 +17,10 @@
 @endsection
 
 @section("blueprint.navigation")
-  <?php
-    $extensionsIcon="fa fa-puzzle-piece";
-    if($blueprint->fileRead($PlaceholderService->folder()."/.blueprint/extensions/blueprint/private/db/onboarding") == "true"){
-      $extensionsIcon="fa fa-puzzle-piece bx-flashing";
-    }
-  ?>
-
   <li>
     <li>
       <a href="{{ route('admin.extensions') }}" data-toggle="tooltip" data-placement="bottom" title="Extensions">
-        <i class='{{ $extensionsIcon }}'></i>
+        <i class='fa fa-puzzle-piece'></i>
       </a>
     </li>
   </li>
@@ -35,9 +28,6 @@
 
 @section("blueprint.notifications")
   <?php
-    if($blueprint->fileRead($PlaceholderService->folder()."/.blueprint/extensions/blueprint/private/db/onboarding") == "true") {
-      $blueprint->fileWipe($PlaceholderService->folder()."/.blueprint/extensions/blueprint/private/db/onboarding");
-    }
     $notification = $blueprint->dbGet("blueprint", "notification:text");
     if($notification != null) {
       echo "<div class=\"notification\">
