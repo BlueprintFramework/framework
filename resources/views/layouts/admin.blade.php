@@ -93,6 +93,7 @@
                             </a>
                         </li>
                         <li class="header">MANAGEMENT</li>
+                        @yield("blueprint.sidenav")
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.databases') ?: 'active' }}">
                             <a href="{{ route('admin.databases') }}">
                                 <i class="fa fa-database"></i> <span>Databases</span>

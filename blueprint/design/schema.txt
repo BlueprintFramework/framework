@@ -8,6 +8,7 @@ blueprint
   flags
     disable_attribution      false        boolean
     is_developer             false        boolean
+    show_in_sidebar          false        boolean
     telemetry_enabled        true         boolean
   notification
     text                     -            string

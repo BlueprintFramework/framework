@@ -38,6 +38,10 @@ class BlueprintSeeder extends Seeder
         'default' => false,
         'type' => 'boolean'
       ],
+      'show_in_sidebar' => [
+        'default' => false,
+        'type' => 'boolean'
+      ],
       'telemetry_enabled' => [
         'default' => true,
         'type' => 'boolean'

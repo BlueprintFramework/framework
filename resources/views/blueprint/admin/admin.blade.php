@@ -26,6 +26,16 @@
   </li>
 @endsection
 
+@section("blueprint.sidenav")
+  @if($blueprint->dbGet("blueprint", "flags:show_in_sidebar"))
+    <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.extensions') ?: 'active' }}">
+      <a href="{{ route('admin.extensions') }}">
+        <i class="fa fa-puzzle-piece"></i> <span>Extensions</span>
+      </a>
+    </li>
+  @endif
+@endsection
+
 @section("blueprint.notifications")
   <?php
     $notification = $blueprint->dbGet("blueprint", "notification:text");
