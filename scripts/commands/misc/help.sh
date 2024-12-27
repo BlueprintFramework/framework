@@ -15,6 +15,7 @@ Command() {
 \x1b[34;1mExtensions\x1b[0m\x1b[34m
   -install [name]   -add -i  install/update a blueprint extension
   -remove [name]         -r  remove a blueprint extension
+  -query [name]          -q  information about a specific blueprint extension
   \x1b[0m
 
 ${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}

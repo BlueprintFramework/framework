@@ -12,7 +12,7 @@ class VersionCacheCommand extends Command
   protected $signature = 'bp:version:cache';
 
   /**
-   * VersionFetchCommand constructor.
+   * VersionCacheCommand constructor.
    */
   public function __construct(
     private BlueprintPlaceholderService $PlaceholderService,

@@ -38,7 +38,7 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
     cmd="${COMP_WORDS[1]}"
 
     case "${cmd}" in
-      -install|-add|-i)
+      -install|-add|-i|-query|-q)
         opts="$(
           find "$BLUEPRINT__SOURCEFOLDER"/*.blueprint 2> /dev/null |
           sed -e "s|^$BLUEPRINT__SOURCEFOLDER/||g" -e "s|.blueprint$||g"
@@ -52,7 +52,7 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
       -export) opts="expose" ;;
       -upgrade) opts="remote" ;;
       
-      *) opts="-install -add -remove -init -build -export -wipe -version -help -info -debug -upgrade -rerun-install" ;;
+      *) opts="-install -add -remove -query -init -build -export -wipe -version -help -info -debug -upgrade -rerun-install" ;;
     esac
 
     if [[ ${cur} == * ]]; then
@@ -358,6 +358,7 @@ cmd="${2}"
 case "$cmd" in
   -add|-install|-i) source ./scripts/commands/extensions/install.sh ;;
   -remove|-r) source ./scripts/commands/extensions/remove.sh ;;
+  -query|-q) source ./scripts/commands/extensions/query.sh ;;
   -init|-I) source ./scripts/commands/developer/init.sh ;;
   -build|-b) source ./scripts/commands/developer/build.sh ;;
   -wipe|-w) source ./scripts/commands/developer/wipe.sh ;;
