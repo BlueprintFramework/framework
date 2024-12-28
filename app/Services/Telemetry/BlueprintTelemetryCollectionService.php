@@ -59,6 +59,13 @@ class BlueprintTelemetryCollectionService
         if (is_null($value)) {
           $value = $this->seeder->getDefaultsForFlag($path);
         }
+
+        // Force booleans
+        if ($value == "1") {
+          $value = true;
+        } elseif ($value == "0") {
+          $value = false;
+        }
         
         $flags[$flagName] = $value;
       }
