@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
+use Database\Seeders\BlueprintSeeder;
 
 class BlueprintTelemetryCollectionService
 {
@@ -16,6 +17,7 @@ class BlueprintTelemetryCollectionService
   public function __construct(
     private BlueprintExtensionLibrary $blueprint,
     private BlueprintPlaceholderService $placeholderService,
+    private BlueprintSeeder $seeder,
   ) {
   }
 
@@ -46,6 +48,22 @@ class BlueprintTelemetryCollectionService
       $this->blueprint->dbSet('blueprint', 'internal:uuid', $uuid);
     }
 
+    $schema = $this->seeder->getSchema();
+    $flags = [];
+    
+    if (isset($schema['flags'])) {
+      foreach ($schema['flags'] as $flagName => $config) {
+        $path = "flags:{$flagName}";
+        $value = $this->blueprint->dbGet('blueprint', $path);
+        
+        if (is_null($value)) {
+          $value = $this->seeder->getDefaultsForFlag($path);
+        }
+        
+        $flags[$flagName] = $value;
+      }
+    }
+
     return [
       'id' => $uuid,
       'telemetry_version' => 1,
@@ -53,6 +71,7 @@ class BlueprintTelemetryCollectionService
       'blueprint' => [
         'version' => $this->placeholderService->version(),
         'extensions' => $this->blueprint->extensions()->toArray(),
+        'flags' => $flags,
         'developer' => $this->blueprint->dbGet('blueprint', 'flags:is_developer', 'false') === "true",
         'docker' => file_exists('/.dockerenv'),
       ],

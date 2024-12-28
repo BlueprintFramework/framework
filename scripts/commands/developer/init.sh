@@ -1,7 +1,6 @@
 #!/bin/bash
 
 Command() {
-  # Check for developer mode through the database library.
   if ! is_developer; then PRINT FATAL "Developer mode is not enabled.";exit 2; fi
 
   # To prevent accidental wiping of your dev directory, you are unable to initialize another extension
