@@ -73,6 +73,8 @@ else
   DOCKER="n"
 fi
 
+source "$(realpath "$(dirname "$0")")"/.blueprintrc 2> /dev/null
+
 # This has caused a bunch of errors but is just here to make sure people actually upload the
 # "blueprint" folder onto their panel when installing Blueprint. Pick your poison.
 if [[ -d "$FOLDER/blueprint" ]]; then mv "$FOLDER/blueprint" "$FOLDER/.blueprint"; fi
