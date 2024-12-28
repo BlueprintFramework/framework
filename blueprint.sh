@@ -9,9 +9,22 @@
 
 # This stores the webserver ownership user which Blueprint uses when applying webserver permissions.
   OWNERSHIP="www-data:www-data" #;
+  if [[ -f "/etc/os-release" ]]; then
+    source "/etc/os-release"
+    if [[ $ID == "centos" ]] || [[ $ID == "rocky" ]]; then
+      OWNERSHIP="nginx:nginx"
+    fi
+  fi
 
 # This stores options for permissions related to running install scripts the webserver user.
   WEBUSER="www-data" #;
+  # check for CentOS/Rocky Linux
+  if [[ -f "/etc/os-release" ]]; then
+    source "/etc/os-release"
+    if [[ $ID == "centos" ]] || [[ $ID == "rocky" ]]; then
+      WEBUSER="nginx"
+    fi
+  fi
   USERSHELL="/bin/bash" #;
 
 # Defines the version Blueprint will display as the active one.
