@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Pterodactyl\Http\Requests\Admin\AdminFormRequest;
 use Database\Seeders\BlueprintSeeder;
 
+// FIXME: Move form request and remove controller.
 class BlueprintExtensionController extends Controller
 {
 
