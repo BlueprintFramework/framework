@@ -105,10 +105,6 @@ cdhalt() { PRINT FATAL "Attempted navigation into nonexistent directory, halting
 depend() {
   # Make sure Node.js is version 17 or higher.
   nodeMajor=$(node -v | awk -F. '{print $1}' | sed 's/[^0-9]*//g')
-  if [[ $nodeMajor -lt 17 ]]; then
-    PRINT FATAL "Blueprint requires Node.js version 17 or higher to run."
-    exit 1
-  fi
 
   # Check for required (both internal and external) dependencies.
   if \
@@ -138,19 +134,19 @@ depend() {
       PRINT FATAL "Required dependency \"node\" is using an unsupported version."
     fi
 
-    if ! [ -x "$(command -v unzip)"                          ]; then PRINT FATAL "Required dependency \"unzip\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v node)"                           ]; then PRINT FATAL "Required dependency \"node\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v yarn)"                           ]; then PRINT FATAL "Required dependency \"yarn\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v zip)"                            ]; then PRINT FATAL "Required dependency \"zip\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v curl)"                           ]; then PRINT FATAL "Required dependency \"curl\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v php)"                            ]; then PRINT FATAL "Required dependency \"php\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v git)"                            ]; then PRINT FATAL "Required dependency \"git\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v grep)"                           ]; then PRINT FATAL "Required dependency \"grep\" is not installed or detected.";      fi
-    if ! [ -x "$(command -v sed)"                            ]; then PRINT FATAL "Required dependency \"sed\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v awk)"                            ]; then PRINT FATAL "Required dependency \"awk\" is not installed or detected.";       fi
-    if ! [ -x "$(command -v tput)"                           ]; then PRINT FATAL "Required dependency \"tput\" is not installed or detected.";      fi
-    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ]; then PRINT FATAL "Required dependency \"webpack\" is not installed or detected.";   fi
-    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ]; then PRINT FATAL "Required dependency \"react\" is not installed or detected.";     fi
+    if ! [ -x "$(command -v unzip)"                        ]; then PRINT FATAL "Required dependency \"unzip\" is not installed or detected.";     fi
+    if ! [ -x "$(command -v node)"                         ]; then PRINT FATAL "Required dependency \"node\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v yarn)"                         ]; then PRINT FATAL "Required dependency \"yarn\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v zip)"                          ]; then PRINT FATAL "Required dependency \"zip\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v curl)"                         ]; then PRINT FATAL "Required dependency \"curl\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v php)"                          ]; then PRINT FATAL "Required dependency \"php\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v git)"                          ]; then PRINT FATAL "Required dependency \"git\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v grep)"                         ]; then PRINT FATAL "Required dependency \"grep\" is not installed or detected.";      fi
+    if ! [ -x "$(command -v sed)"                          ]; then PRINT FATAL "Required dependency \"sed\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v awk)"                          ]; then PRINT FATAL "Required dependency \"awk\" is not installed or detected.";       fi
+    if ! [ -x "$(command -v tput)"                         ]; then PRINT FATAL "Required dependency \"tput\" is not installed or detected.";      fi
+    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)" ]; then PRINT FATAL "Required dependency \"webpack\" is not installed or detected.";   fi
+    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"   ]; then PRINT FATAL "Required dependency \"react\" is not installed or detected.";     fi
 
     if [[ $missinglibs == *"[parse_yaml]"*    ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected."; fi
     if [[ $missinglibs == *"[grabEnv]"*       ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";    fi
