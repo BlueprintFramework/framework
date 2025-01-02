@@ -109,7 +109,6 @@ depend() {
   # Check for required (both internal and external) dependencies.
   if \
   ! [ -x "$(command -v unzip)" ] ||                          # unzip
-  ! [ -x "$(command -v node)" ] ||                           # node
   ! [ -x "$(command -v yarn)" ] ||                           # yarn
   ! [ -x "$(command -v zip)" ] ||                            # zip
   ! [ -x "$(command -v curl)" ] ||                           # curl
@@ -119,6 +118,8 @@ depend() {
   ! [ -x "$(command -v sed)" ] ||                            # sed
   ! [ -x "$(command -v awk)" ] ||                            # awk
   ! [ -x "$(command -v tput)" ] ||                           # tput
+  ! [ -x "$(command -v node)" ] ||                           # node
+  [[ $nodeMajor -lt 17 ]] ||                                 # node version
   ! [ "$(ls "node_modules/"*"cross-env"* 2> /dev/null)" ] || # cross-env
   ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)"   ] || # webpack
   ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"     ] || # react
@@ -152,6 +153,10 @@ depend() {
     if [[ $missinglibs == *"[grabEnv]"*       ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";    fi
     if [[ $missinglibs == *"[logFormat]"*     ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";  fi
     if [[ $missinglibs == *"[misc]"*          ]]; then PRINT FATAL "Required internal dependency \"internal:misc\" is not installed or detected.";       fi
+
+    if ! [ -x "$(command -v inotifywait)" ] && [[ "$DeveloperWatch" == true ]]; then
+      PRINT FATAL "Developer dependency \"inotify-tools\" is not installed or detected."
+    fi
 
     exit 1
   fi

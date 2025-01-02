@@ -42,3 +42,4 @@ docker-compose.yaml
 !scripts/commands/misc
 wak.toml
 demo/
+.build-cache.json
