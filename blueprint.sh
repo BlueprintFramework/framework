@@ -359,6 +359,7 @@ case "$cmd" in
   -query|-q) source ./scripts/commands/extensions/query.sh ;;
   -init|-I) source ./scripts/commands/developer/init.sh ;;
   -build|-b) source ./scripts/commands/developer/build.sh ;;
+  -watch) source ./scripts/commands/developer/watch.sh ;;
   -wipe|-w) source ./scripts/commands/developer/wipe.sh ;;
   -export|-e) source ./scripts/commands/developer/export.sh ;;
   -info|-f) source ./scripts/commands/misc/info.sh ;;

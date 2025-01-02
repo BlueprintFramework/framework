@@ -136,7 +136,6 @@ module.exports = {
             '@definitions': path.join(__dirname, '/resources/scripts/api/definitions'),
             '@feature': path.join(__dirname, '/resources/scripts/components/server/features'),
         },
-        symlinks: false,
     },
     externals: {
         moment: 'moment',
