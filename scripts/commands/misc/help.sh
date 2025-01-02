@@ -21,6 +21,7 @@ Command() {
 ${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
   -init                  -I  initialize development files
   -build                 -b  install/update your development files
+  -watch                     watch for changes and rebuild your development files
   -export (expose)       -e  export/download your development files
   -wipe                  -w  remove your development files
   \x1b[0m
