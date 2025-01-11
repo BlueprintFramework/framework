@@ -376,5 +376,5 @@ case "$cmd" in
 esac
 
 shift 2
-Command "$*"
+Command "$@"
 exit 0
