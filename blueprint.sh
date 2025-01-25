@@ -4,21 +4,23 @@
 # Learn more @ blueprint.zip
 # Source code available at github.com/blueprintframework/framework
 
-# Variable for telling Blueprint which folder Pterodactyl lives in.
+# TODO: Guide users to using .blueprintrc instead of this mess
+
+# Variable for telling Blueprint which folder Pterodactyl lives in
   FOLDER=$(realpath "$(dirname "$0")")
 
-# This stores the webserver ownership user which Blueprint uses when applying webserver permissions.
-  OWNERSHIP="www-data:www-data" #;
+# This stores the webserver ownership user which Blueprint uses when applying webserver permissions
+  OWNERSHIP="www-data:www-data"
 
-# This stores options for permissions related to running install scripts the webserver user.
-  WEBUSER="www-data" #;
-  USERSHELL="/bin/bash" #;
+# This stores options for permissions related to running install scripts the webserver user
+  WEBUSER="www-data"
+  USERSHELL="/bin/bash"
 
-# Defines the version Blueprint will display as the active one.
+# Defines the version Blueprint will display as the active one
   VERSION="beta-2025-01"
   BLUEPRINT_ENGINE="solstice"
 
-# Default GitHub repository to use when upgrading Blueprint.
+# Default GitHub repository to use when upgrading Blueprint
   REPOSITORY="BlueprintFramework/framework"
 
 
