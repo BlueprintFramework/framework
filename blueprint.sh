@@ -68,6 +68,11 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
   return 0
 fi
 
+# Defaults
+D_OWNERSHIP="www-data:www-data"
+D_WEBUSER="www-data"
+D_USERSHELL="/bin/bash"
+
 # Check for panels that are using Docker, which should have better support in the future.
 if [[ -f "/.dockerenv" ]]; then
   DOCKER="y"
