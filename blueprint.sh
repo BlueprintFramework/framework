@@ -262,6 +262,7 @@ if [[ $1 != "-bash" ]]; then
 
     if [[ ( $BLUEPRINT_ENVIRONMENT == "upgrade" ) || ( $1 == "--post-upgrade" ) ]]; then
       PRINT WARNING "Blueprint variable customization is deprecated, autogenerating blueprintrc file.."
+      # FIXME: finish this function
       ((PROGRESS_NOW++))
     fi
     
