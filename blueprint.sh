@@ -254,6 +254,11 @@ if [[ $1 != "-bash" ]]; then
     depend # Check if required dependencies are installed
 
     ((PROGRESS_NOW++))
+
+    if [[ ( $BLUEPRINT_ENVIRONMENT == "upgrade" ) || ( $1 == "--post-upgrade" ) ]]; then
+      PRINT WARNING "Blueprint variable customization is deprecated, autogenerating blueprintrc file.."
+      ((PROGRESS_NOW++))
+    fi
     
     placeshortcut # Place Blueprint shortcut
 

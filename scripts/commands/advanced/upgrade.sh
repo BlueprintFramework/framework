@@ -23,7 +23,7 @@ Command() {
   if [[ ${YN} != "continue" ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
   YN=""
 
-  INSTALL_STEPS=11
+  INSTALL_STEPS=12
   export PROGRESS_TOTAL="$((10 + "$INSTALL_STEPS"))"
   export PROGRESS_NOW=0
 
