@@ -4,7 +4,8 @@
 # Learn more @ blueprint.zip
 # Source code available at github.com/blueprintframework/framework
 
-# TODO: Guide users to using .blueprintrc instead of this mess
+# To make changes to the variables persist between updates, make a .blueprintrc file
+# and override the variables there.
 
 # Variable for telling Blueprint which folder Pterodactyl lives in
   FOLDER=$(realpath "$(dirname "$0")")
