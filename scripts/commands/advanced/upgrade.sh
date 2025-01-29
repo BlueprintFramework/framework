@@ -123,13 +123,14 @@ Command() {
   
   ((PROGRESS_NOW++))
 
+  # Deprecated, kept in for backwards compatibility
+  sed -i -E \
+    -e "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" \
+    -e "s|WEBUSER=\"www-data\" #;|WEBUSER=\"$WEBUSER\" #;|g" \
+    -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
+    "$FOLDER/blueprint.sh"
+
   chmod +x blueprint.sh
-  # TODO: Use .blueprintrc instead of this mess.
-  #sed -i -E \
-  #  -e "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" \
-  #  -e "s|WEBUSER=\"www-data\" #;|WEBUSER=\"$WEBUSER\" #;|g" \
-  #  -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
-  #  "$FOLDER/blueprint.sh"
   mv "$FOLDER/blueprint" "$FOLDER/.blueprint"
   hide_progress
   BLUEPRINT_ENVIRONMENT="upgrade" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh

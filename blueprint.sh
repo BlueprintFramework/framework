@@ -11,11 +11,11 @@
   FOLDER=$(realpath "$(dirname "$0")")
 
 # This stores the webserver ownership user which Blueprint uses when applying webserver permissions
-  OWNERSHIP="www-data:www-data"
+  OWNERSHIP="www-data:www-data" #;
 
 # This stores options for permissions related to running install scripts the webserver user
-  WEBUSER="www-data"
-  USERSHELL="/bin/bash"
+  WEBUSER="www-data" #;
+  USERSHELL="/bin/bash" #;
 
 # Defines the version Blueprint will display as the active one
   VERSION="beta-2025-02"
