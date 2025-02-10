@@ -86,11 +86,24 @@ Command() {
   PRINT INFO "Watching extension files.."
 
   last_hash=$(get_hash)
-  while inotifywait -q -r -e modify,create,delete,move .blueprint/dev; do
-    current_hash=$(get_hash)
-    if [ "$last_hash" == "$current_hash" ]; then continue; fi
-    blueprint -add "[developer-build]"
+  should_rebuild=false
+  rebuild_timer=0
 
-    last_hash=$current_hash
+  while true; do
+    if inotifywait -q -t 1 -r -e modify,create,delete,move .blueprint/dev; then
+      current_time=$(date +%s)
+      should_rebuild=true
+      rebuild_timer=$((current_time + 2)) # Add 2-second debounce timer.
+    fi
+
+    current_time=$(date +%s)
+    if [[ ( $should_rebuild == true ) && ( $current_time -ge $rebuild_timer ) ]]; then
+      current_hash=$(get_hash)
+      if [ "$last_hash" != "$current_hash" ]; then
+        blueprint -add "[developer-build]"
+        last_hash=$current_hash
+      fi
+      should_rebuild=false
+    fi
   done
 }
