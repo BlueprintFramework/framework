@@ -42,7 +42,7 @@ current_encoding=$(locale charmap 2>/dev/null)
 if [[ "$current_encoding" != "UTF-8" ]]; then
   echo "Error: System locale encoding is '$current_encoding'."
   echo "Please set your locale to a UTF-8 variant (e.g., en_US.UTF-8) instead of '$current_encoding'."
-  echo "Ubuntu/Debian: run 'dpkg-reconfigure locales'
+  echo "Ubuntu/Debian: run 'dpkg-reconfigure locales'"
   echo "Rocky/Alma/CentOS/RHEL: run 'localectl set-locale LANG=en_US.UTF-8'"
   
   exit 1
