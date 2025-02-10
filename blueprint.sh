@@ -32,22 +32,6 @@ export BLUEPRINT__VERSION=$VERSION
 export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
 export NODE_OPTIONS=--openssl-legacy-provider
 
-# Check Locale of system. If not UTF-8 routes will fail when installing extensions on some OS'. It's stupid.
-current_encoding=$(locale charmap 2>/dev/null)
-
-# FIXME: Adjust code to work correctly with Blueprint.
-#        If this fixme block is still here when we release
-#        this version, you should scream at Emma.
-# If current locale is not UTF-8, print error.
-if [[ "$current_encoding" != "UTF-8" ]]; then
-  echo "Error: System locale encoding is '$current_encoding'."
-  echo "Please set your locale to a UTF-8 variant (e.g., en_US.UTF-8) instead of '$current_encoding'."
-  echo "Ubuntu/Debian: run 'dpkg-reconfigure locales'"
-  echo "Rocky/Alma/CentOS/RHEL: run 'localectl set-locale LANG=en_US.UTF-8'"
-  
-  exit 1
-fi
-
 
 # Check if the script is being sourced - and if so - load bash autocompletion.
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then

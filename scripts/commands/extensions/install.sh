@@ -524,6 +524,12 @@ InstallExtension() {
       else
         PRINT INFO "Creating and linking console commands and schedules.."
 
+        if [[ "$SYS_ENCODING" != "UTF-8" ]]; then
+          clear_tmp
+          PRINT FATAL "System locale encoding is not UTF-8, artisan commands cannot be generated."
+          return 1
+        fi
+
         # Create (and replace) schedules file
         touch "app/BlueprintFramework/Schedules/${identifier^}Schedules.php" 2>> "$BLUEPRINT__DEBUG"
         echo -e "<?php\n\n" > "app/BlueprintFramework/Schedules/${identifier^}Schedules.php"
@@ -880,6 +886,12 @@ InstallExtension() {
       # Place custom extension routes.
       if [[ $Components_Navigation_Routes_ != "" ]]; then
         PRINT INFO "Linking navigation routes.."
+
+        if [[ "$SYS_ENCODING" != "UTF-8" ]]; then
+          clear_tmp
+          PRINT FATAL "System locale encoding is not UTF-8, navigation routes cannot be generated."
+          return 1
+        fi
 
         ImportConstructor="$__BuildDir/extensions/routes/importConstructor.bak"
         AccountRouteConstructor="$__BuildDir/extensions/routes/accountRouteConstructor.bak"
@@ -1346,6 +1358,14 @@ Command() {
     PRINT INFO "Searching and validating framework dependencies.."
     # Check if required programs and libraries are installed.
     depend
+  fi
+
+  # Check system locale encoding.
+  export SYS_ENCODING
+  SYS_ENCODING=$(locale charmap 2>/dev/null)
+  # If current locale is not UTF-8, print error.
+  if [[ "$SYS_ENCODING" != "UTF-8" ]]; then
+    PRINT WARNING "System locale encoding is not UTF-8, extension support is limited."
   fi
 
   # Install selected extensions
