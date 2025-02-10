@@ -93,7 +93,7 @@ Command() {
     if inotifywait -q -t 1 -r -e modify,create,delete,move .blueprint/dev; then
       current_time=$(date +%s)
       should_rebuild=true
-      rebuild_timer=$((current_time + 2)) # Add 2-second debounce timer.
+      rebuild_timer=$((current_time + 1)) # Add 1-second debounce timer.
     fi
 
     current_time=$(date +%s)
