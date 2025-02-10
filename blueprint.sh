@@ -35,6 +35,9 @@ export NODE_OPTIONS=--openssl-legacy-provider
 # Check Locale of system. If not UTF-8 routes will fail when installing extensions on some OS'. It's stupid.
 current_encoding=$(locale charmap 2>/dev/null)
 
+# FIXME: Adjust code to work correctly with Blueprint.
+#        If this fixme block is still here when we release
+#        this version, you should scream at Emma.
 # If current locale is not UTF-8, print error.
 if [[ "$current_encoding" != "UTF-8" ]]; then
   echo "Error: System locale encoding is '$current_encoding'."
