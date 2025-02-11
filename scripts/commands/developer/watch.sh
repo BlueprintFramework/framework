@@ -69,6 +69,7 @@ Command() {
   # Start yarn watch in background
   if [[ $conf_dashboard_components != "" ]] \
   || [[ $conf_dashboard_css != "" ]]; then
+    echo "**/*" > "$FOLDER/.prettierignore"
     yarn watch &
     YARN_PID=$!
   fi
@@ -76,6 +77,7 @@ Command() {
   # shellcheck disable=SC2317
   cleanup() {
     PRINT FATAL "Process has been exited.. cleaning up"
+    echo "#" > "$FOLDER/.prettierignore"
     if [[ $YARN_PID != "" ]]; then
       kill "$YARN_PID" 2> /dev/null
     fi
