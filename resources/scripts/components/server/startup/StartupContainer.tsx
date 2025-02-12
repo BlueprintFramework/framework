@@ -16,8 +16,8 @@ import setSelectedDockerImage from '@/api/server/setSelectedDockerImage';
 import InputSpinner from '@/components/elements/InputSpinner';
 import useFlash from '@/plugins/useFlash';
 
-import BeforeContent from '@/blueprint/components/Server/Startup/BeforeContent';
-import AfterContent from '@/blueprint/components/Server/Startup/AfterContent';
+import BeforeContent from '@blueprint/components/Server/Startup/BeforeContent';
+import AfterContent from '@blueprint/components/Server/Startup/AfterContent';
 
 const StartupContainer = () => {
     const [loading, setLoading] = useState(false);

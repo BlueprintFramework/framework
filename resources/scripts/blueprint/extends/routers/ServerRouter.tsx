@@ -11,6 +11,7 @@ import { ServerContext } from '@/state/server';
 
 import routes from '@/routers/routes';
 import blueprintRoutes from './routes';
+import AdminBadge from '../../elements/AdminBadge';
 
 const blueprintExtensions = [...new Set(blueprintRoutes.server.map((route) => route.identifier))];
 
@@ -82,11 +83,17 @@ export const NavigationLinks = () => {
               <Can key={route.path} action={route.permission} matchAny>
                 <NavLink to={to(route.path, true)} exact={route.exact}>
                   {route.name}
+                  {route.adminOnly ? (
+                    <AdminBadge/>
+                  ) : undefined}
                 </NavLink>
               </Can>
             ) : (
               <NavLink key={route.path} to={to(route.path, true)} exact={route.exact}>
                 {route.name}
+                {route.adminOnly ? (
+                  <AdminBadge/>
+                ) : undefined}
               </NavLink>
             )
           )}

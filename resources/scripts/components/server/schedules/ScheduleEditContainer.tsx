@@ -18,8 +18,8 @@ import { format } from 'date-fns';
 import ScheduleCronRow from '@/components/server/schedules/ScheduleCronRow';
 import RunScheduleButton from '@/components/server/schedules/RunScheduleButton';
 
-import BeforeEdit from '@/blueprint/components/Server/Schedules/Edit/BeforeEdit';
-import AfterEdit from '@/blueprint/components/Server/Schedules/Edit/AfterEdit';
+import BeforeEdit from '@blueprint/components/Server/Schedules/Edit/BeforeEdit';
+import AfterEdit from '@blueprint/components/Server/Schedules/Edit/AfterEdit';
 
 interface Params {
     id: string;

@@ -167,7 +167,7 @@ RemoveExtension() {
       if [[ ! $EXTENSION == "" ]]; then
         # remove components
         sed -i \
-          -e "s~""${s}@/blueprint/extensions/${identifier}/$EXTENSION${e}""~~g" \
+          -e "s~""${s}@extensions/${identifier}/$EXTENSION${e}""~~g" \
           -e "s~""<${identifier^}Component />""~~g" \
           "$co"/"$2"
       fi

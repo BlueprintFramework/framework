@@ -10,9 +10,9 @@ export interface PageContentBlockProps {
     showFlashKey?: string;
 }
 
-import Attribution from '@/blueprint/extends/Attribution';
-import BeforeSection from '@/blueprint/components/Dashboard/Global/BeforeSection';
-import AfterSection from '@/blueprint/components/Dashboard/Global/AfterSection';
+import Attribution from '@blueprint/extends/Attribution';
+import BeforeSection from '@blueprint/components/Dashboard/Global/BeforeSection';
+import AfterSection from '@blueprint/components/Dashboard/Global/AfterSection';
 
 const PageContentBlock: React.FC<PageContentBlockProps> = ({ title, showFlashKey, className, children }) => {
     useEffect(() => {

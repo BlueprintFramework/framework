@@ -11,8 +11,8 @@ import PowerButtons from '@/components/server/console/PowerButtons';
 import ServerDetailsBlock from '@/components/server/console/ServerDetailsBlock';
 import { Alert } from '@/components/elements/alert';
 
-import BeforeContent from '@/blueprint/components/Server/Terminal/BeforeContent';
-import AfterContent from '@/blueprint/components/Server/Terminal/AfterContent';
+import BeforeContent from '@blueprint/components/Server/Terminal/BeforeContent';
+import AfterContent from '@blueprint/components/Server/Terminal/AfterContent';
 
 export type PowerAction = 'start' | 'stop' | 'restart' | 'kill';
 

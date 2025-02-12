@@ -14,10 +14,10 @@ import InstallListener from '@/components/server/InstallListener';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
-import { NavigationLinks, NavigationRouter } from '@/blueprint/extends/routers/ServerRouter';
-import BeforeSubNavigation from '@/blueprint/components/Navigation/SubNavigation/BeforeSubNavigation';
-import AdditionalServerItems from '@/blueprint/components/Navigation/SubNavigation/AdditionalServerItems';
-import AfterSubNavigation from '@/blueprint/components/Navigation/SubNavigation/AfterSubNavigation';
+import { NavigationLinks, NavigationRouter } from '@blueprint/extends/routers/ServerRouter';
+import BeforeSubNavigation from '@blueprint/components/Navigation/SubNavigation/BeforeSubNavigation';
+import AdditionalServerItems from '@blueprint/components/Navigation/SubNavigation/AdditionalServerItems';
+import AfterSubNavigation from '@blueprint/components/Navigation/SubNavigation/AfterSubNavigation';
 
 export default () => {
     const match = useRouteMatch<{ id: string }>();

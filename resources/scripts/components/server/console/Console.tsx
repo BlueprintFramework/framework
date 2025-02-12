@@ -16,7 +16,7 @@ import { SocketEvent, SocketRequest } from '@/components/server/events';
 import classNames from 'classnames';
 import { ChevronDoubleRightIcon } from '@heroicons/react/solid';
 
-import CommandRow from '@/blueprint/components/Server/Terminal/CommandRow';
+import CommandRow from '@blueprint/components/Server/Terminal/CommandRow';
 
 import 'xterm/css/xterm.css';
 import styles from './style.module.css';

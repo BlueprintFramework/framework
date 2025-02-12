@@ -10,8 +10,8 @@ import styled from 'styled-components/macro';
 import MessageBox from '@/components/MessageBox';
 import { useLocation } from 'react-router-dom';
 
-import BeforeContent from '@/blueprint/components/Account/Overview/BeforeContent';
-import AfterContent from '@/blueprint/components/Account/Overview/AfterContent';
+import BeforeContent from '@blueprint/components/Account/Overview/BeforeContent';
+import AfterContent from '@blueprint/components/Account/Overview/AfterContent';
 
 const Container = styled.div`
     ${tw`flex flex-wrap`};

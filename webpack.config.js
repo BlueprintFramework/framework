@@ -133,6 +133,10 @@ module.exports = {
       '@': path.join(__dirname, '/resources/scripts'),
       '@definitions': path.join(__dirname, '/resources/scripts/api/definitions'),
       '@feature': path.join(__dirname, '/resources/scripts/components/server/features'),
+
+      // Blueprint aliases
+      '@blueprint': path.join(__dirname, '/resources/scripts/blueprint'),
+      '@extensions': path.join(__dirname, '/resources/scripts/blueprint/extensions'),
     },
   },
   externals: {

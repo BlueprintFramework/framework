@@ -12,8 +12,8 @@ import Can from '@/components/elements/Can';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import tw from 'twin.macro';
 
-import BeforeContent from '@/blueprint/components/Server/Users/BeforeContent';
-import AfterContent from '@/blueprint/components/Server/Users/AfterContent';
+import BeforeContent from '@blueprint/components/Server/Users/BeforeContent';
+import AfterContent from '@blueprint/components/Server/Users/AfterContent';
 
 export default () => {
     const [loading, setLoading] = useState(true);

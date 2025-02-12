@@ -287,7 +287,7 @@ InstallExtension() {
               -e "s~\^#installmode#\^~$INSTALLMODE~g" \
               -e "s~\^#blueprintversion#\^~$VERSION~g" \
               -e "s~\^#timestamp#\^~$INSTALL_STAMP~g" \
-              -e "s~\^#componentroot#\^~@/blueprint/extensions/$identifier~g" \
+              -e "s~\^#componentroot#\^~@extensions/$identifier~g" \
               \
               -e "s~__version__~$version~g" \
               -e "s~__author__~$author~g" \
@@ -299,7 +299,7 @@ InstallExtension() {
               -e "s~__installmode__~$INSTALLMODE~g" \
               -e "s~__blueprintversion__~$VERSION~g" \
               -e "s~__timestamp__~$INSTALL_STAMP~g" \
-              -e "s~__componentroot__~@/blueprint/extensions/$identifier~g" \
+              -e "s~__componentroot__~@extensions/$identifier~g" \
               "$file"
           elif [ -d "$file" ]; then
             PLACE_PLACEHOLDERS "$file"
@@ -745,7 +745,7 @@ InstallExtension() {
 
         if [[ $3 != "$1" ]]; then
           # remove old components
-          sed -i "s~""${s}@/blueprint/extensions/${identifier}/$3${e}""~~g" "$co"/"$2"
+          sed -i "s~""${s}@extensions/${identifier}/$3${e}""~~g" "$co"/"$2"
           sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
         fi
         if [[ ! $1 == "" ]]; then
@@ -772,10 +772,10 @@ InstallExtension() {
 
           # Purge and add components.
           sed -i \
-            -e "s~""${s}@/blueprint/extensions/${identifier}/$1${e}""~~g" \
+            -e "s~""${s}@extensions/${identifier}/$1${e}""~~g" \
             -e "s~""<${identifier^}Component />""~~g" \
             \
-            -e "s~""$im""~""${im}${s}@/blueprint/extensions/${identifier}/$1${e}""~g" \
+            -e "s~""$im""~""${im}${s}@extensions/${identifier}/$1${e}""~g" \
             -e "s~""$re""~""${re}\<${identifier^}Component /\>""~g" \
             "$co"/"$2"
         fi
@@ -998,14 +998,14 @@ InstallExtension() {
             # Account routes
             #if [[ $COMPONENTS_ROUTE_PERM != "" ]]; then PRINT WARNING "Route permission declarations have no effect on account navigation routes."; fi
 
-            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
+            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI, identifier: '$identifier' },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" "$ImportConstructor"
             sed -i "s~/\* \[routes] \*/~/* [routes] */""$COMPONENTS_ROUTE""~g" "$AccountRouteConstructor"
           elif [[ $COMPONENTS_ROUTE_TYPE == "server" ]]; then
             # Server routes
-            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@/blueprint/extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
+            COMPONENTS_IMPORT="import $COMPONENTS_ROUTE_IDEN from '@extensions/$identifier/$COMPONENTS_ROUTE_COMP';"
             COMPONENTS_ROUTE="{ path: '$COMPONENTS_ROUTE_PATH', permission: $COMPONENTS_ROUTE_PERM, name: '$COMPONENTS_ROUTE_NAME', component: $COMPONENTS_ROUTE_IDEN, adminOnly: $COMPONENTS_ROUTE_ADMI, identifier: '$identifier' },"
 
             sed -i "s~/\* \[import] \*/~/* [import] */""$COMPONENTS_IMPORT""~g" "$ImportConstructor"

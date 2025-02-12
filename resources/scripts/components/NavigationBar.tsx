@@ -13,9 +13,9 @@ import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import Avatar from '@/components/Avatar';
 
-import BeforeNavigation from '@/blueprint/components/Navigation/NavigationBar/BeforeNavigation';
-import AdditionalItems from '@/blueprint/components/Navigation/NavigationBar/AdditionalItems';
-import AfterNavigation from '@/blueprint/components/Navigation/NavigationBar/AfterNavigation';
+import BeforeNavigation from '@blueprint/components/Navigation/NavigationBar/BeforeNavigation';
+import AdditionalItems from '@blueprint/components/Navigation/NavigationBar/AdditionalItems';
+import AfterNavigation from '@blueprint/components/Navigation/NavigationBar/AfterNavigation';
 
 const RightNavigation = styled.div`
     & > a,

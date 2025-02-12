@@ -23,7 +23,7 @@ import { restoreServerBackup } from '@/api/server/backups';
 import http, { httpErrorToHuman } from '@/api/http';
 import { Dialog } from '@/components/elements/dialog';
 
-import DropdownItems from '@/blueprint/components/Server/Backups/DropdownItems';
+import DropdownItems from '@blueprint/components/Server/Backups/DropdownItems';
 
 interface Props {
     backup: ServerBackup;

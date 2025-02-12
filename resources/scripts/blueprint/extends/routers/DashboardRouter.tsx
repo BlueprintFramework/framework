@@ -9,6 +9,7 @@ import { useStoreState } from 'easy-peasy';
 
 import routes from '@/routers/routes';
 import blueprintRoutes from './routes';
+import AdminBadge from '../../elements/AdminBadge';
 
 export const NavigationLinks = () => {
   const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
@@ -29,9 +30,12 @@ export const NavigationLinks = () => {
       {blueprintRoutes.account.length > 0 && blueprintRoutes.account
         .filter((route) => !!route.name)
         .filter((route) => route.adminOnly ? rootAdmin : true)
-        .map(({ path, name, exact = false }) => (
+        .map(({ path, name, exact = false, adminOnly }) => (
           <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
             {name}
+            {adminOnly ? (
+              <AdminBadge/>
+            ) : undefined}
           </NavLink>
         ))
       }

@@ -33,7 +33,7 @@ import isEqual from 'react-fast-compare';
 import ChmodFileModal from '@/components/server/files/ChmodFileModal';
 import { Dialog } from '@/components/elements/dialog';
 
-import DropdownItems from '@/blueprint/components/Server/Files/Browse/DropdownItems';
+import DropdownItems from '@blueprint/components/Server/Files/Browse/DropdownItems';
 
 type ModalType = 'rename' | 'move' | 'chmod';
 

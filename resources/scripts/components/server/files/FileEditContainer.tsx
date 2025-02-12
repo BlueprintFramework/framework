@@ -21,8 +21,8 @@ import { encodePathSegments, hashToPath } from '@/helpers';
 import { dirname } from 'path';
 import CodemirrorEditor from '@/components/elements/CodemirrorEditor';
 
-import BeforeEdit from '@/blueprint/components/Server/Files/Edit/BeforeEdit';
-import AfterEdit from '@/blueprint/components/Server/Files/Edit/AfterEdit';
+import BeforeEdit from '@blueprint/components/Server/Files/Edit/BeforeEdit';
+import AfterEdit from '@blueprint/components/Server/Files/Edit/AfterEdit';
 
 export default () => {
     const [error, setError] = useState('');

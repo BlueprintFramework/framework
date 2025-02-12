@@ -5,7 +5,7 @@ import { ServerContext } from '@/state/server';
 import { PowerAction } from '@/components/server/console/ServerConsoleContainer';
 import { Dialog } from '@/components/elements/dialog';
 
-import AdditionalPowerButtons from '@/blueprint/components/Server/Terminal/AdditionalPowerButtons';
+import AdditionalPowerButtons from '@blueprint/components/Server/Terminal/AdditionalPowerButtons';
 
 interface PowerButtonProps {
     className?: string;
