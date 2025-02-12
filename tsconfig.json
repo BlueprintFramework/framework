@@ -22,8 +22,7 @@
       "@/*": ["./resources/scripts/*"],
       "@definitions/*": ["./resources/scripts/api/definitions/*"],
       "@feature/*": ["./resources/scripts/components/server/features/*"],
-      "@blueprint/*": ["./resources/scripts/blueprint/*"],
-      "@extensions/*": ["./resources/scripts/blueprint/extensions/*"]
+      "@blueprint/*": ["./resources/scripts/blueprint/*"]
     },
     "plugins": [
       {

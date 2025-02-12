@@ -134,7 +134,6 @@ module.exports = {
       '@definitions': path.join(__dirname, '/resources/scripts/api/definitions'),
       '@feature': path.join(__dirname, '/resources/scripts/components/server/features'),
       '@blueprint': path.join(__dirname, '/resources/scripts/blueprint'),
-      '@extensions': path.join(__dirname, '/resources/scripts/blueprint/extensions'),
     },
   },
   externals: {
