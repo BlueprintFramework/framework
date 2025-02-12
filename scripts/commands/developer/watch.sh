@@ -15,7 +15,7 @@ Command() {
     rm .blueprint/dev/.gitkeep 2>> "$BLUEPRINT__DEBUG"
   fi
 
-  PRINT INFO "Setting up developer environment.."
+  PRINT INFO "Setting up development environment.."
   export IgnoreRebuild=true
   export DeveloperWatch=true
 
