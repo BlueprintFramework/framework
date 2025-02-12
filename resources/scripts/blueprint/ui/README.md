@@ -4,12 +4,24 @@ Blueprint UI allows extensions to use versatile, easy to theme and powerful comp
 
 Pterodactyl's own components and the ones offered in Blueprint UI can look nearly identical, with added features on the Blueprint UI counterparts.
 
-### Example code
+## Components
+
+### Badge
 
 ```tsx
-import { UiButton } from '@blueprint/ui/button';
+import { UiBadge } from '@blueprint/ui/badge'
+
+export default () = {
+  return (
+    <>
+      <UiBadge>
+        Hello, world!
+      </UiBadge>
+    </>
+  )
+}
 ```
 
-### Disclaimer
+## Disclaimer
 
 Features documented in this file are highly subject to change, wait for a stable Blueprint release to be released first.
