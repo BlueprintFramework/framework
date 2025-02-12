@@ -10,7 +10,7 @@ interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 const Badge: React.FC<BadgeProps> = ({ children, className, ...rest }) => {
   return (
     <span
-      className={classNames(
+      className={"UiBadge "+classNames(
         styles.UiBadge,
         className
       )}
