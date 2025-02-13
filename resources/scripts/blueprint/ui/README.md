@@ -6,6 +6,13 @@ Pterodactyl's own components and the ones offered in Blueprint UI can look nearl
 
 ## Components
 
+- [x] `UiBadge`
+- [ ] `UiButton`
+- [ ] `UiCard`
+- [ ] `UiModal`
+- [ ] `UiTabs`
+- [ ] `UiPagination`
+
 ### Badge
 
 ```tsx
