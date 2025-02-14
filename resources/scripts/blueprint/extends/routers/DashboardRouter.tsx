@@ -9,13 +9,12 @@ import { useStoreState } from 'easy-peasy';
 
 import routes from '@/routers/routes';
 import blueprintRoutes from './routes';
-import AdminBadge from '../../elements/AdminBadge';
+import { UiBadge } from '@blueprint/ui/badge';
 
 export const NavigationLinks = () => {
   const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
   return (
     <>
-
       {/* Pterodactyl routes */}
       {routes.account
         .filter((route) => !!route.name)
@@ -23,23 +22,25 @@ export const NavigationLinks = () => {
           <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
             {name}
           </NavLink>
-        ))
-      }
+        ))}
 
       {/* Blueprint routes */}
-      {blueprintRoutes.account.length > 0 && blueprintRoutes.account
-        .filter((route) => !!route.name)
-        .filter((route) => route.adminOnly ? rootAdmin : true)
-        .map(({ path, name, exact = false, adminOnly }) => (
-          <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
-            {name}
-            {adminOnly ? (
-              <AdminBadge/>
-            ) : undefined}
-          </NavLink>
-        ))
-      }
-
+      {blueprintRoutes.account.length > 0 &&
+        blueprintRoutes.account
+          .filter((route) => !!route.name)
+          .filter((route) => (route.adminOnly ? rootAdmin : true))
+          .map(({ path, name, exact = false, adminOnly }) => (
+            <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
+              {name}
+              {adminOnly ? (
+                <>
+                  <span className={'hidden'}>(</span>
+                  <UiBadge>ADMIN</UiBadge>
+                  <span className={'hidden'}>)</span>
+                </>
+              ) : undefined}
+            </NavLink>
+          ))}
     </>
   );
 };
@@ -64,15 +65,15 @@ export const NavigationRouter = () => {
             ))}
 
             {/* Blueprint routes */}
-            {blueprintRoutes.account.length > 0 && blueprintRoutes.account
-              .filter((route) => route.adminOnly ? rootAdmin : true)
-              .map(({ path, component: Component }) => (
-                <Route key={path} path={`/account/${path}`.replace('//', '/')} exact>
-                  <Component />
-                </Route>
-              ))
-            }
-            
+            {blueprintRoutes.account.length > 0 &&
+              blueprintRoutes.account
+                .filter((route) => (route.adminOnly ? rootAdmin : true))
+                .map(({ path, component: Component }) => (
+                  <Route key={path} path={`/account/${path}`.replace('//', '/')} exact>
+                    <Component />
+                  </Route>
+                ))}
+
             <Route path={'*'}>
               <NotFound />
             </Route>
