@@ -401,10 +401,9 @@ InstallExtension() {
 
   if [[ $identifier == *" "* ]] \
   || [[ $identifier == *"-"* ]] \
-  || [[ $identifier == *"_"* ]] \
   || [[ $identifier == *"."* ]]; then
     clear_tmp
-    PRINT FATAL "Extension identifier may not contain spaces, underscores, hyphens or periods."
+    PRINT FATAL "Extension identifier may not contain spaces, hyphens or periods."
     return 1
   fi
 
