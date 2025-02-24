@@ -6,7 +6,9 @@ Pterodactyl's own components and the ones offered in Blueprint UI can look nearl
 
 ## Components
 
-- [x] `UiBadge`
+- [x] [`UiBadge`](#badge)
+- [x] `UiAlert`
+- [x] `UiDivider`
 - [ ] `UiButton`
 - [ ] `UiCard`
 - [ ] `UiModal`
@@ -18,9 +20,7 @@ Pterodactyl's own components and the ones offered in Blueprint UI can look nearl
 - [ ] `UiSlider`
 - [ ] `UiInput`
 - [ ] `UiSwitch`
-- [x] `UiAlert`
 - [ ] `UiLink`
-- [x] `UiDivider`
 
 ### Badge
 
