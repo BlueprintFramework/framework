@@ -18,8 +18,9 @@ Pterodactyl's own components and the ones offered in Blueprint UI can look nearl
 - [ ] `UiSlider`
 - [ ] `UiInput`
 - [ ] `UiSwitch`
-- [ ] `UiAlert`
+- [x] `UiAlert`
 - [ ] `UiLink`
+- [x] `UiDivider`
 
 ### Badge
 
