@@ -26,7 +26,7 @@ Pterodactyl's own components and the ones offered in Blueprint UI can look nearl
 ```tsx
 import { UiBadge } from '@blueprint/ui/badge'
 
-export default () = {
+export default () => {
   return (
     <>
       <UiBadge>
