@@ -21,21 +21,20 @@ Pterodactyl's own components and the ones offered in Blueprint UI can look nearl
 - [ ] `UiInput`
 - [ ] `UiSwitch`
 - [ ] `UiLink`
+- [ ] `UiIcon`
 
 ### Badge
 
 ```tsx
-import { UiBadge } from '@blueprint/ui/badge'
+import { UiBadge } from '@blueprint/ui/badge';
 
 export default () => {
   return (
     <>
-      <UiBadge>
-        Hello, world!
-      </UiBadge>
+      <UiBadge>Hello, world!</UiBadge>
     </>
-  )
-}
+  );
+};
 ```
 
 ## Disclaimer
