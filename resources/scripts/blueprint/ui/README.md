@@ -39,4 +39,4 @@ export default () => {
 
 ## Disclaimer
 
-Features documented in this file are highly subject to change, wait for a stable Blueprint release to be released first.
+Features documented in this file are highly subject to change, wait for a stable Blueprint release to be released first. This documentation will probably move over to [Blueprint's website](https://blueprint.zip) at a later date.
