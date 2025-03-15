@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RemoveExtension() {
-  if [[ $USER_CONFIRMED_REMOVAL != "yes" ]]; then
+  if [[ $USER_CONFIRMED_REMOVAL != "yes" || $3 != "-user-confirmed-removal" ]]; then
     PRINT INPUT "Do you want to proceed with this transaction? Some files might not be removed properly. (y/N)"
     hide_progress
     read -r YN
