@@ -9,7 +9,7 @@ import { useStoreState } from 'easy-peasy';
 
 import routes from '@/routers/routes';
 import blueprintRoutes from './routes';
-import { UiBadge } from '@blueprint/ui/badge';
+import { UiBadge } from '@blueprint/ui';
 
 export const NavigationLinks = () => {
   const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);

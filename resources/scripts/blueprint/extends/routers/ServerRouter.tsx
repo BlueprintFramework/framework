@@ -11,7 +11,7 @@ import { ServerContext } from '@/state/server';
 
 import routes from '@/routers/routes';
 import blueprintRoutes from './routes';
-import { UiBadge } from '@blueprint/ui/badge';
+import { UiBadge } from '@blueprint/ui';
 
 const blueprintExtensions = [...new Set(blueprintRoutes.server.map((route) => route.identifier))];
 
