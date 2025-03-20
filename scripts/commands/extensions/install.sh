@@ -228,17 +228,16 @@ InstallExtension() {
     fi
 
     case "${website}" in
-      *"://github.com"* | *"://"*".github.com"*)               local websiteiconclass="bx bx-git-branch" ;;   # GitHub
-      *"://gitlab.io"* | *"://"*".gitlab.io"*)                 local websiteiconclass="bx bx-git-branch" ;;   # GitLab
-      *"://sourcexchange.net"* | *"://"*".sourcexchange.net"*) local websiteiconclass="bx bx-store" ;;        # sourceXchange
-      *"://builtbybit.com"* | *"://"*".builtbybit.com"*)       local websiteiconclass="bx bx-store" ;;        # BuiltByBit
-      *"://discord.gg"* | *"://"*".discord.gg"*)               local websiteiconclass="bx bxl-discord-alt" ;; # Discord
-      *"://patreon.com"* | *"://"*".patreon.com"*)             local websiteiconclass="bx bxl-patreon" ;;     # Patreon
-      *"://twitch.tv"* | *"://"*".twitch.tv"*)                 local websiteiconclass="bx bxl-twitch" ;;      # Twitch
-      *"://youtube.com"* | *"://"*".youtube.com"*)             local websiteiconclass="bx bxl-youtube" ;;     # YouTube
-      *"://ko-fi.com"* | *"://"*".ko-fi.com"*)                 local websiteiconclass="bx bxs-heart" ;;       # Ko-fi
+      *"://github.com"* | *"://"*".github.com"*)               local websiteiconclass="bi bi-github" ;;     # GitHub
+      *"://gitlab.io"* | *"://"*".gitlab.io"*)                 local websiteiconclass="bi bi-gitlab" ;;     # GitLab
+      *"://sourcexchange.net"* | *"://"*".sourcexchange.net"*) local websiteiconclass="bi bi-tag-fill" ;;   # sourceXchange
+      *"://builtbybit.com"* | *"://"*".builtbybit.com"*)       local websiteiconclass="bi bi-tag-fill" ;;   # BuiltByBit
+      *"://discord.gg"* | *"://"*".discord.gg"*)               local websiteiconclass="bi bi-discord" ;;    # Discord
+      *"://twitch.tv"* | *"://"*".twitch.tv"*)                 local websiteiconclass="bi bi-twitch" ;;     # Twitch
+      *"://youtube.com"* | *"://"*".youtube.com"*)             local websiteiconclass="bi bi-youtube" ;;    # YouTube
+      *"://ko-fi.com"* | *"://"*".ko-fi.com"*)                 local websiteiconclass="bi bi-heart-fill" ;; # Ko-fi
       
-      *) local websiteiconclass="bx bx-link-external" ;;
+      *) local websiteiconclass="bi bi-link-45deg" ;;
     esac
   fi
 
