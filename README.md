@@ -33,11 +33,11 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 
 
 
-<!-- Sponsors -->
+<!-- Sponsors (commented out for now)
 <br/><h2 align="center">💖 Sponsors</h2>
 
 Sponsors help fund development, upkeep and maintenance. [Interested in sponsoring Blueprint?](https://github.com/sponsors/prplwtf)
-<!--
+
 | Company | About |
 |---------|-------|
 |         |       |
