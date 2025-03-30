@@ -152,6 +152,15 @@ Command() {
   # Return files to folder.
   cp -R .blueprint/tmp/init/* .blueprint/dev/
 
+  # Initialize dist directory.
+  PRINT INFO "Initializing .dist directory.."
+  mkdir .blueprint/dev/.dist
+  ln -s .blueprint/dist/types .blueprint/dev/.dist/types
+
+  # Initialize types.
+  PRINT INFO "Generating types.."
+  node scripts/helpers/generate-types.js 2> /dev/null
+
   # Remove tmp files.
   PRINT INFO "Cleaning up build files.."
   rm -R \

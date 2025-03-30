@@ -2,8 +2,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Ensure the .blueprint/types directory exists
-const typesDir = path.resolve('./.blueprint/types');
+const typesDir = path.resolve('./.blueprint/dist/types');
 if (!fs.existsSync(typesDir)) {
   fs.mkdirSync(typesDir, { recursive: true });
 }

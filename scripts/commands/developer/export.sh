@@ -57,6 +57,7 @@ Command() {
     extension.zip \
     ./* \
     -x ".dist/*" \
+    -x ".git/*" \
     -x ".gitkeep"
 
   cd "${FOLDER}" || cdhalt
