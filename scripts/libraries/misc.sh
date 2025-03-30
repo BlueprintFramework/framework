@@ -78,7 +78,7 @@ extract_extension() {
   # Check if file exists
   if [[ ! -f "$file" ]]; then
     PRINT FATAL "$file could not be found or detected."
-    return 2
+    exit 2
   fi
   
   # Setup tmp directory
@@ -101,7 +101,7 @@ extract_extension() {
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
     PRINT FATAL "Extension configuration file not found or detected."
-    return 1
+    exit 1
   fi
   
   # Move files to tmp root if needed
