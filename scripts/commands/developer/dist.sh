@@ -8,5 +8,20 @@ Command() {
     exit 2
   fi
 
-  # command here..
+  PRINT INFO "Cleaning up .dist files.."
+  rm -f -r \
+    .blueprint/dev/.dist/* \
+    .blueprint/dist/types/*
+  mkdir -p .blueprint/dev
+
+  # Initialize dist directory.
+  PRINT INFO "Initializing .dist directory.."
+  ln -s .blueprint/dist/types .blueprint/dev/.dist/types
+
+  # Initialize types.
+  PRINT INFO "Generating types.."
+  node scripts/helpers/generate-types.js 2> /dev/null
+
+  
+  PRINT SUCCESS "Finished regenerating dist files."
 }
