@@ -11,10 +11,6 @@ Command() {
     exit 2
   fi
 
-  if [[ -f ".blueprint/dev/.gitkeep" ]]; then
-    rm .blueprint/dev/.gitkeep 2>> "$BLUEPRINT__DEBUG"
-  fi
-
   PRINT INFO "Setting up development environment.."
   export IgnoreRebuild=true
   export DeveloperWatch=true
