@@ -54,6 +54,12 @@ Command() {
     echo -e "\e[0m\x1b[0m\033[0m"
   fi
 
+  PRINT INFO "Cleaning up extension.."
+  if [[ $conf_dashboard_components != "" ]]; then
+    # Remove .types directory containing types before exporting extension
+    rm -r "$conf_dashboard_components/.types"
+  fi
+
   zip -r extension.zip ./*
   cd "${FOLDER}" || cdhalt
   cp .blueprint/tmp/extension.zip "${identifier}.blueprint"
