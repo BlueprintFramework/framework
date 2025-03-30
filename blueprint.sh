@@ -400,8 +400,9 @@ case "$cmd" in
   -init|-I) source ./scripts/commands/developer/init.sh ;;
   -build|-b) source ./scripts/commands/developer/build.sh ;;
   -watch) source ./scripts/commands/developer/watch.sh ;;
-  -wipe|-w) source ./scripts/commands/developer/wipe.sh ;;
+  -dist) source ./scripts/commands/developer/dist.sh ;;
   -export|-e) source ./scripts/commands/developer/export.sh ;;
+  -wipe|-w) source ./scripts/commands/developer/wipe.sh ;;
   -info|-f) source ./scripts/commands/misc/info.sh ;;
   -debug) source ./scripts/commands/misc/debug.sh ;;
   -help|-h|help|'') source ./scripts/commands/misc/help.sh ;;
