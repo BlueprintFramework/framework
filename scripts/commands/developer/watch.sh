@@ -48,13 +48,6 @@ Command() {
     YARN_PID=$!
   fi
 
-  # Create .dist folder
-  mkdir ".blueprint/dev/.dist" &> /dev/null
-  if [[ $conf_dashboard_components != "" ]]; then
-    # Generate types for dashboard components
-    ln -s "$FOLDER/.blueprint/types" "$FOLDER/.blueprint/dev/.dist/types"
-  fi
-
   # shellcheck disable=SC2317
   cleanup() {
     PRINT FATAL "Process has been exited.. cleaning up"
