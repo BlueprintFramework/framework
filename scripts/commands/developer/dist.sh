@@ -12,11 +12,11 @@ Command() {
   rm -f -r \
     .blueprint/dev/.dist/* \
     .blueprint/dist/types/*
-  mkdir -p .blueprint/dev
 
   # Initialize dist directory.
   PRINT INFO "Initializing .dist directory.."
-  ln -s .blueprint/dist/types .blueprint/dev/.dist/types
+  mkdir -p .blueprint/dev/.dist
+  ln -s -r .blueprint/dist/types .blueprint/dev/.dist/types
 
   # Initialize types.
   PRINT INFO "Generating types.."

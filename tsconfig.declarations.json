@@ -4,6 +4,6 @@
     "noEmit": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "./.blueprint/types"
+    "outDir": "./.blueprint/dist/types"
   }
 }

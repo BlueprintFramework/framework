@@ -156,7 +156,7 @@ Command() {
   # NOTE: Could maybe make this a function so we don't have to keep dist.sh and init.sh in sync.
   PRINT INFO "Initializing .dist directory.."
   mkdir .blueprint/dev/.dist
-  ln -s .blueprint/dist/types .blueprint/dev/.dist/types
+  ln -s -r .blueprint/dist/types .blueprint/dev/.dist/types
 
   # Initialize types.
   PRINT INFO "Generating types.."
