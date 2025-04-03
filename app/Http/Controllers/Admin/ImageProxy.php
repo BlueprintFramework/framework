@@ -48,14 +48,14 @@ class ImageProxy extends Controller
     }
 
     // image proxy the image. embed it in the page. There is not a view for this yet.
-    if (!Cache::has($ext['icon'])) {
+    if (!Cache::has($extension)) {
         $iconContent = @file_get_contents($ext['icon']);
         if ($iconContent === false) {
             abort(404, 'Failed to fetch the icon from the provided URL.');
         }
-        Cache::put($ext['icon'], $iconContent);
+        Cache::put($extension, $iconContent);
     }
-    $icon = Cache::get($ext['icon']);
+    $icon = Cache::get($extension);
     if (empty($icon)) {
         abort(404, 'Icon not found.');
     }

@@ -112,7 +112,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
           'EXTENSION_ID' => $extension['identifier'],
           'EXTENSION_NAME' => $extension['name'],
           'EXTENSION_VERSION' => $extension['version'],
-          'EXTENSION_ICON' => '/admin/extensions/img/'.$extension['identifier'],
+          'EXTENSION_ICON' => '/admin/extensions/img/'.$extension['identifier'].'.jpg',
         ])
       @endforeach
 
