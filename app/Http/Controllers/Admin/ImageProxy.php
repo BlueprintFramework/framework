@@ -51,7 +51,7 @@ class ImageProxy extends Controller
         if ($iconContent === false) {
             abort(404, 'Failed to fetch the icon from the provided URL.');
         }
-        Cache::put($extension, $iconContent);
+        Cache::put($extension, $iconContent, now()->addDays(1));
     }
     $icon = Cache::get($extension);
     if (empty($icon)) {
