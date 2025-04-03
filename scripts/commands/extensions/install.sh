@@ -1136,17 +1136,15 @@ InstallExtension() {
         cp ".blueprint/assets/Extensions/Defaults/$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.jpg"
       else
         # download icon from url
-        PRINT INFO "Downloading icon.."
-        curl -s -o ".blueprint/tmp/$n/icon.$ICON_EXT" "$icon" 2>> "$BLUEPRINT__DEBUG"
+        PRINT INFO "parsing icon.."
+        ICON_OVERRIDE=$icon
       fi
     fi
-    PRINT INFO "Cloning icon.."
-    cp ".blueprint/tmp/$n/icon.$ICON_EXT" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT" 2>> "$BLUEPRINT__DEBUG"
   fi;
-
-  PRINT INFO "Icon: $icon"
-  PRINT INFO "Icon ext: $ICON_EXT"
   ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
+  if [[ $ICON_OVERRIDE != "" ]]; then
+    ICON=$ICON_OVERRIDE
+  fi
 
   ((PROGRESS_NOW++))
 
