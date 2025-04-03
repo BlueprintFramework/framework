@@ -1139,12 +1139,11 @@ InstallExtension() {
         PRINT INFO "Downloading icon.."
         curl -s -o ".blueprint/tmp/$n/icon.$ICON_EXT" "$icon" 2>> "$BLUEPRINT__DEBUG"
       fi
-    else
-      # copy icon from tmp folder
-      PRINT INFO "Cloning icon.."
-      cp ".blueprint/tmp/$n/icon.$ICON_EXT" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT" 2>> "$BLUEPRINT__DEBUG"
     fi
+    PRINT INFO "Cloning icon.."
+    cp ".blueprint/tmp/$n/icon.$ICON_EXT" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT" 2>> "$BLUEPRINT__DEBUG"
   fi;
+
   PRINT INFO "Icon: $icon"
   PRINT INFO "Icon ext: $ICON_EXT"
   ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
