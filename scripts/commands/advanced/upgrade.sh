@@ -61,7 +61,11 @@ Command() {
     fi
     # download release
     hide_progress
-    git clone "$REMOTE_REPOSITORY" main
+    if [[ $3 == "" ]]; then
+      git clone "$REMOTE_REPOSITORY" main
+    else
+      git clone "$REMOTE_REPOSITORY" main --branch "$3"
+    fi
   else
     # download latest release
     hide_progress
