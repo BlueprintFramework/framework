@@ -1130,7 +1130,7 @@ InstallExtension() {
       *) local ICON_EXT="jpg" ;;
     esac
     if [[ $icon == "http"* ]]; then
-      if [[ $icon != (*".svg"*) && $icon != (*".png"*) && $icon != (*".gif"*) && $icon != (*".jpeg"*) && $icon != (*".webp"*) ]]; then
+      if [[ $icon != *".svg" && $icon != *".png" && $icon != *".gif" && $icon != *".jpeg" && $icon != *".webp" ]]; then
         # use random placeholder icon if extension does not
         # come with an icon.
         PRINT WARNING "Icon URL does not end with a valid image extension, using default icon instead."
