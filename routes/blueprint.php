@@ -16,6 +16,7 @@ $blueprint = app()->make(BlueprintExtensionLibrary::class);
 */
 Route::group(['prefix' => 'extensions'], function () {
   Route::get('/', [Admin\ExtensionsController::class, 'index'])->name('admin.extensions');
+  Route::get('/img/{extension}', [Admin\ImageProxy::class, 'index'])->name('admin.extensions.img');
 });
 
 Route::group(['prefix' => 'extensions/blueprint'], function () {
