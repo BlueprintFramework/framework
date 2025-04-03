@@ -3,7 +3,7 @@
 namespace Pterodactyl\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\View\View;
+use Illuminate\Http\Response;
 use Illuminate\View\Factory as ViewFactory;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Services\Helpers\SoftwareVersionService;
@@ -24,7 +24,7 @@ class ImageProxy extends Controller
   /**
    * Return the admin index view.
    */
-  public function index(string $extension): View
+  public function index(string $extension): Response
   {
     $ext = $this->blueprint->extensionConfig($extension);
     if ($ext === null || $ext === []) {
