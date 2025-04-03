@@ -1131,21 +1131,18 @@ InstallExtension() {
     esac
     if [[ $icon == "http"* ]]; then
       if [[ $icon != *".svg" && $icon != *".png" && $icon != *".gif" && $icon != *".jpeg" && $icon != *".webp" ]]; then
-        # use random placeholder icon if extension does not
-        # come with an icon.
         PRINT WARNING "Icon URL does not end with a valid image extension, using default icon instead."
         icnNUM=$(( 1 + RANDOM % 5 ))
         cp ".blueprint/assets/Extensions/Defaults/$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.jpg"
       else
         # download icon from url
         PRINT INFO "Downloading icon.."
-        icon_safename=$(basename "$icon")
-        curl -s -o ".blueprint/tmp/$n/$icon_safename.$ICON_EXT" "$icon" 2>> "$BLUEPRINT__DEBUG"
+        curl -s -o ".blueprint/tmp/$n/icon.$ICON_EXT" "$icon" 2>> "$BLUEPRINT__DEBUG"
       fi
     else
       # copy icon from tmp folder
       PRINT INFO "Cloning icon.."
-      cp ".blueprint/tmp/$n/$icon" ".blueprint/tmp/$n/$icon.$ICON_EXT"
+      cp ".blueprint/tmp/$n/icon.$ICON_EXT" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT" 2>> "$BLUEPRINT__DEBUG"
     fi
   fi;
   ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
