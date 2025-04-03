@@ -1135,7 +1135,7 @@ InstallExtension() {
         # come with an icon.
         PRINT WARNING "Icon URL does not end with a valid image extension, using default icon instead."
         icnNUM=$(( 1 + RANDOM % 5 ))
-        cp ".blueprint/assets/Extensions/Defaults/$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
+        cp ".blueprint/assets/Extensions/Defaults/$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.jpg"
       else
         # download icon from url
         PRINT INFO "Downloading icon.."
