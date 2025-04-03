@@ -1145,8 +1145,8 @@ InstallExtension() {
       cp ".blueprint/tmp/$n/icon.$ICON_EXT" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT" 2>> "$BLUEPRINT__DEBUG"
     fi
   fi;
-  PRINT DEBUG "Icon: $icon"
-  PRINT DEBUG "Icon ext: $ICON_EXT"
+  PRINT INFO "Icon: $icon"
+  PRINT INFO "Icon ext: $ICON_EXT"
   ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
 
   ((PROGRESS_NOW++))
