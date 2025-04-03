@@ -46,14 +46,15 @@ class ImageProxy extends Controller
         ]);
     }
 
-    if (!Cache::has($extension)) {
+    $cache_key = 'blueprint_extension_icon_' . $extension;
+    if (!Cache::has($cache_key)) {
         $iconContent = @file_get_contents($ext['icon']);
         if ($iconContent === false) {
             abort(404, 'Failed to fetch the icon from the provided URL.');
         }
-        Cache::put($extension, $iconContent, now()->addDays(1));
+        Cache::put($cache_key, $iconContent, now()->addDays(1));
     }
-    $icon = Cache::get($extension);
+    $icon = Cache::get($cache_key);
     if (empty($icon)) {
         abort(404, 'Icon not found.');
     }
