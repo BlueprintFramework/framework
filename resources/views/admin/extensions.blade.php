@@ -112,11 +112,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
           'EXTENSION_ID' => $extension['identifier'],
           'EXTENSION_NAME' => $extension['name'],
           'EXTENSION_VERSION' => $extension['version'],
-            'EXTENSION_ICON' => (str_starts_with($extension['icon'], 'http') && preg_match('/\.(svg|png|gif|jpeg|webp|jpg)$/i', $extension['icon'])) 
-            ? $extension['icon'] 
-            : (!empty($extension['icon']) && preg_match('/\.(svg|png|gif|jpeg|webp|jpg)$/i', $extension['icon']) 
-              ? '/assets/extensions/'.$extension['identifier'].'/icon.'.pathinfo($extension['icon'], PATHINFO_EXTENSION) 
-              : '/assets/extensions/'.$extension['identifier'].'/icon.jpg')
+          'EXTENSION_ICON' => '/admin/extensions/img/'.$extension['identifier'].'.jpg',
         ])
       @endforeach
 
