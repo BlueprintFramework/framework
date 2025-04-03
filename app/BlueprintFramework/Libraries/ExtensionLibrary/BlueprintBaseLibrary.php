@@ -238,6 +238,11 @@ class BlueprintBaseLibrary
    */
   public function extensionConfig(string $identifier): array
   {
+    if (!file_exists(base_path(".blueprint/extensions/$identifier/private/.store/conf.yml")))
+      return [];
+    if (!is_readable(base_path(".blueprint/extensions/$identifier/private/.store/conf.yml")))
+      return [];
+
     $conf = Yaml::parse($this->fileRead(base_path(".blueprint/extensions/$identifier/private/.store/conf.yml")));
 
     return array_filter($conf['info'], fn ($k) => !!$k);

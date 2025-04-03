@@ -27,7 +27,7 @@ class ImageProxy extends Controller
   public function index(string $extension): View
   {
     $ext = $this->blueprint->extensionConfig($extension);
-    if ($ext === null) {
+    if ($ext === null || $ext === []) {
       abort(404, 'Extension not found.');
     }
 
