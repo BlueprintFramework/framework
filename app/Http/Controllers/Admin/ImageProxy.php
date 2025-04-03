@@ -11,7 +11,7 @@ use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlacehol
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;
 use Database\Seeders\BlueprintSeeder;
 
-class ExtensionsController extends Controller
+class ImageProxy extends Controller
 {
   /**
    * ExtensionsController constructor.
@@ -26,7 +26,7 @@ class ExtensionsController extends Controller
    */
   public function index(string $extension): View
   {
-    $ext = $this->blueprint->extension($extension);
+    $ext = $this->blueprint->extensionConfig($extension);
     if ($ext === null) {
       abort(404, 'Extension not found.');
     }

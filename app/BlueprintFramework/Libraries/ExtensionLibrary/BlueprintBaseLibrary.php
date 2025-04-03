@@ -229,6 +229,22 @@ class BlueprintBaseLibrary
   }
 
   /**
+   * Returns the extension's configuration as an associative array.
+   * 
+   * @param string $identifier Extension identifier
+   * @return array Extension configuration
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function extensionConfig(string $identifier): array
+  {
+    $conf = Yaml::parse($this->fileRead(base_path(".blueprint/extensions/$identifier/private/.store/conf.yml")));
+
+    return array_filter($conf['info'], fn ($k) => !!$k);
+  }
+
+
+  /**
    * Returns an array containing all installed extensions's identifiers.
    * 
    * @return array An array of installed extensions
