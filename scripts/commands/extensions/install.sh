@@ -410,7 +410,7 @@ InstallExtension() {
 
   # Validate paths to files and directories defined in conf.yml.
   if \
-    [[ ( ! -f ".blueprint/tmp/$n/$icon"                         ) && ( ${icon} != ""                         ) ]] ||    # file:   icon                         (optional)
+    [[ ( ! -f ".blueprint/tmp/$n/$icon"                         ) && ( ${icon} != ""                         ) && ( ${icon} != http* ) ]] ||    # file:   icon                         (optional)
     [[ ( ! -f ".blueprint/tmp/$n/$admin_view"                   )                                              ]] ||    # file:   admin_view
     [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"             ) && ( ${admin_controller} != ""             ) ]] ||    # file:   admin_controller             (optional)
     [[ ( ! -f ".blueprint/tmp/$n/$admin_css"                    ) && ( ${admin_css} != ""                    ) ]] ||    # file:   admin_css                    (optional)
@@ -1129,7 +1129,16 @@ InstallExtension() {
       *.webp) local ICON_EXT="webp" ;;
       *) local ICON_EXT="jpg" ;;
     esac
-    cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
+    if [[ $icon == "http"* ]]; then
+      # download icon from url
+      PRINT INFO "Downloading icon.."
+      icon_filename=$(basename "$icon")
+      curl -s -o ".blueprint/tmp/$n/$icon_filename" "$icon" 2>> "$BLUEPRINT__DEBUG"
+    else
+      # copy icon from tmp folder
+      PRINT INFO "Cloning icon.."
+      cp ".blueprint/tmp/$n/$icon" ".blueprint/tmp/$n/$icon.$ICON_EXT"
+    fi
   fi;
   ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
 
