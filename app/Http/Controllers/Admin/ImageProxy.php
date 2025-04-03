@@ -32,7 +32,6 @@ class ImageProxy extends Controller
     }
     
     if(!isset($ext['icon'])) {
-        // send this file: '/assets/extensions/' . $extension . '/icon.jpg', embed the image
 
         return response()->file(public_path('assets/extensions/' . $extension . '/icon.jpg'), [
             'Content-Type' => 'image/jpeg',
@@ -47,13 +46,12 @@ class ImageProxy extends Controller
         ]);
     }
 
-    // image proxy the image. embed it in the page. There is not a view for this yet.
     if (!Cache::has($extension)) {
         $iconContent = @file_get_contents($ext['icon']);
         if ($iconContent === false) {
             abort(404, 'Failed to fetch the icon from the provided URL.');
         }
-        Cache::put($extension, $iconContent);
+        Cache::put($extension, $iconContent, now()->addDays(1));
     }
     $icon = Cache::get($extension);
     if (empty($icon)) {
