@@ -3,26 +3,19 @@
 
 # Learn more @ blueprint.zip
 # Source code available at github.com/blueprintframework/framework
+# Transparent financials available at hcb.hackclub.com/blueprint
 
 # To make changes to the variables persist between updates, make a .blueprintrc file
 # and override the variables there.
 
-# Variable for telling Blueprint which folder Pterodactyl lives in
-  FOLDER=$(realpath "$(dirname "$0")") 2> /dev/null
+BLUEPRINT_ENGINE="solstice"
+REPOSITORY="BlueprintFramework/framework"
+VERSION="beta-2025-04"
 
-# This stores the webserver ownership user which Blueprint uses when applying webserver permissions
-  OWNERSHIP="www-data:www-data" #;
-
-# This stores options for permissions related to running install scripts the webserver user
-  WEBUSER="www-data" #;
-  USERSHELL="/bin/bash" #;
-
-# Defines the version Blueprint will display as the active one
-  VERSION="beta-2025-04"
-  BLUEPRINT_ENGINE="solstice"
-
-# Default GitHub repository to use when upgrading Blueprint
-  REPOSITORY="BlueprintFramework/framework"
+FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__SOURCEFOLDER"
+OWNERSHIP="www-data:www-data" #;
+WEBUSER="www-data" #;
+USERSHELL="/bin/bash" #;
 
 
 
@@ -82,7 +75,7 @@ else
   DOCKER="n"
 fi
 
-source "$(realpath "$(dirname "$0")")/.blueprintrc" 2> /dev/null
+source "$FOLDER/.blueprintrc" 2> /dev/null
 
 # This has caused a bunch of errors but is just here to make sure people actually upload the
 # "blueprint" folder onto their panel when installing Blueprint. Pick your poison.
