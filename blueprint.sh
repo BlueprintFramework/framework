@@ -18,7 +18,6 @@ WEBUSER="www-data" #;
 USERSHELL="/bin/bash" #;
 
 
-
 # Set environment variables.
 export BLUEPRINT__FOLDER=$FOLDER
 export BLUEPRINT__VERSION=$VERSION
