@@ -229,13 +229,48 @@ class BlueprintBaseLibrary
   }
 
   /**
+   * Retrieves a list of installed extensions.
+   *
+   * This method reads a file containing a comma-separated list of installed
+   * extensions, parses it into an array, and returns the result.
+   *
+   * @return array An array of installed extensions.
+   */
+  public function extensions(): Array
+  {
+    $array = explode(',', $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')));
+    return $array;
+  }
+
+  /**
+   * Retrieves the configuration for a specified extension.
+   *
+   * This method checks if the given extension exists and, if so, reads its
+   * configuration file in YAML format. The configuration data is then filtered
+   * to remove any empty or falsy keys.
+   *
+   * @param string $extension The name of the extension to retrieve the configuration for.
+   * 
+   * @return array|null The configuration array for the extension, or null if the extension does not exist.
+   */
+  public function extensionConfig(string $extension): ?array
+  {
+    if(!$this->extension($extension)) {
+      return null;
+    }
+    $conf = Yaml::parse($this->fileRead(base_path(".blueprint/extensions/$extension/private/.store/conf.yml")));
+    $conf = array_filter($conf, fn ($k) => !!$k);
+    return $conf;
+  }
+
+  /**
    * Returns an array containing all installed extensions's identifiers.
    * 
    * @return array An array of installed extensions
    * 
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function extensions(): Collection
+  public function extensionsConfigs(): Collection
   {
     $array = explode(',', $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')));
     $collection = new Collection();
@@ -247,7 +282,7 @@ class BlueprintBaseLibrary
       try {
         $conf = Yaml::parse($this->fileRead(base_path(".blueprint/extensions/$extension/private/.store/conf.yml")));
 
-        $collection->push(array_filter($conf['info'], fn ($k) => !!$k));
+        $collection->push(array_filter($conf, fn ($k) => !!$k));
       } catch (\Exception $e) {
       }
     }

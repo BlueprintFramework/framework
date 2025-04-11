@@ -107,7 +107,8 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
         </button>
       </div>
 
-      @foreach($blueprint->extensions() as $extension)
+      @foreach($blueprint->extensionsConfigs() as $extension)
+        {{ $extension = $extension['info'] }}
         @include("blueprint.admin.entry", [
           'EXTENSION_ID' => $extension['identifier'],
           'EXTENSION_NAME' => $extension['name'],
