@@ -4,10 +4,7 @@
     "module": "es2020",
     "jsx": "react",
     "moduleResolution": "node",
-    "lib": [
-      "es2015",
-      "dom"
-    ],
+    "lib": ["es2015", "dom"],
     "strict": true,
     "noEmit": true,
     "sourceMap": true,
@@ -17,7 +14,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
-    "importsNotUsedAsValues": "preserve",
+    "verbatimModuleSyntax": true,
     "paths": {
       "@/*": ["./resources/scripts/*"],
       "@definitions/*": ["./resources/scripts/api/definitions/*"],
@@ -29,14 +26,8 @@
         "name": "typescript-plugin-tw-template"
       }
     ],
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "typeRoots": ["node_modules/@types"]
   },
-  "include": [
-    "./resources/scripts/**/*"
-  ],
-  "exclude": [
-    "/node_modules/"
-  ]
+  "include": ["./resources/scripts/**/*"],
+  "exclude": ["/node_modules/"]
 }
