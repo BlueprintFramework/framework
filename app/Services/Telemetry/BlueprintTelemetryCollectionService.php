@@ -77,7 +77,9 @@ class BlueprintTelemetryCollectionService
 
       'blueprint' => [
         'version' => $this->placeholderService->version(),
-        'extensions' => $this->blueprint->extensions()->toArray(),
+        'extensions' => array_map(function ($config) {
+            return $config['info'] ?? null;
+        }, $this->blueprint->extensionsConfigs()->toArray()),
         'flags' => $flags,
         'docker' => file_exists('/.dockerenv'),
       ],

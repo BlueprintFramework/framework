@@ -26,7 +26,8 @@ Route::group(['prefix' => 'extensions/blueprint'], function () {
   Route::patch('/config', [Pterodactyl\BlueprintFramework\Controllers\ExtensionConfigurationController::class, 'update']);
 });
 
-foreach ($blueprint->extensions() as $extension) {
+foreach ($blueprint->extensionsConfigs() as $extension) {
+  $extension = $extension['info'];
   $identifier = $extension['identifier'];
   $controllerName = $identifier . 'ExtensionController';
   
