@@ -113,7 +113,7 @@ InstallExtension() {
   ((PROGRESS_NOW++))
 
   # "prevent" folder "escaping"
-  if [[ ( $icon                         == "/"* ) || ( $icon                         == *"/.."* ) || ( $icon                         == *"../"* ) || ( $icon                         == *"/../"* ) || ( $icon                         == *"~"* ) || ( $icon                         == *"\\"* ) ]] \
+  if [[(( $icon                         == "/"* ) || ( $icon                         == *"/.."* ) || ( $icon                         == *"../"* ) || ( $icon                         == *"/../"* ) || ( $icon                         == *"~"* ) || ( $icon                         == *"\\"* ) ) && !( ${icon} =~ ^https?:// ) ]] \
   || [[ ( $admin_view                   == "/"* ) || ( $admin_view                   == *"/.."* ) || ( $admin_view                   == *"../"* ) || ( $admin_view                   == *"/../"* ) || ( $admin_view                   == *"~"* ) || ( $admin_view                   == *"\\"* ) ]] \
   || [[ ( $admin_controller             == "/"* ) || ( $admin_controller             == *"/.."* ) || ( $admin_controller             == *"../"* ) || ( $admin_controller             == *"/../"* ) || ( $admin_controller             == *"~"* ) || ( $admin_controller             == *"\\"* ) ]] \
   || [[ ( $admin_css                    == "/"* ) || ( $admin_css                    == *"/.."* ) || ( $admin_css                    == *"../"* ) || ( $admin_css                    == *"/../"* ) || ( $admin_css                    == *"~"* ) || ( $admin_css                    == *"\\"* ) ]] \
@@ -410,7 +410,7 @@ InstallExtension() {
 
   # Validate paths to files and directories defined in conf.yml.
   if \
-    [[ ( ! -f ".blueprint/tmp/$n/$icon"                         ) && ( ${icon} != ""                         ) ]] ||    # file:   icon                         (optional)
+    [[ ( ! -f ".blueprint/tmp/$n/$icon"                         ) && ( ${icon} != ""                         ) && ! ( ${icon} =~ ^https?:// ) ]] ||    # file:   icon                         (optional)
     [[ ( ! -f ".blueprint/tmp/$n/$admin_view"                   )                                              ]] ||    # file:   admin_view
     [[ ( ! -f ".blueprint/tmp/$n/$admin_controller"             ) && ( ${admin_controller} != ""             ) ]] ||    # file:   admin_controller             (optional)
     [[ ( ! -f ".blueprint/tmp/$n/$admin_css"                    ) && ( ${admin_css} != ""                    ) ]] ||    # file:   admin_css                    (optional)
@@ -1129,9 +1129,22 @@ InstallExtension() {
       *.webp) local ICON_EXT="webp" ;;
       *) local ICON_EXT="jpg" ;;
     esac
-    cp ".blueprint/tmp/$n/$icon" ".blueprint/extensions/$identifier/assets/icon.$ICON_EXT"
+    if [[ $icon == "http"* ]]; then
+      if [[ $icon != *".svg" && $icon != *".png" && $icon != *".gif" && $icon != *".jpeg" && $icon != *".webp" ]]; then
+        PRINT WARNING "Icon URL does not end with a valid image extension, using default icon instead."
+        icnNUM=$(( 1 + RANDOM % 5 ))
+        cp ".blueprint/assets/Extensions/Defaults/$icnNUM.jpg" ".blueprint/extensions/$identifier/assets/icon.jpg"
+      else
+        # download icon from url
+        PRINT INFO "parsing icon.."
+        ICON_OVERRIDE=$icon
+      fi
+    fi
   fi;
   ICON="/assets/extensions/$identifier/icon.$ICON_EXT"
+  if [[ $ICON_OVERRIDE != "" ]]; then
+    ICON=$ICON_OVERRIDE
+  fi
 
   ((PROGRESS_NOW++))
 
