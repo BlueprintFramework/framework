@@ -9,7 +9,7 @@ export default function UiDivider({
 
     if (children) {
         return (
-            <div className={classNames('relative w-full', className)}>
+            <div className={"UiDivider "+classNames('relative w-full', className)}>
                 <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-700" />
                 </div>
@@ -24,7 +24,7 @@ export default function UiDivider({
 
     return (
         <div
-            className={classNames(
+            className={"UiDivider "+classNames(
                 'h-px w-full bg-gray-700',
                 className
             )}
