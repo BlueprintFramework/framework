@@ -33,15 +33,11 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 
 
 
-<!-- Sponsors (commented out for now)
-<br/><h2 align="center">💖 Sponsors</h2>
+<br/><h2 align="center">💖 Donate</h2>
 
-Sponsors help fund development, upkeep and maintenance. [Interested in sponsoring Blueprint?](https://github.com/sponsors/prplwtf)
+Blueprint is free and open-source software. We play a vital role in the Pterodactyl modding community and empower developers with tools to bring their ideas to life. To keep everything up and running, we rely heavily on [donations](https://hcb.hackclub.com/blueprint/donations). We're also nonprofit!
 
-| Company | About |
-|---------|-------|
-|         |       |
--->
+[**Donate to our nonprofit organization**](https://hcb.hackclub.com/donations/start/blueprint) or [view our open financials](https://hcb.hackclub.com/blueprint).
 
 
 <!-- Contributors -->
