@@ -10,7 +10,7 @@
 
 BLUEPRINT_ENGINE="solstice"
 REPOSITORY="BlueprintFramework/framework"
-VERSION="beta-2025-04"
+VERSION="beta-2025-05"
 
 FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__SOURCEFOLDER"
 OWNERSHIP="www-data:www-data" #;
