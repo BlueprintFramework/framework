@@ -130,34 +130,34 @@ depend() {
 
   # Exit when missing dependencies.
   if [[ $DEPEND_MISSING == true ]]; then
-    PRINT FATAL "Some framework dependencies are not installed or detected."
+    PRINT FATAL "Some framework dependencies couldn't be found or have issues. This is usually NOT a bug, do not report it as such."
 
     if [[ $nodeMajor -lt 17 ]]; then
-      PRINT FATAL "Required dependency \"node\" is using an unsupported version."
+      PRINT FATAL "Unsupported dependency \"node\" <17.x. (Requires >17.x)"
     fi
 
-    if ! [ -x "$(command -v unzip)"                        ]; then PRINT FATAL "Required dependency \"unzip\" is not installed or detected.";   fi
-    if ! [ -x "$(command -v node)"                         ]; then PRINT FATAL "Required dependency \"node\" is not installed or detected.";    fi
-    if ! [ -x "$(command -v yarn)"                         ]; then PRINT FATAL "Required dependency \"yarn\" is not installed or detected.";    fi
-    if ! [ -x "$(command -v zip)"                          ]; then PRINT FATAL "Required dependency \"zip\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v curl)"                         ]; then PRINT FATAL "Required dependency \"curl\" is not installed or detected.";    fi
-    if ! [ -x "$(command -v php)"                          ]; then PRINT FATAL "Required dependency \"php\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v git)"                          ]; then PRINT FATAL "Required dependency \"git\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v grep)"                         ]; then PRINT FATAL "Required dependency \"grep\" is not installed or detected.";    fi
-    if ! [ -x "$(command -v sed)"                          ]; then PRINT FATAL "Required dependency \"sed\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v awk)"                          ]; then PRINT FATAL "Required dependency \"awk\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v tput)"                         ]; then PRINT FATAL "Required dependency \"tput\" is not installed or detected.";    fi
-    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)" ]; then PRINT FATAL "Required dependency \"webpack\" is not installed or detected."; fi
-    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"   ]; then PRINT FATAL "Required dependency \"react\" is not installed or detected.";   fi
+    if ! [ -x "$(command -v unzip)"                        ]; then PRINT FATAL "Missing dependency \"unzip\".";   fi
+    if ! [ -x "$(command -v node)"                         ]; then PRINT FATAL "Missing dependency \"node\".";    fi
+    if ! [ -x "$(command -v yarn)"                         ]; then PRINT FATAL "Missing dependency \"yarn\".";    fi
+    if ! [ -x "$(command -v zip)"                          ]; then PRINT FATAL "Missing dependency \"zip\".";     fi
+    if ! [ -x "$(command -v curl)"                         ]; then PRINT FATAL "Missing dependency \"curl\".";    fi
+    if ! [ -x "$(command -v php)"                          ]; then PRINT FATAL "Missing dependency \"php\".";     fi
+    if ! [ -x "$(command -v git)"                          ]; then PRINT FATAL "Missing dependency \"git\".";     fi
+    if ! [ -x "$(command -v grep)"                         ]; then PRINT FATAL "Missing dependency \"grep\".";    fi
+    if ! [ -x "$(command -v sed)"                          ]; then PRINT FATAL "Missing dependency \"sed\".";     fi
+    if ! [ -x "$(command -v awk)"                          ]; then PRINT FATAL "Missing dependency \"awk\".";     fi
+    if ! [ -x "$(command -v tput)"                         ]; then PRINT FATAL "Missing dependency \"tput\".";    fi
+    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)" ]; then PRINT FATAL "Missing dependency \"webpack\"."; fi
+    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"   ]; then PRINT FATAL "Missing dependency \"react\".";   fi
 
     if ! [ -x "$(command -v inotifywait)" ] && [[ "$DeveloperWatch" == true ]]; then
       PRINT FATAL "Developer dependency \"inotify-tools\" is not installed or detected."
     fi
 
-    if [[ $missinglibs == *"[parse_yaml]"*    ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected."; fi
-    if [[ $missinglibs == *"[grabEnv]"*       ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";    fi
-    if [[ $missinglibs == *"[logFormat]"*     ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";  fi
-    if [[ $missinglibs == *"[misc]"*          ]]; then PRINT FATAL "Required internal dependency \"internal:misc\" is not installed or detected.";       fi
+    if [[ $missinglibs == *"[parse_yaml]"*    ]]; then PRINT FATAL "Missing internal dependency \"internal:parse_yaml\"."; fi
+    if [[ $missinglibs == *"[grabEnv]"*       ]]; then PRINT FATAL "Missing internal dependency \"internal:grabEnv\".";    fi
+    if [[ $missinglibs == *"[logFormat]"*     ]]; then PRINT FATAL "Missing internal dependency \"internal:logFormat\".";  fi
+    if [[ $missinglibs == *"[misc]"*          ]]; then PRINT FATAL "Missing internal dependency \"internal:misc\".";       fi
 
     exit 1
   fi
