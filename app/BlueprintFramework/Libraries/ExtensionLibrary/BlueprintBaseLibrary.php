@@ -155,6 +155,19 @@ class BlueprintBaseLibrary
     return (bool) DB::table('settings')->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))->delete();
   }
 
+    /**
+   * Delete/forget all database records of table.
+   * 
+   * @param string $table Database table
+   * @return bool Whether there was a record to delete
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function dbForgetAll(string $table): bool
+  {
+    return (bool) DB::table('settings')->where('key', 'like', $this->getRecordName($table, '%'))->delete();
+  }
+
   /**
    * Read and returns the content of a given file.
    * 
