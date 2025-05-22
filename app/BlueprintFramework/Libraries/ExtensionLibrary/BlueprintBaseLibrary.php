@@ -17,6 +17,7 @@ namespace Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Symfony\Component\Yaml\Yaml;
+use Alert;
 
 class BlueprintBaseLibrary
 {
@@ -301,5 +302,32 @@ class BlueprintBaseLibrary
     }
 
     return $collection;
+  }
+
+  /**
+   * Displays an alert message at the top of the page.
+   *
+   * @param 'info'|'warning'|'danger'|'success' $type The type of alert. 
+   * @param string $message Alert message.
+   * 
+   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
+   */
+  public function alert(string $type, string $message): void
+  {
+    switch ($type) {
+      case 'success':
+        Alert::success($message)->flash();
+        break;
+      case 'warning':
+        Alert::warning($message)->flash();
+        break;
+      case 'danger':
+        Alert::danger($message)->flash();
+        break;
+      case 'info':
+      default:
+        Alert::info($message)->flash();
+        break;
+    }
   }
 }
