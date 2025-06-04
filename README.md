@@ -74,6 +74,7 @@ Contributors help shape the future of the Blueprint modding framework. To start 
 
 <br/><br/>
 <p align="center">
-  $\color{#4b4950}{\textsf{© 2023-2025 Emma (prpl.wtf)}}$
+  © 2023-2025 Emma (prpl.wtf)
   <br/><br/><img src="https://github.com/user-attachments/assets/e6ff62c3-6d99-4e43-850d-62150706e5dd"/>
 </p>
+
