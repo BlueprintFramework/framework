@@ -236,7 +236,7 @@ InstallExtension() {
       *"://twitch.tv"* | *"://"*".twitch.tv"*)                 local websiteiconclass="bi bi-twitch" ;;     # Twitch
       *"://youtube.com"* | *"://"*".youtube.com"*)             local websiteiconclass="bi bi-youtube" ;;    # YouTube
       *"://ko-fi.com"* | *"://"*".ko-fi.com"*)                 local websiteiconclass="bi bi-heart-fill" ;; # Ko-fi
-      
+
       *) local websiteiconclass="bi bi-link-45deg" ;;
     esac
   fi
@@ -394,17 +394,25 @@ InstallExtension() {
 
   if [[ $icon == "" ]]; then                           PRINT WARNING "${identifier^} does not come with an icon, consider adding one.";fi
   if [[ $target != "$VERSION" ]]; then                 PRINT WARNING "${identifier^} is built for version $target, but your version is $VERSION.";fi
-  if [[ $identifier != "$n" ]]; then clear_tmp;        PRINT FATAL "Extension file name must be the same as your identifier. (example: identifier.blueprint)";return 1;fi
-  if ! [[ $identifier =~ [a-z] ]]; then clear_tmp;     PRINT FATAL "Extension identifier should be lowercase and only contain characters a-z.";return 1;fi
-  if [[ $identifier == "blueprint" ]]; then clear_tmp; PRINT FATAL "Extensions can not have the identifier 'blueprint'.";return 1;fi
 
-  if [[ $identifier == *" "* ]] \
-  || [[ $identifier == *"-"* ]] \
-  || [[ $identifier == *"."* ]]; then
+  ((PROGRESS_NOW++))
+
+  # Test identifier
+  export VALIDATE_IDENTIFIER_INPUT="$identifier"
+  local TEST_IDENTIFIER="$(node scripts/helpers/validate-identifier.js)"
+  local TEST_IDENTIFIER_MATCHES="false"
+  unset VALIDATE_IDENTIFIER_INPUT
+
+  if [[ $TEST_IDENTIFIER == *"[potential-crashout]"* ]]; then TEST_IDENTIFIER_MATCHES="true"; PRINT FATAL "Extension identifiers cannot be 'blueprint'."; fi
+  if [[ $TEST_IDENTIFIER == *"[length]"* ]]; then TEST_IDENTIFIER_MATCHES="true"; PRINT FATAL "Extension identifiers cannot be over 48 characters in length."; fi
+  if [[ $TEST_IDENTIFIER == *"[chars]"* ]]; then TEST_IDENTIFIER_MATCHES="true"; PRINT FATAL "Extension identifiers should be lowercase and only contain characters a-z."; fi
+
+  if [[ $TEST_IDENTIFIER_MATCHES == "true" ]]; then
     clear_tmp
-    PRINT FATAL "Extension identifier may not contain spaces, hyphens or periods."
     return 1
   fi
+  unset TEST_IDENTIFIER
+  unset TEST_IDENTIFIER_MATCHES
 
   ((PROGRESS_NOW++))
 
@@ -515,7 +523,7 @@ InstallExtension() {
       # Read the Console.yml file with the "parse_yaml" library.
       eval "$(parse_yaml .blueprint/tmp/"$n"/"$data_console"/Console.yml Console_)"
       if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Console.yml OldConsole_)"; fi
-    
+
       # Print warning if console configuration is empty - otherwise go through all options.
       if [[ $Console__ == "" ]]; then
         PRINT WARNING "Console configuration (Console.yml) is empty!"
@@ -626,12 +634,12 @@ InstallExtension() {
             -e "s~\[IDENTIFIER\]~$identifier~g" \
             -e "s~\[SIGNATURE\]~$CONSOLE_ENTRY_SIGN~g" \
             "$ScheduleConstructor"
-          
+
           cp "$ArtisanCommandConstructor" "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}/${CONSOLE_ENTRY_IDEN}Command.php"
 
           # Detect schedule definition and apply it
           SCHEDULE_SET=false
-          if [[ 
+          if [[
             ( $CONSOLE_ENTRY_INTE != "" ) &&
             ( $CONSOLE_ENTRY_INTE != "false" )
           ]]; then
@@ -664,10 +672,10 @@ InstallExtension() {
               monthly)             ApplyConsoleInterval "monthly" ;;
               quarterly)           ApplyConsoleInterval "quarterly" ;;
               yearly)              ApplyConsoleInterval "yearly" ;;
-            
+
               *)                   sed -i "s~\[SCHEDULE\]~cron('$CONSOLE_ENTRY_INTE')~g" "$ScheduleConstructor" ;;
             esac
-            
+
             cat "$ScheduleConstructor" >> "app/BlueprintFramework/Schedules/${identifier^}Schedules.php"
           fi
 
@@ -782,7 +790,7 @@ InstallExtension() {
       # Backwards compatibility
       if [ -n "$Components_Dashboard_BeforeContent" ]; then Components_Dashboard_Serverlist_BeforeContent="$Components_Dashboard_BeforeContent"; fi
       if [ -n "$Components_Dashboard_AfterContent" ]; then Components_Dashboard_Serverlist_AfterContent="$Components_Dashboard_AfterContent"; fi
-      if [ -n "$Components_Dashboard_ServerRow_" ]; then 
+      if [ -n "$Components_Dashboard_ServerRow_" ]; then
         Components_Dashboard_Serverlist_ServerRow_BeforeEntryName="$Components_Dashboard_ServerRow_BeforeEntryName"
         Components_Dashboard_Serverlist_ServerRow_AfterEntryName="$Components_Dashboard_ServerRow_AfterEntryName"
         Components_Dashboard_Serverlist_ServerRow_BeforeEntryDescription="$Components_Dashboard_ServerRow_BeforeEntryDescription"
@@ -793,7 +801,7 @@ InstallExtension() {
       if [[ $DUPLICATE == "y" ]]; then
         if [ -n "$OldComponents_Dashboard_BeforeContent" ]; then OldComponents_Dashboard_Serverlist_BeforeContent="$OldComponents_Dashboard_BeforeContent"; fi
         if [ -n "$OldComponents_Dashboard_AfterContent" ]; then OldComponents_Dashboard_Serverlist_AfterContent="$OldComponents_Dashboard_AfterContent"; fi
-        if [ -n "$OldComponents_Dashboard_ServerRow_" ]; then 
+        if [ -n "$OldComponents_Dashboard_ServerRow_" ]; then
           OldComponents_Dashboard_Serverlist_ServerRow_BeforeEntryName="$OldComponents_Dashboard_ServerRow_BeforeEntryName"
           OldComponents_Dashboard_Serverlist_ServerRow_AfterEntryName="$OldComponents_Dashboard_ServerRow_AfterEntryName"
           OldComponents_Dashboard_Serverlist_ServerRow_BeforeEntryDescription="$OldComponents_Dashboard_ServerRow_BeforeEntryDescription"
@@ -804,7 +812,7 @@ InstallExtension() {
 
       # place component items
       # -> PLACE_REACT "$Components_" "path/.tsx" "$OldComponents_"
-  
+
 
       # navigation
       PLACE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx" "$OldComponents_Navigation_NavigationBar_BeforeNavigation"
@@ -1275,7 +1283,7 @@ InstallExtension() {
   clear_tmp
 
   ((PROGRESS_NOW++))
-  
+
   if [[ ( $F_developerForceMigrate == true ) && ( $dev == true ) ]]; then
     DeveloperForcedMigrate="true"
   fi
@@ -1335,7 +1343,7 @@ InstallExtension() {
 
   if [[ $dev != true ]]; then
     if [[ $InstalledExtensions == "" ]]; then InstalledExtensions="$identifier"; else InstalledExtensions+=", $identifier"; fi
-    
+
     # Unset variables
     PRINT INFO "Unsetting variables.."
     unsetVariables
@@ -1371,7 +1379,7 @@ Command() {
   extensions="$*"
   total=$(echo "$extensions" | wc -w)
 
-  local EXTENSIONS_STEPS=34 #Total amount of steps per extension
+  local EXTENSIONS_STEPS=35 #Total amount of steps per extension
   local FINISH_STEPS=6 #Total amount of finalization steps
 
   if [[ $DeveloperWatch == false ]]; then
@@ -1419,7 +1427,7 @@ Command() {
         php artisan bp:cache
         php artisan queue:restart
       } &>> "$BLUEPRINT__DEBUG"
-    
+
       ((PROGRESS_NOW++))
 
       # Make sure all files have correct permissions.
