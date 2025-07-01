@@ -1359,7 +1359,7 @@ Command() {
   if [[ ( $1 == "./"* ) || ( $1 == "../"* ) || ( $1 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";exit 2;fi
 
   if [[ $DeveloperWatch == "" ]]; then
-    export DeveloperWatch=false
+    export DeveloperWatch="false"
 
     PRINT INFO "Searching and validating framework dependencies.."
     # Check if required programs and libraries are installed.
@@ -1382,7 +1382,7 @@ Command() {
   local EXTENSIONS_STEPS=35 #Total amount of steps per extension
   local FINISH_STEPS=6 #Total amount of finalization steps
 
-  if [[ $DeveloperWatch == false ]]; then
+  if [[ $DeveloperWatch != "false" ]]; then
     FINISH_STEPS=5
   fi
 
@@ -1416,7 +1416,7 @@ Command() {
 
     ((PROGRESS_NOW++))
 
-    if [[ $DeveloperWatch == false ]]; then
+    if [[ $DeveloperWatch == "false" ]]; then
       # Flush cache.
       PRINT INFO "Flushing view, config and route cache.."
       {
@@ -1452,12 +1452,11 @@ Command() {
       CorrectPhrasing="have"
       if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
       PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
-      hide_progress
     else
       PRINT SUCCESS "$BuiltExtensions has been built."
-      hide_progress
     fi
 
+    hide_progress
     exit 0
   fi
 
