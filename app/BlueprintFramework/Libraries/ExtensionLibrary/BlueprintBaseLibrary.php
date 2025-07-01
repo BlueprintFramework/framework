@@ -5,8 +5,8 @@
  *
  * @category   BlueprintExtensionLibrary
  * @package    BlueprintBaseLibrary
- * @author     Emma <hello@prpl.wtf>
- * @copyright  2023-2024 Emma (prpl.wtf)
+ * @author     Blueprint Framework <byte@blueprint.zip>
+ * @copyright  2023-2025 Emma (prpl.wtf)
  * @license    https://blueprint.zip/docs/?page=about/License MIT License
  * @link       https://blueprint.zip/docs/?page=documentation/$blueprint
  * @since      alpha
@@ -28,12 +28,12 @@ class BlueprintBaseLibrary
 
   /**
    * Fetch a record from the database. (Data will be unserialized)
-   * 
+   *
    * @param string $table Database table
    * @param string $record Database record
    * @param mixed $default Optional. Returns this value when value is null.
    * @return mixed Database value
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function dbGet(string $table, string $record, mixed $default = null): mixed
@@ -51,12 +51,12 @@ class BlueprintBaseLibrary
 
   /**
    * Fetch many records from the database. (Data will be unserialized)
-   * 
+   *
    * @param string $table Database table
    * @param array $records Database records
    * @param mixed $default Optional. Returns this value when value is null.
    * @return array Database values as an associative array
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function dbGetMany(string $table, array $records = [], mixed $default = null): array
@@ -92,11 +92,11 @@ class BlueprintBaseLibrary
 
   /**
    * Set a database record. (Data will be serialized)
-   * 
+   *
    * @param string $table Database table
    * @param string $record Database record
    * @param string $value Value to store
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function dbSet(string $table, string $record, mixed $value): void
@@ -109,10 +109,10 @@ class BlueprintBaseLibrary
 
   /**
    * Set many database records. (Data will be serialized)
-   * 
+   *
    * @param string $table Database table
    * @param array $records Database records as an associative array
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function dbSetMany(string $table, array $records): void
@@ -130,11 +130,11 @@ class BlueprintBaseLibrary
 
   /**
    * Delete/forget a database record.
-   * 
+   *
    * @param string $table Database table
    * @param string $record Database record
    * @return bool Whether there was a record to delete
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function dbForget(string $table, string $record): bool
@@ -144,11 +144,11 @@ class BlueprintBaseLibrary
 
   /**
    * Delete/forget many database records.
-   * 
+   *
    * @param string $table Database table
    * @param array $records Database records
    * @return bool Whether there was a record to delete
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function dbForgetMany(string $table, array $records): bool
@@ -156,12 +156,12 @@ class BlueprintBaseLibrary
     return (bool) DB::table('settings')->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))->delete();
   }
 
-    /**
+  /**
    * Delete/forget all database records of table.
-   * 
+   *
    * @param string $table Database table
    * @return bool Whether there was a record to delete
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function dbForgetAll(string $table): bool
@@ -171,10 +171,10 @@ class BlueprintBaseLibrary
 
   /**
    * Read and returns the content of a given file.
-   * 
+   *
    * @param string $path Path to file
    * @return string File contents or empty string if file does not exist or is not readable
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function fileRead(string $path): string
@@ -189,9 +189,9 @@ class BlueprintBaseLibrary
 
   /**
    * Attempts to create a file.
-   * 
+   *
    * @param string $path File name/path
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function fileMake(string $path): void
@@ -202,10 +202,10 @@ class BlueprintBaseLibrary
 
   /**
    * Attempts to remove a file or directory.
-   * 
+   *
    * @param string $path Path to file/directory
    * @return bool Whether the file/directory was removed
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function fileWipe(string $path): bool
@@ -231,10 +231,10 @@ class BlueprintBaseLibrary
 
   /**
    * Check if an extension is installed based on it's identifier.
-   * 
+   *
    * @param string $identifier Extension identifier
    * @return bool Whether the extension is installed
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function extension(string $identifier): bool
@@ -264,7 +264,7 @@ class BlueprintBaseLibrary
    * to remove any empty or falsy keys.
    *
    * @param string $extension The name of the extension to retrieve the configuration for.
-   * 
+   *
    * @return array|null The configuration array for the extension, or null if the extension does not exist.
    */
   public function extensionConfig(string $extension): ?array
@@ -279,9 +279,9 @@ class BlueprintBaseLibrary
 
   /**
    * Returns an array containing all installed extensions's identifiers.
-   * 
+   *
    * @return array An array of installed extensions
-   * 
+   *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
   public function extensionsConfigs(): Collection
@@ -302,32 +302,5 @@ class BlueprintBaseLibrary
     }
 
     return $collection;
-  }
-
-  /**
-   * Displays an alert message at the top of the page.
-   *
-   * @param 'info'|'warning'|'danger'|'success' $type The type of alert. 
-   * @param string $message Alert message.
-   * 
-   * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
-   */
-  public function alert(string $type, string $message): void
-  {
-    switch ($type) {
-      case 'success':
-        Alert::success($message)->flash();
-        break;
-      case 'warning':
-        Alert::warning($message)->flash();
-        break;
-      case 'danger':
-        Alert::danger($message)->flash();
-        break;
-      case 'info':
-      default:
-        Alert::info($message)->flash();
-        break;
-    }
   }
 }

@@ -10,7 +10,7 @@
 
 BLUEPRINT_ENGINE="solstice"
 REPOSITORY="BlueprintFramework/framework"
-VERSION="beta-2025-05"
+VERSION="beta-2025-08"
 
 FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__SOURCEFOLDER"
 OWNERSHIP="www-data:www-data" #;
@@ -47,7 +47,7 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
       ;;
       -export) opts="expose" ;;
       -upgrade) opts="remote" ;;
-      
+
       *) opts="-install -add -remove -query -init -build -export -wipe -version -help -info -debug -upgrade -rerun-install" ;;
     esac
 
@@ -182,7 +182,7 @@ assignflags() {
 
 
   warn_deprecated_flag() { PRINT WARNING "Extension flag '$1' is deprecated."; }
-  
+
   F_hasInstallScript=false
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     warn_deprecated_flag "hasInstallScript"
@@ -194,13 +194,13 @@ assignflags() {
     warn_deprecated_flag "hasRemovalScript"
     F_hasRemovalScript=true
   fi
-  
+
   F_hasExportScript=false
   if [[ ( $flags == *"hasExportScript,"* ) || ( $flags == *"hasExportScript" ) ]]; then
     warn_deprecated_flag "hasExportScript"
     F_hasExportScript=true
   fi
-  
+
   F_developerForceMigrate=false
   if [[ ( $flags == *"developerForceMigrate,"* ) || ( $flags == *"developerForceMigrate" ) ]]; then
     warn_deprecated_flag "developerForceMigrate"
@@ -243,7 +243,7 @@ if [[ $1 != "-bash" ]]; then
         "\n$C4  ██$C1▌$C2▌$C3▌$C0   Blueprint Framework" \
         "\n$C4██  ██$C1▌$C2▌$C3▌$C0 https://blueprint.zip" \
         "\n$C4  ████$C1▌$C2▌$C3▌$C0 © 2023-2025 Emma (prpl.wtf)\n";
-      
+
       export PROGRESS_TOTAL=13
       export PROGRESS_NOW=0
     fi
@@ -271,7 +271,7 @@ if [[ $1 != "-bash" ]]; then
     fi
 
     ((PROGRESS_NOW++))
-    
+
     placeshortcut # Place Blueprint shortcut
 
     ((PROGRESS_NOW++))
@@ -340,7 +340,7 @@ if [[ $1 != "-bash" ]]; then
     find "$FOLDER/" \
       -path "$FOLDER/node_modules" -prune \
       -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
-    
+
     ((PROGRESS_NOW++))
 
     PRINT INFO "Cleaning up.."
