@@ -159,24 +159,20 @@ RemoveExtension() {
     # fetch component config
     eval "$(parse_yaml .blueprint/extensions/"$identifier"/components/Components.yml Components_)"
 
-    # define static variables to make stuff a bit easier
-    im="\/\* blueprint\/import \*\/"; re="{/\* blueprint\/react \*/}"; co="resources/scripts/blueprint/components"
-    s="import ${identifier^}Component from '"; e="';"
-
     REMOVE_REACT() {
-      if [[ ! $EXTENSION == "" ]]; then
+      if [[ ! $1 == "" ]]; then
         # remove components
         sed -i \
-          -e "s~""${s}@blueprint/extensions/${identifier}/$EXTENSION${e}""~~g" \
+          -e "s~""import ${identifier^}Component from '@blueprint/extensions/${identifier}/$1';""~~g" \
           -e "s~""<${identifier^}Component />""~~g" \
-          "$co"/"$2"
+          "resources/scripts/blueprint/components"/"$2"
       fi
     }
 
     # Backwards compatibility
     if [ -n "$Components_Dashboard_BeforeContent" ]; then Components_Dashboard_Serverlist_BeforeContent="$Components_Dashboard_BeforeContent"; fi
     if [ -n "$Components_Dashboard_AfterContent" ]; then Components_Dashboard_Serverlist_AfterContent="$Components_Dashboard_AfterContent"; fi
-    if [ -n "$Components_Dashboard_ServerRow_" ]; then 
+    if [ -n "$Components_Dashboard_ServerRow_" ]; then
       Components_Dashboard_Serverlist_ServerRow_BeforeEntryName="$Components_Dashboard_ServerRow_BeforeEntryName"
       Components_Dashboard_Serverlist_ServerRow_AfterEntryName="$Components_Dashboard_ServerRow_AfterEntryName"
       Components_Dashboard_Serverlist_ServerRow_BeforeEntryDescription="$Components_Dashboard_ServerRow_BeforeEntryDescription"
@@ -357,7 +353,7 @@ RemoveExtension() {
   rm -R \
     ".blueprint/extensions/$identifier/assets" \
     "public/assets/extensions/$identifier"
-  
+
   ((PROGRESS_NOW++))
 
   # Remove extension filesystem (ExtensionFS)
@@ -387,7 +383,7 @@ RemoveExtension() {
   sed -i "s~$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
 
   if [[ $RemovedExtensions == "" ]]; then RemovedExtensions="$identifier"; else RemovedExtensions+=", $identifier"; fi
-  
+
   ((PROGRESS_NOW++))
 
   # Unset variables
@@ -404,8 +400,8 @@ Command() {
   total=$(echo "$extensions" | wc -w)
 
   local EXTENSIONS_STEPS=22 #Total amount of steps per extension
-  local FINISH_STEPS=5 #Total amount of finalization 
-  
+  local FINISH_STEPS=5 #Total amount of finalization
+
   export PROGRESS_TOTAL="$(("$FINISH_STEPS" + "$EXTENSIONS_STEPS" * "$total"))"
   export PROGRESS_NOW=0
 
@@ -464,7 +460,7 @@ Command() {
 
     exit 0
   fi
-  
+
   hide_progress
   exit 1
 }
