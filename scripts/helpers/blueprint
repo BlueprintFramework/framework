@@ -3,16 +3,14 @@
 # Blueprint command shortcut
 # Learn more @ blueprint.zip
 
+export BLUEPRINT__FOLDER="BLUEPRINT_FOLDER_HERE"
+
 # Only runs when sourced
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
-    export BLUEPRINT__FOLDER="BLUEPRINT_FOLDER_HERE"
     source "$BLUEPRINT__FOLDER/blueprint.sh"
     return 0
 fi
 
-# Runs the Blueprint script
-exec sudo -s <<'END_OF_SUDO'
-
-    bash BLUEPRINT_FOLDER_HERE/blueprint.sh -bash $@
-
-END_OF_SUDO
+# Run Blueprint command
+[[ "$EUID" == 0 ]] || exec sudo -s "$0" "$@"
+bash "$BLUEPRINT__FOLDER/blueprint.sh" -bash $@
