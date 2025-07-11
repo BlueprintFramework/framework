@@ -218,7 +218,7 @@ placeshortcut() {
   mv scripts/helpers/blueprint.bak /usr/local/bin/blueprint
 
   {
-    chmod u+x \
+    chmod 755 \
       "$FOLDER/blueprint.sh" \
       /usr/local/bin/blueprint
   } >> "$BLUEPRINT__DEBUG"

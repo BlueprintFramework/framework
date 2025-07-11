@@ -11,11 +11,8 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
 fi
 
 # Runs the Blueprint script
-if [[ $USER != "root" ]];
-    sudo -v
-    if [[ $SUDO_USER == "" ]]; then
-        exit 2
-    fi
-    sudo bash $BLUEPRINT__FOLDER/blueprint.sh -bash $@
-fi
-bash $BLUEPRINT__FOLDER/blueprint.sh -bash $@
+exec sudo -s <<'END_OF_SUDO'
+
+    bash BLUEPRINT_FOLDER_HERE/blueprint.sh -bash $@
+
+END_OF_SUDO
