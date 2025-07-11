@@ -3,6 +3,8 @@
 # Blueprint command shortcut
 # Learn more @ blueprint.zip
 
+[[ "$EUID" == 0 ]] || exec sudo -s "/usr/local/bin/blueprint" "$@"
+
 export BLUEPRINT__FOLDER="BLUEPRINT_FOLDER_HERE"
 
 # Only runs when sourced
@@ -13,5 +15,4 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
 fi
 
 # Run Blueprint command
-[[ "$EUID" == 0 ]] || exec sudo -s "$0" "$@"
 bash "$BLUEPRINT__FOLDER/blueprint.sh" -bash $@
