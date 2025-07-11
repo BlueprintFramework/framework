@@ -159,17 +159,13 @@ RemoveExtension() {
     # fetch component config
     eval "$(parse_yaml .blueprint/extensions/"$identifier"/components/Components.yml Components_)"
 
-    # define static variables to make stuff a bit easier
-    im="\/\* blueprint\/import \*\/"; re="{/\* blueprint\/react \*/}"; co="resources/scripts/blueprint/components"
-    s="import ${identifier^}Component from '"; e="';"
-
     REMOVE_REACT() {
-      if [[ ! $EXTENSION == "" ]]; then
+      if [[ ! $1 == "" ]]; then
         # remove components
         sed -i \
-          -e "s~""${s}@blueprint/extensions/${identifier}/$EXTENSION${e}""~~g" \
+          -e "s~""import ${identifier^}Component from '@blueprint/extensions/${identifier}/$1';""~~g" \
           -e "s~""<${identifier^}Component />""~~g" \
-          "$co"/"$2"
+          "resources/scripts/blueprint/components"/"$2"
       fi
     }
 
