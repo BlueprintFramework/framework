@@ -176,7 +176,7 @@ RemoveExtension() {
     # Backwards compatibility
     if [ -n "$Components_Dashboard_BeforeContent" ]; then Components_Dashboard_Serverlist_BeforeContent="$Components_Dashboard_BeforeContent"; fi
     if [ -n "$Components_Dashboard_AfterContent" ]; then Components_Dashboard_Serverlist_AfterContent="$Components_Dashboard_AfterContent"; fi
-    if [ -n "$Components_Dashboard_ServerRow_" ]; then 
+    if [ -n "$Components_Dashboard_ServerRow_" ]; then
       Components_Dashboard_Serverlist_ServerRow_BeforeEntryName="$Components_Dashboard_ServerRow_BeforeEntryName"
       Components_Dashboard_Serverlist_ServerRow_AfterEntryName="$Components_Dashboard_ServerRow_AfterEntryName"
       Components_Dashboard_Serverlist_ServerRow_BeforeEntryDescription="$Components_Dashboard_ServerRow_BeforeEntryDescription"
@@ -219,45 +219,35 @@ RemoveExtension() {
     REMOVE_REACT "$Components_Server_Terminal_AfterInformation" "Server/Terminal/AfterInformation.tsx"
     REMOVE_REACT "$Components_Server_Terminal_CommandRow" "Server/Terminal/CommandRow.tsx"
     REMOVE_REACT "$Components_Server_Terminal_AfterContent" "Server/Terminal/AfterContent.tsx"
-
     REMOVE_REACT "$Components_Server_Files_Browse_BeforeContent" "Server/Files/Browse/BeforeContent.tsx"
     REMOVE_REACT "$Components_Server_Files_Browse_FileButtons" "Server/Files/Browse/FileButtons.tsx"
     REMOVE_REACT "$Components_Server_Files_Browse_DropdownItems" "Server/Files/Browse/DropdownItems.tsx"
     REMOVE_REACT "$Components_Server_Files_Browse_AfterContent" "Server/Files/Browse/AfterContent.tsx"
     REMOVE_REACT "$Components_Server_Files_Edit_BeforeEdit" "Server/Files/Edit/BeforeEdit.tsx"
     REMOVE_REACT "$Components_Server_Files_Edit_AfterEdit" "Server/Files/Edit/AfterEdit.tsx"
-
     REMOVE_REACT "$Components_Server_Databases_BeforeContent" "Server/Databases/BeforeContent.tsx"
     REMOVE_REACT "$Components_Server_Databases_AfterContent" "Server/Databases/AfterContent.tsx"
-
     REMOVE_REACT "$Components_Server_Schedules_List_BeforeContent" "Server/Schedules/List/BeforeContent.tsx"
     REMOVE_REACT "$Components_Server_Schedules_List_AfterContent" "Server/Schedules/List/AfterContent.tsx"
     REMOVE_REACT "$Components_Server_Schedules_Edit_BeforeEdit" "Server/Schedules/Edit/BeforeEdit.tsx"
     REMOVE_REACT "$Components_Server_Schedules_Edit_AfterEdit" "Server/Schedules/Edit/AfterEdit.tsx"
-
     REMOVE_REACT "$Components_Server_Users_BeforeContent" "Server/Users/BeforeContent.tsx"
     REMOVE_REACT "$Components_Server_Users_AfterContent" "Server/Users/AfterContent.tsx"
-
     REMOVE_REACT "$Components_Server_Backups_BeforeContent" "Server/Backups/BeforeContent.tsx"
     REMOVE_REACT "$Components_Server_Backups_DropdownItems" "Server/Backups/DropdownItems.tsx"
     REMOVE_REACT "$Components_Server_Backups_AfterContent" "Server/Backups/AfterContent.tsx"
-
     REMOVE_REACT "$Components_Server_Network_BeforeContent" "Server/Network/BeforeContent.tsx"
     REMOVE_REACT "$Components_Server_Network_AfterContent" "Server/Network/AfterContent.tsx"
-
     REMOVE_REACT "$Components_Server_Startup_BeforeContent" "Server/Startup/BeforeContent.tsx"
     REMOVE_REACT "$Components_Server_Startup_AfterContent" "Server/Startup/AfterContent.tsx"
-
     REMOVE_REACT "$Components_Server_Settings_BeforeContent" "Server/Settings/BeforeContent.tsx"
     REMOVE_REACT "$Components_Server_Settings_AfterContent" "Server/Settings/AfterContent.tsx"
 
     # account
     REMOVE_REACT "$Components_Account_Overview_BeforeContent" "Account/Overview/BeforeContent.tsx"
     REMOVE_REACT "$Components_Account_Overview_AfterContent" "Account/Overview/AfterContent.tsx"
-
     REMOVE_REACT "$Components_Account_API_BeforeContent" "Account/API/BeforeContent.tsx"
     REMOVE_REACT "$Components_Account_API_AfterContent" "Account/API/AfterContent.tsx"
-
     REMOVE_REACT "$Components_Account_SSH_BeforeContent" "Account/SSH/BeforeContent.tsx"
     REMOVE_REACT "$Components_Account_SSH_AfterContent" "Account/SSH/AfterContent.tsx"
 
@@ -357,7 +347,7 @@ RemoveExtension() {
   rm -R \
     ".blueprint/extensions/$identifier/assets" \
     "public/assets/extensions/$identifier"
-  
+
   ((PROGRESS_NOW++))
 
   # Remove extension filesystem (ExtensionFS)
@@ -387,7 +377,7 @@ RemoveExtension() {
   sed -i "s~$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
 
   if [[ $RemovedExtensions == "" ]]; then RemovedExtensions="$identifier"; else RemovedExtensions+=", $identifier"; fi
-  
+
   ((PROGRESS_NOW++))
 
   # Unset variables
@@ -404,8 +394,8 @@ Command() {
   total=$(echo "$extensions" | wc -w)
 
   local EXTENSIONS_STEPS=22 #Total amount of steps per extension
-  local FINISH_STEPS=5 #Total amount of finalization 
-  
+  local FINISH_STEPS=5 #Total amount of finalization
+
   export PROGRESS_TOTAL="$(("$FINISH_STEPS" + "$EXTENSIONS_STEPS" * "$total"))"
   export PROGRESS_NOW=0
 
@@ -464,7 +454,7 @@ Command() {
 
     exit 0
   fi
-  
+
   hide_progress
   exit 1
 }

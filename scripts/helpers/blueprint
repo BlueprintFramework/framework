@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Blueprint command shortcut
+# Learn more @ blueprint.zip
+
+# Only runs when sourced
+if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
+    export BLUEPRINT__FOLDER="BLUEPRINT_FOLDER_HERE"
+    source "$BLUEPRINT__FOLDER/blueprint.sh"
+    return 0
+fi
+
+# Runs the Blueprint script
+if [[ $USER != "root" ]];
+    sudo -v
+    if [[ $SUDO_USER == "" ]]; then
+        exit 2
+    fi
+    sudo bash $BLUEPRINT__FOLDER/blueprint.sh -bash $@
+fi
+bash $BLUEPRINT__FOLDER/blueprint.sh -bash $@

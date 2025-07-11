@@ -322,18 +322,18 @@ InstallExtension() {
             # Step 4: Apply conditional placeholders.
             # Step 5: Switch escaped placeholders back to their original form, without the backslash.
             sed -i \
-              -e "s~!{identifier~{!!!!identifier~g" \
-              -e "s~!{name~{!!!!name~g" \
-              -e "s~!{author~{!!!!author~g" \
-              -e "s~!{version~{!!!!version~g" \
-              -e "s~!{random~{!!!!random~g" \
-              -e "s~!{timestamp~{!!!!timestamp~g" \
-              -e "s~!{mode~{!!!!mode~g" \
-              -e "s~!{target~{!!!!target~g" \
-              -e "s~!{root~{!!!!root~g" \
-              -e "s~!{webroot~{!!!!webroot~g" \
-              -e "s~!{engine_~{!!!!engine_~g" \
-              -e "s~!{is_~{!!!!is_~g" \
+              -e "s~!{identifier~{__BP_ESCAPED__identifier~g" \
+              -e "s~!{name~{__BP_ESCAPED__name~g" \
+              -e "s~!{author~{__BP_ESCAPED__author~g" \
+              -e "s~!{version~{__BP_ESCAPED__version~g" \
+              -e "s~!{random~{__BP_ESCAPED__random~g" \
+              -e "s~!{timestamp~{__BP_ESCAPED__timestamp~g" \
+              -e "s~!{mode~{__BP_ESCAPED__mode~g" \
+              -e "s~!{target~{__BP_ESCAPED__target~g" \
+              -e "s~!{root~{__BP_ESCAPED__root~g" \
+              -e "s~!{webroot~{__BP_ESCAPED__webroot~g" \
+              -e "s~!{engine_~{__BP_ESCAPED__engine_~g" \
+              -e "s~!{is_~{__BP_ESCAPED__is_~g" \
               \
               -e "s~{identifier}~$identifier~g" \
               -e "s~{name}~$name~g" \
@@ -358,18 +358,18 @@ InstallExtension() {
               \
               -e "s~{is_target}~$IS_TARGET~g" \
               \
-              -e "s~{!!!!identifier~{identifier~g" \
-              -e "s~{!!!!name~{name~g" \
-              -e "s~{!!!!author~{author~g" \
-              -e "s~{!!!!version~{version~g" \
-              -e "s~{!!!!random~{random~g" \
-              -e "s~{!!!!timestamp~{timestamp~g" \
-              -e "s~{!!!!mode~{mode~g" \
-              -e "s~{!!!!target~{target~g" \
-              -e "s~{!!!!root~{root~g" \
-              -e "s~{!!!!webroot~{webroot~g" \
-              -e "s~{!!!!engine_~{engine~g" \
-              -e "s~{!!!!is_~{is~g" \
+              -e "s~{__BP_ESCAPED__identifier~{identifier~g" \
+              -e "s~{__BP_ESCAPED__name~{name~g" \
+              -e "s~{__BP_ESCAPED__author~{author~g" \
+              -e "s~{__BP_ESCAPED__version~{version~g" \
+              -e "s~{__BP_ESCAPED__random~{random~g" \
+              -e "s~{__BP_ESCAPED__timestamp~{timestamp~g" \
+              -e "s~{__BP_ESCAPED__mode~{mode~g" \
+              -e "s~{__BP_ESCAPED__target~{target~g" \
+              -e "s~{__BP_ESCAPED__root~{root~g" \
+              -e "s~{__BP_ESCAPED__webroot~{webroot~g" \
+              -e "s~{__BP_ESCAPED__engine_~{engine~g" \
+              -e "s~{__BP_ESCAPED__is_~{is~g" \
               "$file"
 
 
@@ -845,45 +845,35 @@ InstallExtension() {
       PLACE_REACT "$Components_Server_Terminal_AfterInformation" "Server/Terminal/AfterInformation.tsx" "$OldComponents_Server_Terminal_AfterInformation"
       PLACE_REACT "$Components_Server_Terminal_CommandRow" "Server/Terminal/CommandRow.tsx" "$OldComponents_Server_Terminal_CommandRow"
       PLACE_REACT "$Components_Server_Terminal_AfterContent" "Server/Terminal/AfterContent.tsx" "$OldComponents_Server_Terminal_AfterContent"
-
       PLACE_REACT "$Components_Server_Files_Browse_BeforeContent" "Server/Files/Browse/BeforeContent.tsx" "$OldComponents_Server_Files_Browse_BeforeContent"
       PLACE_REACT "$Components_Server_Files_Browse_FileButtons" "Server/Files/Browse/FileButtons.tsx" "$OldComponents_Server_Files_Browse_FileButtons"
       PLACE_REACT "$Components_Server_Files_Browse_DropdownItems" "Server/Files/Browse/DropdownItems.tsx" "$OldComponents_Server_Files_Browse_DropdownItems"
       PLACE_REACT "$Components_Server_Files_Browse_AfterContent" "Server/Files/Browse/AfterContent.tsx" "$OldComponents_Server_Files_Browse_AfterContent"
       PLACE_REACT "$Components_Server_Files_Edit_BeforeEdit" "Server/Files/Edit/BeforeEdit.tsx" "$OldComponents_Server_Files_Edit_BeforeEdit"
       PLACE_REACT "$Components_Server_Files_Edit_AfterEdit" "Server/Files/Edit/AfterEdit.tsx" "$OldComponents_Server_Files_Edit_AfterEdit"
-
       PLACE_REACT "$Components_Server_Databases_BeforeContent" "Server/Databases/BeforeContent.tsx" "$OldComponents_Server_Databases_BeforeContent"
       PLACE_REACT "$Components_Server_Databases_AfterContent" "Server/Databases/AfterContent.tsx" "$OldComponents_Server_Databases_AfterContent"
-
       PLACE_REACT "$Components_Server_Schedules_List_BeforeContent" "Server/Schedules/List/BeforeContent.tsx" "$OldComponents_Server_Schedules_List_BeforeContent"
       PLACE_REACT "$Components_Server_Schedules_List_AfterContent" "Server/Schedules/List/AfterContent.tsx" "$OldComponents_Server_Schedules_List_AfterContent"
       PLACE_REACT "$Components_Server_Schedules_Edit_BeforeEdit" "Server/Schedules/Edit/BeforeEdit.tsx" "$OldComponents_Server_Schedules_Edit_BeforeEdit"
       PLACE_REACT "$Components_Server_Schedules_Edit_AfterEdit" "Server/Schedules/Edit/AfterEdit.tsx" "$OldComponents_Server_Schedules_Edit_AfterEdit"
-
       PLACE_REACT "$Components_Server_Users_BeforeContent" "Server/Users/BeforeContent.tsx" "$OldComponents_Server_Users_BeforeContent"
       PLACE_REACT "$Components_Server_Users_AfterContent" "Server/Users/AfterContent.tsx" "$OldComponents_Server_Users_AfterContent"
-
       PLACE_REACT "$Components_Server_Backups_BeforeContent" "Server/Backups/BeforeContent.tsx" "$OldComponents_Server_Backups_BeforeContent"
       PLACE_REACT "$Components_Server_Backups_DropdownItems" "Server/Backups/DropdownItems.tsx" "$OldComponents_Server_Backups_DropdownItems"
       PLACE_REACT "$Components_Server_Backups_AfterContent" "Server/Backups/AfterContent.tsx" "$OldComponents_Server_Backups_AfterContent"
-
       PLACE_REACT "$Components_Server_Network_BeforeContent" "Server/Network/BeforeContent.tsx" "$OldComponents_Server_Network_BeforeContent"
       PLACE_REACT "$Components_Server_Network_AfterContent" "Server/Network/AfterContent.tsx" "$OldComponents_Server_Network_AfterContent"
-
       PLACE_REACT "$Components_Server_Startup_BeforeContent" "Server/Startup/BeforeContent.tsx" "$OldComponents_Server_Startup_BeforeContent"
       PLACE_REACT "$Components_Server_Startup_AfterContent" "Server/Startup/AfterContent.tsx" "$OldComponents_Server_Startup_AfterContent"
-
       PLACE_REACT "$Components_Server_Settings_BeforeContent" "Server/Settings/BeforeContent.tsx" "$OldComponents_Server_Settings_BeforeContent"
       PLACE_REACT "$Components_Server_Settings_AfterContent" "Server/Settings/AfterContent.tsx" "$OldComponents_Server_Settings_AfterContent"
 
       # account
       PLACE_REACT "$Components_Account_Overview_BeforeContent" "Account/Overview/BeforeContent.tsx" "$OldComponents_Account_Overview_BeforeContent"
       PLACE_REACT "$Components_Account_Overview_AfterContent" "Account/Overview/AfterContent.tsx" "$OldComponents_Account_Overview_AfterContent"
-
       PLACE_REACT "$Components_Account_API_BeforeContent" "Account/API/BeforeContent.tsx" "$OldComponents_Account_API_BeforeContent"
       PLACE_REACT "$Components_Account_API_AfterContent" "Account/API/AfterContent.tsx" "$OldComponents_Account_API_AfterContent"
-
       PLACE_REACT "$Components_Account_SSH_BeforeContent" "Account/SSH/BeforeContent.tsx" "$OldComponents_Account_SSH_BeforeContent"
       PLACE_REACT "$Components_Account_SSH_AfterContent" "Account/SSH/AfterContent.tsx" "$OldComponents_Account_SSH_AfterContent"
 
@@ -895,7 +885,7 @@ InstallExtension() {
 
         if [[ "$SYS_ENCODING" != "UTF-8" ]]; then
           clear_tmp
-          PRINT FATAL "System locale encoding is not UTF-8, navigation routes cannot be generated."
+          PRINT FATAL "System locale encoding is not UTF-8, navigation routes cannot be generated at this time."
           return 1
         fi
 

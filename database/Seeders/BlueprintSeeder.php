@@ -16,43 +16,41 @@ class BlueprintSeeder extends Seeder
     'internal' => [
       'seed' => [
         'default' => true,
-        'type' => 'boolean'
+        'type' => 'boolean',
       ],
       'uuid' => [
         'default' => null,
-        'type' => 'string'
+        'type' => 'string',
       ],
       'version' => [
         'latest' => [
           'default' => null,
-          'type' => 'string'
-        ]
-      ]
+          'type' => 'string',
+        ],
+      ],
     ],
     'flags' => [
       'disable_attribution' => [
         'default' => false,
-        'type' => 'boolean'
+        'type' => 'boolean',
+        'hidden' => false,
       ],
       'is_developer' => [
         'default' => false,
-        'type' => 'boolean'
+        'type' => 'boolean',
+        'hidden' => false,
       ],
       'show_in_sidebar' => [
         'default' => false,
-        'type' => 'boolean'
+        'type' => 'boolean',
+        'hidden' => false,
       ],
       'telemetry_enabled' => [
         'default' => true,
-        'type' => 'boolean'
+        'type' => 'boolean',
+        'hidden' => false,
       ],
     ],
-    'notification' => [
-      'text' => [
-        'default' => null,
-        'type' => 'string'
-      ]
-    ]
   ];
 
   public function getSchema(): array
@@ -60,18 +58,18 @@ class BlueprintSeeder extends Seeder
     return $this->schema;
   }
 
-  public function getDefaultsForFlag(string $flag): mixed 
+  public function getDefaultsForFlag(string $flag): mixed
   {
     $parts = explode(':', $flag);
     $current = $this->schema;
-    
+
     foreach ($parts as $part) {
       if (!isset($current[$part])) {
         return null;
       }
       $current = $current[$part];
     }
-    
+
     return $current['default'] ?? null;
   }
 
@@ -108,7 +106,7 @@ class BlueprintSeeder extends Seeder
   private function createRecords(): void
   {
     $records = [];
-    
+
     foreach ($this->schema as $category => $values) {
       $categoryRecords = $this->buildCategoryRecords($category, $values);
       $records = array_merge($records, $categoryRecords);
@@ -130,9 +128,9 @@ class BlueprintSeeder extends Seeder
     // First, get all existing records
     $existingPaths = $this->getAllSchemaPaths();
     $existingRecords = $this->blueprint->dbGetMany('blueprint', $existingPaths);
-    
+
     $recordsToUpdate = [];
-    
+
     foreach ($this->schema as $category => $values) {
       $categoryRecords = $this->buildUpdateRecords($category, $values, $existingRecords);
       $recordsToUpdate = array_merge($recordsToUpdate, $categoryRecords);
@@ -170,8 +168,12 @@ class BlueprintSeeder extends Seeder
   /**
    * Build update records array for a category recursively.
    */
-  private function buildUpdateRecords(string $category, array $values, array $existingRecords, string $prefix = ''): array
-  {
+  private function buildUpdateRecords(
+    string $category,
+    array $values,
+    array $existingRecords,
+    string $prefix = ''
+  ): array {
     $records = [];
 
     foreach ($values as $key => $config) {
@@ -197,7 +199,7 @@ class BlueprintSeeder extends Seeder
   private function getAllSchemaPaths(): array
   {
     $paths = [];
-    
+
     foreach ($this->schema as $category => $values) {
       $paths = array_merge($paths, $this->extractPaths($category, $values));
     }
