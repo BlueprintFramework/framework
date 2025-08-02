@@ -89,8 +89,30 @@ RemoveExtension() {
 
   ((PROGRESS_NOW++))
 
-  if [[ -f ".blueprint/extensions/$identifier/private/remove.sh" ]]; then
-    PRINT WARNING "Extension uses a custom removal script, proceed with caution."
+  if [[ $2 == "-script" && -f ".blueprint/extensions/$identifier/private/autonomous_remove.sh" ]]; then
+    PRINT WARNING "Extension has a custom removal script, proceed with caution."
+    hide_progress
+    chmod +x ".blueprint/extensions/$identifier/private/autonomous_remove.sh"
+
+    # Run script while also parsing some useful variables for the uninstall script to use.
+    su "$WEBUSER" -s "$USERSHELL" -c "
+        cd \"$FOLDER\";
+        ENGINE=\"$BLUEPRINT_ENGINE\"         \
+        EXTENSION_IDENTIFIER=\"$identifier\" \
+        EXTENSION_TARGET=\"$target\"         \
+        EXTENSION_VERSION=\"$version\"       \
+        PTERODACTYL_DIRECTORY=\"$FOLDER\"    \
+        BLUEPRINT_VERSION=\"$VERSION\"       \
+        bash .blueprint/extensions/$identifier/private/autonomous_remove.sh
+      "
+
+    echo -e "\e[0m\x1b[0m\033[0m"
+  elif [[ -f ".blueprint/extensions/$identifier/private/remove.sh" ]]; then
+    if [[ $2 == "-script" ]]; then
+      PRINT WARNING "No autonomous removal script found, but extension has a custom removal script. Falling back to basic uninstall."
+    else
+      PRINT WARNING "Extension has a custom removal script, proceed with caution."
+    fi
     hide_progress
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
 
