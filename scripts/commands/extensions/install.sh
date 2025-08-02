@@ -73,6 +73,15 @@ InstallExtension() {
   local author="${conf_info_author//&/\\&}" #(optional)
   local icon="${conf_info_icon//&/\\&}" #(optional)
   local website="${conf_info_website//&/\\&}"; #(optional)
+  local canRunAutonomous="${conf_info_canRunAutonomous//&/\\&}" #(optional, default: true)
+  if [[ -z "$canRunAutonomous" ]]; then canRunAutonomous="true"; fi
+
+  if [[ $script == true && $canRunAutonomous == false ]]; then
+    # just in case the dev has a script that REQUIRES human input.
+    PRINT WARNING "Extension has a custom install script, but autonomous installation is disabled. Cannot continue with installation. Please install via CLI."
+    hide_progress
+    return 1
+  fi
 
   local admin_view="$conf_admin_view"
   local admin_controller="$conf_admin_controller"; #(optional)
