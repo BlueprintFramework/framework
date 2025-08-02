@@ -35,20 +35,6 @@
   @endif
 @endsection
 
-@section("blueprint.notifications")
-  <?php
-    $notification = $blueprint->dbGet("blueprint", "notification:text");
-    if($notification != null) {
-      echo "<div class=\"notification\">
-      <p>".$notification."</p>
-      </div>
-      ";
-
-      $blueprint->dbSet("blueprint", "notification:text", "");
-    }
-  ?>
-@endsection
-
 @section("blueprint.wrappers")
   @foreach (File::allFiles($PlaceholderService->folder().'/resources/views/blueprint/admin/wrappers') as $partial)
     @if ($partial->getExtension() == 'php')

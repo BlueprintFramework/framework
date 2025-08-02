@@ -10,20 +10,12 @@
 
 BLUEPRINT_ENGINE="solstice"
 REPOSITORY="BlueprintFramework/framework"
-VERSION="beta-2025-04"
+VERSION="beta-2025-08"
 
-FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__SOURCEFOLDER"
+FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__FOLDER"
 OWNERSHIP="www-data:www-data" #;
 WEBUSER="www-data" #;
 USERSHELL="/bin/bash" #;
-
-
-# Set environment variables.
-export BLUEPRINT__FOLDER=$FOLDER
-export BLUEPRINT__VERSION=$VERSION
-export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
-export NODE_OPTIONS=--openssl-legacy-provider
-
 
 # Check if the script is being sourced - and if so - load bash autocompletion.
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
@@ -36,18 +28,18 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
     case "${cmd}" in
       -install|-add|-i|-query|-q)
         opts="$(
-          find "$BLUEPRINT__SOURCEFOLDER"/*.blueprint 2> /dev/null |
-          sed -e "s|^$BLUEPRINT__SOURCEFOLDER/||g" -e "s|.blueprint$||g"
+          find "$BLUEPRINT__FOLDER"/*.blueprint 2> /dev/null |
+          sed -e "s|^$BLUEPRINT__FOLDER/||g" -e "s|.blueprint$||g"
         )"
       ;;
       -remove|-r)
         opts="$(
-          sed "s|,| |g" "$BLUEPRINT__SOURCEFOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions"
+          sed "s|,| |g" "$BLUEPRINT__FOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions"
         )"
       ;;
       -export) opts="expose" ;;
       -upgrade) opts="remote" ;;
-      
+
       *) opts="-install -add -remove -query -init -build -export -wipe -version -help -info -debug -upgrade -rerun-install" ;;
     esac
 
@@ -60,6 +52,12 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
   complete -F _blueprint_completions blueprint
   return 0
 fi
+
+# Set Blueprint environment variables.
+export BLUEPRINT__FOLDER=$FOLDER
+export BLUEPRINT__VERSION=$VERSION
+export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
+export NODE_OPTIONS="--openssl-legacy-provider"
 
 # Defaults
 D_OWNERSHIP="www-data:www-data"
@@ -130,34 +128,34 @@ depend() {
 
   # Exit when missing dependencies.
   if [[ $DEPEND_MISSING == true ]]; then
-    PRINT FATAL "Some framework dependencies are not installed or detected."
+    PRINT FATAL "Some framework dependencies couldn't be found or have issues. This is usually NOT a bug, do not report it as such."
 
     if [[ $nodeMajor -lt 17 ]]; then
-      PRINT FATAL "Required dependency \"node\" is using an unsupported version."
+      PRINT FATAL "Unsupported dependency \"node\" <17.x. (Requires >17.x)"
     fi
 
-    if ! [ -x "$(command -v unzip)"                        ]; then PRINT FATAL "Required dependency \"unzip\" is not installed or detected.";   fi
-    if ! [ -x "$(command -v node)"                         ]; then PRINT FATAL "Required dependency \"node\" is not installed or detected.";    fi
-    if ! [ -x "$(command -v yarn)"                         ]; then PRINT FATAL "Required dependency \"yarn\" is not installed or detected.";    fi
-    if ! [ -x "$(command -v zip)"                          ]; then PRINT FATAL "Required dependency \"zip\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v curl)"                         ]; then PRINT FATAL "Required dependency \"curl\" is not installed or detected.";    fi
-    if ! [ -x "$(command -v php)"                          ]; then PRINT FATAL "Required dependency \"php\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v git)"                          ]; then PRINT FATAL "Required dependency \"git\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v grep)"                         ]; then PRINT FATAL "Required dependency \"grep\" is not installed or detected.";    fi
-    if ! [ -x "$(command -v sed)"                          ]; then PRINT FATAL "Required dependency \"sed\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v awk)"                          ]; then PRINT FATAL "Required dependency \"awk\" is not installed or detected.";     fi
-    if ! [ -x "$(command -v tput)"                         ]; then PRINT FATAL "Required dependency \"tput\" is not installed or detected.";    fi
-    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)" ]; then PRINT FATAL "Required dependency \"webpack\" is not installed or detected."; fi
-    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"   ]; then PRINT FATAL "Required dependency \"react\" is not installed or detected.";   fi
+    if ! [ -x "$(command -v unzip)"                        ]; then PRINT FATAL "Missing dependency \"unzip\".";   fi
+    if ! [ -x "$(command -v node)"                         ]; then PRINT FATAL "Missing dependency \"node\".";    fi
+    if ! [ -x "$(command -v yarn)"                         ]; then PRINT FATAL "Missing dependency \"yarn\".";    fi
+    if ! [ -x "$(command -v zip)"                          ]; then PRINT FATAL "Missing dependency \"zip\".";     fi
+    if ! [ -x "$(command -v curl)"                         ]; then PRINT FATAL "Missing dependency \"curl\".";    fi
+    if ! [ -x "$(command -v php)"                          ]; then PRINT FATAL "Missing dependency \"php\".";     fi
+    if ! [ -x "$(command -v git)"                          ]; then PRINT FATAL "Missing dependency \"git\".";     fi
+    if ! [ -x "$(command -v grep)"                         ]; then PRINT FATAL "Missing dependency \"grep\".";    fi
+    if ! [ -x "$(command -v sed)"                          ]; then PRINT FATAL "Missing dependency \"sed\".";     fi
+    if ! [ -x "$(command -v awk)"                          ]; then PRINT FATAL "Missing dependency \"awk\".";     fi
+    if ! [ -x "$(command -v tput)"                         ]; then PRINT FATAL "Missing dependency \"tput\".";    fi
+    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)" ]; then PRINT FATAL "Missing dependency \"webpack\"."; fi
+    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"   ]; then PRINT FATAL "Missing dependency \"react\".";   fi
 
     if ! [ -x "$(command -v inotifywait)" ] && [[ "$DeveloperWatch" == true ]]; then
       PRINT FATAL "Developer dependency \"inotify-tools\" is not installed or detected."
     fi
 
-    if [[ $missinglibs == *"[parse_yaml]"*    ]]; then PRINT FATAL "Required internal dependency \"internal:parse_yaml\" is not installed or detected."; fi
-    if [[ $missinglibs == *"[grabEnv]"*       ]]; then PRINT FATAL "Required internal dependency \"internal:grabEnv\" is not installed or detected.";    fi
-    if [[ $missinglibs == *"[logFormat]"*     ]]; then PRINT FATAL "Required internal dependency \"internal:logFormat\" is not installed or detected.";  fi
-    if [[ $missinglibs == *"[misc]"*          ]]; then PRINT FATAL "Required internal dependency \"internal:misc\" is not installed or detected.";       fi
+    if [[ $missinglibs == *"[parse_yaml]"*    ]]; then PRINT FATAL "Missing internal dependency \"internal:parse_yaml\"."; fi
+    if [[ $missinglibs == *"[grabEnv]"*       ]]; then PRINT FATAL "Missing internal dependency \"internal:grabEnv\".";    fi
+    if [[ $missinglibs == *"[logFormat]"*     ]]; then PRINT FATAL "Missing internal dependency \"internal:logFormat\".";  fi
+    if [[ $missinglibs == *"[misc]"*          ]]; then PRINT FATAL "Missing internal dependency \"internal:misc\".";       fi
 
     exit 1
   fi
@@ -182,7 +180,7 @@ assignflags() {
 
 
   warn_deprecated_flag() { PRINT WARNING "Extension flag '$1' is deprecated."; }
-  
+
   F_hasInstallScript=false
   if [[ ( $flags == *"hasInstallScript,"* ) || ( $flags == *"hasInstallScript" ) ]]; then
     warn_deprecated_flag "hasInstallScript"
@@ -194,13 +192,13 @@ assignflags() {
     warn_deprecated_flag "hasRemovalScript"
     F_hasRemovalScript=true
   fi
-  
+
   F_hasExportScript=false
   if [[ ( $flags == *"hasExportScript,"* ) || ( $flags == *"hasExportScript" ) ]]; then
     warn_deprecated_flag "hasExportScript"
     F_hasExportScript=true
   fi
-  
+
   F_developerForceMigrate=false
   if [[ ( $flags == *"developerForceMigrate,"* ) || ( $flags == *"developerForceMigrate" ) ]]; then
     warn_deprecated_flag "developerForceMigrate"
@@ -211,17 +209,19 @@ assignflags() {
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 placeshortcut() {
   PRINT INFO "Placing Blueprint command shortcut.."
+
+  rm -f scripts/helpers/blueprint.bak
+  cp "scripts/helpers/blueprint" "scripts/helpers/blueprint.bak"
+  sed -i "s~BLUEPRINT_FOLDER_HERE~$FOLDER~g" "scripts/helpers/blueprint.bak"
+
+  rm -f /usr/local/bin/blueprint
+  mv scripts/helpers/blueprint.bak /usr/local/bin/blueprint
+
   {
-    touch /usr/local/bin/blueprint
-    chmod u+x \
+    chmod 755 \
       "$FOLDER/blueprint.sh" \
       /usr/local/bin/blueprint
   } >> "$BLUEPRINT__DEBUG"
-  echo -e \
-    "#!/bin/bash \n" \
-    "if [[ \"\${BASH_SOURCE[0]}\" != \"\${0}\" ]]; then export BLUEPRINT__SOURCEFOLDER=\"$FOLDER\"; source \"$FOLDER/blueprint.sh\"; return 0; fi; "\
-    "bash $FOLDER/blueprint.sh -bash \$@;" \
-    > /usr/local/bin/blueprint
 }
 if ! [ -x "$(command -v blueprint)" ]; then placeshortcut; fi
 
@@ -243,7 +243,7 @@ if [[ $1 != "-bash" ]]; then
         "\n$C4  ██$C1▌$C2▌$C3▌$C0   Blueprint Framework" \
         "\n$C4██  ██$C1▌$C2▌$C3▌$C0 https://blueprint.zip" \
         "\n$C4  ████$C1▌$C2▌$C3▌$C0 © 2023-2025 Emma (prpl.wtf)\n";
-      
+
       export PROGRESS_TOTAL=13
       export PROGRESS_NOW=0
     fi
@@ -271,7 +271,7 @@ if [[ $1 != "-bash" ]]; then
     fi
 
     ((PROGRESS_NOW++))
-    
+
     placeshortcut # Place Blueprint shortcut
 
     ((PROGRESS_NOW++))
@@ -340,7 +340,7 @@ if [[ $1 != "-bash" ]]; then
     find "$FOLDER/" \
       -path "$FOLDER/node_modules" -prune \
       -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
-    
+
     ((PROGRESS_NOW++))
 
     PRINT INFO "Cleaning up.."

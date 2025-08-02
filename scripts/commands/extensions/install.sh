@@ -245,7 +245,7 @@ InstallExtension() {
       *"://twitch.tv"* | *"://"*".twitch.tv"*)                 local websiteiconclass="bi bi-twitch" ;;     # Twitch
       *"://youtube.com"* | *"://"*".youtube.com"*)             local websiteiconclass="bi bi-youtube" ;;    # YouTube
       *"://ko-fi.com"* | *"://"*".ko-fi.com"*)                 local websiteiconclass="bi bi-heart-fill" ;; # Ko-fi
-      
+
       *) local websiteiconclass="bi bi-link-45deg" ;;
     esac
   fi
@@ -331,18 +331,18 @@ InstallExtension() {
             # Step 4: Apply conditional placeholders.
             # Step 5: Switch escaped placeholders back to their original form, without the backslash.
             sed -i \
-              -e "s~!{identifier~{!!!!identifier~g" \
-              -e "s~!{name~{!!!!name~g" \
-              -e "s~!{author~{!!!!author~g" \
-              -e "s~!{version~{!!!!version~g" \
-              -e "s~!{random~{!!!!random~g" \
-              -e "s~!{timestamp~{!!!!timestamp~g" \
-              -e "s~!{mode~{!!!!mode~g" \
-              -e "s~!{target~{!!!!target~g" \
-              -e "s~!{root~{!!!!root~g" \
-              -e "s~!{webroot~{!!!!webroot~g" \
-              -e "s~!{engine_~{!!!!engine_~g" \
-              -e "s~!{is_~{!!!!is_~g" \
+              -e "s~!{identifier~{__BP_ESCAPED__identifier~g" \
+              -e "s~!{name~{__BP_ESCAPED__name~g" \
+              -e "s~!{author~{__BP_ESCAPED__author~g" \
+              -e "s~!{version~{__BP_ESCAPED__version~g" \
+              -e "s~!{random~{__BP_ESCAPED__random~g" \
+              -e "s~!{timestamp~{__BP_ESCAPED__timestamp~g" \
+              -e "s~!{mode~{__BP_ESCAPED__mode~g" \
+              -e "s~!{target~{__BP_ESCAPED__target~g" \
+              -e "s~!{root~{__BP_ESCAPED__root~g" \
+              -e "s~!{webroot~{__BP_ESCAPED__webroot~g" \
+              -e "s~!{engine_~{__BP_ESCAPED__engine_~g" \
+              -e "s~!{is_~{__BP_ESCAPED__is_~g" \
               \
               -e "s~{identifier}~$identifier~g" \
               -e "s~{name}~$name~g" \
@@ -367,18 +367,18 @@ InstallExtension() {
               \
               -e "s~{is_target}~$IS_TARGET~g" \
               \
-              -e "s~{!!!!identifier~{identifier~g" \
-              -e "s~{!!!!name~{name~g" \
-              -e "s~{!!!!author~{author~g" \
-              -e "s~{!!!!version~{version~g" \
-              -e "s~{!!!!random~{random~g" \
-              -e "s~{!!!!timestamp~{timestamp~g" \
-              -e "s~{!!!!mode~{mode~g" \
-              -e "s~{!!!!target~{target~g" \
-              -e "s~{!!!!root~{root~g" \
-              -e "s~{!!!!webroot~{webroot~g" \
-              -e "s~{!!!!engine_~{engine~g" \
-              -e "s~{!!!!is_~{is~g" \
+              -e "s~{__BP_ESCAPED__identifier~{identifier~g" \
+              -e "s~{__BP_ESCAPED__name~{name~g" \
+              -e "s~{__BP_ESCAPED__author~{author~g" \
+              -e "s~{__BP_ESCAPED__version~{version~g" \
+              -e "s~{__BP_ESCAPED__random~{random~g" \
+              -e "s~{__BP_ESCAPED__timestamp~{timestamp~g" \
+              -e "s~{__BP_ESCAPED__mode~{mode~g" \
+              -e "s~{__BP_ESCAPED__target~{target~g" \
+              -e "s~{__BP_ESCAPED__root~{root~g" \
+              -e "s~{__BP_ESCAPED__webroot~{webroot~g" \
+              -e "s~{__BP_ESCAPED__engine_~{engine~g" \
+              -e "s~{__BP_ESCAPED__is_~{is~g" \
               "$file"
 
 
@@ -403,17 +403,25 @@ InstallExtension() {
 
   if [[ $icon == "" ]]; then                           PRINT WARNING "${identifier^} does not come with an icon, consider adding one.";fi
   if [[ $target != "$VERSION" ]]; then                 PRINT WARNING "${identifier^} is built for version $target, but your version is $VERSION.";fi
-  if [[ $identifier != "$n" ]]; then clear_tmp;        PRINT FATAL "Extension file name must be the same as your identifier. (example: identifier.blueprint)";return 1;fi
-  if ! [[ $identifier =~ [a-z] ]]; then clear_tmp;     PRINT FATAL "Extension identifier should be lowercase and only contain characters a-z.";return 1;fi
-  if [[ $identifier == "blueprint" ]]; then clear_tmp; PRINT FATAL "Extensions can not have the identifier 'blueprint'.";return 1;fi
 
-  if [[ $identifier == *" "* ]] \
-  || [[ $identifier == *"-"* ]] \
-  || [[ $identifier == *"."* ]]; then
+  ((PROGRESS_NOW++))
+
+  # Test identifier
+  export VALIDATE_IDENTIFIER_INPUT="$identifier"
+  local TEST_IDENTIFIER="$(node scripts/helpers/validate-identifier.js)"
+  local TEST_IDENTIFIER_MATCHES="false"
+  unset VALIDATE_IDENTIFIER_INPUT
+
+  if [[ $TEST_IDENTIFIER == *"[potential-crashout]"* ]]; then TEST_IDENTIFIER_MATCHES="true"; PRINT FATAL "Extension identifiers cannot be 'blueprint'."; fi
+  if [[ $TEST_IDENTIFIER == *"[length]"* ]]; then TEST_IDENTIFIER_MATCHES="true"; PRINT FATAL "Extension identifiers cannot be over 48 characters in length."; fi
+  if [[ $TEST_IDENTIFIER == *"[chars]"* ]]; then TEST_IDENTIFIER_MATCHES="true"; PRINT FATAL "Extension identifiers should be lowercase and only contain characters a-z."; fi
+
+  if [[ $TEST_IDENTIFIER_MATCHES == "true" ]]; then
     clear_tmp
-    PRINT FATAL "Extension identifier may not contain spaces, hyphens or periods."
     return 1
   fi
+  unset TEST_IDENTIFIER
+  unset TEST_IDENTIFIER_MATCHES
 
   ((PROGRESS_NOW++))
 
@@ -524,7 +532,7 @@ InstallExtension() {
       # Read the Console.yml file with the "parse_yaml" library.
       eval "$(parse_yaml .blueprint/tmp/"$n"/"$data_console"/Console.yml Console_)"
       if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Console.yml OldConsole_)"; fi
-    
+
       # Print warning if console configuration is empty - otherwise go through all options.
       if [[ $Console__ == "" ]]; then
         PRINT WARNING "Console configuration (Console.yml) is empty!"
@@ -635,12 +643,12 @@ InstallExtension() {
             -e "s~\[IDENTIFIER\]~$identifier~g" \
             -e "s~\[SIGNATURE\]~$CONSOLE_ENTRY_SIGN~g" \
             "$ScheduleConstructor"
-          
+
           cp "$ArtisanCommandConstructor" "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}/${CONSOLE_ENTRY_IDEN}Command.php"
 
           # Detect schedule definition and apply it
           SCHEDULE_SET=false
-          if [[ 
+          if [[
             ( $CONSOLE_ENTRY_INTE != "" ) &&
             ( $CONSOLE_ENTRY_INTE != "false" )
           ]]; then
@@ -673,10 +681,10 @@ InstallExtension() {
               monthly)             ApplyConsoleInterval "monthly" ;;
               quarterly)           ApplyConsoleInterval "quarterly" ;;
               yearly)              ApplyConsoleInterval "yearly" ;;
-            
+
               *)                   sed -i "s~\[SCHEDULE\]~cron('$CONSOLE_ENTRY_INTE')~g" "$ScheduleConstructor" ;;
             esac
-            
+
             cat "$ScheduleConstructor" >> "app/BlueprintFramework/Schedules/${identifier^}Schedules.php"
           fi
 
@@ -791,7 +799,7 @@ InstallExtension() {
       # Backwards compatibility
       if [ -n "$Components_Dashboard_BeforeContent" ]; then Components_Dashboard_Serverlist_BeforeContent="$Components_Dashboard_BeforeContent"; fi
       if [ -n "$Components_Dashboard_AfterContent" ]; then Components_Dashboard_Serverlist_AfterContent="$Components_Dashboard_AfterContent"; fi
-      if [ -n "$Components_Dashboard_ServerRow_" ]; then 
+      if [ -n "$Components_Dashboard_ServerRow_" ]; then
         Components_Dashboard_Serverlist_ServerRow_BeforeEntryName="$Components_Dashboard_ServerRow_BeforeEntryName"
         Components_Dashboard_Serverlist_ServerRow_AfterEntryName="$Components_Dashboard_ServerRow_AfterEntryName"
         Components_Dashboard_Serverlist_ServerRow_BeforeEntryDescription="$Components_Dashboard_ServerRow_BeforeEntryDescription"
@@ -802,7 +810,7 @@ InstallExtension() {
       if [[ $DUPLICATE == "y" ]]; then
         if [ -n "$OldComponents_Dashboard_BeforeContent" ]; then OldComponents_Dashboard_Serverlist_BeforeContent="$OldComponents_Dashboard_BeforeContent"; fi
         if [ -n "$OldComponents_Dashboard_AfterContent" ]; then OldComponents_Dashboard_Serverlist_AfterContent="$OldComponents_Dashboard_AfterContent"; fi
-        if [ -n "$OldComponents_Dashboard_ServerRow_" ]; then 
+        if [ -n "$OldComponents_Dashboard_ServerRow_" ]; then
           OldComponents_Dashboard_Serverlist_ServerRow_BeforeEntryName="$OldComponents_Dashboard_ServerRow_BeforeEntryName"
           OldComponents_Dashboard_Serverlist_ServerRow_AfterEntryName="$OldComponents_Dashboard_ServerRow_AfterEntryName"
           OldComponents_Dashboard_Serverlist_ServerRow_BeforeEntryDescription="$OldComponents_Dashboard_ServerRow_BeforeEntryDescription"
@@ -813,7 +821,7 @@ InstallExtension() {
 
       # place component items
       # -> PLACE_REACT "$Components_" "path/.tsx" "$OldComponents_"
-  
+
 
       # navigation
       PLACE_REACT "$Components_Navigation_NavigationBar_BeforeNavigation" "Navigation/NavigationBar/BeforeNavigation.tsx" "$OldComponents_Navigation_NavigationBar_BeforeNavigation"
@@ -846,45 +854,35 @@ InstallExtension() {
       PLACE_REACT "$Components_Server_Terminal_AfterInformation" "Server/Terminal/AfterInformation.tsx" "$OldComponents_Server_Terminal_AfterInformation"
       PLACE_REACT "$Components_Server_Terminal_CommandRow" "Server/Terminal/CommandRow.tsx" "$OldComponents_Server_Terminal_CommandRow"
       PLACE_REACT "$Components_Server_Terminal_AfterContent" "Server/Terminal/AfterContent.tsx" "$OldComponents_Server_Terminal_AfterContent"
-
       PLACE_REACT "$Components_Server_Files_Browse_BeforeContent" "Server/Files/Browse/BeforeContent.tsx" "$OldComponents_Server_Files_Browse_BeforeContent"
       PLACE_REACT "$Components_Server_Files_Browse_FileButtons" "Server/Files/Browse/FileButtons.tsx" "$OldComponents_Server_Files_Browse_FileButtons"
       PLACE_REACT "$Components_Server_Files_Browse_DropdownItems" "Server/Files/Browse/DropdownItems.tsx" "$OldComponents_Server_Files_Browse_DropdownItems"
       PLACE_REACT "$Components_Server_Files_Browse_AfterContent" "Server/Files/Browse/AfterContent.tsx" "$OldComponents_Server_Files_Browse_AfterContent"
       PLACE_REACT "$Components_Server_Files_Edit_BeforeEdit" "Server/Files/Edit/BeforeEdit.tsx" "$OldComponents_Server_Files_Edit_BeforeEdit"
       PLACE_REACT "$Components_Server_Files_Edit_AfterEdit" "Server/Files/Edit/AfterEdit.tsx" "$OldComponents_Server_Files_Edit_AfterEdit"
-
       PLACE_REACT "$Components_Server_Databases_BeforeContent" "Server/Databases/BeforeContent.tsx" "$OldComponents_Server_Databases_BeforeContent"
       PLACE_REACT "$Components_Server_Databases_AfterContent" "Server/Databases/AfterContent.tsx" "$OldComponents_Server_Databases_AfterContent"
-
       PLACE_REACT "$Components_Server_Schedules_List_BeforeContent" "Server/Schedules/List/BeforeContent.tsx" "$OldComponents_Server_Schedules_List_BeforeContent"
       PLACE_REACT "$Components_Server_Schedules_List_AfterContent" "Server/Schedules/List/AfterContent.tsx" "$OldComponents_Server_Schedules_List_AfterContent"
       PLACE_REACT "$Components_Server_Schedules_Edit_BeforeEdit" "Server/Schedules/Edit/BeforeEdit.tsx" "$OldComponents_Server_Schedules_Edit_BeforeEdit"
       PLACE_REACT "$Components_Server_Schedules_Edit_AfterEdit" "Server/Schedules/Edit/AfterEdit.tsx" "$OldComponents_Server_Schedules_Edit_AfterEdit"
-
       PLACE_REACT "$Components_Server_Users_BeforeContent" "Server/Users/BeforeContent.tsx" "$OldComponents_Server_Users_BeforeContent"
       PLACE_REACT "$Components_Server_Users_AfterContent" "Server/Users/AfterContent.tsx" "$OldComponents_Server_Users_AfterContent"
-
       PLACE_REACT "$Components_Server_Backups_BeforeContent" "Server/Backups/BeforeContent.tsx" "$OldComponents_Server_Backups_BeforeContent"
       PLACE_REACT "$Components_Server_Backups_DropdownItems" "Server/Backups/DropdownItems.tsx" "$OldComponents_Server_Backups_DropdownItems"
       PLACE_REACT "$Components_Server_Backups_AfterContent" "Server/Backups/AfterContent.tsx" "$OldComponents_Server_Backups_AfterContent"
-
       PLACE_REACT "$Components_Server_Network_BeforeContent" "Server/Network/BeforeContent.tsx" "$OldComponents_Server_Network_BeforeContent"
       PLACE_REACT "$Components_Server_Network_AfterContent" "Server/Network/AfterContent.tsx" "$OldComponents_Server_Network_AfterContent"
-
       PLACE_REACT "$Components_Server_Startup_BeforeContent" "Server/Startup/BeforeContent.tsx" "$OldComponents_Server_Startup_BeforeContent"
       PLACE_REACT "$Components_Server_Startup_AfterContent" "Server/Startup/AfterContent.tsx" "$OldComponents_Server_Startup_AfterContent"
-
       PLACE_REACT "$Components_Server_Settings_BeforeContent" "Server/Settings/BeforeContent.tsx" "$OldComponents_Server_Settings_BeforeContent"
       PLACE_REACT "$Components_Server_Settings_AfterContent" "Server/Settings/AfterContent.tsx" "$OldComponents_Server_Settings_AfterContent"
 
       # account
       PLACE_REACT "$Components_Account_Overview_BeforeContent" "Account/Overview/BeforeContent.tsx" "$OldComponents_Account_Overview_BeforeContent"
       PLACE_REACT "$Components_Account_Overview_AfterContent" "Account/Overview/AfterContent.tsx" "$OldComponents_Account_Overview_AfterContent"
-
       PLACE_REACT "$Components_Account_API_BeforeContent" "Account/API/BeforeContent.tsx" "$OldComponents_Account_API_BeforeContent"
       PLACE_REACT "$Components_Account_API_AfterContent" "Account/API/AfterContent.tsx" "$OldComponents_Account_API_AfterContent"
-
       PLACE_REACT "$Components_Account_SSH_BeforeContent" "Account/SSH/BeforeContent.tsx" "$OldComponents_Account_SSH_BeforeContent"
       PLACE_REACT "$Components_Account_SSH_AfterContent" "Account/SSH/AfterContent.tsx" "$OldComponents_Account_SSH_AfterContent"
 
@@ -896,7 +894,7 @@ InstallExtension() {
 
         if [[ "$SYS_ENCODING" != "UTF-8" ]]; then
           clear_tmp
-          PRINT FATAL "System locale encoding is not UTF-8, navigation routes cannot be generated."
+          PRINT FATAL "System locale encoding is not UTF-8, navigation routes cannot be generated at this time."
           return 1
         fi
 
@@ -1284,7 +1282,7 @@ InstallExtension() {
   clear_tmp
 
   ((PROGRESS_NOW++))
-  
+
   if [[ ( $F_developerForceMigrate == true ) && ( $dev == true ) ]]; then
     DeveloperForcedMigrate="true"
   fi
@@ -1376,7 +1374,7 @@ InstallExtension() {
 
   if [[ $dev != true ]]; then
     if [[ $InstalledExtensions == "" ]]; then InstalledExtensions="$identifier"; else InstalledExtensions+=", $identifier"; fi
-    
+
     # Unset variables
     PRINT INFO "Unsetting variables.."
     unsetVariables
@@ -1393,7 +1391,7 @@ Command() {
 
 
   if [[ $DeveloperWatch == "" ]]; then
-    export DeveloperWatch=false
+    export DeveloperWatch="false"
 
     PRINT INFO "Searching and validating framework dependencies.."
     # Check if required programs and libraries are installed.
@@ -1420,10 +1418,9 @@ Command() {
     extensions="${extensions%" $last_arg"}"
   fi
 
-  local EXTENSIONS_STEPS=34 #Total amount of steps per extension
-  local FINISH_STEPS=6 #Total amount of finalization steps
+  local EXTENSIONS_STEPS=35 #Total amount of steps per extension
 
-  if [[ $DeveloperWatch == false ]]; then
+  if [[ $DeveloperWatch != "false" ]]; then
     FINISH_STEPS=5
   fi
 
@@ -1457,7 +1454,7 @@ Command() {
 
     ((PROGRESS_NOW++))
 
-    if [[ $DeveloperWatch == false ]]; then
+    if [[ $DeveloperWatch == "false" ]]; then
       # Flush cache.
       PRINT INFO "Flushing view, config and route cache.."
       {
@@ -1468,7 +1465,7 @@ Command() {
         php artisan bp:cache
         php artisan queue:restart
       } &>> "$BLUEPRINT__DEBUG"
-    
+
       ((PROGRESS_NOW++))
 
       # Make sure all files have correct permissions.
@@ -1493,12 +1490,11 @@ Command() {
       CorrectPhrasing="have"
       if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
       PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
-      hide_progress
     else
       PRINT SUCCESS "$BuiltExtensions has been built."
-      hide_progress
     fi
 
+    hide_progress
     exit 0
   fi
 

@@ -10,7 +10,7 @@ interface AlertProps {
 export default ({ type, className, children }: AlertProps) => {
     return (
         <div
-            className={classNames(
+            className={"UiAlert "+classNames(
                 'flex items-center border-l-8 text-gray-50 rounded-md shadow px-4 py-3',
                 {
                     ['border-red-500 bg-red-500/25']: type === 'danger',
