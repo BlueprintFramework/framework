@@ -1294,7 +1294,7 @@ InstallExtension() {
   ((PROGRESS_NOW++))
 
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
-    if [[ $2 == "-script" && -f ".blueprint/extensions/$identifier/private/autonomous_install.sh" ]]; then
+    if [[ $script == true && -f ".blueprint/extensions/$identifier/private/autonomous_install.sh" ]]; then
       PRINT WARNING "Extension has a autonomous installation script, proceed with caution."
       hide_progress
       chmod --silent +x ".blueprint/extensions/$identifier/private/autonomous_install.sh" 2>> "$BLUEPRINT__DEBUG"
@@ -1323,7 +1323,7 @@ InstallExtension() {
         "
       fi
     elif [[ -f ".blueprint/extensions/$identifier/private/install.sh" ]]; then
-      if [[ $2 == "-script" ]]; then
+      if [[ $script == true ]]; then
         PRINT WARNING "No autonomous installation script found, but extension has a custom installation script. Falling back to basic install."
       else
         PRINT INFO "Extension has a custom installation script, proceed with caution."
@@ -1382,6 +1382,7 @@ Command() {
   if [[ $1 == "" ]]; then PRINT FATAL "Expected at least 1 argument but got 0.";exit 2;fi
   if [[ ( $1 == "./"* ) || ( $1 == "../"* ) || ( $1 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";exit 2;fi
 
+
   if [[ $DeveloperWatch == "" ]]; then
     export DeveloperWatch=false
 
@@ -1403,6 +1404,13 @@ Command() {
   extensions="$*"
   total=$(echo "$extensions" | wc -w)
 
+  script=false
+  last_arg="${!#}"
+  if [[ "$last_arg" == "-script" ]]; then
+    script=true
+    extensions="${extensions%" $last_arg"}"
+  fi
+
   local EXTENSIONS_STEPS=34 #Total amount of steps per extension
   local FINISH_STEPS=6 #Total amount of finalization steps
 
@@ -1415,7 +1423,7 @@ Command() {
 
   for extension in $extensions; do
     (( current++ ))
-    InstallExtension "$extension" "$current" "$total"
+    InstallExtension "$extension" "$current" "$total" "$script"
     export PROGRESS_NOW="$(("$EXTENSIONS_STEPS" * "$current"))"
   done
 

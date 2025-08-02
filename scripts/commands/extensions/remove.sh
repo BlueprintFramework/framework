@@ -89,7 +89,7 @@ RemoveExtension() {
 
   ((PROGRESS_NOW++))
 
-  if [[ $2 == "-script" && -f ".blueprint/extensions/$identifier/private/autonomous_remove.sh" ]]; then
+  if [[ $script == true && -f ".blueprint/extensions/$identifier/private/autonomous_remove.sh" ]]; then
     PRINT WARNING "Extension has a custom removal script, proceed with caution."
     hide_progress
     chmod +x ".blueprint/extensions/$identifier/private/autonomous_remove.sh"
@@ -108,7 +108,7 @@ RemoveExtension() {
 
     echo -e "\e[0m\x1b[0m\033[0m"
   elif [[ -f ".blueprint/extensions/$identifier/private/remove.sh" ]]; then
-    if [[ $2 == "-script" ]]; then
+    if [[ $script == true ]]; then
       PRINT WARNING "No autonomous removal script found, but extension has a custom removal script. Falling back to basic uninstall."
     else
       PRINT WARNING "Extension has a custom removal script, proceed with caution."
@@ -424,6 +424,13 @@ Command() {
   current=0
   extensions="$*"
   total=$(echo "$extensions" | wc -w)
+
+  script=false
+  last_arg="${!#}"
+  if [[ "$last_arg" == "-script" ]]; then
+    script=true
+    extensions="${extensions%" $last_arg"}"
+  fi
 
   local EXTENSIONS_STEPS=22 #Total amount of steps per extension
   local FINISH_STEPS=5 #Total amount of finalization 
