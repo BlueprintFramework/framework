@@ -244,7 +244,7 @@ if [[ $1 != "-bash" ]]; then
         "\n$C4██  ██$C1▌$C2▌$C3▌$C0 https://blueprint.zip" \
         "\n$C4  ████$C1▌$C2▌$C3▌$C0 © 2023-2025 Emma (prpl.wtf)\n";
 
-      export PROGRESS_TOTAL=13
+      export PROGRESS_TOTAL=14
       export PROGRESS_NOW=0
     fi
 
@@ -307,6 +307,21 @@ if [[ $1 != "-bash" ]]; then
 
     ((PROGRESS_NOW++))
 
+    # Run migrations if Blueprint is not running through Docker.
+    if [[ $DOCKER != "y" ]]; then
+      PRINT INFO "Running database migrations.."
+      hide_progress
+      php artisan migrate --force
+    fi
+
+    ((PROGRESS_NOW++))
+
+    # Seed Blueprint database records
+    PRINT INFO "Seeding Blueprint database records.."
+    php artisan db:seed --class=BlueprintSeeder --force &>> "$BLUEPRINT__DEBUG"
+
+    ((PROGRESS_NOW++))
+
     # Flush cache.
     PRINT INFO "Flushing cache.."
     {
@@ -320,18 +335,9 @@ if [[ $1 != "-bash" ]]; then
 
     ((PROGRESS_NOW++))
 
-    # Run migrations if Blueprint is not running through Docker.
-    if [[ $DOCKER != "y" ]]; then
-      PRINT INFO "Running database migrations.."
-      hide_progress
-      php artisan migrate --force
-    fi
-
-    ((PROGRESS_NOW++))
-
-    # Seed Blueprint database records
-    PRINT INFO "Seeding Blueprint database records.."
-    php artisan db:seed --class=BlueprintSeeder --force &>> "$BLUEPRINT__DEBUG"
+    # Restart queue workers
+    PRINT INFO "Restarting queue workers.."
+    php artisan queue:restart &>> "$BLUEPRINT__DEBUG"
 
     ((PROGRESS_NOW++))
 
