@@ -58,7 +58,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Merge Blueprint configurations with existing configurations.
-        $this->mergeConfigFrom(base_path('config/ExtensionFS.php'), 'filesystems');
+        $this->mergeConfigFrom(base_path('/.blueprint/extensions/blueprint/private/extensionfs.php'), 'filesystems');
 
         // Load Blueprint's route service provider.
         $this->app->register(RouteServiceProvider::class);

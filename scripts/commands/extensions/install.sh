@@ -1262,9 +1262,9 @@ InstallExtension() {
       -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
       -e "s~/\* ${identifier^}Start \*/~~g" \
       -e "s~/\* ${identifier^}End \*/~~g" \
-      "config/ExtensionFS.php"
+      ".blueprint/extensions/blueprint/private/extensionfs.php"
   fi
-  sed -i "s~\/\* blueprint/disks \*\/~/* blueprint/disks */$CONFIGEXTENSIONFS_RESULT~g" config/ExtensionFS.php
+  sed -i "s~\/\* blueprint/disks \*\/~/* blueprint/disks */$CONFIGEXTENSIONFS_RESULT~g" .blueprint/extensions/blueprint/private/extensionfs.php
 
   ((PROGRESS_NOW++))
 

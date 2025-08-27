@@ -368,7 +368,7 @@ RemoveExtension() {
     -e "s/\/\* ${identifier^}Start \*\/.*\/\* ${identifier^}End \*\///" \
     -e "s~/\* ${identifier^}Start \*/~~g" \
     -e "s~/\* ${identifier^}End \*/~~g" \
-    "config/ExtensionFS.php"
+    ".blueprint/extensions/blueprint/private/extensionfs.php"
 
   ((PROGRESS_NOW++))
 
