@@ -179,33 +179,36 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
                         $schema = $seeder->getSchema();
                         $flagConfig = $schema['flags'][$flagKey] ?? null;
                         $flagType = $flagConfig['type'] ?? 'string';
+                        $flagHidden = $flagConfig['hidden'] ?? false;
                       @endphp
-                      <tr data-flag-row data-flag-name="{{ $key }}" data-flag-type="{{ $flagType }}" data-default-value="{{ $defaults[$key] }}">
-                        <td>
-                          <code>
-                            {{ $flagKey }}
-                          </code>
-                        </td>
-                        <td>
-                          @switch($flagType)
-                            @case('boolean')
-                              <select class="form-control" name="{{ $key }}" style="border-radius:6px">
-                                <option value="1" {{ $value ? 'selected' : '' }}>true</option>
-                                <option value="0" {{ !$value ? 'selected' : '' }}>false</option>
-                              </select>
-                              @break
-                            @case('number')
-                              <input type="number" class="form-control" name="{{ $key }}" value="{{ $value }}" step="any" style="border-radius:6px">
-                              @break
-                            @case('integer')
-                              <input type="number" class="form-control" name="{{ $key }}" value="{{ $value }}" step="1" style="border-radius:6px">
-                              @break
+                      @if($flagHidden != true)
+                        <tr data-flag-row data-flag-name="{{ $key }}" data-flag-type="{{ $flagType }}" data-default-value="{{ $defaults[$key] }}">
+                          <td>
+                            <code>
+                              {{ $flagKey }}
+                            </code>
+                          </td>
+                          <td>
+                            @switch($flagType)
+                              @case('boolean')
+                                <select class="form-control" name="{{ $key }}" style="border-radius:6px">
+                                  <option value="1" {{ $value ? 'selected' : '' }}>true</option>
+                                  <option value="0" {{ !$value ? 'selected' : '' }}>false</option>
+                                </select>
+                                @break
+                              @case('number')
+                                <input type="number" class="form-control" name="{{ $key }}" value="{{ $value }}" step="any" style="border-radius:6px">
+                                @break
+                              @case('integer')
+                                <input type="number" class="form-control" name="{{ $key }}" value="{{ $value }}" step="1" style="border-radius:6px">
+                                @break
                             
-                            @default
-                              <input type="text" class="form-control" name="{{ $key }}" value="{{ $value }}" style="border-radius:6px">
-                          @endswitch
-                        </td>
-                      </tr>
+                              @default
+                                <input type="text" class="form-control" name="{{ $key }}" value="{{ $value }}" style="border-radius:6px">
+                            @endswitch
+                          </td>
+                        </tr>
+                      @endif
                     @endif
                   @endforeach
                 </tbody>

@@ -12,18 +12,10 @@ BLUEPRINT_ENGINE="solstice"
 REPOSITORY="BlueprintFramework/framework"
 VERSION="beta-2025-08"
 
-FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__SOURCEFOLDER"
+FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__FOLDER"
 OWNERSHIP="www-data:www-data" #;
 WEBUSER="www-data" #;
 USERSHELL="/bin/bash" #;
-
-
-# Set environment variables.
-export BLUEPRINT__FOLDER=$FOLDER
-export BLUEPRINT__VERSION=$VERSION
-export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
-export NODE_OPTIONS=--openssl-legacy-provider
-
 
 # Check if the script is being sourced - and if so - load bash autocompletion.
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
@@ -36,13 +28,13 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
     case "${cmd}" in
       -install|-add|-i|-query|-q)
         opts="$(
-          find "$BLUEPRINT__SOURCEFOLDER"/*.blueprint 2> /dev/null |
-          sed -e "s|^$BLUEPRINT__SOURCEFOLDER/||g" -e "s|.blueprint$||g"
+          find "$BLUEPRINT__FOLDER"/*.blueprint 2> /dev/null |
+          sed -e "s|^$BLUEPRINT__FOLDER/||g" -e "s|.blueprint$||g"
         )"
       ;;
       -remove|-r)
         opts="$(
-          sed "s|,| |g" "$BLUEPRINT__SOURCEFOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions"
+          sed "s|,| |g" "$BLUEPRINT__FOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions"
         )"
       ;;
       -export) opts="expose" ;;
@@ -60,6 +52,12 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
   complete -F _blueprint_completions blueprint
   return 0
 fi
+
+# Set Blueprint environment variables.
+export BLUEPRINT__FOLDER=$FOLDER
+export BLUEPRINT__VERSION=$VERSION
+export BLUEPRINT__DEBUG="$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
+export NODE_OPTIONS="--openssl-legacy-provider"
 
 # Defaults
 D_OWNERSHIP="www-data:www-data"
@@ -211,17 +209,19 @@ assignflags() {
 # Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
 placeshortcut() {
   PRINT INFO "Placing Blueprint command shortcut.."
+
+  rm -f scripts/helpers/blueprint.bak
+  cp "scripts/helpers/blueprint" "scripts/helpers/blueprint.bak"
+  sed -i "s~BLUEPRINT_FOLDER_HERE~$FOLDER~g" "scripts/helpers/blueprint.bak"
+
+  rm -f /usr/local/bin/blueprint
+  mv scripts/helpers/blueprint.bak /usr/local/bin/blueprint
+
   {
-    touch /usr/local/bin/blueprint
-    chmod u+x \
+    chmod 755 \
       "$FOLDER/blueprint.sh" \
       /usr/local/bin/blueprint
   } >> "$BLUEPRINT__DEBUG"
-  echo -e \
-    "#!/bin/bash \n" \
-    "if [[ \"\${BASH_SOURCE[0]}\" != \"\${0}\" ]]; then export BLUEPRINT__SOURCEFOLDER=\"$FOLDER\"; source \"$FOLDER/blueprint.sh\"; return 0; fi; "\
-    "bash $FOLDER/blueprint.sh -bash \$@;" \
-    > /usr/local/bin/blueprint
 }
 if ! [ -x "$(command -v blueprint)" ]; then placeshortcut; fi
 
@@ -244,7 +244,7 @@ if [[ $1 != "-bash" ]]; then
         "\n$C4██  ██$C1▌$C2▌$C3▌$C0 https://blueprint.zip" \
         "\n$C4  ████$C1▌$C2▌$C3▌$C0 © 2023-2025 Emma (prpl.wtf)\n";
 
-      export PROGRESS_TOTAL=13
+      export PROGRESS_TOTAL=14
       export PROGRESS_NOW=0
     fi
 
@@ -307,6 +307,21 @@ if [[ $1 != "-bash" ]]; then
 
     ((PROGRESS_NOW++))
 
+    # Run migrations if Blueprint is not running through Docker.
+    if [[ $DOCKER != "y" ]]; then
+      PRINT INFO "Running database migrations.."
+      hide_progress
+      php artisan migrate --force
+    fi
+
+    ((PROGRESS_NOW++))
+
+    # Seed Blueprint database records
+    PRINT INFO "Seeding Blueprint database records.."
+    php artisan db:seed --class=BlueprintSeeder --force &>> "$BLUEPRINT__DEBUG"
+
+    ((PROGRESS_NOW++))
+
     # Flush cache.
     PRINT INFO "Flushing cache.."
     {
@@ -320,18 +335,9 @@ if [[ $1 != "-bash" ]]; then
 
     ((PROGRESS_NOW++))
 
-    # Run migrations if Blueprint is not running through Docker.
-    if [[ $DOCKER != "y" ]]; then
-      PRINT INFO "Running database migrations.."
-      hide_progress
-      php artisan migrate --force
-    fi
-
-    ((PROGRESS_NOW++))
-
-    # Seed Blueprint database records
-    PRINT INFO "Seeding Blueprint database records.."
-    php artisan db:seed --class=BlueprintSeeder --force &>> "$BLUEPRINT__DEBUG"
+    # Restart queue workers
+    PRINT INFO "Restarting queue workers.."
+    php artisan queue:restart &>> "$BLUEPRINT__DEBUG"
 
     ((PROGRESS_NOW++))
 
