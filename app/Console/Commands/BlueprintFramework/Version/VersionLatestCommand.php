@@ -11,9 +11,6 @@ class VersionLatestCommand extends Command
   protected $description = 'Returns the latest release name';
   protected $signature = 'bp:version:latest';
 
-  /**
-   * VersionLatestCommand constructor.
-   */
   public function __construct(
     private BlueprintPlaceholderService $PlaceholderService,
     private BlueprintExtensionLibrary $blueprint,
@@ -22,20 +19,17 @@ class VersionLatestCommand extends Command
   }
 
   /**
-   * Handle execution of command.
-   *
-   * @return string The latest version
+   * @return string Latest Blueprint release version
    */
   public function handle()
   {
     $latest = $this->blueprint->dbGet('blueprint', 'internal:version:latest');
-    if ($latest == "") {
+    if ($latest == '') {
       $this->call('bp:version:cache');
       $latest = $this->blueprint->dbGet('blueprint', 'internal:version:latest');
     }
 
-    echo ($latest);
+    echo $latest;
     return $latest;
   }
-
 }

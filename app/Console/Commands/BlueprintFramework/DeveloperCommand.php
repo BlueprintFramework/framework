@@ -10,24 +10,17 @@ class DeveloperCommand extends Command
   protected $description = 'Check if Blueprint developer mode is enabled';
   protected $signature = 'bp:developer';
 
-  /**
-   * DeveloperCommand constructor.
-   */
-  public function __construct(
-    private BlueprintExtensionLibrary $blueprint,
-  ) {
+  public function __construct(private BlueprintExtensionLibrary $blueprint)
+  {
     parent::__construct();
   }
 
-  /**
-   * Handle execution of command.
-   */
   public function handle()
   {
     if ($this->blueprint->dbGet('blueprint', 'flags:is_developer', 0)) {
-      echo ("true");
+      echo 'true';
       return;
     }
-    echo ("false");
+    echo 'false';
   }
 }

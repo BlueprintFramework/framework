@@ -11,9 +11,6 @@ class VersionCacheCommand extends Command
   protected $description = 'Fetches and caches the latest release name';
   protected $signature = 'bp:version:cache';
 
-  /**
-   * VersionCacheCommand constructor.
-   */
   public function __construct(
     private BlueprintPlaceholderService $PlaceholderService,
     private BlueprintExtensionLibrary $blueprint,
@@ -21,12 +18,9 @@ class VersionCacheCommand extends Command
     parent::__construct();
   }
 
-  /**
-   * Handle execution of command.
-   */
   public function handle()
   {
-    $api_url = $this->PlaceholderService->api_url() . "/api/latest";
+    $api_url = $this->PlaceholderService->api_url() . '/api/latest';
     $context = stream_context_create([
       'http' => [
         'method' => 'GET',
@@ -42,11 +36,11 @@ class VersionCacheCommand extends Command
         $this->blueprint->dbSet('blueprint', 'internal:version:latest', $latest_version);
         return true;
       } else {
-        echo "Error: Unable to fetch the latest release version.";
+        echo 'Error: Unable to fetch the latest release version.';
         return false;
       }
     } else {
-      echo "Error: Failed to make the API request.";
+      echo 'Error: Failed to make the API request.';
       return false;
     }
   }
