@@ -19,7 +19,7 @@ class StorageCommand extends Command
   {
     $this->info('This command will perform a test operation on a filesystem disk');
 
-    $disk = $this->option('disk') ?? $this->confirm('Which disk to test?');
+    $disk = $this->option('disk') ?? $this->ask('Which disk to test?');
 
     Storage::disk($disk)->put('bp_fs_test.txt', 'hi :)');
     Storage::disk($disk)->delete('bp_fs_test.txt');
