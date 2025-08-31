@@ -40,7 +40,9 @@ class BlueprintBaseLibrary
   {
     $value = DB::table('settings')->where('key', $this->getRecordName($table, $record))->first();
 
-    if (!$value) return $default;
+    if (!$value) {
+      return $default;
+    }
 
     try {
       return unserialize($value->value);
@@ -62,9 +64,13 @@ class BlueprintBaseLibrary
   public function dbGetMany(string $table, array $records = [], mixed $default = null): array
   {
     if (empty($records)) {
-      $values = DB::table('settings')->where('key', 'like', "$table::%")->get();
+      $values = DB::table('settings')
+        ->where('key', 'like', "$table::%")
+        ->get();
     } else {
-      $values = DB::table('settings')->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))->get();
+      $values = DB::table('settings')
+        ->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))
+        ->get();
     }
 
     if (empty($records)) {
@@ -103,7 +109,7 @@ class BlueprintBaseLibrary
   {
     DB::table('settings')->updateOrInsert(
       ['key' => $this->getRecordName($table, $record)],
-      ['value' => serialize($value)]
+      ['value' => serialize($value)],
     );
   }
 
@@ -153,7 +159,9 @@ class BlueprintBaseLibrary
    */
   public function dbForgetMany(string $table, array $records): bool
   {
-    return (bool) DB::table('settings')->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))->delete();
+    return (bool) DB::table('settings')
+      ->whereIn('key', array_map(fn($record) => $this->getRecordName($table, $record), $records))
+      ->delete();
   }
 
   /**
@@ -170,8 +178,9 @@ class BlueprintBaseLibrary
   }
 
   /**
-   * Read and returns the content of a given file.
+   * (Deprecated) Read and returns the content of a given file.
    *
+   * @deprecated beta-2025-08
    * @param string $path Path to file
    * @return string File contents or empty string if file does not exist or is not readable
    *
@@ -179,10 +188,12 @@ class BlueprintBaseLibrary
    */
   public function fileRead(string $path): string
   {
-    if (!file_exists($path))
+    if (!file_exists($path)) {
       return '';
-    if (!is_readable($path))
+    }
+    if (!is_readable($path)) {
       return '';
+    }
 
     return file_get_contents($path);
   }
@@ -201,8 +212,9 @@ class BlueprintBaseLibrary
   }
 
   /**
-   * Attempts to remove a file or directory.
+   * (Deprecated) Attempts to remove a file or directory.
    *
+   * @deprecated beta-2025-08
    * @param string $path Path to file/directory
    * @return bool Whether the file/directory was removed
    *
@@ -230,8 +242,9 @@ class BlueprintBaseLibrary
   }
 
   /**
-   * Check if an extension is installed based on it's identifier.
+   * (Deprecated) Check if an extension is installed based on it's identifier.
    *
+   * @deprecated beta-2025-08
    * @param string $identifier Extension identifier
    * @return bool Whether the extension is installed
    *
@@ -239,7 +252,10 @@ class BlueprintBaseLibrary
    */
   public function extension(string $identifier): bool
   {
-    return str_contains($this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')), $identifier);
+    return str_contains(
+      $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')),
+      $identifier,
+    );
   }
 
   /**
@@ -250,9 +266,12 @@ class BlueprintBaseLibrary
    *
    * @return array An array of installed extensions.
    */
-  public function extensions(): Array
+  public function extensions(): array
   {
-    $array = explode(',', $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')));
+    $array = explode(
+      ',',
+      $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')),
+    );
     return $array;
   }
 
@@ -269,11 +288,11 @@ class BlueprintBaseLibrary
    */
   public function extensionConfig(string $extension): ?array
   {
-    if(!$this->extension($extension)) {
+    if (!$this->extension($extension)) {
       return null;
     }
     $conf = Yaml::parse($this->fileRead(base_path(".blueprint/extensions/$extension/private/.store/conf.yml")));
-    $conf = array_filter($conf, fn ($k) => !!$k);
+    $conf = array_filter($conf, fn($k) => !!$k);
     return $conf;
   }
 
@@ -286,17 +305,21 @@ class BlueprintBaseLibrary
    */
   public function extensionsConfigs(): Collection
   {
-    $array = explode(',', $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')));
+    $array = explode(
+      ',',
+      $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')),
+    );
     $collection = new Collection();
 
     foreach ($array as $extension) {
-      if (!$extension)
+      if (!$extension) {
         continue;
+      }
 
       try {
         $conf = Yaml::parse($this->fileRead(base_path(".blueprint/extensions/$extension/private/.store/conf.yml")));
 
-        $collection->push(array_filter($conf, fn ($k) => !!$k));
+        $collection->push(array_filter($conf, fn($k) => !!$k));
       } catch (\Exception $e) {
       }
     }
