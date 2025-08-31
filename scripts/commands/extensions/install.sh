@@ -346,7 +346,7 @@ InstallExtension() {
               -e "s~{root}~$FOLDER~g" \
               -e "s~{webroot}~/~g" \
               -e "s~{engine}~$BLUEPRINT_ENGINE~g" \
-              -e "s~{fs}~blueprint_private:$identifier~g" \
+              -e "s~{fs}~blueprint:$identifier~g" \
               \
               -e "s~{identifier^}~${identifier^}~g" \
               -e "s~{identifier!}~${identifier^^}~g" \
@@ -356,7 +356,6 @@ InstallExtension() {
               -e "s~{root/fs}~$FOLDER/.blueprint/extensions/$identifier/fs~g" \
               -e "s~{webroot/public}~/extensions/$identifier~g" \
               -e "s~{webroot/fs}~/fs/extensions/$identifier~g" \
-              -e "s~{fs/public}~blueprint:$identifier~g" \
               -e "s~{fs/private}~blueprint_private:$identifier~g" \
               \
               -e "s~{is_target}~$IS_TARGET~g" \
