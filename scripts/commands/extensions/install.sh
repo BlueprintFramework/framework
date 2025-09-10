@@ -163,7 +163,7 @@ InstallExtension() {
   ((PROGRESS_NOW++))
 
   # Detect if extension is already installed and prepare the upgrading process.
-  if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"$identifier,"* ]]; then
+  if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"|$identifier,"* ]]; then
     PRINT INFO "Switching to update process as extension has already been installed."
 
     if [[ ! -d ".blueprint/extensions/$identifier/private/.store" ]]; then
@@ -332,7 +332,8 @@ InstallExtension() {
               -e "s~!{target~{__BP_ESCAPED__target~g" \
               -e "s~!{root~{__BP_ESCAPED__root~g" \
               -e "s~!{webroot~{__BP_ESCAPED__webroot~g" \
-              -e "s~!{engine_~{__BP_ESCAPED__engine_~g" \
+              -e "s~!{engine~{__BP_ESCAPED__engine~g" \
+              -e "s~!{fs~{__BP_ESCAPED__fs~g" \
               -e "s~!{is_~{__BP_ESCAPED__is_~g" \
               \
               -e "s~{identifier}~$identifier~g" \
@@ -346,6 +347,7 @@ InstallExtension() {
               -e "s~{root}~$FOLDER~g" \
               -e "s~{webroot}~/~g" \
               -e "s~{engine}~$BLUEPRINT_ENGINE~g" \
+              -e "s~{fs}~blueprint:$identifier~g" \
               \
               -e "s~{identifier^}~${identifier^}~g" \
               -e "s~{identifier!}~${identifier^^}~g" \
@@ -355,6 +357,7 @@ InstallExtension() {
               -e "s~{root/fs}~$FOLDER/.blueprint/extensions/$identifier/fs~g" \
               -e "s~{webroot/public}~/extensions/$identifier~g" \
               -e "s~{webroot/fs}~/fs/extensions/$identifier~g" \
+              -e "s~{fs/private}~blueprint_private:$identifier~g" \
               \
               -e "s~{is_target}~$IS_TARGET~g" \
               \
@@ -368,7 +371,8 @@ InstallExtension() {
               -e "s~{__BP_ESCAPED__target~{target~g" \
               -e "s~{__BP_ESCAPED__root~{root~g" \
               -e "s~{__BP_ESCAPED__webroot~{webroot~g" \
-              -e "s~{__BP_ESCAPED__engine_~{engine~g" \
+              -e "s~{__BP_ESCAPED__engine~{engine~g" \
+              -e "s~{__BP_ESCAPED__fs~{fs~g" \
               -e "s~{__BP_ESCAPED__is_~{is~g" \
               "$file"
 
@@ -1328,7 +1332,7 @@ InstallExtension() {
 
   if [[ $DUPLICATE != "y" ]]; then
     PRINT INFO "Adding '$identifier' to active extensions list.."
-    printf "%s," "${identifier}" >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
+    printf "|%s," "${identifier}" >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
   fi
 
   if [[ $dev != true ]]; then

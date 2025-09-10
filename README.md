@@ -37,7 +37,7 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 
 Blueprint is free and open-source software. We play a vital role in the Pterodactyl modding community and empower developers with tools to bring their ideas to life. To keep everything up and running, we rely heavily on [donations](https://hcb.hackclub.com/blueprint/donations). We're also nonprofit!
 
-[**Donate to our nonprofit organization**](https://hcb.hackclub.com/donations/start/blueprint) or [view our open financials](https://hcb.hackclub.com/blueprint).
+[**Donate to our nonprofit organization**](https://hcb.hackclub.com/donations/start/blueprint) or [view our open finances](https://hcb.hackclub.com/blueprint).
 
 
 <!-- Contributors -->
@@ -77,4 +77,5 @@ Contributors help shape the future of the Blueprint modding framework. To start 
   © 2023-2025 Emma (prpl.wtf)
   <br/><br/><img src="https://github.com/user-attachments/assets/e6ff62c3-6d99-4e43-850d-62150706e5dd"/>
 </p>
+
 

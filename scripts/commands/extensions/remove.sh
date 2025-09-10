@@ -20,7 +20,7 @@ RemoveExtension() {
   if [[ $EXTENSION == *".blueprint" ]]; then EXTENSION="${EXTENSION::-10}"; fi
   set -- "${@:1:2}" "$EXTENSION" "${@:4}"
 
-  if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"$EXTENSION,"* ]]; then
+  if [[ $(cat ".blueprint/extensions/blueprint/private/db/installed_extensions") != *"|$EXTENSION,"* ]]; then
     PRINT FATAL "'$EXTENSION' is not installed or detected."
     return 2
   fi
@@ -370,7 +370,7 @@ RemoveExtension() {
 
   # Remove from installed list
   PRINT INFO "Removing '$identifier' from active extensions list.."
-  sed -i "s~$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
+  sed -i "s~|$identifier,~~g" ".blueprint/extensions/blueprint/private/db/installed_extensions"
 
   if [[ $RemovedExtensions == "" ]]; then RemovedExtensions="$identifier"; else RemovedExtensions+=", $identifier"; fi
 

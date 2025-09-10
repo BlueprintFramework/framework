@@ -34,7 +34,7 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
       ;;
       -remove|-r)
         opts="$(
-          sed "s|,| |g" "$BLUEPRINT__FOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions"
+          sed -e "s~|~~g" -e "s|,| |g" "$BLUEPRINT__FOLDER/.blueprint/extensions/blueprint/private/db/installed_extensions"
         )"
       ;;
       -export) opts="expose" ;;
@@ -228,7 +228,7 @@ if ! [ -x "$(command -v blueprint)" ]; then placeshortcut; fi
 
 if [[ $1 != "-bash" ]]; then
   if dbValidate "blueprint.setupFinished"; then
-    PRINT FATAL "Installation process has already been finished before, consider using the 'blueprint' command."
+    PRINT FATAL "Blueprint is already installed, use the 'blueprint' command instead."
     exit 2
   else
     # Only run if Blueprint is not in the process of upgrading.
