@@ -254,7 +254,7 @@ class BlueprintBaseLibrary
   {
     return str_contains(
       $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')),
-      $identifier,
+      "|$identifier,",
     );
   }
 
@@ -268,10 +268,9 @@ class BlueprintBaseLibrary
    */
   public function extensions(): array
   {
-    $array = explode(
-      ',',
-      $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')),
-    );
+    $array = $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions'));
+    $array = preg_replace('/[|]/', '', $array);
+    $array = explode(',', $array);
     return $array;
   }
 
@@ -305,10 +304,7 @@ class BlueprintBaseLibrary
    */
   public function extensionsConfigs(): Collection
   {
-    $array = explode(
-      ',',
-      $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')),
-    );
+    $array = $this->extensions();
     $collection = new Collection();
 
     foreach ($array as $extension) {

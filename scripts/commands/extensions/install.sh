@@ -163,7 +163,7 @@ InstallExtension() {
   ((PROGRESS_NOW++))
 
   # Detect if extension is already installed and prepare the upgrading process.
-  if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"$identifier,"* ]]; then
+  if [[ $(cat .blueprint/extensions/blueprint/private/db/installed_extensions) == *"|$identifier,"* ]]; then
     PRINT INFO "Switching to update process as extension has already been installed."
 
     if [[ ! -d ".blueprint/extensions/$identifier/private/.store" ]]; then
@@ -1332,7 +1332,7 @@ InstallExtension() {
 
   if [[ $DUPLICATE != "y" ]]; then
     PRINT INFO "Adding '$identifier' to active extensions list.."
-    printf "%s," "${identifier}" >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
+    printf "|%s," "${identifier}" >> ".blueprint/extensions/blueprint/private/db/installed_extensions"
   fi
 
   if [[ $dev != true ]]; then
