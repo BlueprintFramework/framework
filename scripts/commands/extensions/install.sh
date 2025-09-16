@@ -124,6 +124,7 @@ InstallExtension() {
   || [[ ( $data_directory               == "/"* ) || ( $data_directory               == *"/.."* ) || ( $data_directory               == *"../"* ) || ( $data_directory               == *"/../"* ) || ( $data_directory               == *"~"* ) || ( $data_directory               == *"\\"* ) ]] \
   || [[ ( $data_public                  == "/"* ) || ( $data_public                  == *"/.."* ) || ( $data_public                  == *"../"* ) || ( $data_public                  == *"/../"* ) || ( $data_public                  == *"~"* ) || ( $data_public                  == *"\\"* ) ]] \
   || [[ ( $data_console                 == "/"* ) || ( $data_console                 == *"/.."* ) || ( $data_console                 == *"../"* ) || ( $data_console                 == *"/../"* ) || ( $data_console                 == *"~"* ) || ( $data_console                 == *"\\"* ) ]] \
+  || [[ ( $data_tasks                   == "/"* ) || ( $data_tasks                   == *"/.."* ) || ( $data_tasks                   == *"../"* ) || ( $data_tasks                   == *"/../"* ) || ( $data_tasks                   == *"~"* ) || ( $data_tasks                   == *"\\"* ) ]] \
   || [[ ( $requests_views               == "/"* ) || ( $requests_views               == *"/.."* ) || ( $requests_views               == *"../"* ) || ( $requests_views               == *"/../"* ) || ( $requests_views               == *"~"* ) || ( $requests_views               == *"\\"* ) ]] \
   || [[ ( $requests_app                 == "/"* ) || ( $requests_app                 == *"/.."* ) || ( $requests_app                 == *"../"* ) || ( $requests_app                 == *"/../"* ) || ( $requests_app                 == *"~"* ) || ( $requests_app                 == *"\\"* ) ]] \
   || [[ ( $requests_routers_application == "/"* ) || ( $requests_routers_application == *"/.."* ) || ( $requests_routers_application == *"../"* ) || ( $requests_routers_application == *"/../"* ) || ( $requests_routers_application == *"~"* ) || ( $requests_routers_application == *"\\"* ) ]] \
@@ -142,6 +143,7 @@ InstallExtension() {
   || [[ ( $data_directory == *"/"       ) ]] \
   || [[ ( $data_public == *"/"          ) ]] \
   || [[ ( $data_console == *"/"         ) ]] \
+  || [[ ( $data_tasks == *"/"           ) ]] \
   || [[ ( $requests_views == *"/"       ) ]] \
   || [[ ( $requests_app == *"/"         ) ]] \
   || [[ ( $database_migrations == *"/"  ) ]]; then
@@ -208,6 +210,13 @@ InstallExtension() {
       rm -R \
         ".blueprint/extensions/$identifier/console" \
         "app/Console/Commands/BlueprintFramework/Extensions/${identifier^}"
+    fi
+    if [[ $old_data_tasks != "" ]]; then #TODO: Where does old_data_tasks get defined?
+      # Clean up old tasks folder.
+      rm -R ".blueprint/extensions/$identifier/tasks"
+      mkdir -p ".blueprint/extensions/$identifier/tasks"
+      rm -R "app/BlueprintFramework/Tasks/Extensions/${identifier^}"
+      mkdir -p "app/BlueprintFramework/Tasks/Extensions/${identifier^}"
     fi
   fi
 
@@ -507,6 +516,17 @@ InstallExtension() {
   fi
 
   ((PROGRESS_NOW++))
+
+  # Place and link tasks directory
+  if [[ $data_tasks != "" ]]; then
+    PRINT INFO "Cloning and linking tasks directory.."
+    mkdir -p \
+      ".blueprint/extensions/$identifier/tasks" \
+      "app/BlueprintFramework/Tasks/Extensions/${identifier^}"
+    cp -R ".blueprint/tmp/$n/$data_tasks/"* ".blueprint/extensions/$identifier/tasks/" 2>> "$BLUEPRINT__DEBUG"
+    cp -R ".blueprint/extensions/$identifier/tasks/"* "app/BlueprintFramework/Tasks/Extensions/${identifier^}/" 2>> "$BLUEPRINT__DEBUG"
+    ln -s -r -T "$FOLDER/.blueprint/extensions/$identifier/tasks" "$FOLDER/app/BlueprintFramework/Tasks/Extensions/${identifier^}" 2>> "$BLUEPRINT__DEBUG"
+  fi
 
   # Place and link console directory and generate artisan files.
   if [[ $data_console != "" ]]; then
