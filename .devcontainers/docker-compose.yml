@@ -1,0 +1,169 @@
+x-common:
+  database:
+    &db-environment
+    # Do not remove the "&db-password" from the end of the line below, it is important
+    # for Panel functionality.
+    MYSQL_PASSWORD: &db-password "${MARIADB_USER_PASS}"
+    MYSQL_ROOT_PASSWORD: "${MARIADB_ROOT_PASS}"
+  cache:
+    &redis-environment
+    REDIS_PASSWORD: &redis-password "${VALKEY_PASS}"
+  panel:
+    &panel-environment
+    APP_URL: "${FQDN}"
+    APP_NAME: "${APP_NAME}"
+    # A list of valid timezones can be found here: http://php.net/manual/en/timezones.php
+    APP_TIMEZONE: "${TIMEZONE}"
+    APP_SERVICE_AUTHOR: "${EGG_AUTHOR_EMAIL}"
+    # Uncomment the line below and set to a non-empty value if you want to use Let's Encrypt
+    # to generate an SSL certificate for the Panel.
+    # LE_EMAIL: ""
+    # TRUSTED_PROXIES: "${TRUSTED_PROXIES}"
+    RECAPTCHA_ENABLED: "${RECAPTCHA_ENABLED}"
+    RECAPTCHA_WEBSITE_KEY: "${RECAPTCHA_SITE_KEY}"
+    RECAPTCHA_SECRET_KEY: "${RECAPTCHA_SECRET_KEY}"
+    APP_2FA_REQUIRED: "${APP_2FA_REQUIRED}"
+    PTERODACTYL_CLIENT_ALLOCATIONS_ENABLED: "${AUTO_ALLOCATION}"
+    PTERODACTYL_CLIENT_ALLOCATIONS_RANGE_START: "${AUTO_ALLOCATION_START_PORT}"
+    PTERODACTYL_CLIENT_ALLOCATIONS_RANGE_END: "${AUTO_ALLOCATION_END_PORT}"
+  mail:
+    &mail-environment
+    MAIL_FROM_ADDRESS: "no-reply@${DOMAIN}"
+    MAIL_FROM_NAME: "${APP_NAME}"
+    MAIL_DRIVER: "${MAIL_DRIVER}"
+    MAIL_HOST: "${SMTP_SERVER}"
+    MAIL_PORT: "${SMTP_PORT}"
+    MAIL_USERNAME: "${SMTP_USERNAME}"
+    MAIL_PASSWORD: "${SMTP_APIKEY}"
+    MAIL_ENCRYPTION: "${SMTP_ENCRYPTION}"
+    MAIL_EHLO_DOMAIN: "no-reply@${DOMAIN}"
+
+#
+# ------------------------------------------------------------------------------------------
+# DANGER ZONE BELOW
+#
+# The remainder of this file likely does not need to be changed. Please only make modifications
+# below if you understand what you are doing.
+#
+services:
+  database:
+    image: mariadb:11
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --max-connections=2000
+    volumes:
+      - "${BASE_DIR}/database:/var/lib/mysql"
+    environment:
+      <<: *db-environment
+      MYSQL_DATABASE: "panel"
+      MYSQL_USER: "pterodactyl"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - pterodactyl_stack
+      # - pterodactyl_nw
+      # If you un-comment the above, also un-comment the bottom of the network section at the very
+      # bottom of this file where it mentions pterodactyl_nw
+    ports:
+      - "3306:3306"
+      # After connecting Wings to your panel successfully, change this to "172.18.0.1:3306:3306"
+      # to allow database connections from servers at the 172.18.0.1 address
+      # Un-commenting pterodactyl_nw will also allow game servers to connect to the database at the address "database"
+  cache:
+    image: valkey/valkey:alpine
+    restart: always
+    command: >
+      --requirepass "${VALKEY_PASS}"
+    environment:
+      REDISCLI_AUTH: "${VALKEY_PASS}"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - pterodactyl_stack
+  panel:
+    image: ghcr.io/blueprintframework/blueprint:v1.11.11
+    restart: always
+    ports:
+      - "${PANEL_PORT}:${PANEL_PORT}"
+    links:
+      - database
+      - cache
+    volumes:
+      - "${BASE_DIR}/var/:/app/var/"
+      - "${BASE_DIR}/nginx/:/etc/nginx/http.d/"
+      - "${BASE_DIR}/certs/:/etc/letsencrypt/live:ro"
+      - "${BASE_DIR}/logs/:/app/storage/logs"
+      - "${BASE_DIR}/nginx/logs:/var/log/nginx"
+      - "${BASE_DIR}/extensions/:/blueprint_extensions"
+      - "app:/app"
+    environment:
+      <<: [*panel-environment, *mail-environment]
+      DB_PASSWORD: *db-password
+      APP_ENV: "production" # "production" or "testing"
+      APP_ENVIRONMENT_ONLY: "false"
+      CACHE_DRIVER: "redis"
+      SESSION_DRIVER: "redis"
+      QUEUE_DRIVER: "redis"
+      REDIS_HOST: "cache"
+      REDIS_PASSWORD: *redis-password
+      DB_HOST: "database"
+      DB_PORT: "3306"
+      HASHIDS_SALT: "${HASH_SALT}"
+      HASHIDS_LENGTH: 8
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:${PANEL_PORT}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - pterodactyl_stack
+  wings:
+    # See https://github.com/Loki-101/cwings for info about cwings
+    image: ghcr.io/loki-101/cwings:v1.11.13
+    restart: always
+    ports:
+      - "${WINGS_PORT}:${WINGS_PORT}"
+      - "${WINGS_SFTP_PORT}:${WINGS_SFTP_PORT}"
+    tty: true
+    environment:
+      TZ: "${TIMEZONE}"
+      WINGS_UID: 988
+      WINGS_GID: 988
+      WINGS_USERNAME: pterodactyl
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/lib/docker/containers/:/var/lib/docker/containers/"
+      - "${BASE_DIR}/wings/:/etc/pterodactyl"
+      - "${BASE_DIR}/:${BASE_DIR}/"
+      - "${BASE_DIR}/logs/:/var/log/pterodactyl/"
+      - "/tmp/pterodactyl/:/tmp/pterodactyl/"
+      - "${BASE_DIR}/certs/:/etc/letsencrypt/live:ro"
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:${WINGS_PORT}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - pterodactyl_stack
+
+networks:
+  pterodactyl_stack:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.20.0.0/24"
+#  pterodactyl_nw:
+#    external: true
+
+volumes:
+  app:
