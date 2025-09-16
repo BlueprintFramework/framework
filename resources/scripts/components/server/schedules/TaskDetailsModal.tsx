@@ -68,6 +68,24 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
     const appendSchedule = ServerContext.useStoreActions((actions) => actions.schedules.appendSchedule);
     const backupLimit = ServerContext.useStoreState((state) => state.server.data!.featureLimits.backups);
 
+    function useTaskNames() {
+        const [taskNames, setTaskNames] = React.useState<string[]>([]);
+
+        React.useEffect(() => {
+            fetch(`/api/client/servers/${uuid}/schedules/tasks`)
+                .then((response) => response.json())
+                .then((data) => setTaskNames(data))
+                .catch((error) => {
+                    console.error('Error fetching task names:', error);
+                });
+        }
+        , [uuid]);
+        
+        return taskNames;
+    }
+
+    const taskNames = useTaskNames();
+
     useEffect(() => {
         return () => {
             clearFlashes('schedule:task');
@@ -122,9 +140,11 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                             <ActionListener />
                             <FormikFieldWrapper name={'action'}>
                                 <FormikField as={Select} name={'action'}>
-                                    <option value={'command'}>Send command</option>
-                                    <option value={'power'}>Send power action</option>
-                                    <option value={'backup'}>Create backup</option>
+                                    {taskNames.map((name) => (
+                                        <option key={name} value={name}>
+                                            {name.charAt(0).toUpperCase() + name.slice(1)}
+                                        </option>
+                                    ))}
                                 </FormikField>
                             </FormikFieldWrapper>
                         </div>

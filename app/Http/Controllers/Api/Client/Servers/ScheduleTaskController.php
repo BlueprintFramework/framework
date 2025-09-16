@@ -31,6 +31,14 @@ class ScheduleTaskController extends ClientApiController
         parent::__construct();
     }
 
+    public function index(Server $server, Schedule $schedule): array
+    {
+        $tasks = app(TasksRegistry::class)->getAll();
+        $taskNames = array_keys($tasks);
+
+        return response()->json($taskNames);
+    }
+
     /**
      * Create a new task for a given schedule and store it in the database.
      *
