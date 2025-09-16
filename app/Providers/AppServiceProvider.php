@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 use Pterodactyl\Providers\Blueprint\ExtensionfsConfigProvider;
 use Pterodactyl\Providers\Blueprint\RouteServiceProvider;
+use Pterodactyl\Providers\Blueprint\RouteServiceProvider;
+use Pterodactyl\BlueprintFramework\TasksRegistry;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -64,6 +66,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Load Blueprint's route service provider.
         $this->app->register(RouteServiceProvider::class);
+
+        // Register Blueprint's TasksRegistry as a singleton
+        $this->app->singleton(TasksRegistry::class);
 
         // Only load the settings service provider if the environment
         // is configured to allow it.
