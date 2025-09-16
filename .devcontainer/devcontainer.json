@@ -2,7 +2,6 @@
   "name": "Blueprint Dev Container",
   "dockerComposeFile": ["docker-compose.yml"],
   "service": "panel",
-  "workspaceFolder": "/app/.blueprint/dev",
-  "envFile": ".env",
-  "postCreateCommand": "rm .gitkeep && git clone https://github.com/Exterminate5573/AddonManager.git ."
+  "workspaceFolder": "/app",
+  "postCreateCommand": ""
 }
