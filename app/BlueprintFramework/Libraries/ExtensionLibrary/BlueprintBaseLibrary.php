@@ -199,8 +199,9 @@ class BlueprintBaseLibrary
   }
 
   /**
-   * Attempts to create a file.
+   * (Deprecated) Attempts to create a file.
    *
+   * @deprecated beta-2025-08
    * @param string $path File name/path
    *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
@@ -242,9 +243,8 @@ class BlueprintBaseLibrary
   }
 
   /**
-   * (Deprecated) Check if an extension is installed based on it's identifier.
+   * Check if an extension is installed based on it's identifier.
    *
-   * @deprecated beta-2025-08
    * @param string $identifier Extension identifier
    * @return bool Whether the extension is installed
    *
@@ -253,7 +253,7 @@ class BlueprintBaseLibrary
   public function extension(string $identifier): bool
   {
     return str_contains(
-      $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')),
+      file_get_contents(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions')),
       "|$identifier,",
     );
   }
@@ -268,7 +268,7 @@ class BlueprintBaseLibrary
    */
   public function extensions(): array
   {
-    $array = $this->fileRead(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions'));
+    $array = file_get_contents(base_path('.blueprint/extensions/blueprint/private/db/installed_extensions'));
     $array = preg_replace('/[|]/', '', $array);
     $array = explode(',', $array);
     return $array;
@@ -281,24 +281,24 @@ class BlueprintBaseLibrary
    * configuration file in YAML format. The configuration data is then filtered
    * to remove any empty or falsy keys.
    *
-   * @param string $extension The name of the extension to retrieve the configuration for.
+   * @param string $identifier Extension identifier to retrieve config from
    *
    * @return array|null The configuration array for the extension, or null if the extension does not exist.
    */
-  public function extensionConfig(string $extension): ?array
+  public function extensionConfig(string $identifier): ?array
   {
-    if (!$this->extension($extension)) {
+    if (!$this->extension($identifier)) {
       return null;
     }
-    $conf = Yaml::parse($this->fileRead(base_path(".blueprint/extensions/$extension/private/.store/conf.yml")));
+    $conf = Yaml::parse(file_get_contents(base_path(".blueprint/extensions/$identifier/private/.store/conf.yml")));
     $conf = array_filter($conf, fn($k) => !!$k);
     return $conf;
   }
 
   /**
-   * Returns an array containing all installed extensions's identifiers.
+   * Returns a Collection containing all installed extensions's configs.
    *
-   * @return array An array of installed extensions
+   * @return Collection Collection of installed extensions's configs
    *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
