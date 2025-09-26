@@ -11,8 +11,9 @@ export BLUEPRINT__FOLDER="BLUEPRINT_FOLDER_HERE"
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
     export BLUEPRINT__PROFILE="available"
     source "$BLUEPRINT__FOLDER/blueprint.sh"
+    # shellcheck disable=SC2317
     return 0
 fi
 
 # Run Blueprint command
-bash "$BLUEPRINT__FOLDER/blueprint.sh" -bash $@
+bash "$BLUEPRINT__FOLDER/blueprint.sh" -bash "${@}"
