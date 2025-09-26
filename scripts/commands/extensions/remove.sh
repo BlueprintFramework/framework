@@ -66,7 +66,7 @@ RemoveExtension() {
     # Add backwards compatibility
     if [[ $conf_requests_controllers != "" ]]; then
       local requests_app="$conf_requests_controllers"
-      PRINT WARNING "Config value 'requests_controllers' is deprecated, use 'requests_app' instead."
+      PRINT WARNING "Config value 'requests.controllers' is deprecated, use 'requests.app' instead."
     fi
   else
     PRINT FATAL "Extension configuration file not found or detected."

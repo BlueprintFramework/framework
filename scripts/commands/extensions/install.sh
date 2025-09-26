@@ -107,7 +107,7 @@ InstallExtension() {
   fi
   if [[ $conf_requests_controllers != "" ]]; then
     local requests_app="$conf_requests_controllers"
-    PRINT WARNING "Config value 'requests_controllers' is deprecated, use 'requests_app' instead."
+    PRINT WARNING "Config value 'requests.controllers' is deprecated, use 'requests.app' instead."
   fi
 
   ((PROGRESS_NOW++))
@@ -389,12 +389,12 @@ InstallExtension() {
 
   ((PROGRESS_NOW++))
 
-  if [[ $name == "" ]]; then clear_tmp;                PRINT FATAL "'info_name' is a required configuration option.";return 1;fi
-  if [[ $identifier == "" ]]; then clear_tmp;          PRINT FATAL "'info_identifier' is a required configuration option.";return 1;fi
-  if [[ $description == "" ]]; then clear_tmp;         PRINT FATAL "'info_description' is a required configuration option.";return 1;fi
-  if [[ $version == "" ]]; then clear_tmp;             PRINT FATAL "'info_version' is a required configuration option.";return 1;fi
-  if [[ $target == "" ]]; then clear_tmp;              PRINT FATAL "'info_target' is a required configuration option.";return 1;fi
-  if [[ $admin_view == "" ]]; then clear_tmp;          PRINT FATAL "'admin_view' is a required configuration option.";return 1;fi
+  if [[ $name == "" ]]; then clear_tmp;                PRINT FATAL "'info.name' is a required configuration option.";return 1;fi
+  if [[ $identifier == "" ]]; then clear_tmp;          PRINT FATAL "'info.identifier' is a required configuration option.";return 1;fi
+  if [[ $description == "" ]]; then clear_tmp;         PRINT FATAL "'info.description' is a required configuration option.";return 1;fi
+  if [[ $version == "" ]]; then clear_tmp;             PRINT FATAL "'info.version' is a required configuration option.";return 1;fi
+  if [[ $target == "" ]]; then clear_tmp;              PRINT FATAL "'info.target' is a required configuration option.";return 1;fi
+  if [[ $admin_view == "" ]]; then clear_tmp;          PRINT FATAL "'admin.view' is a required configuration option.";return 1;fi
 
   if [[ $icon == "" ]]; then                           PRINT WARNING "${identifier^} does not come with an icon, consider adding one.";fi
   if [[ $target != "$VERSION" ]]; then                 PRINT WARNING "${identifier^} is built for version $target, but your version is $VERSION.";fi
@@ -403,7 +403,8 @@ InstallExtension() {
 
   # Test identifier
   export VALIDATE_IDENTIFIER_INPUT="$identifier"
-  local TEST_IDENTIFIER="$(node scripts/helpers/validate-identifier.js)"
+  local TEST_IDENTIFIER
+  TEST_IDENTIFIER="$(node scripts/helpers/validate-identifier.js)"
   local TEST_IDENTIFIER_MATCHES="false"
   unset VALIDATE_IDENTIFIER_INPUT
 
@@ -734,10 +735,6 @@ InstallExtension() {
       eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/Components.yml Components_)"
       if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Components.yml OldComponents_)"; fi
 
-      # define static variables to make stuff a bit easier
-      im="\/\* blueprint\/import \*\/"; re="{/\* blueprint\/react \*/}"; co="resources/scripts/blueprint/components"
-      s="import ${identifier^}Component from '"; e="';"
-
       PLACE_REACT() {
         if [[
           ( $1 == "/"* ) ||
@@ -755,8 +752,8 @@ InstallExtension() {
 
         if [[ $3 != "$1" ]]; then
           # remove old components
-          sed -i "s~""${s}@blueprint/extensions/${identifier}/$3${e}""~~g" "$co"/"$2"
-          sed -i "s~""<${identifier^}Component />""~~g" "$co"/"$2"
+          sed -i "s~""import ${identifier^}Component from '@blueprint/extensions/${identifier}/$3';""~~g" "resources/scripts/blueprint/components"/"$2"
+          sed -i "s~""<${identifier^}Component />""~~g" "resources/scripts/blueprint/components"/"$2"
         fi
         if [[ ! $1 == "" ]]; then
 
@@ -782,12 +779,12 @@ InstallExtension() {
 
           # Purge and add components.
           sed -i \
-            -e "s~""${s}@blueprint/extensions/${identifier}/$1${e}""~~g" \
+            -e "s~""import ${identifier^}Component from '@blueprint/extensions/${identifier}/$1';""~~g" \
             -e "s~""<${identifier^}Component />""~~g" \
             \
-            -e "s~""$im""~""${im}${s}@blueprint/extensions/${identifier}/$1${e}""~g" \
-            -e "s~""$re""~""${re}\<${identifier^}Component /\>""~g" \
-            "$co"/"$2"
+            -e "s~""\/\* blueprint\/import \*\/""~""\/\* blueprint\/import \*\/import ${identifier^}Component from '@blueprint/extensions/${identifier}/$1';""~g" \
+            -e "s~""{/\* blueprint\/react \*/}""~""{/\* blueprint\/react \*/}\<${identifier^}Component /\>""~g" \
+            "resources/scripts/blueprint/components"/"$2"
         fi
       }
 

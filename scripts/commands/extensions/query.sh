@@ -2,7 +2,7 @@
 
 Command() {
   if [[ $1 == "" ]]; then PRINT FATAL "Expected 1 argument but got 0.";exit 2;fi
-  
+
   # Check if required programs and libraries are installed.
   depend
 
@@ -65,7 +65,7 @@ Command() {
           PRINT DEBUG "${config_item_clean} :: ${!config_item}"
 
           if [[ "${!config_item}" != "" ]]; then
-            extension_apis+="${config_item_clean} "
+            extension_apis+="${config_item_clean//_/.} "
           fi
         fi
       done
