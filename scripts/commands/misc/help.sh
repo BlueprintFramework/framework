@@ -38,6 +38,5 @@ ${help_dev_primary}Developer${help_dev_status}\x1b[0m${help_dev_secondary}
   -upgrade (remote <url>)    update/reset to another release
   -rerun-install             rerun the blueprint installation script
   \x1b[0m
-\x1b[2mLearn more @ https://blueprint.zip/docs/cli/commands\x1b[0m
 "
 }
