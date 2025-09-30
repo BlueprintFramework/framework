@@ -23,7 +23,7 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    *
    * @param 'info'|'warning'|'danger'|'success' $type The type of alert.
    * @param string $message Alert message.
-   * @since beta-2025-08
+   * @since beta-2025-09
    *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
@@ -80,7 +80,7 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    * (Deprecated) Display a notification on the Pterodactyl admin panel (on next page load).
    * Available for backwards compatibility, do not use this function, use alert() instead.
    *
-   * @deprecated beta-2025-08
+   * @deprecated beta-2025-09
    * @param string $text Notification contents
    *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
@@ -100,9 +100,7 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function notifyAfter($delay, $text): void
-  {
-  }
+  public function notifyAfter($delay, $text): void {}
 
   /**
    * (Deprecated) Display a notification on the Pterodactyl admin panel and refresh the page instantly.
@@ -114,7 +112,5 @@ class BlueprintAdminLibrary extends BlueprintBaseLibrary
    *
    * [BlueprintExtensionLibrary documentation](https://blueprint.zip/docs/?page=documentation/$blueprint)
    */
-  public function notifyNow($text): void
-  {
-  }
+  public function notifyNow($text): void {}
 }
