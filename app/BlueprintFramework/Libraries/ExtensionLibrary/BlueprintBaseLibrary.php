@@ -17,7 +17,6 @@ namespace Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Symfony\Component\Yaml\Yaml;
-use Alert;
 
 class BlueprintBaseLibrary
 {
