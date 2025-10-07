@@ -48,7 +48,7 @@ Command() {
     YARN_PID=$!
   fi
 
-  # shellcheck disable=SC2317
+  # shellcheck disable=SC2329
   cleanup() {
     PRINT FATAL "Process has been exited.. cleaning up"
 
