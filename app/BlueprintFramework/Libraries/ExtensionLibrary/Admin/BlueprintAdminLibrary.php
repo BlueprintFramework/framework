@@ -15,6 +15,7 @@
 namespace Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin;
 
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\BlueprintBaseLibrary;
+use Prologue\Alerts\Facades\Alert;
 
 class BlueprintAdminLibrary extends BlueprintBaseLibrary
 {
