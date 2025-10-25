@@ -332,6 +332,8 @@ InstallExtension() {
               -e "s~!{target~{__BP_ESCAPED__target~g" \
               -e "s~!{root~{__BP_ESCAPED__root~g" \
               -e "s~!{webroot~{__BP_ESCAPED__webroot~g" \
+              -e "s~!{viewcontext~{__BP_ESCAPED__viewcontext~g" \
+              -e "s~!{appcontext~{__BP_ESCAPED__appcontext~g" \
               -e "s~!{engine~{__BP_ESCAPED__engine~g" \
               -e "s~!{fs~{__BP_ESCAPED__fs~g" \
               -e "s~!{is_~{__BP_ESCAPED__is_~g" \
@@ -346,6 +348,8 @@ InstallExtension() {
               -e "s~{target}~$VERSION~g" \
               -e "s~{root}~$FOLDER~g" \
               -e "s~{webroot}~/~g" \
+              -e "s~{viewcontext}~blueprint.extensions.$identifier~g" \
+              -e "s~{appcontext}~Pterodactyl\\BlueprintFramework\\Extensions\\$identifier~g" \
               -e "s~{engine}~$BLUEPRINT_ENGINE~g" \
               -e "s~{fs}~blueprint:$identifier~g" \
               \
@@ -371,6 +375,8 @@ InstallExtension() {
               -e "s~{__BP_ESCAPED__target~{target~g" \
               -e "s~{__BP_ESCAPED__root~{root~g" \
               -e "s~{__BP_ESCAPED__webroot~{webroot~g" \
+              -e "s~{__BP_ESCAPED__viewcontext~{viewcontext~g" \
+              -e "s~{__BP_ESCAPED__appcontext~{appcontext~g" \
               -e "s~{__BP_ESCAPED__engine~{engine~g" \
               -e "s~{__BP_ESCAPED__fs~{fs~g" \
               -e "s~{__BP_ESCAPED__is_~{is~g" \
