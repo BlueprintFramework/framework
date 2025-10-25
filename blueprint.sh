@@ -364,7 +364,7 @@ if [[ $1 != "-bash" ]]; then
 
     ((PROGRESS_NOW++))
 
-    if [[ $DOCKER != "y" ]] && [[ $MAINTENANCE == "true" ]]; then
+    if [[ $MAINTENANCE == "true" ]]; then
       # Put application into production.
       PRINT INFO "Put application into production."
       php artisan up &>> "$BLUEPRINT__DEBUG"
