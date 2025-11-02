@@ -3,6 +3,9 @@
     "Shell Script": {
       "tab_size": 2,
       "hard_tabs": false
+    },
+    "PHP": {
+      "tab_size": 2
     }
   },
   "format_on_save": "off"

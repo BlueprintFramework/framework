@@ -6,7 +6,11 @@ class BlueprintPlaceholderService
 {
   public function version(): string
   {
-    return "::v";
+    $ver = "::v";
+    if ($ver == '::'.'v') {
+      return 'unknown';
+    }
+    return $ver;
   }
   public function folder(): string
   {
