@@ -18,6 +18,6 @@ class BlueprintPlaceholderService
   }
   public function api_url(): string
   {
-    return "https://blueprint.zip/api";
+    return "https://blueprint.zip";
   }
 }
