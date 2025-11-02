@@ -39,7 +39,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
             <span class="text-bold h4">Blueprint</span>
           </p>
           <span>
-            Powerful, fast and developer-friendly extension framework for Pterodactyl. Utilize extension APIs, inject HTML, modify stylesheets, package extensions and so much more. 
+            Powerful, fast and developer-friendly extension framework for Pterodactyl. Utilize extension APIs, inject HTML, modify stylesheets, package extensions and so much more.
           </span>
         </div>
         <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
@@ -109,13 +109,13 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
 
       @foreach($blueprint->extensionsConfigs() as $extension)
         <?php
-          $extension = $extension['info']; 
+          $extension = $extension['info'];
         ?>
         @include("blueprint.admin.entry", [
           'EXTENSION_ID' => $extension['identifier'],
           'EXTENSION_NAME' => $extension['name'],
           'EXTENSION_VERSION' => $extension['version'],
-          'EXTENSION_ICON' => !empty($extension['icon']) 
+          'EXTENSION_ICON' => !empty($extension['icon'])
             ? '/assets/extensions/'.$extension['identifier'].'/icon.'.pathinfo($extension['icon'], PATHINFO_EXTENSION)
             : '/assets/extensions/'.$extension['identifier'].'/icon.jpg'
         ])
@@ -202,7 +202,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
                               @case('integer')
                                 <input type="number" class="form-control" name="{{ $key }}" value="{{ $value }}" step="1" style="border-radius:6px">
                                 @break
-                            
+
                               @default
                                 <input type="text" class="form-control" name="{{ $key }}" value="{{ $value }}" style="border-radius:6px">
                             @endswitch
@@ -233,7 +233,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
     </div>
   </div>
 
-  @else 
+  @else
     <center>
       <div style="padding-top: 50px;">
         <span style="font-size: 36px">
@@ -247,8 +247,12 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
         <span>
           Blueprint is currently only partially installed.<br>
           Finish the
-          <a href="https://blueprint.zip/docs/?page=getting-started/Installation">installation guide</a>,
+          <a href="https://blueprint.zip/guides/admin/install">installation guide</a>,
           then return to this page afterwards.
+        </span>
+        <br style="margin-bottom: 12px;">
+        <span>
+          You may be able to fix this issue by running <code>blueprint -upgrade</code>.
         </span>
       </div>
     </center>
@@ -256,7 +260,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
 
   <style>
     /* style content */
-    a:has(button.btn.extension-btn) { 
+    a:has(button.btn.extension-btn) {
       height: 96px;
       display: inline-block;
       width: 100%;
@@ -284,22 +288,22 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const flagRows = document.querySelectorAll('[data-flag-row]');
-      
+
       const createResetButton = (row, input) => {
         const button = document.createElement('button');
         button.className = 'blueprint-button-link reset-flag';
         button.style.padding = '0';
         button.style.marginLeft = '8px';
         button.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i>';
-        
+
         const defaultValue = getDefaultValue(row);
-        
+
         button.addEventListener('click', (e) => {
           e.preventDefault();
           input.value = defaultValue;
           input.dispatchEvent(new Event('change'));
         });
-        
+
         return button;
       };
 
@@ -310,16 +314,16 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
         if (flagType === 'boolean' && (!defaultValue || defaultValue === '')) {
           return '0';
         }
-        
+
         return defaultValue;
       };
 
       const compareValues = (input, defaultValue) => {
         const flagType = input.closest('[data-flag-row]').dataset.flagType;
         const currentValue = input.value;
-        
-        const effectiveDefault = flagType === 'boolean' && (!defaultValue || defaultValue === '') 
-          ? '0' 
+
+        const effectiveDefault = flagType === 'boolean' && (!defaultValue || defaultValue === '')
+          ? '0'
           : defaultValue;
 
         switch (flagType) {
@@ -332,27 +336,27 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
             return String(currentValue) !== String(effectiveDefault);
         }
       };
-      
+
       const handleValueChange = (row, input) => {
         const defaultValue = getDefaultValue(row);
-        
+
         const existingButton = row.querySelector('td .reset-flag');
         if (existingButton) {
           existingButton.remove();
         }
-        
+
         if (compareValues(input, defaultValue)) {
           const resetButton = createResetButton(row, input);
           row.querySelector('td').appendChild(resetButton);
         }
       };
-      
+
       flagRows.forEach(row => {
         const input = row.querySelector('select, input');
         if (!input) return; // Skip if no input found
-        
+
         handleValueChange(row, input);
-        
+
         input.addEventListener('change', () => {
           handleValueChange(row, input);
         });
