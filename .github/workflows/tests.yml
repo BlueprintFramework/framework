@@ -11,8 +11,8 @@ name: "Run tests"
 permissions: {}
 
 jobs:
-  shellcheck:
-    name: ShellCheck
+  cli:
+    name: Test CLI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
