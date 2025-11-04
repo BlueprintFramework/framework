@@ -1,4 +1,3 @@
-@import url("/assets/extensions/blueprint/misc/cacheOverlay-1.css");
 @keyframes notification {
   0%   { right:-300px; top:62px; opacity:0; background-color: #1f2933; }
   10%  { right:12px;   top:62px; opacity:1; background-color: #1f2933; }
