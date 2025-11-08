@@ -43,3 +43,4 @@ docker-compose.yaml
 wak.toml
 demo/
 .build-cache.json
+.bashatimerc
