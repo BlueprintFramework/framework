@@ -244,9 +244,19 @@ if [[ $1 != "-bash" ]]; then
         "\n$C4██  ██$C1▌$C2▌$C3▌$C0 https://blueprint.zip" \
         "\n$C4  ████$C1▌$C2▌$C3▌$C0 © 2023-2025 Emma (prpl.wtf)\n";
 
-      export PROGRESS_TOTAL=14
+      export PROGRESS_TOTAL=15
       export PROGRESS_NOW=0
     fi
+
+    PRINT INFO "Installing node modules.."
+    # Check for yarn before installing node modules..
+    if ! [ -x "$(command -v yarn)" ]; then
+        PRINT FATAL "Missing dependency \"yarn\"."
+    fi
+    hide_progress
+    yarn install
+
+    ((PROGRESS_NOW++))
 
     PRINT INFO "Searching and validating framework dependencies.."
     depend # Check if required dependencies are installed

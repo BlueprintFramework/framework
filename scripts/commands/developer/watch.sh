@@ -56,7 +56,7 @@ Command() {
 
     if [[ $conf_dashboard_components != "" ]]; then
       # Remove types
-      rm "$FOLDER/.blueprint/dev/$conf_dashboard_components/.dist"
+      rm "$FOLDER/.blueprint/dev/.dist"
     fi
 
     if [[ $YARN_PID != "" ]]; then

@@ -23,7 +23,7 @@ Command() {
   if [[ ${YN} != "continue" ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
   YN=""
 
-  INSTALL_STEPS=14
+  INSTALL_STEPS=15
   export PROGRESS_TOTAL="$((10 + "$INSTALL_STEPS"))"
   export PROGRESS_NOW=0
 
@@ -124,7 +124,7 @@ Command() {
     "routes/blueprint/client/"* \
     "routes/blueprint/web/"* \
     &>> /dev/null # cannot forward to debug dir because it does not exist
-  
+
   ((PROGRESS_NOW++))
 
   # Deprecated, kept in for backwards compatibility
