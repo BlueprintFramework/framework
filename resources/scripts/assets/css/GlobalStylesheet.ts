@@ -6,6 +6,7 @@ export default createGlobalStyle`
         --blueprint-white: 255 255 255;
         --blueprint-black: 19 26 32;
 
+        --blueprint-primary: var(--blueprint-blue-500);
         --blueprint-primary-50: var(--blueprint-blue-50);
         --blueprint-primary-100: var(--blueprint-blue-100);
         --blueprint-primary-200: var(--blueprint-blue-200);
@@ -18,6 +19,7 @@ export default createGlobalStyle`
         --blueprint-primary-900: var(--blueprint-blue-900);
         --blueprint-primary-950: var(--blueprint-blue-950);
 
+        --blueprint-neutral: var(--blueprint-neutral-500);
         --blueprint-neutral-50: var(--blueprint-gray-50);
         --blueprint-neutral-100: var(--blueprint-gray-100);
         --blueprint-neutral-200: var(--blueprint-gray-200);
@@ -30,6 +32,7 @@ export default createGlobalStyle`
         --blueprint-neutral-900: var(--blueprint-gray-900);
         --blueprint-neutral-950: var(--blueprint-gray-950);
 
+        --blueprint-slate: var(--blueprint-slate-500);
         --blueprint-slate-50: 248 250 252;
         --blueprint-slate-100: 241 245 249;
         --blueprint-slate-200: 226 232 240;
@@ -42,6 +45,7 @@ export default createGlobalStyle`
         --blueprint-slate-900: 15 23 42;
         --blueprint-slate-950: 2 6 23;
 
+        --blueprint-gray: var(--blueprint-gray-500);
         --blueprint-gray-50: 245 247 250;
         --blueprint-gray-100: 229 232 235;
         --blueprint-gray-200: 202 209 216;
@@ -54,6 +58,7 @@ export default createGlobalStyle`
         --blueprint-gray-900: 31 41 51;
         --blueprint-gray-950: 31 41 51;
 
+        --blueprint-zinc: var(--blueprint-zinc-500);
         --blueprint-zinc-50: 250 250 250;
         --blueprint-zinc-100: 244 244 245;
         --blueprint-zinc-200: 228 228 231;
@@ -66,6 +71,7 @@ export default createGlobalStyle`
         --blueprint-zinc-900: 24 24 27;
         --blueprint-zinc-950: 9 9 11;
 
+        --blueprint-stone: var(--blueprint-stone-500);
         --blueprint-stone-50: 250 250 249;
         --blueprint-stone-100: 245 245 244;
         --blueprint-stone-200: 231 229 228;
@@ -78,6 +84,7 @@ export default createGlobalStyle`
         --blueprint-stone-900: 28 25 23;
         --blueprint-stone-950: 12 10 9;
 
+        --blueprint-red: var(--blueprint-red-500);
         --blueprint-red-50: 254 242 242;
         --blueprint-red-100: 254 226 226;
         --blueprint-red-200: 254 202 202;
@@ -90,6 +97,7 @@ export default createGlobalStyle`
         --blueprint-red-900: 127 29 29;
         --blueprint-red-950: 69 10 10;
 
+        --blueprint-orange: var(--blueprint-orange-500);
         --blueprint-orange-50: 255 247 237;
         --blueprint-orange-100: 255 237 213;
         --blueprint-orange-200: 254 215 170;
@@ -102,6 +110,7 @@ export default createGlobalStyle`
         --blueprint-orange-900: 124 45 18;
         --blueprint-orange-950: 67 20 7;
 
+        --blueprint-amber: var(--blueprint-amber-500);
         --blueprint-amber-50: 255 251 235;
         --blueprint-amber-100: 254 243 199;
         --blueprint-amber-200: 253 230 138;
@@ -114,6 +123,7 @@ export default createGlobalStyle`
         --blueprint-amber-900: 120 53 15;
         --blueprint-amber-950: 69 26 3;
 
+        --blueprint-yellow: var(--blueprint-yellow-500);
         --blueprint-yellow-50: 254 252 232;
         --blueprint-yellow-100: 254 249 195;
         --blueprint-yellow-200: 254 240 138;
@@ -126,6 +136,7 @@ export default createGlobalStyle`
         --blueprint-yellow-900: 113 63 18;
         --blueprint-yellow-950: 66 32 6;
 
+        --blueprint-lime: var(--blueprint-lime-500);
         --blueprint-lime-50: 247 254 231;
         --blueprint-lime-100: 236 252 203;
         --blueprint-lime-200: 217 249 157;
@@ -138,6 +149,7 @@ export default createGlobalStyle`
         --blueprint-lime-900: 54 83 20;
         --blueprint-lime-950: 26 46 5;
 
+        --blueprint-green: var(--blueprint-green-500);
         --blueprint-green-50: 240 253 244;
         --blueprint-green-100: 220 252 231;
         --blueprint-green-200: 187 247 208;
@@ -150,6 +162,7 @@ export default createGlobalStyle`
         --blueprint-green-900: 20 83 45;
         --blueprint-green-950: 5 46 22;
 
+        --blueprint-emerald: var(--blueprint-emerald-500);
         --blueprint-emerald-50: 236 253 245;
         --blueprint-emerald-100: 209 250 229;
         --blueprint-emerald-200: 167 243 208;
@@ -162,6 +175,7 @@ export default createGlobalStyle`
         --blueprint-emerald-900: 6 78 59;
         --blueprint-emerald-950: 2 44 34;
 
+        --blueprint-teal: var(--blueprint-teal-500);
         --blueprint-teal-50: 240 253 250;
         --blueprint-teal-100: 204 251 241;
         --blueprint-teal-200: 153 246 228;
@@ -174,6 +188,7 @@ export default createGlobalStyle`
         --blueprint-teal-900: 19 78 74;
         --blueprint-teal-950: 4 47 46;
 
+        --blueprint-cyan: var(--blueprint-cyan-500);
         --blueprint-cyan-50: 236 254 255;
         --blueprint-cyan-100: 207 250 254;
         --blueprint-cyan-200: 165 243 252;
@@ -186,6 +201,7 @@ export default createGlobalStyle`
         --blueprint-cyan-900: 22 78 99;
         --blueprint-cyan-950: 8 51 68;
 
+        --blueprint-sky: var(--blueprint-sky-500);
         --blueprint-sky-50: 240 249 255;
         --blueprint-sky-100: 224 242 254;
         --blueprint-sky-200: 186 230 253;
@@ -198,6 +214,7 @@ export default createGlobalStyle`
         --blueprint-sky-900: 12 74 110;
         --blueprint-sky-950: 8 47 73;
 
+        --blueprint-blue: var(--blueprint-blue-500);
         --blueprint-blue-50: 239 246 255;
         --blueprint-blue-100: 219 234 254;
         --blueprint-blue-200: 191 219 254;
@@ -210,6 +227,7 @@ export default createGlobalStyle`
         --blueprint-blue-900: 30 58 138;
         --blueprint-blue-950: 23 37 84;
 
+        --blueprint-indigo: var(--blueprint-indigo-500);
         --blueprint-indigo-50: 238 242 255;
         --blueprint-indigo-100: 224 231 255;
         --blueprint-indigo-200: 199 210 254;
@@ -222,6 +240,7 @@ export default createGlobalStyle`
         --blueprint-indigo-900: 49 46 129;
         --blueprint-indigo-950: 30 27 75;
 
+        --blueprint-violet: var(--blueprint-violet-500);
         --blueprint-violet-50: 245 243 255;
         --blueprint-violet-100: 237 233 254;
         --blueprint-violet-200: 221 214 254;
@@ -234,6 +253,7 @@ export default createGlobalStyle`
         --blueprint-violet-900: 76 29 149;
         --blueprint-violet-950: 46 16 101;
 
+        --blueprint-purple: var(--blueprint-purple-500);
         --blueprint-purple-50: 245 243 255;
         --blueprint-purple-100: 243 232 255;
         --blueprint-purple-200: 233 213 255;
@@ -246,6 +266,7 @@ export default createGlobalStyle`
         --blueprint-purple-900: 88 28 135;
         --blueprint-purple-950: 59 7 100;
 
+        --blueprint-fuchsia: var(--blueprint-fuchsia-500);
         --blueprint-fuchsia-50: 253 244 255;
         --blueprint-fuchsia-100: 250 232 255;
         --blueprint-fuchsia-200: 245 208 254;
@@ -258,6 +279,7 @@ export default createGlobalStyle`
         --blueprint-fuchsia-900: 112 26 117;
         --blueprint-fuchsia-950: 74 4 78;
 
+        --blueprint-pink: var(--blueprint-pink-500);
         --blueprint-pink-50: 253 242 248;
         --blueprint-pink-100: 252 231 243;
         --blueprint-pink-200: 251 207 232;
@@ -270,6 +292,7 @@ export default createGlobalStyle`
         --blueprint-pink-900: 131 24 67;
         --blueprint-pink-950: 80 7 36;
 
+        --blueprint-rose: var(--blueprint-rose-500);
         --blueprint-rose-50: 255 241 242;
         --blueprint-rose-100: 255 228 230;
         --blueprint-rose-200: 254 205 211;
