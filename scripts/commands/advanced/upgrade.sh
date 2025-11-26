@@ -40,8 +40,8 @@ Command() {
   HAS_DEV=false
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     PRINT INFO "Backing up extension development files.."
-    mkdir -p "$FOLDER/.tmp/dev"
-    cp .blueprint/dev/* "$FOLDER/.tmp/dev/" -Rf
+    mkdir -p "$FOLDER/.tmp"
+    cp .blueprint/dev "$FOLDER/.tmp/dev" -Rf
     HAS_DEV=true
   fi
 
