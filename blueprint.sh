@@ -254,7 +254,10 @@ if [[ $1 != "-bash" ]]; then
         PRINT FATAL "Missing dependency \"yarn\"."
     fi
     hide_progress
+
+    set -eo pipefail
     yarn install
+    set +eo pipefail
 
     ((PROGRESS_NOW++))
 
@@ -370,7 +373,9 @@ if [[ $1 != "-bash" ]]; then
     PRINT INFO "Rebuilding panel assets.."
     hide_progress
     cd "$FOLDER" || cdhalt
+    set -eo pipefail
     yarn run build:production --progress
+    set +eo pipefail
 
     ((PROGRESS_NOW++))
 
@@ -421,4 +426,4 @@ esac
 
 shift 2
 Command "$@"
-exit 0
+exit 
