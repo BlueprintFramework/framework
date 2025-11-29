@@ -143,9 +143,8 @@ Command() {
 
   if [[ ${HAS_DEV} == true ]]; then
     PRINT INFO "Restoring extension development files.."
-    mkdir -p .blueprint/dev
-    cp "$FOLDER/.tmp/dev/"* .blueprint/dev -r
-    rm "$FOLDER/.tmp/dev" -rf
+    rm -rf .blueprint/dev
+    mv "$FOLDER/.tmp/dev" .blueprint/dev
   fi
 
   rm -r "$FOLDER/.tmp"
