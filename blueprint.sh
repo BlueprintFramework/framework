@@ -426,4 +426,4 @@ esac
 
 shift 2
 Command "$@"
-exit 
+exit 0
