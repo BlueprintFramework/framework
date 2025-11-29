@@ -1,3 +1,5 @@
+@import url('./extensions.css');
+
 :root {
   --blueprint-white: 255 255 255;
   --blueprint-black: 19 26 32;
