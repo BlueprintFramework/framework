@@ -1,7 +1,7 @@
 {
   "name": "pterodactyl-panel",
   "engines": {
-    "node": ">=17"
+    "node": ">=14"
   },
   "dependencies": {
     "@floating-ui/react-dom-interactions": "^0.6.6",
@@ -13,7 +13,7 @@
     "@hot-loader/react-dom": "^16.14.0",
     "@preact/signals-react": "^1.2.1",
     "@tailwindcss/forms": "^0.5.2",
-    "@tailwindcss/line-clamp": "^0.4.4",
+    "@tailwindcss/line-clamp": "^0.4.0",
     "axios": "^0.27.2",
     "boring-avatars": "^1.7.0",
     "chart.js": "^3.8.0",
@@ -130,7 +130,7 @@
     "yarn-deduplicate": "^1.1.1"
   },
   "scripts": {
-    "clean": "cd public/assets && find . \\( -name \"*.js\" -o -name \"*.map\" \\) -type f -delete && rm -rf ./node_modules/.cache",
+    "clean": "cd public/assets && find . \\( -name \"*.js\" -o -name \"*.map\" \\) -type f -delete",
     "test": "jest",
     "lint": "eslint ./resources/scripts/**/*.{ts,tsx} --ext .ts,.tsx",
     "watch": "cross-env NODE_ENV=development ./node_modules/.bin/webpack --watch --progress",

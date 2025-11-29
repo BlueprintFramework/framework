@@ -1,72 +1,353 @@
-const postcss = require('postcss');
-const fs = require('fs');
-
-function extractCssVars(cssFilePath) {
-  const cssContent = fs.readFileSync(cssFilePath, 'utf8');
-  const root = postcss.parse(cssContent);
-  const vars = {};
-
-  root.walkRules(rule => {
-    if (rule.selector === ':root') {
-      rule.walkDecls(decl => {
-        if (decl.prop.startsWith('--blueprint-')) {
-          const name = decl.prop.replace('--blueprint-', '');
-          let value = decl.value;
-
-          if (value.includes('rgb(') && value.includes('/')) {
-            const match = value.match(/rgb\(([^/]+)/);
-            if (match) {
-              value = match[1].trim();
-            }
-          }
-
-          value = `rgb(${value} / 1)`
-
-          if (name.includes('-')) {
-            const [colorName, shade] = name.split('-');
-            if (!vars[colorName]) vars[colorName] = {};
-            vars[colorName][shade] = value;
-          } else {
-            if (!vars[name]) vars[name] = {};
-            vars[name]['DEFAULT'] = value;
-          }
-        }
-      });
-    }
-  });
-
-  return vars;
-}
-
-const cssVars = extractCssVars('./resources/scripts/blueprint/css/BlueprintStylesheet.css');
-
 module.exports = {
-    content: [
-        './resources/scripts/**/*.{js,ts,tsx}',
-    ],
-    theme: {
-        extend: {
-            fontFamily: {
-                header: ['"IBM Plex Sans"', '"Roboto"', 'system-ui', 'sans-serif'],
-            },
-            colors: {
-                ...cssVars
-            },
-            fontSize: {
-                '2xs': '0.625rem',
-            },
-            transitionDuration: {
-                250: '250ms',
-            },
-            borderColor: theme => ({
-                default: theme('colors.neutral.400', 'currentColor'),
-            }),
+  content: ['./resources/scripts/**/*.{js,ts,tsx,css}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        header: ['"IBM Plex Sans"', '"Roboto"', 'system-ui', 'sans-serif'],
+      },
+      colors: {
+        white: 'rgb(var(--blueprint-white) / 1)',
+        black: 'rgb(var(--blueprint-black) / 1)',
+
+        slate: {
+          DEFAULT: 'rgb(var(--blueprint-slate) / 1)',
+          50: 'rgb(var(--blueprint-slate-50) / 1)',
+          100: 'rgb(var(--blueprint-slate-100) / 1)',
+          200: 'rgb(var(--blueprint-slate-200) / 1)',
+          300: 'rgb(var(--blueprint-slate-300) / 1)',
+          400: 'rgb(var(--blueprint-slate-400) / 1)',
+          500: 'rgb(var(--blueprint-slate-500) / 1)',
+          600: 'rgb(var(--blueprint-slate-600) / 1)',
+          700: 'rgb(var(--blueprint-slate-700) / 1)',
+          800: 'rgb(var(--blueprint-slate-800) / 1)',
+          900: 'rgb(var(--blueprint-slate-900) / 1)',
+          950: 'rgb(var(--blueprint-slate-950) / 1)',
         },
+        gray: {
+          DEFAULT: 'rgb(var(--blueprint-gray) / 1)',
+          50: 'rgb(var(--blueprint-gray-50) / 1)',
+          100: 'rgb(var(--blueprint-gray-100) / 1)',
+          200: 'rgb(var(--blueprint-gray-200) / 1)',
+          300: 'rgb(var(--blueprint-gray-300) / 1)',
+          400: 'rgb(var(--blueprint-gray-400) / 1)',
+          500: 'rgb(var(--blueprint-gray-500) / 1)',
+          600: 'rgb(var(--blueprint-gray-600) / 1)',
+          700: 'rgb(var(--blueprint-gray-700) / 1)',
+          800: 'rgb(var(--blueprint-gray-800) / 1)',
+          900: 'rgb(var(--blueprint-gray-900) / 1)',
+          950: 'rgb(var(--blueprint-gray-950) / 1)',
+        },
+        zinc: {
+          DEFAULT: 'rgb(var(--blueprint-zinc) / 1)',
+          50: 'rgb(var(--blueprint-zinc-50) / 1)',
+          100: 'rgb(var(--blueprint-zinc-100) / 1)',
+          200: 'rgb(var(--blueprint-zinc-200) / 1)',
+          300: 'rgb(var(--blueprint-zinc-300) / 1)',
+          400: 'rgb(var(--blueprint-zinc-400) / 1)',
+          500: 'rgb(var(--blueprint-zinc-500) / 1)',
+          600: 'rgb(var(--blueprint-zinc-600) / 1)',
+          700: 'rgb(var(--blueprint-zinc-700) / 1)',
+          800: 'rgb(var(--blueprint-zinc-800) / 1)',
+          900: 'rgb(var(--blueprint-zinc-900) / 1)',
+          950: 'rgb(var(--blueprint-zinc-950) / 1)',
+        },
+        stone: {
+          DEFAULT: 'rgb(var(--blueprint-stone) / 1)',
+          50: 'rgb(var(--blueprint-stone-50) / 1)',
+          100: 'rgb(var(--blueprint-stone-100) / 1)',
+          200: 'rgb(var(--blueprint-stone-200) / 1)',
+          300: 'rgb(var(--blueprint-stone-300) / 1)',
+          400: 'rgb(var(--blueprint-stone-400) / 1)',
+          500: 'rgb(var(--blueprint-stone-500) / 1)',
+          600: 'rgb(var(--blueprint-stone-600) / 1)',
+          700: 'rgb(var(--blueprint-stone-700) / 1)',
+          800: 'rgb(var(--blueprint-stone-800) / 1)',
+          900: 'rgb(var(--blueprint-stone-900) / 1)',
+          950: 'rgb(var(--blueprint-stone-950) / 1)',
+        },
+        red: {
+          DEFAULT: 'rgb(var(--blueprint-red) / 1)',
+          50: 'rgb(var(--blueprint-red-50) / 1)',
+          100: 'rgb(var(--blueprint-red-100) / 1)',
+          200: 'rgb(var(--blueprint-red-200) / 1)',
+          300: 'rgb(var(--blueprint-red-300) / 1)',
+          400: 'rgb(var(--blueprint-red-400) / 1)',
+          500: 'rgb(var(--blueprint-red-500) / 1)',
+          600: 'rgb(var(--blueprint-red-600) / 1)',
+          700: 'rgb(var(--blueprint-red-700) / 1)',
+          800: 'rgb(var(--blueprint-red-800) / 1)',
+          900: 'rgb(var(--blueprint-red-900) / 1)',
+          950: 'rgb(var(--blueprint-red-950) / 1)',
+        },
+        orange: {
+          DEFAULT: 'rgb(var(--blueprint-orange) / 1)',
+          50: 'rgb(var(--blueprint-orange-50) / 1)',
+          100: 'rgb(var(--blueprint-orange-100) / 1)',
+          200: 'rgb(var(--blueprint-orange-200) / 1)',
+          300: 'rgb(var(--blueprint-orange-300) / 1)',
+          400: 'rgb(var(--blueprint-orange-400) / 1)',
+          500: 'rgb(var(--blueprint-orange-500) / 1)',
+          600: 'rgb(var(--blueprint-orange-600) / 1)',
+          700: 'rgb(var(--blueprint-orange-700) / 1)',
+          800: 'rgb(var(--blueprint-orange-800) / 1)',
+          900: 'rgb(var(--blueprint-orange-900) / 1)',
+          950: 'rgb(var(--blueprint-orange-950) / 1)',
+        },
+        amber: {
+          DEFAULT: 'rgb(var(--blueprint-amber) / 1)',
+          50: 'rgb(var(--blueprint-amber-50) / 1)',
+          100: 'rgb(var(--blueprint-amber-100) / 1)',
+          200: 'rgb(var(--blueprint-amber-200) / 1)',
+          300: 'rgb(var(--blueprint-amber-300) / 1)',
+          400: 'rgb(var(--blueprint-amber-400) / 1)',
+          500: 'rgb(var(--blueprint-amber-500) / 1)',
+          600: 'rgb(var(--blueprint-amber-600) / 1)',
+          700: 'rgb(var(--blueprint-amber-700) / 1)',
+          800: 'rgb(var(--blueprint-amber-800) / 1)',
+          900: 'rgb(var(--blueprint-amber-900) / 1)',
+          950: 'rgb(var(--blueprint-amber-950) / 1)',
+        },
+        yellow: {
+          DEFAULT: 'rgb(var(--blueprint-yellow) / 1)',
+          50: 'rgb(var(--blueprint-yellow-50) / 1)',
+          100: 'rgb(var(--blueprint-yellow-100) / 1)',
+          200: 'rgb(var(--blueprint-yellow-200) / 1)',
+          300: 'rgb(var(--blueprint-yellow-300) / 1)',
+          400: 'rgb(var(--blueprint-yellow-400) / 1)',
+          500: 'rgb(var(--blueprint-yellow-500) / 1)',
+          600: 'rgb(var(--blueprint-yellow-600) / 1)',
+          700: 'rgb(var(--blueprint-yellow-700) / 1)',
+          800: 'rgb(var(--blueprint-yellow-800) / 1)',
+          900: 'rgb(var(--blueprint-yellow-900) / 1)',
+          950: 'rgb(var(--blueprint-yellow-950) / 1)',
+        },
+        lime: {
+          DEFAULT: 'rgb(var(--blueprint-lime) / 1)',
+          50: 'rgb(var(--blueprint-lime-50) / 1)',
+          100: 'rgb(var(--blueprint-lime-100) / 1)',
+          200: 'rgb(var(--blueprint-lime-200) / 1)',
+          300: 'rgb(var(--blueprint-lime-300) / 1)',
+          400: 'rgb(var(--blueprint-lime-400) / 1)',
+          500: 'rgb(var(--blueprint-lime-500) / 1)',
+          600: 'rgb(var(--blueprint-lime-600) / 1)',
+          700: 'rgb(var(--blueprint-lime-700) / 1)',
+          800: 'rgb(var(--blueprint-lime-800) / 1)',
+          900: 'rgb(var(--blueprint-lime-900) / 1)',
+          950: 'rgb(var(--blueprint-lime-950) / 1)',
+        },
+        green: {
+          DEFAULT: 'rgb(var(--blueprint-green) / 1)',
+          50: 'rgb(var(--blueprint-green-50) / 1)',
+          100: 'rgb(var(--blueprint-green-100) / 1)',
+          200: 'rgb(var(--blueprint-green-200) / 1)',
+          300: 'rgb(var(--blueprint-green-300) / 1)',
+          400: 'rgb(var(--blueprint-green-400) / 1)',
+          500: 'rgb(var(--blueprint-green-500) / 1)',
+          600: 'rgb(var(--blueprint-green-600) / 1)',
+          700: 'rgb(var(--blueprint-green-700) / 1)',
+          800: 'rgb(var(--blueprint-green-800) / 1)',
+          900: 'rgb(var(--blueprint-green-900) / 1)',
+          950: 'rgb(var(--blueprint-green-950) / 1)',
+        },
+        emerald: {
+          DEFAULT: 'rgb(var(--blueprint-emerald) / 1)',
+          50: 'rgb(var(--blueprint-emerald-50) / 1)',
+          100: 'rgb(var(--blueprint-emerald-100) / 1)',
+          200: 'rgb(var(--blueprint-emerald-200) / 1)',
+          300: 'rgb(var(--blueprint-emerald-300) / 1)',
+          400: 'rgb(var(--blueprint-emerald-400) / 1)',
+          500: 'rgb(var(--blueprint-emerald-500) / 1)',
+          600: 'rgb(var(--blueprint-emerald-600) / 1)',
+          700: 'rgb(var(--blueprint-emerald-700) / 1)',
+          800: 'rgb(var(--blueprint-emerald-800) / 1)',
+          900: 'rgb(var(--blueprint-emerald-900) / 1)',
+          950: 'rgb(var(--blueprint-emerald-950) / 1)',
+        },
+        teal: {
+          DEFAULT: 'rgb(var(--blueprint-teal) / 1)',
+          50: 'rgb(var(--blueprint-teal-50) / 1)',
+          100: 'rgb(var(--blueprint-teal-100) / 1)',
+          200: 'rgb(var(--blueprint-teal-200) / 1)',
+          300: 'rgb(var(--blueprint-teal-300) / 1)',
+          400: 'rgb(var(--blueprint-teal-400) / 1)',
+          500: 'rgb(var(--blueprint-teal-500) / 1)',
+          600: 'rgb(var(--blueprint-teal-600) / 1)',
+          700: 'rgb(var(--blueprint-teal-700) / 1)',
+          800: 'rgb(var(--blueprint-teal-800) / 1)',
+          900: 'rgb(var(--blueprint-teal-900) / 1)',
+          950: 'rgb(var(--blueprint-teal-950) / 1)',
+        },
+        cyan: {
+          DEFAULT: 'rgb(var(--blueprint-cyan) / 1)',
+          50: 'rgb(var(--blueprint-cyan-50) / 1)',
+          100: 'rgb(var(--blueprint-cyan-100) / 1)',
+          200: 'rgb(var(--blueprint-cyan-200) / 1)',
+          300: 'rgb(var(--blueprint-cyan-300) / 1)',
+          400: 'rgb(var(--blueprint-cyan-400) / 1)',
+          500: 'rgb(var(--blueprint-cyan-500) / 1)',
+          600: 'rgb(var(--blueprint-cyan-600) / 1)',
+          700: 'rgb(var(--blueprint-cyan-700) / 1)',
+          800: 'rgb(var(--blueprint-cyan-800) / 1)',
+          900: 'rgb(var(--blueprint-cyan-900) / 1)',
+          950: 'rgb(var(--blueprint-cyan-950) / 1)',
+        },
+        sky: {
+          DEFAULT: 'rgb(var(--blueprint-sky) / 1)',
+          50: 'rgb(var(--blueprint-sky-50) / 1)',
+          100: 'rgb(var(--blueprint-sky-100) / 1)',
+          200: 'rgb(var(--blueprint-sky-200) / 1)',
+          300: 'rgb(var(--blueprint-sky-300) / 1)',
+          400: 'rgb(var(--blueprint-sky-400) / 1)',
+          500: 'rgb(var(--blueprint-sky-500) / 1)',
+          600: 'rgb(var(--blueprint-sky-600) / 1)',
+          700: 'rgb(var(--blueprint-sky-700) / 1)',
+          800: 'rgb(var(--blueprint-sky-800) / 1)',
+          900: 'rgb(var(--blueprint-sky-900) / 1)',
+          950: 'rgb(var(--blueprint-sky-950) / 1)',
+        },
+        blue: {
+          DEFAULT: 'rgb(var(--blueprint-blue) / 1)',
+          50: 'rgb(var(--blueprint-blue-50) / 1)',
+          100: 'rgb(var(--blueprint-blue-100) / 1)',
+          200: 'rgb(var(--blueprint-blue-200) / 1)',
+          300: 'rgb(var(--blueprint-blue-300) / 1)',
+          400: 'rgb(var(--blueprint-blue-400) / 1)',
+          500: 'rgb(var(--blueprint-blue-500) / 1)',
+          600: 'rgb(var(--blueprint-blue-600) / 1)',
+          700: 'rgb(var(--blueprint-blue-700) / 1)',
+          800: 'rgb(var(--blueprint-blue-800) / 1)',
+          900: 'rgb(var(--blueprint-blue-900) / 1)',
+          950: 'rgb(var(--blueprint-blue-950) / 1)',
+        },
+        indigo: {
+          DEFAULT: 'rgb(var(--blueprint-indigo) / 1)',
+          50: 'rgb(var(--blueprint-indigo-50) / 1)',
+          100: 'rgb(var(--blueprint-indigo-100) / 1)',
+          200: 'rgb(var(--blueprint-indigo-200) / 1)',
+          300: 'rgb(var(--blueprint-indigo-300) / 1)',
+          400: 'rgb(var(--blueprint-indigo-400) / 1)',
+          500: 'rgb(var(--blueprint-indigo-500) / 1)',
+          600: 'rgb(var(--blueprint-indigo-600) / 1)',
+          700: 'rgb(var(--blueprint-indigo-700) / 1)',
+          800: 'rgb(var(--blueprint-indigo-800) / 1)',
+          900: 'rgb(var(--blueprint-indigo-900) / 1)',
+          950: 'rgb(var(--blueprint-indigo-950) / 1)',
+        },
+        violet: {
+          DEFAULT: 'rgb(var(--blueprint-violet) / 1)',
+          50: 'rgb(var(--blueprint-violet-50) / 1)',
+          100: 'rgb(var(--blueprint-violet-100) / 1)',
+          200: 'rgb(var(--blueprint-violet-200) / 1)',
+          300: 'rgb(var(--blueprint-violet-300) / 1)',
+          400: 'rgb(var(--blueprint-violet-400) / 1)',
+          500: 'rgb(var(--blueprint-violet-500) / 1)',
+          600: 'rgb(var(--blueprint-violet-600) / 1)',
+          700: 'rgb(var(--blueprint-violet-700) / 1)',
+          800: 'rgb(var(--blueprint-violet-800) / 1)',
+          900: 'rgb(var(--blueprint-violet-900) / 1)',
+          950: 'rgb(var(--blueprint-violet-950) / 1)',
+        },
+        purple: {
+          DEFAULT: 'rgb(var(--blueprint-purple) / 1)',
+          50: 'rgb(var(--blueprint-purple-50) / 1)',
+          100: 'rgb(var(--blueprint-purple-100) / 1)',
+          200: 'rgb(var(--blueprint-purple-200) / 1)',
+          300: 'rgb(var(--blueprint-purple-300) / 1)',
+          400: 'rgb(var(--blueprint-purple-400) / 1)',
+          500: 'rgb(var(--blueprint-purple-500) / 1)',
+          600: 'rgb(var(--blueprint-purple-600) / 1)',
+          700: 'rgb(var(--blueprint-purple-700) / 1)',
+          800: 'rgb(var(--blueprint-purple-800) / 1)',
+          900: 'rgb(var(--blueprint-purple-900) / 1)',
+          950: 'rgb(var(--blueprint-purple-950) / 1)',
+        },
+        fuchsia: {
+          DEFAULT: 'rgb(var(--blueprint-fuchsia) / 1)',
+          50: 'rgb(var(--blueprint-fuchsia-50) / 1)',
+          100: 'rgb(var(--blueprint-fuchsia-100) / 1)',
+          200: 'rgb(var(--blueprint-fuchsia-200) / 1)',
+          300: 'rgb(var(--blueprint-fuchsia-300) / 1)',
+          400: 'rgb(var(--blueprint-fuchsia-400) / 1)',
+          500: 'rgb(var(--blueprint-fuchsia-500) / 1)',
+          600: 'rgb(var(--blueprint-fuchsia-600) / 1)',
+          700: 'rgb(var(--blueprint-fuchsia-700) / 1)',
+          800: 'rgb(var(--blueprint-fuchsia-800) / 1)',
+          900: 'rgb(var(--blueprint-fuchsia-900) / 1)',
+          950: 'rgb(var(--blueprint-fuchsia-950) / 1)',
+        },
+        pink: {
+          DEFAULT: 'rgb(var(--blueprint-pink) / 1)',
+          50: 'rgb(var(--blueprint-pink-50) / 1)',
+          100: 'rgb(var(--blueprint-pink-100) / 1)',
+          200: 'rgb(var(--blueprint-pink-200) / 1)',
+          300: 'rgb(var(--blueprint-pink-300) / 1)',
+          400: 'rgb(var(--blueprint-pink-400) / 1)',
+          500: 'rgb(var(--blueprint-pink-500) / 1)',
+          600: 'rgb(var(--blueprint-pink-600) / 1)',
+          700: 'rgb(var(--blueprint-pink-700) / 1)',
+          800: 'rgb(var(--blueprint-pink-800) / 1)',
+          900: 'rgb(var(--blueprint-pink-900) / 1)',
+          950: 'rgb(var(--blueprint-pink-950) / 1)',
+        },
+        rose: {
+          DEFAULT: 'rgb(var(--blueprint-rose) / 1)',
+          50: 'rgb(var(--blueprint-rose-50) / 1)',
+          100: 'rgb(var(--blueprint-rose-100) / 1)',
+          200: 'rgb(var(--blueprint-rose-200) / 1)',
+          300: 'rgb(var(--blueprint-rose-300) / 1)',
+          400: 'rgb(var(--blueprint-rose-400) / 1)',
+          500: 'rgb(var(--blueprint-rose-500) / 1)',
+          600: 'rgb(var(--blueprint-rose-600) / 1)',
+          700: 'rgb(var(--blueprint-rose-700) / 1)',
+          800: 'rgb(var(--blueprint-rose-800) / 1)',
+          900: 'rgb(var(--blueprint-rose-900) / 1)',
+          950: 'rgb(var(--blueprint-rose-950) / 1)',
+        },
+
+        primary: {
+          DEFAULT: 'rgb(var(--blueprint-primary) / 1)',
+          50: 'rgb(var(--blueprint-primary-50) / 1)',
+          100: 'rgb(var(--blueprint-primary-100) / 1)',
+          200: 'rgb(var(--blueprint-primary-200) / 1)',
+          300: 'rgb(var(--blueprint-primary-300) / 1)',
+          400: 'rgb(var(--blueprint-primary-400) / 1)',
+          500: 'rgb(var(--blueprint-primary-500) / 1)',
+          600: 'rgb(var(--blueprint-primary-600) / 1)',
+          700: 'rgb(var(--blueprint-primary-700) / 1)',
+          800: 'rgb(var(--blueprint-primary-800) / 1)',
+          900: 'rgb(var(--blueprint-primary-900) / 1)',
+          950: 'rgb(var(--blueprint-primary-950) / 1)',
+        },
+        neutral: {
+          DEFAULT: 'rgb(var(--blueprint-neutral) / 1)',
+          50: 'rgb(var(--blueprint-neutral-50) / 1)',
+          100: 'rgb(var(--blueprint-neutral-100) / 1)',
+          200: 'rgb(var(--blueprint-neutral-200) / 1)',
+          300: 'rgb(var(--blueprint-neutral-300) / 1)',
+          400: 'rgb(var(--blueprint-neutral-400) / 1)',
+          500: 'rgb(var(--blueprint-neutral-500) / 1)',
+          600: 'rgb(var(--blueprint-neutral-600) / 1)',
+          700: 'rgb(var(--blueprint-neutral-700) / 1)',
+          800: 'rgb(var(--blueprint-neutral-800) / 1)',
+          900: 'rgb(var(--blueprint-neutral-900) / 1)',
+          950: 'rgb(var(--blueprint-neutral-950) / 1)',
+        },
+      },
+      fontSize: {
+        '2xs': '0.625rem',
+      },
+      transitionDuration: {
+        250: '250ms',
+      },
+      borderColor: (theme) => ({
+        default: theme('colors.neutral.400', 'currentColor'),
+      }),
     },
-    plugins: [
-        require('@tailwindcss/line-clamp'),
-        require('@tailwindcss/forms')({
-            strategy: 'class',
-        }),
-    ]
+  },
+  plugins: [
+    require('@tailwindcss/line-clamp'),
+    require('@tailwindcss/forms')({
+      strategy: 'class',
+    }),
+  ],
 };
