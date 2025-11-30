@@ -10,7 +10,7 @@
 
 BLUEPRINT_ENGINE="solstice"
 REPOSITORY="BlueprintFramework/framework"
-VERSION="beta-2025-11"
+VERSION="beta-2025-12"
 
 FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__FOLDER"
 OWNERSHIP="www-data:www-data" #;
@@ -163,7 +163,6 @@ depend() {
 
 # Assign variables for extension flags.
 assignflags() {
-  F_experimentalThemecolors=false
   F_ignorePlaceholders=false
   F_forceLegacyPlaceholders=false
   F_developerIgnoreInstallScript=false
@@ -171,7 +170,6 @@ assignflags() {
   F_developerKeepApplicationCache=false
   F_developerEscalateInstallScript=false
   F_developerEscalateExportScript=false
-  if [[ ( $flags == *"experimentalThemecolors,"*        ) || ( $flags == *"experimentalThemecolors"        ) ]]; then F_experimentalThemecolors=true        ;fi
   if [[ ( $flags == *"ignorePlaceholders,"*             ) || ( $flags == *"ignorePlaceholders"             ) ]]; then F_ignorePlaceholders=true             ;fi
   if [[ ( $flags == *"forceLegacyPlaceholders,"*        ) || ( $flags == *"forceLegacyPlaceholders"        ) ]]; then F_forceLegacyPlaceholders=true        ;fi
   if [[ ( $flags == *"developerIgnoreInstallScript,"*   ) || ( $flags == *"developerIgnoreInstallScript"   ) ]]; then F_developerIgnoreInstallScript=true   ;fi
