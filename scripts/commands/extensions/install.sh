@@ -1152,25 +1152,13 @@ InstallExtension() {
     PRINT INFO "Cloning and linking dashboard css.."
     YARN="y"
 
-    # Handle experimental theme colors flag
-    # Throw extension dashboard.css to extensions_colors_experiment.css
-    local DASHBOARDCSS_FILE
-    DASHBOARDCSS_FILE="resources/scripts/blueprint/css/extensions.css"
-    if [[ $F_experimentalThemecolors == true ]]; then
-      PRINT WARNING "Experimental theme colors flag enabled, linking to extensions_colors_experiment.css"
-      DASHBOARDCSS_FILE="resources/scripts/blueprint/css/extensions_colors_experiment.css"
-    fi
-
     sed -i "s~@import url(./imported/$identifier.css);~~g" "resources/scripts/blueprint/css/extensions.css"
-    sed -i "s~@import url(./imported/$identifier.css);~~g" "resources/scripts/blueprint/css/extensions_colors_experiment.css"
-    echo -e -n "@import url(./imported/$identifier.css);" >> "$DASHBOARDCSS_FILE"
+    echo -e -n "@import url(./imported/$identifier.css);" >> "resources/scripts/blueprint/css/extensions.css"
 
     cp ".blueprint/tmp/$n/$dashboard_css" ".blueprint/extensions/$identifier/dashboard.css"
     if [[ $DUPLICATE != "y" ]]; then
       ln -s -r -T ".blueprint/extensions/$identifier/dashboard.css" "$FOLDER/resources/scripts/blueprint/css/imported/$identifier.css"
     fi
-
-    unset DASHBOARDCSS_FILE
   fi
 
   ((PROGRESS_NOW++))
