@@ -163,6 +163,7 @@ depend() {
 
 # Assign variables for extension flags.
 assignflags() {
+  F_experimentalThemecolors=false
   F_ignorePlaceholders=false
   F_forceLegacyPlaceholders=false
   F_developerIgnoreInstallScript=false
@@ -170,6 +171,7 @@ assignflags() {
   F_developerKeepApplicationCache=false
   F_developerEscalateInstallScript=false
   F_developerEscalateExportScript=false
+  if [[ ( $flags == *"experimentalThemecolors,"*        ) || ( $flags == *"experimentalThemecolors"        ) ]]; then F_experimentalThemecolors=true        ;fi
   if [[ ( $flags == *"ignorePlaceholders,"*             ) || ( $flags == *"ignorePlaceholders"             ) ]]; then F_ignorePlaceholders=true             ;fi
   if [[ ( $flags == *"forceLegacyPlaceholders,"*        ) || ( $flags == *"forceLegacyPlaceholders"        ) ]]; then F_forceLegacyPlaceholders=true        ;fi
   if [[ ( $flags == *"developerIgnoreInstallScript,"*   ) || ( $flags == *"developerIgnoreInstallScript"   ) ]]; then F_developerIgnoreInstallScript=true   ;fi

@@ -146,7 +146,10 @@ RemoveExtension() {
   # Remove dashboard css
   if [[ $dashboard_css != "" ]]; then
     PRINT INFO "Removing and unlinking dashboard css.."
+
     sed -i "s~@import url(./imported/$identifier.css);~~g" "resources/scripts/blueprint/css/extensions.css"
+    sed -i "s~@import url(./imported/$identifier.css);~~g" "resources/scripts/blueprint/css/extensions_colors_experiment.css"
+
     rm "resources/scripts/blueprint/css/imported/$identifier.css"
     YARN="y"
   fi
