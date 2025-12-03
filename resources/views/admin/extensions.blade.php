@@ -10,7 +10,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
 
 @section('content-header')
   @if($is_installed)
-    @if($PlaceholderService->version() != $latestBlueprintVersion)
+    @if(($PlaceholderService->version() != $latestBlueprintVersion) && $latestBlueprintVersion != "unknown")
       <div class="blueprint-statusbar blueprint-statusbar-danger">
         <div style="margin-right: 14px;">
           <i class="bi bi-exclamation-triangle-fill" style="font-size: 24px; color: #f52e98"></i>
@@ -28,6 +28,20 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
             {{ $latestBlueprintVersion }}
           </code>
           to access the latest features and improvements.
+        </div>
+      </div>
+    @endif
+
+    @if($latestBlueprintVersion == "unknown")
+      <div class="blueprint-statusbar blueprint-statusbar-warning">
+        <div style="margin-right: 14px;">
+          <i class="bi bi-wifi-off" style="font-size: 24px; color: #f5952e"></i>
+        </div>
+        <div>
+          <span class="text-bold" style="color: #f9a040;">
+          Could not fetch version info.
+          </span>
+          Blueprint failed to fetch the latest release name from the API.
         </div>
       </div>
     @endif
@@ -67,6 +81,13 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
         to left,
         #1f2933 50%,
         #5c143b 100%
+      );
+    }
+    .blueprint-statusbar.blueprint-statusbar-warning {
+      background-image: linear-gradient(
+        to left,
+        #1f2933 60%,
+        #a43e006e 100%
       );
     }
 

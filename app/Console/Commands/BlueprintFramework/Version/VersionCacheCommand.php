@@ -27,7 +27,13 @@ class VersionCacheCommand extends Command
         'header' => 'User-Agent: BlueprintFramework',
       ],
     ]);
-    $response = file_get_contents($api_url, false, $context);
+    $response = @file_get_contents($api_url, false, $context);
+
+    if ($response === false || empty($response)) {
+      $this->blueprint->dbSet('blueprint', 'internal:version:latest', 'unknown');
+      return false;
+    }
+
     if ($response) {
       $cleaned_response = preg_replace('/[[:^print:]]/', '', $response);
       $data = json_decode($cleaned_response, true);
@@ -37,10 +43,12 @@ class VersionCacheCommand extends Command
         return true;
       } else {
         echo 'Error: Unable to fetch the latest release version.';
+        $this->blueprint->dbSet('blueprint', 'internal:version:latest', 'unknown');
         return false;
       }
     } else {
       echo 'Error: Failed to make the API request.';
+      $this->blueprint->dbSet('blueprint', 'internal:version:latest', 'unknown');
       return false;
     }
   }
