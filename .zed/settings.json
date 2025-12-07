@@ -6,6 +6,12 @@
     },
     "PHP": {
       "tab_size": 2
+    },
+    "TypeScript": {
+      "tab_size": 2
+    },
+    "CSS": {
+      "tab_size": 2
     }
   },
   "format_on_save": "off"

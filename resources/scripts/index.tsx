@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import App from '@/components/App';
 import { setConfig } from 'react-hot-loader';
 
-import './blueprint/css/extensions.css';
 import './blueprint/css/BlueprintStylesheet.css';
 
 // Enable language support.
