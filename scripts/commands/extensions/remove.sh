@@ -411,6 +411,7 @@ Command() {
     if [[ $YARN == "y" ]]; then
       PRINT INFO "Rebuilding panel assets.."
       cd "$FOLDER" || cdhalt
+      rm -rf "$FOLDER/node_modules/.cache"
       yarn run build:production --progress
     fi
 

@@ -374,6 +374,7 @@ if [[ $1 != "-bash" ]]; then
     hide_progress
     cd "$FOLDER" || cdhalt
     set -eo pipefail
+    rm -rf "$FOLDER/node_modules/.cache"
     yarn run build:production --progress
     set +eo pipefail
 
