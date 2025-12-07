@@ -1,16 +1,15 @@
-// theme.ts
 import { theme as twinTheme } from 'twin.macro';
 
-// node.js imports (tree-shaken in browser)
 let postcss: any;
 let fs: any;
 let path: any;
 
-async function loadNodeModules() {
-  if (typeof window === 'undefined' && !postcss) {
-    postcss = (await import('postcss')).default;
-    fs = await import('fs');
-    path = await import('path');
+if (typeof window === 'undefined') {
+  try {
+    postcss = require('postcss');
+    fs = require('fs');
+    path = require('path');
+  } catch {
   }
 }
 
@@ -76,7 +75,7 @@ function rgbToHex(rgb: string): string {
   return rgb;
 }
 
-export async function theme(path: string, fallback?: string): Promise<string> {
+export function theme(path: string, fallback?: string): string {
   const cssVarName = '--' + path.replace(/\./g, '-');
 
   // try browser runtime first
