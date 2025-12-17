@@ -122,7 +122,7 @@ jobs:
         working-directory: panel
         run: |
           git fetch origin 1.0-develop
-          git cherry-pick caab0562561228b02355618904b25dce66550a94
+          git cherry-pick caab0562561228b02355618904b25dce66550a94 -X theirs
       # This concludes scuffed temporary CI fix.
 
       - name: Install node dependencies
