@@ -86,7 +86,7 @@ jobs:
       - name: Install apt dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl git gnupg unzip wget zip sed grep awk tput inotify-tools
+          sudo apt-get install -y curl git gnupg unzip wget zip sed grep gawk inotify-tools
 
       - name: Setup Node and Yarn
         uses: actions/setup-node@v4
