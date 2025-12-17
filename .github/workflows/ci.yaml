@@ -113,13 +113,6 @@ jobs:
           echo 'WEBUSER="runner"; OWNERSHIP="runner:runner"; USERSHELL="/bin/bash";' > .blueprintrc
           chmod +x blueprint.sh
 
-      - name: Setup Blueprint
-        working-directory: panel
-        run: bash blueprint.sh
-        env:
-          BLUEPRINT_ENVIRONMENT: ci
-          TERM: xterm-kitty #fixes tput errors
-
       - name: Get cache directory
         id: composer-cache
         working-directory: panel
@@ -149,6 +142,13 @@ jobs:
       - name: Install dependencies
         working-directory: panel
         run: composer install --no-interaction --no-progress --no-suggest --prefer-dist
+
+      - name: Setup Blueprint
+        working-directory: panel
+        run: bash blueprint.sh
+        env:
+          BLUEPRINT_ENVIRONMENT: ci
+          TERM: xterm-kitty #fixes tput errors
 
       - name: Unit tests
         working-directory: panel
