@@ -1,0 +1,130 @@
+name: Tests
+
+on: [push]
+permissions: {}
+
+jobs:
+  shellcheck:
+    name: Run ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+
+  build-frontend-only:
+    name: Build frontend only
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Pterodactyl stable
+        uses: actions/checkout@v4
+        with:
+          repository: pterodactyl/panel
+          ref: v1.11.11
+          path: panel
+
+      - name: Install apt dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl git gnupg unzip wget zip
+
+      - name: Setup Node and Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'yarn'
+          cache-dependency-path: panel/yarn.lock
+
+      - name: Install Pterodactyl dependencies
+        working-directory: panel
+        run: yarn install
+
+      - name: Overlay Blueprint files
+        uses: actions/checkout@v4
+        with:
+          path: overlay
+
+      - name: Copy Blueprint overlay files
+        run: cp -r overlay/* panel/
+
+      - name: Reinstall dependencies
+        working-directory: panel
+        run: yarn install
+
+      - name: Build production frontend
+        working-directory: panel
+        run: yarn run build:production
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+
+  tests:
+    name: Tests
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [8.2, 8.3]
+        database:
+          - mariadb:10.5
+          - mariadb:10.11
+          - mariadb:11.5
+          - mysql:8
+          - mysql:9
+    services:
+      database:
+        image: ${{ matrix.database }}
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306
+    steps:
+      - name: Checkout Pterodactyl stable
+        uses: actions/checkout@v4
+        with:
+          repository: pterodactyl/panel
+          ref: v1.11.11
+
+      - name: Overlay Blueprint files
+        uses: actions/checkout@v4
+
+      - name: Get cache directory
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-${{ matrix.php }}-
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, cli, curl, gd, mbstring, mysql, openssl, pdo, tokenizer, xml, zip
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup .env
+        run: cp .env.ci .env
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --no-suggest --prefer-dist
+
+      - name: Unit tests
+        run: vendor/bin/phpunit --bootstrap vendor/autoload.php tests/Unit
+        if: ${{ always() }}
+        env:
+          DB_HOST: UNIT_NO_DB
+
+      - name: Integration tests
+        run: vendor/bin/phpunit tests/Integration
+        env:
+          DB_PORT: ${{ job.services.database.ports[3306] }}
+          DB_USERNAME: root
