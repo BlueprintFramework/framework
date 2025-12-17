@@ -35,16 +35,16 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: panel/yarn.lock
 
-      - name: Install Pterodactyl dependencies
+      - name: Install Pterodactyl node dependencies
         working-directory: panel
         run: yarn install
 
-      - name: Overlay Blueprint files
+      - name: Checkout latest commit
         uses: actions/checkout@v4
         with:
           path: blueprint
 
-      - name: Copy Blueprint overlay files
+      - name: Overwrite Pterodactyl files with latest commit
         run: cp -r blueprint/* panel/
 
       - name: Reinstall dependencies
@@ -88,13 +88,25 @@ jobs:
           ref: v1.11.11
           path: panel
 
-      - name: Overlay Blueprint files
+      - name: Checkout latest commit
         uses: actions/checkout@v4
         with:
           path: blueprint
 
-      - name: Copy Blueprint overlay files
+      - name: Overwrite Pterodactyl files with latest commit
         run: cp -r blueprint/* panel/
+
+      - name: Prepare Blueprint
+        working-directory: panel
+        run: |
+          echo 'WEBUSER="runner"; OWNERSHIP="runner:runner"; USERSHELL="/bin/bash";' > .blueprintrc
+          chmod +x blueprint.sh
+
+      - name: Install Blueprint
+        working-directory: panel
+        run: bash blueprint.sh
+        env:
+          BLUEPRINT_ENVIRONMENT: ci
 
       - name: Get cache directory
         id: composer-cache
