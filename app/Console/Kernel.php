@@ -8,11 +8,12 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Console\PruneCommand;
 use Pterodactyl\Repositories\Eloquent\SettingsRepository;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Pterodactyl\BlueprintFramework\GetExtensionSchedules;
 use Pterodactyl\Services\Telemetry\TelemetryCollectionService;
 use Pterodactyl\Console\Commands\Schedule\ProcessRunnableCommand;
 use Pterodactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
 use Pterodactyl\Console\Commands\Maintenance\CleanServiceBackupFilesCommand;
+
+use Pterodactyl\BlueprintFramework\GetExtensionSchedules;
 use Pterodactyl\Services\Telemetry\RegisterBlueprintTelemetry;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
 
