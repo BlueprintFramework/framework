@@ -104,23 +104,6 @@ jobs:
       - name: Overwrite Pterodactyl files with latest commit
         run: cp -r blueprint/* panel/
 
-      # This is a temporary and pretty scuffed way to go about this. The current latest
-      # version of Pterodactyl (v1.11.11) has a broken unit test. Once a new version is
-      # released, this issue will pretty much be fixed.
-      - name: Commit overlay changes
-        working-directory: panel
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Apply overlay files"
-      - name: Cherry-pick specific commit from pterodactyl
-        working-directory: panel
-        run: |
-          git fetch origin 1.0-develop
-          git cherry-pick caab0562561228b02355618904b25dce66550a94 -X theirs
-      # This concludes scuffed temporary CI fix.
-
       - name: Install node dependencies
         working-directory: panel
         run: yarn install
