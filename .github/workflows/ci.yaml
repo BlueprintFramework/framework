@@ -23,11 +23,6 @@ jobs:
           ref: v1.11.11
           path: panel
 
-      - name: Install apt dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ca-certificates curl git gnupg unzip wget zip
-
       - name: Setup Node and Yarn
         uses: actions/setup-node@v4
         with:
@@ -47,7 +42,7 @@ jobs:
       - name: Overwrite Pterodactyl files with latest commit
         run: cp -r blueprint/* panel/
 
-      - name: Reinstall dependencies
+      - name: Reinstall node dependencies
         working-directory: panel
         run: yarn install
 
@@ -88,6 +83,18 @@ jobs:
           ref: v1.11.11
           path: panel
 
+      - name: Install apt dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl git gnupg unzip wget zip sed grep awk tput inotify-tools
+
+      - name: Setup Node and Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'yarn'
+          cache-dependency-path: panel/yarn.lock
+
       - name: Checkout latest commit
         uses: actions/checkout@v4
         with:
@@ -96,17 +103,22 @@ jobs:
       - name: Overwrite Pterodactyl files with latest commit
         run: cp -r blueprint/* panel/
 
+      - name: Install node dependencies
+        working-directory: panel
+        run: yarn install
+
       - name: Prepare Blueprint
         working-directory: panel
         run: |
           echo 'WEBUSER="runner"; OWNERSHIP="runner:runner"; USERSHELL="/bin/bash";' > .blueprintrc
           chmod +x blueprint.sh
 
-      - name: Install Blueprint
+      - name: Setup Blueprint
         working-directory: panel
         run: bash blueprint.sh
         env:
           BLUEPRINT_ENVIRONMENT: ci
+          TERM: xterm-kitty #fixes tput errors
 
       - name: Get cache directory
         id: composer-cache
