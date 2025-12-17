@@ -248,12 +248,14 @@ if [[ $1 != "-bash" ]]; then
       export PROGRESS_NOW=0
     fi
 
-    PRINT INFO "Installing node modules.."
-    # Check for yarn before installing node modules..
-    if ! [ -x "$(command -v yarn)" ]; then
-        PRINT FATAL "Missing dependency \"yarn\"."
+    if [[ $BLUEPRINT_ENVIRONMENT != "ci" ]]; then
+      PRINT INFO "Installing node modules.."
+      # Check for yarn before installing node modules..
+      if ! [ -x "$(command -v yarn)" ]; then
+          PRINT FATAL "Missing dependency \"yarn\"."
+      fi
+      hide_progress
     fi
-    hide_progress
 
     if [[ $BLUEPRINT_ENVIRONMENT != "ci" ]]; then
       set -eo pipefail
@@ -330,7 +332,7 @@ if [[ $1 != "-bash" ]]; then
     ((PROGRESS_NOW++))
 
     # Run migrations if Blueprint is not running through Docker.
-    if [[ $DOCKER != "y" ]]; then
+    if [[ ( $DOCKER != "y" ) && ( $BLUEPRINT_ENVIRONMENT != "ci" ) ]]; then
       PRINT INFO "Running database migrations.."
       hide_progress
       php artisan migrate --force
@@ -339,21 +341,25 @@ if [[ $1 != "-bash" ]]; then
     ((PROGRESS_NOW++))
 
     # Seed Blueprint database records
-    PRINT INFO "Seeding Blueprint database records.."
-    php artisan db:seed --class=BlueprintSeeder --force &>> "$BLUEPRINT__DEBUG"
+    if [[ $BLUEPRINT_ENVIRONMENT != "ci" ]]; then
+      PRINT INFO "Seeding Blueprint database records.."
+      php artisan db:seed --class=BlueprintSeeder --force &>> "$BLUEPRINT__DEBUG"
+    fi
 
     ((PROGRESS_NOW++))
 
     # Flush cache.
-    PRINT INFO "Flushing cache.."
-    {
-      php artisan view:cache
-      php artisan config:cache
-      php artisan route:clear
-      php artisan cache:clear
-      php artisan bp:cache
-      php artisan bp:version:cache
-    } &>> "$BLUEPRINT__DEBUG"
+    if [[ $BLUEPRINT_ENVIRONMENT != "ci" ]]; then
+      PRINT INFO "Flushing cache.."
+      {
+        php artisan view:cache
+        php artisan config:cache
+        php artisan route:clear
+        php artisan cache:clear
+        php artisan bp:cache
+        php artisan bp:version:cache
+      } &>> "$BLUEPRINT__DEBUG"
+    fi
 
     ((PROGRESS_NOW++))
 
