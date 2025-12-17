@@ -1,0 +1,50 @@
+name: test frontend
+
+on: [push]
+permissions: {}
+
+jobs:
+  build-frontend-only:
+    name: Build frontend only
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Pterodactyl stable
+        uses: actions/checkout@v4
+        with:
+          repository: pterodactyl/panel
+          ref: v1.11.11
+          path: panel
+
+      - name: Install apt dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl git gnupg unzip wget zip
+
+      - name: Setup Node and Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'yarn'
+          cache-dependency-path: panel/yarn.lock
+
+      - name: Install Pterodactyl dependencies
+        working-directory: panel
+        run: yarn install
+
+      - name: Overlay Blueprint files
+        uses: actions/checkout@v4
+        with:
+          path: overlay
+
+      - name: Copy Blueprint overlay files
+        run: cp -r overlay/* panel/
+
+      - name: Reinstall dependencies
+        working-directory: panel
+        run: yarn install
+
+      - name: Build production frontend
+        working-directory: panel
+        run: yarn run build:production
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider

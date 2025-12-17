@@ -1,18 +1,11 @@
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+name: test cli
 
-name: "Run tests"
+on: [push]
 permissions: {}
 
 jobs:
-  cli:
-    name: Test CLI
+  shellcheck:
+    name: ShellCheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
