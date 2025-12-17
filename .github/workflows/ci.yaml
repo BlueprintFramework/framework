@@ -42,10 +42,10 @@ jobs:
       - name: Overlay Blueprint files
         uses: actions/checkout@v4
         with:
-          path: overlay
+          path: blueprint
 
       - name: Copy Blueprint overlay files
-        run: cp -r overlay/* panel/
+        run: cp -r blueprint/* panel/
 
       - name: Reinstall dependencies
         working-directory: panel
@@ -57,8 +57,8 @@ jobs:
         env:
           NODE_OPTIONS: --openssl-legacy-provider
 
-  tests:
-    name: Tests
+  test-pterodactyl:
+    name: Test Pterodactyl
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -86,12 +86,19 @@ jobs:
         with:
           repository: pterodactyl/panel
           ref: v1.11.11
+          path: panel
 
       - name: Overlay Blueprint files
         uses: actions/checkout@v4
+        with:
+          path: blueprint
+
+      - name: Copy Blueprint overlay files
+        run: cp -r blueprint/* panel/
 
       - name: Get cache directory
         id: composer-cache
+        working-directory: panel
         run: |
           echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
@@ -112,18 +119,22 @@ jobs:
           coverage: none
 
       - name: Setup .env
+        working-directory: panel
         run: cp .env.ci .env
 
       - name: Install dependencies
+        working-directory: panel
         run: composer install --no-interaction --no-progress --no-suggest --prefer-dist
 
       - name: Unit tests
+        working-directory: panel
         run: vendor/bin/phpunit --bootstrap vendor/autoload.php tests/Unit
         if: ${{ always() }}
         env:
           DB_HOST: UNIT_NO_DB
 
       - name: Integration tests
+        working-directory: panel
         run: vendor/bin/phpunit tests/Integration
         env:
           DB_PORT: ${{ job.services.database.ports[3306] }}
