@@ -4,6 +4,8 @@
 # $OLD_TAG: Old Blueprint version that update.sh is updating from
 # $RAN_BY_LEGACY: If this script is ran by the legacy updater
 # $UPDATE_FOLDER: Folder with the update files
+# $PROGRESS_NOW: Current loader progress
+# $PROGRESS_TOTAL: Total loader progress
 
 # $FOLDER: Pterodactyl directory
 # $REPOSITORY: GitHub repository
