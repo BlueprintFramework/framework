@@ -27,7 +27,7 @@ jobs:
           git config --local user.name 'Blueprint CI'
           git checkout -b "$BRANCH"
           git push -u origin "$BRANCH"
-          sed -i "s/VERSION=\"rolling\" #;/VERSION=\"${REF_NAME}\" #;/" blueprint.sh
+          sed -i "s/VERSION=\"rolling\"/VERSION=\"${REF_NAME}\"/" blueprint.sh
           git add blueprint.sh
           git commit -m 'ci(release): bump version'
           git push
