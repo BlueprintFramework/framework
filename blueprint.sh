@@ -10,6 +10,7 @@
 
 BLUEPRINT_ENGINE="solstice"
 REPOSITORY="BlueprintFramework/framework"
+REPOSITORY_BRANCH="main"
 VERSION="beta-2025-12" #;
 
 FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__FOLDER"
@@ -252,9 +253,9 @@ if [[ $1 != "-bash" ]]; then
 
     if [[ $BLUEPRINT_ENVIRONMENT == "upgrade" ]]; then
       echo -e "\x1b[30;41;1m YOU ARE USING THE LEGACY UPDATER!! \x1b[0m"
-      echo -e "\x1b[31;49;1mPlease rerun 'blueprint -upgrade' to continue the update process. This is NOT A BUG.\nPress ENTER to continue back to legacy updater (will fail) or ^C to terminate the process.\x1b[0m"
+      echo -e "\n\x1b[31;49;1mPlease rerun 'blueprint -upgrade' to continue the update process. This is NOT A BUG.\nPress ENTER to continue back to legacy updater (will fail) or ^C to terminate the process.\x1b[0m"
 
-      echo -e "\n\n1. Terminate this process with CTRL+C (^C)"
+      echo -e "\n1. Terminate this process with CTRL+C (^C)"
       echo -e "2. Run 'blueprint -upgrade'"
       echo -e "3. Blueprint will update to the latest version."
 
