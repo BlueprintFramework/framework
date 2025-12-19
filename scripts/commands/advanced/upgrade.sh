@@ -12,22 +12,35 @@ Command() {
   update_choice=""
 
   # Initial steps count for progress bar
-  export PROGRESS_TOTAL=10
+  export PROGRESS_TOTAL=7
   export PROGRESS_NOW=0
 
   # Make sure the script is in $FOLDER
   cd "$FOLDER" || exit 1
 
+  # Export the repository variables
+  export remote_repo
+  export remote_branch
+  export fetched_version
+
   # Create temporary directory for upgrade files
   PRINT INFO "Creating .update directory.."
   mkdir -p .update
 
-  # Define cleanup for this step
+  # Define cleanup
   cleanup() {
+    PRINT INFO "Cleaning up.."
     cd "$FOLDER" || exit 1
+
+    if [[ $development_files == true ]]; then
+      PRINT INFO "Restoring extension development files.."
+      rm -rf .blueprint/dev
+      mv .update/backup/dev .blueprint/dev
+    fi
     rm -rf .update
 
     if [[ $1 != "" ]]; then
+      hide_progress
       exit "$1"
     fi
   }
@@ -83,12 +96,23 @@ Command() {
     esac
   else
     PRINT DEBUG "\$1 was NOT 'remote' (it was '$1')"
+    PRINT INFO "Fetching version info"
+
+    php artisan bp:version:cache 2> $BLUEPRINT__DEBUG
+    tag_latest=$(php artisan bp:version:latest)
+    PRINT DEBUG "tag_latest is $tag_latest"
+
+    fetched_version="$tag_latest"
+    remote_repo="https://github.com/$REPOSITORY.git"
+    remote_branch="release/$tag_latest"
+    PRINT DEBUG "set remote_repo to '$remote_repo', remote_branch to '$remote_branch'"
   fi
 
   ((PROGRESS_NOW++))
 
   # Fetching repository with git
   PRINT INFO "Downloading repository.."
+  hide_progress
   git clone "$remote_repo" .update/repo --branch "$remote_branch"
 
   if [[ ! -d ".update/repo" ]]; then
@@ -98,7 +122,60 @@ Command() {
 
   ((PROGRESS_NOW++))
 
+  # Determine and backup development files
+  development_files=false
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
+    development_files=true
+    PRINT INFO "Backing up extension development files.."
+    mkdir -p .update/backup
+    cp -Rf .blueprint/dev .update/backup/dev
+  fi
+
+  ((PROGRESS_NOW++))
+
+  # Delete files
+  PRINT INFO "Deleting files.."
+  rm -rf .blueprint
+
+  # Clean up folders with potentially broken symlinks.
+  rm \
+    "resources/views/blueprint/admin/wrappers/"* \
+    "resources/views/blueprint/dashboard/wrappers/"* \
+    "routes/blueprint/application/"* \
+    "routes/blueprint/client/"* \
+    "routes/blueprint/web/"* \
+    &>> /dev/null # cannot forward to debug dir because it does not exist
+
+  ((PROGRESS_NOW++))
+
   # Run update script
   PRINT INFO "Running update script.."
-  bash .update/repo
+  source .update/repo/scripts/updater/update.sh
+  hide_progress
+  UpdaterInstall
+
+  ((PROGRESS_NOW++))
+
+  # Deprecated, kept in for backwards compatibility
+  sed -i -E \
+    -e "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" \
+    -e "s|WEBUSER=\"www-data\" #;|WEBUSER=\"$WEBUSER\" #;|g" \
+    -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
+    blueprint.sh
+
+  # Run install script
+  PRINT INFO "Running final install script.."
+  chmod +x blueprint.sh
+  mv "$FOLDER/blueprint" "$FOLDER/.blueprint"
+  hide_progress
+  BLUEPRINT_ENVIRONMENT="upgrade2" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh
+
+  ((PROGRESS_NOW++))
+
+  cleanup
+
+  # Tell user that update has finished
+  PRINT SUCCESS "Update finished!"
+  hide_progress
+  exit 0
 }

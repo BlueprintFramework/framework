@@ -255,9 +255,9 @@ if [[ $1 != "-bash" ]]; then
       echo -e "\x1b[30;41;1m YOU ARE USING THE LEGACY UPDATER!! \x1b[0m"
       echo -e "\n\x1b[31;49;1mPlease rerun 'blueprint -upgrade' to continue the update process. This is NOT A BUG.\nPress ENTER to continue back to legacy updater (will fail) or ^C to terminate the process.\x1b[0m"
 
-      echo -e "\n1. Terminate this process with CTRL+C (^C)"
-      echo -e "2. Run 'blueprint -upgrade'"
-      echo -e "3. Blueprint will update to the latest version."
+      echo -e "\n\x1b[31;49m1. Terminate this process with CTRL+C (^C)\x1b[0m"
+      echo -e "\n\x1b[31;49m2. Run 'blueprint -upgrade'\x1b[0m"
+      echo -e "\n\x1b[31;49m3. Blueprint will update to the latest version.\x1b[0m"
 
       read -r
       exit 1

@@ -79,25 +79,6 @@ Command() {
 
   ((PROGRESS_NOW++))
 
-  PRINT INFO "Running updater.."
-
-  NEW_TAG="$TAG_NAME" \
-  OLD_TAG="$VERSION" \
-  RAN_BY_LEGACY=false \
-  UPDATE_FOLDER="$FOLDER/.tmp/files/update" \
-  PROGRESS_NOW="$PROGRESS_NOW" \
-  PROGRESS_TOTAL="$PROGRESS_TOTAL" \
-  FOLDER="$FOLDER" \
-  REPOSITORY="$REPOSITORY" \
-  BLUEPRINT_ENGINE="$BLUEPRINT_ENGINE" \
-  OWNERSHIP="$OWNERSHIP" \
-  WEBUSER="$WEBUSER" \
-  USERSHELL="$USERSHELL" \
-  BLUEPRINT__DEBUG="$BLUEPRINT__DEBUG" \
-  bash update/scripts/helpers/preupdate.sh
-
-  ((PROGRESS_NOW++))
-
   if [[ ! -d "update" ]]; then
     PRINT DEBUG "update directory not found.. exiting"
     cd "$FOLDER" || cdhalt
