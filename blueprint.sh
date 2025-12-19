@@ -252,12 +252,11 @@ if [[ $1 != "-bash" ]]; then
     fi
 
     if [[ $BLUEPRINT_ENVIRONMENT == "upgrade" ]]; then
-      echo -e "\x1b[30;41;1m YOU ARE USING THE LEGACY UPDATER!! \x1b[0m"
-      echo -e "\n\x1b[31;49;1mPlease rerun 'blueprint -upgrade' to continue the update process. This is NOT A BUG.\nPress ENTER to continue back to legacy updater (will fail) or ^C to terminate the process.\x1b[0m"
+      echo -e "\x1b[37;41;1m MANUAL ACTION REQUIRED \x1b[0m"
+      echo -e "\n\x1b[31;49;1mThis is NOT a bug. Please follow the following instructions:\x1b[0m"
 
-      echo -e "\n\x1b[31;49m1. Terminate this process with CTRL+C (^C)\x1b[0m"
-      echo -e "\n\x1b[31;49m2. Run 'blueprint -upgrade'\x1b[0m"
-      echo -e "\n\x1b[31;49m3. Blueprint will update to the latest version.\x1b[0m"
+      echo -e "\n\x1b[31;49m1. Use the CTRL+C (^C) keyboard shortcut to terminate this process.\x1b[0m"
+      echo -e "\x1b[31;49m2. Then, run 'blueprint -upgrade' AGAIN.\x1b[0m"
 
       read -r
       exit 1
