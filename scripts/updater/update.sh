@@ -8,6 +8,4 @@ UpdaterInstall() {
   cp .update/repo/.prettierignore .
   cp .update/repo/.prettierrc.json .
   cp .update/repo/.shellcheckrc .
-
-  exit 0
 }

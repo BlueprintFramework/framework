@@ -23,6 +23,11 @@ Command() {
   export remote_branch
   export fetched_version
 
+  if [[ -d '.update' ]]; then
+    PRINT WARNING ".update already exists! Replacing it."
+    rm -rf .update
+  fi
+
   # Create temporary directory for upgrade files
   PRINT INFO "Creating .update directory.."
   mkdir -p .update
