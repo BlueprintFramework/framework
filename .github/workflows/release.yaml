@@ -36,7 +36,7 @@ jobs:
         env:
           REF_NAME: ${{ github.ref_name }}
         run: |
-          zip -r "${REF_NAME}.zip" * .eslintrc.js .prettierignore .prettierrc.json .shellcheckrc
+          zip -r "release.zip" * .eslintrc.js .prettierignore .prettierrc.json .shellcheckrc
 
       - name: Create changelog
         env:
@@ -48,7 +48,7 @@ jobs:
         env:
           REF_NAME: ${{ github.ref_name }}
         run: |
-          SUM=`sha256sum "${REF_NAME}.zip"`
+          SUM=`sha256sum "release.zip"`
           echo -e "\n#### SHA256 Checksum\n\n\`\`\`\n$SUM\n\`\`\`\n" >> ./RELEASE_CHANGELOG
           echo "$SUM" > checksum.txt
 
@@ -62,5 +62,5 @@ jobs:
           prerelease: ${{ contains(github.ref, 'rc') }}
           body_path: ./RELEASE_CHANGELOG
           files: |
-            ${{ github.ref_name }}.zip
+            release.zip
             checksum.txt

@@ -10,7 +10,7 @@
 
 BLUEPRINT_ENGINE="solstice"
 REPOSITORY="BlueprintFramework/framework"
-VERSION="rolling" #;
+VERSION="beta-2025-12" #;
 
 FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__FOLDER"
 OWNERSHIP="www-data:www-data" #;
@@ -232,7 +232,7 @@ if [[ $1 != "-bash" ]]; then
     exit 2
   else
     # Only run if Blueprint is not in the process of upgrading.
-    if [[ ( $BLUEPRINT_ENVIRONMENT != "upgrade" ) && ( $1 != "--post-upgrade" ) ]]; then
+    if [[ $BLUEPRINT_ENVIRONMENT != "upgrade2" ]]; then
       # Print Blueprint icon with ascii characters.
       C0="\x1b[0m"
       C1="\x1b[31;43;1m"
@@ -246,9 +246,23 @@ if [[ $1 != "-bash" ]]; then
 
       export PROGRESS_TOTAL=15
       export PROGRESS_NOW=0
+    else
+      PROGRESS_TOTAL="$(("$PROGRESS_TOTAL" + 15))"
     fi
 
     if [[ $BLUEPRINT_ENVIRONMENT == "upgrade" ]]; then
+      echo -e "\x1b[30;41;1m YOU ARE USING THE LEGACY UPDATER!! \x1b[0m"
+      echo -e "\x1b[31;49;1mPlease rerun 'blueprint -upgrade' to continue the update process. This is NOT A BUG.\nPress ENTER to continue back to legacy updater (will fail) or ^C to terminate the process.\x1b[0m"
+
+      echo -e "\n\n1. Terminate this process with CTRL+C (^C)"
+      echo -e "2. Run 'blueprint -upgrade'"
+      echo -e "3. Blueprint will update to the latest version."
+
+      read -r
+      exit 1
+    fi
+
+    if [[ $BLUEPRINT_ENVIRONMENT == "upgrade2" ]]; then
       # Get rid of beta-2025-11 leftovers
       rm -rf resources/scripts/blueprint/utility resources/scripts/blueprint/css/BlueprintStylesheet.css resources/scripts/blueprint/index.ts
     fi
@@ -257,7 +271,7 @@ if [[ $1 != "-bash" ]]; then
       PRINT INFO "Installing node modules.."
       # Check for yarn before installing node modules..
       if ! [ -x "$(command -v yarn)" ]; then
-          PRINT FATAL "Missing dependency \"yarn\"."
+        PRINT FATAL "Missing dependency \"yarn\"."
       fi
       hide_progress
     fi
@@ -417,7 +431,7 @@ if [[ $1 != "-bash" ]]; then
     sed -i "s~NOTINSTALLED~INSTALLED~g" "$FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php"
 
     # Finish installation
-    if [[ ( $BLUEPRINT_ENVIRONMENT != "upgrade" ) && ( $1 != "--post-upgrade" ) ]]; then
+    if [[ $BLUEPRINT_ENVIRONMENT != "upgrade2" ]]; then
       PRINT SUCCESS "Blueprint has completed its installation process."
       hide_progress
     fi

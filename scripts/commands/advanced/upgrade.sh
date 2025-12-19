@@ -23,8 +23,8 @@ Command() {
   if [[ ${YN} != "continue" ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
   YN=""
 
-  INSTALL_STEPS=15
-  export PROGRESS_TOTAL="$((10 + "$INSTALL_STEPS"))"
+  # Initial steps count
+  export PROGRESS_TOTAL=9
   export PROGRESS_NOW=0
 
   if [[ $1 == "remote" ]]; then PRINT INFO "Fetching and pulling latest commit.."
@@ -33,10 +33,6 @@ Command() {
   ((PROGRESS_NOW++))
 
   mkdir "$FOLDER/.tmp"
-  cp blueprint.sh .blueprint.sh.bak
-
-  ((PROGRESS_NOW++))
-
   HAS_DEV=false
   if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
     PRINT INFO "Backing up extension development files.."
@@ -62,28 +58,34 @@ Command() {
     # download release
     hide_progress
     if [[ $3 == "" ]]; then
-      git clone "$REMOTE_REPOSITORY" main
+      git clone "$REMOTE_REPOSITORY" update
     else
-      git clone "$REMOTE_REPOSITORY" main --branch "$3"
+      git clone "$REMOTE_REPOSITORY" update --branch "$3"
     fi
   else
     # download latest release
     hide_progress
-    LOCATION=$(curl -s https://api.github.com/repos/"$REPOSITORY"/releases/latest \
-  | grep "zipball_url" \
-  | awk '{ print $2 }' \
-  | sed 's/,$//'       \
-  | sed 's/"//g' )     \
-  ; curl -L -o main.zip "$LOCATION"
 
-    unzip main.zip
-    rm main.zip
-    mv ./* main
+    PRINT DEBUG "setting TAG_NAME to $TAG_NAME"
+    TAG_NAME=$(curl -s https://api.github.com/repos/"$REPOSITORY"/releases/latest \
+      | grep "tag_name" \
+      | awk '{ print $2 }' \
+      | sed 's/,$//' \
+      | sed 's/"//g' )
+
+    PRINT DEBUG "attempting to pull https://github.com/$REPOSITORY.git to the update folder (branch: release/$TAG_NAME)"
+    git clone "https://github.com/$REPOSITORY.git" update --branch "release/$TAG_NAME"
   fi
 
   ((PROGRESS_NOW++))
 
-  if [[ ! -d "main" ]]; then
+  PRINT INFO "Running next version's preupdater.."
+
+
+  ((PROGRESS_NOW++))
+
+  if [[ ! -d "update" ]]; then
+    PRINT DEBUG "update directory not found.. exiting"
     cd "$FOLDER" || cdhalt
     rm -r "$FOLDER/.tmp" &>> "$BLUEPRINT__DEBUG"
     rm "$FOLDER/.blueprint.sh.bak" &>> "$BLUEPRINT__DEBUG"
@@ -94,22 +96,12 @@ Command() {
 
   ((PROGRESS_NOW++))
 
-  # Remove some files/directories that don't have to be moved to the Pterodactyl folder.
-  PRINT INFO "Cleaning up fetched release.."
-  rm -r \
-    "main/.github" \
-    "main/.git" \
-    "main/.gitignore" \
-    "main/README.md" \
-    &>> "$BLUEPRINT__DEBUG"
-
-  ((PROGRESS_NOW++))
-
   # Copy fetched release files to the Pterodactyl directory and remove temp files.
   PRINT INFO "Moving release files to Pterodactyl directory.."
-  cp -r main/* "$FOLDER"/
+  cp -r update/* "$FOLDER"/
+  cp -r update/.* "$FOLDER"/
   rm -r \
-    "main" \
+    "update" \
     "$FOLDER"/.blueprint \
     "$FOLDER"/.tmp/files
   cd "$FOLDER" || cdhalt
@@ -137,7 +129,7 @@ Command() {
   chmod +x blueprint.sh
   mv "$FOLDER/blueprint" "$FOLDER/.blueprint"
   hide_progress
-  BLUEPRINT_ENVIRONMENT="upgrade" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh
+  BLUEPRINT_ENVIRONMENT="upgrade2" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh
 
   ((PROGRESS_NOW++))
 
