@@ -79,8 +79,8 @@ Command() {
         remote_branch="$3"
 
         if [[ $remote_branch == "" ]]; then
-          PRINT FATAL "Expected a git branch at argument 3, was empty. Exiting.."
-          cleanup 1
+          PRINT WARNING "Expected a git branch at argument 3, was empty. Defaulting to $REPOSITORY_BRANCH.."
+          remote_branch="$REPOSITORY_BRANCH"
         fi
       ;;
 
