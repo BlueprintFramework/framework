@@ -103,7 +103,7 @@ Command() {
     PRINT DEBUG "\$1 was NOT 'remote' (it was '$1')"
     PRINT INFO "Fetching version info"
 
-    php artisan bp:version:cache 2> $BLUEPRINT__DEBUG
+    php artisan bp:version:cache 2> "$BLUEPRINT__DEBUG"
     tag_latest=$(php artisan bp:version:latest)
     PRINT DEBUG "tag_latest is $tag_latest"
 
