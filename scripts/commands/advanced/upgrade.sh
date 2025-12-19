@@ -166,7 +166,7 @@ Command() {
   # Run install script
   PRINT INFO "Running final install script.."
   chmod +x blueprint.sh
-  mv "$FOLDER/blueprint" "$FOLDER/.blueprint"
+  mv blueprint .blueprint
   hide_progress
   BLUEPRINT_ENVIRONMENT="upgrade2" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh
 
