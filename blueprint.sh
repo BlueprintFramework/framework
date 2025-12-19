@@ -248,6 +248,11 @@ if [[ $1 != "-bash" ]]; then
       export PROGRESS_NOW=0
     fi
 
+    if [[ $BLUEPRINT_ENVIRONMENT == "upgrade" ]]; then
+      # Get rid of beta-2025-11 leftovers
+      rm -rf resources/scripts/blueprint/utility resources/scripts/blueprint/css/BlueprintStylesheet.css
+    fi
+
     if [[ $BLUEPRINT_ENVIRONMENT != "ci" ]]; then
       PRINT INFO "Installing node modules.."
       # Check for yarn before installing node modules..
