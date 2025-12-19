@@ -250,7 +250,7 @@ if [[ $1 != "-bash" ]]; then
 
     if [[ $BLUEPRINT_ENVIRONMENT == "upgrade" ]]; then
       # Get rid of beta-2025-11 leftovers
-      rm -rf resources/scripts/blueprint/utility resources/scripts/blueprint/css/BlueprintStylesheet.css
+      rm -rf resources/scripts/blueprint/utility resources/scripts/blueprint/css/BlueprintStylesheet.css resources/scripts/blueprint/index.ts
     fi
 
     if [[ $BLUEPRINT_ENVIRONMENT != "ci" ]]; then
