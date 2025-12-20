@@ -1,120 +1,146 @@
 #!/bin/bash
 
 Command() {
-  PRINT WARNING "This is an advanced feature, only proceed if you know what you are doing."
-
-  # Confirmation question for developer upgrade.
-  if [[ $1 == "remote" ]]; then
-    PRINT INPUT "Upgrading to the latest development build will update Blueprint to a remote version which might differ from the latest release. Continue? (y/N)"
-    read -r YN
-    if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
-    YN=""
-  fi
-
-  # Confirmation question for both developer and stable upgrade.
-  PRINT INPUT "Upgrading will wipe your .blueprint folder and will deactivate all active extensions. Continue? (y/N)"
-  read -r YN
-  if [[ ( ${YN} != "y"* ) && ( ${YN} != "Y"* ) ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
-  YN=""
-
-  # Last confirmation question for both developer and stable upgrade.
-  PRINT INPUT "This is the last warning before upgrading/wiping Blueprint. Type 'continue' to continue, all other input will be taken as 'no'."
-  read -r YN
-  if [[ ${YN} != "continue" ]]; then PRINT INFO "Upgrade cancelled.";exit 1;fi
-  YN=""
-
-  INSTALL_STEPS=15
-  export PROGRESS_TOTAL="$((10 + "$INSTALL_STEPS"))"
-  export PROGRESS_NOW=0
-
-  if [[ $1 == "remote" ]]; then PRINT INFO "Fetching and pulling latest commit.."
-  else                          PRINT INFO "Fetching and pulling latest release.."; fi
-
-  ((PROGRESS_NOW++))
-
-  mkdir "$FOLDER/.tmp"
-  cp blueprint.sh .blueprint.sh.bak
-
-  ((PROGRESS_NOW++))
-
-  HAS_DEV=false
-  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
-    PRINT INFO "Backing up extension development files.."
-    mkdir -p "$FOLDER/.tmp"
-    cp .blueprint/dev "$FOLDER/.tmp/dev" -Rf
-    HAS_DEV=true
-  fi
-
-  ((PROGRESS_NOW++))
-
-  mkdir -p "$FOLDER/.tmp/files"
-  cd "$FOLDER/.tmp/files" || cdhalt
-  if [[ $1 == "remote" ]]; then
-    if [[ $2 == "" ]]; then
-      REMOTE_REPOSITORY="https://github.com/$REPOSITORY.git"
-    else
-      if [[ $2 != "http://"* ]] && [[ $2 != "https://"* ]]; then
-        REMOTE_REPOSITORY="https://github.com/$2.git"
-      else
-        REMOTE_REPOSITORY="$2"
-      fi
-    fi
-    # download release
-    hide_progress
-    if [[ $3 == "" ]]; then
-      git clone "$REMOTE_REPOSITORY" main
-    else
-      git clone "$REMOTE_REPOSITORY" main --branch "$3"
-    fi
-  else
-    # download latest release
-    hide_progress
-    LOCATION=$(curl -s https://api.github.com/repos/"$REPOSITORY"/releases/latest \
-  | grep "zipball_url" \
-  | awk '{ print $2 }' \
-  | sed 's/,$//'       \
-  | sed 's/"//g' )     \
-  ; curl -L -o main.zip "$LOCATION"
-
-    unzip main.zip
-    rm main.zip
-    mv ./* main
-  fi
-
-  ((PROGRESS_NOW++))
-
-  if [[ ! -d "main" ]]; then
-    cd "$FOLDER" || cdhalt
-    rm -r "$FOLDER/.tmp" &>> "$BLUEPRINT__DEBUG"
-    rm "$FOLDER/.blueprint.sh.bak" &>> "$BLUEPRINT__DEBUG"
-    PRINT FATAL "Remote does not exist or encountered an error, try again later."
-    hide_progress
+  # Confirmation question before updating Blueprint
+  PRINT INPUT "You are about to update your Blueprint installation. Continue? (y/N)"
+  read -r update_choice
+  if [[ ( ${update_choice} != "y"* ) && ( ${update_choice} != "Y"* ) ]]; then
+    # Exit when cancelled by user
+    PRINT INFO "Upgrade cancelled by user."
     exit 1
   fi
+  update_choice=""
+
+  # Initial steps count for progress bar
+  export PROGRESS_TOTAL=7
+  export PROGRESS_NOW=0
+
+  # Make sure the script is in $FOLDER
+  cd "$FOLDER" || exit 1
+
+  # Export the repository variables
+  export remote_repo
+  export remote_branch
+  export fetched_version
+
+  if [[ -d '.update' ]]; then
+    PRINT WARNING ".update already exists! Replacing it."
+    rm -rf .update
+  fi
+
+  # Create temporary directory for upgrade files
+  PRINT INFO "Creating .update directory.."
+  mkdir -p .update
+
+  # Define cleanup
+  cleanup() {
+    PRINT INFO "Cleaning up.."
+    cd "$FOLDER" || exit 1
+
+    if [[ $development_files == true ]]; then
+      PRINT INFO "Restoring extension development files.."
+      rm -rf .blueprint/dev
+      mv .update/backup/dev .blueprint/dev
+    fi
+    rm -rf .update
+
+    if [[ $1 != "" ]]; then
+      hide_progress
+      exit "$1"
+    fi
+  }
 
   ((PROGRESS_NOW++))
 
-  # Remove some files/directories that don't have to be moved to the Pterodactyl folder.
-  PRINT INFO "Cleaning up fetched release.."
-  rm -r \
-    "main/.github" \
-    "main/.git" \
-    "main/.gitignore" \
-    "main/README.md" \
-    &>> "$BLUEPRINT__DEBUG"
+  # Prepare repository URL
+  if [[ $1 == "remote" ]]; then
+    PRINT DEBUG "\$1 was 'remote'"
+    case $2 in
+      # Custom git repository
+      *.git|http://*|https://*)
+        PRINT DEBUG "setting remote_repo to '$2', remote_branch to '$3'"
+        remote_repo="$2"
+        remote_branch="$3"
+
+        if [[ $remote_branch == "" ]]; then
+          PRINT FATAL "Expected a git branch at argument 3, was empty. Exiting.."
+          cleanup 1
+        fi
+        if [[ $remote_branch != *.git ]]; then
+          PRINT FATAL "Expected a git repository at argument 2, was invalid. (Did you forget to prepend your argument with .git?) Exiting.."
+          cleanup 1
+        fi
+      ;;
+
+      # Custom GitHub repository
+      */*)
+        PRINT DEBUG "setting remote_repo to 'https://github.com/$2.git', remote_branch to '$3'"
+        remote_repo="https://github.com/$2.git"
+        remote_branch="$3"
+
+        if [[ $remote_branch == "" ]]; then
+          PRINT WARNING "Expected a git branch at argument 3, was empty. Defaulting to $REPOSITORY_BRANCH.."
+          remote_branch="$REPOSITORY_BRANCH"
+        fi
+      ;;
+
+      # Blueprint default repository
+      "")
+        PRINT INFO "No git repository provided, defaulting to '$REPOSITORY' (repo) and '$REPOSITORY_BRANCH' (branch)!"
+        PRINT DEBUG "setting remote_repo to 'https://github.com/$REPOSITORY.git'"
+        remote_repo="https://github.com/$REPOSITORY.git"
+        remote_branch="$REPOSITORY_BRANCH"
+      ;;
+
+      # Invalid repository provided
+      *)
+        PRINT DEBUG "Invalid repository provided"
+        PRINT FATAL "Expected a GitHub repository name or git repo url at argument 2, but was invalid. Exiting.."
+        cleanup 1
+      ;;
+    esac
+  else
+    PRINT DEBUG "\$1 was NOT 'remote' (it was '$1')"
+    PRINT INFO "Fetching version info"
+
+    php artisan bp:version:cache 2> "$BLUEPRINT__DEBUG"
+    tag_latest=$(php artisan bp:version:latest)
+    PRINT DEBUG "tag_latest is $tag_latest"
+
+    fetched_version="$tag_latest"
+    remote_repo="https://github.com/$REPOSITORY.git"
+    remote_branch="release/$tag_latest"
+    PRINT DEBUG "set remote_repo to '$remote_repo', remote_branch to '$remote_branch'"
+  fi
 
   ((PROGRESS_NOW++))
 
-  # Copy fetched release files to the Pterodactyl directory and remove temp files.
-  PRINT INFO "Moving release files to Pterodactyl directory.."
-  cp -r main/* "$FOLDER"/
-  rm -r \
-    "main" \
-    "$FOLDER"/.blueprint \
-    "$FOLDER"/.tmp/files
-  cd "$FOLDER" || cdhalt
+  # Fetching repository with git
+  PRINT INFO "Downloading repository.."
+  hide_progress
+  git clone "$remote_repo" .update/repo --branch "$remote_branch"
+
+  if [[ ! -d ".update/repo" ]]; then
+    PRINT FATAL "Could not download repository! Exiting.."
+    cleanup 1
+  fi
 
   ((PROGRESS_NOW++))
+
+  # Determine and backup development files
+  development_files=false
+  if [[ -n $(find .blueprint/dev -maxdepth 1 -type f -not -name ".gitkeep" -print -quit) ]]; then
+    development_files=true
+    PRINT INFO "Backing up extension development files.."
+    mkdir -p .update/backup
+    cp -Rf .blueprint/dev .update/backup/dev
+  fi
+
+  ((PROGRESS_NOW++))
+
+  # Delete files
+  PRINT INFO "Deleting files.."
+  rm -rf .blueprint
 
   # Clean up folders with potentially broken symlinks.
   rm \
@@ -127,54 +153,34 @@ Command() {
 
   ((PROGRESS_NOW++))
 
+  # Run update script
+  PRINT INFO "Running update script.."
+  source .update/repo/scripts/updater/update.sh
+  hide_progress
+  UpdaterInstall
+
+  ((PROGRESS_NOW++))
+
   # Deprecated, kept in for backwards compatibility
   sed -i -E \
     -e "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$OWNERSHIP\" #;|g" \
     -e "s|WEBUSER=\"www-data\" #;|WEBUSER=\"$WEBUSER\" #;|g" \
     -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
-    "$FOLDER/blueprint.sh"
+    blueprint.sh
 
+  # Run install script
+  PRINT INFO "Running final install script.."
   chmod +x blueprint.sh
-  mv "$FOLDER/blueprint" "$FOLDER/.blueprint"
+  mv blueprint .blueprint
   hide_progress
-  BLUEPRINT_ENVIRONMENT="upgrade" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh
+  BLUEPRINT_ENVIRONMENT="upgrade2" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh
 
   ((PROGRESS_NOW++))
 
-  if [[ ${HAS_DEV} == true ]]; then
-    PRINT INFO "Restoring extension development files.."
-    rm -rf .blueprint/dev
-    mv "$FOLDER/.tmp/dev" .blueprint/dev
-  fi
+  cleanup
 
-  rm -r "$FOLDER/.tmp"
-
-  ((PROGRESS_NOW++))
-
-  # Post-upgrade checks.
-  PRINT INFO "Validating update.."
-  score=0
-
-  if dbValidate "blueprint.setupFinished"; then score=$((score+1))
-  else PRINT WARNING "'blueprint.setupFinished' could not be detected or found."; fi
-
-  # Finalize upgrade.
-  if [[ ${score} == 1 ]]; then
-    PRINT SUCCESS "Upgrade finished."
-    hide_progress
-    rm .blueprint.sh.bak
-    exit 0 # success
-  elif [[ ${score} == 0 ]]; then
-    PRINT FATAL "All checks have failed. The 'blueprint.sh' file has been reverted."
-    hide_progress
-    rm blueprint.sh
-    mv .blueprint.sh.bak blueprint.sh
-    exit 1 # error
-  else
-    PRINT FATAL "Some checks have failed. The 'blueprint.sh' file has been reverted."
-    hide_progress
-    rm blueprint.sh
-    mv .blueprint.sh.bak blueprint.sh
-    exit 1 # error
-  fi
+  # Tell user that update has finished
+  PRINT SUCCESS "Update finished!"
+  hide_progress
+  exit 0
 }

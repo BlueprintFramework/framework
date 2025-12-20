@@ -10,7 +10,8 @@
 
 BLUEPRINT_ENGINE="solstice"
 REPOSITORY="BlueprintFramework/framework"
-VERSION="rolling" #;
+REPOSITORY_BRANCH="main"
+VERSION="beta-2025-12" #;
 
 FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEPRINT__FOLDER"
 OWNERSHIP="www-data:www-data" #;
@@ -232,7 +233,7 @@ if [[ $1 != "-bash" ]]; then
     exit 2
   else
     # Only run if Blueprint is not in the process of upgrading.
-    if [[ ( $BLUEPRINT_ENVIRONMENT != "upgrade" ) && ( $1 != "--post-upgrade" ) ]]; then
+    if [[ $BLUEPRINT_ENVIRONMENT != "upgrade2" ]]; then
       # Print Blueprint icon with ascii characters.
       C0="\x1b[0m"
       C1="\x1b[31;43;1m"
@@ -246,9 +247,22 @@ if [[ $1 != "-bash" ]]; then
 
       export PROGRESS_TOTAL=15
       export PROGRESS_NOW=0
+    else
+      PROGRESS_TOTAL="$(("$PROGRESS_TOTAL" + 15))"
     fi
 
     if [[ $BLUEPRINT_ENVIRONMENT == "upgrade" ]]; then
+      echo -e "\x1b[37;41;1m MANUAL ACTION REQUIRED \x1b[0m"
+      echo -e "\n\x1b[31;49;1mThis is NOT a bug. Please follow the following instructions:\x1b[0m"
+
+      echo -e "\n\x1b[31;49m1. Use the CTRL+C (^C) keyboard shortcut to terminate this process.\x1b[0m"
+      echo -e "\x1b[31;49m2. Then, run 'blueprint -upgrade' AGAIN.\x1b[0m"
+
+      read -r
+      exit 1
+    fi
+
+    if [[ $BLUEPRINT_ENVIRONMENT == "upgrade2" ]]; then
       # Get rid of beta-2025-11 leftovers
       rm -rf resources/scripts/blueprint/utility resources/scripts/blueprint/css/BlueprintStylesheet.css resources/scripts/blueprint/index.ts
     fi
@@ -257,7 +271,7 @@ if [[ $1 != "-bash" ]]; then
       PRINT INFO "Installing node modules.."
       # Check for yarn before installing node modules..
       if ! [ -x "$(command -v yarn)" ]; then
-          PRINT FATAL "Missing dependency \"yarn\"."
+        PRINT FATAL "Missing dependency \"yarn\"."
       fi
       hide_progress
     fi
@@ -417,7 +431,7 @@ if [[ $1 != "-bash" ]]; then
     sed -i "s~NOTINSTALLED~INSTALLED~g" "$FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php"
 
     # Finish installation
-    if [[ ( $BLUEPRINT_ENVIRONMENT != "upgrade" ) && ( $1 != "--post-upgrade" ) ]]; then
+    if [[ $BLUEPRINT_ENVIRONMENT != "upgrade2" ]]; then
       PRINT SUCCESS "Blueprint has completed its installation process."
       hide_progress
     fi

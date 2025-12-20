@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # This script has been created as part of the Blueprint source code
 # and uses the same license as the rest of the codebase.
 
@@ -97,7 +97,9 @@ PRINT() {
     echo -e "${SECONDARY}${DATE}${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE${RESET}"
   fi
 
-  echo -e "${BOLD}${SECONDARY}$DATEDEBUG${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE" >> "$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
+  if [[ -d "$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt ]]; then
+    echo -e "${BOLD}${SECONDARY}$DATEDEBUG${RESET} ${PRIMARY}${TYPE}:${RESET} $MESSAGE" >> "$FOLDER"/.blueprint/extensions/blueprint/private/debug/logs.txt
+  fi
 
   # If progress variables exist, draw progress bar
   if [[ -n "${PROGRESS_TOTAL}" && -n "${PROGRESS_NOW}" ]]; then
