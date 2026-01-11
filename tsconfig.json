@@ -4,7 +4,10 @@
     "module": "es2020",
     "jsx": "react",
     "moduleResolution": "node",
-    "lib": ["es2015", "dom"],
+    "lib": [
+      "es2015",
+      "dom"
+    ],
     "strict": true,
     "noEmit": true,
     "sourceMap": true,
@@ -14,19 +17,34 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
+    "verbatimModuleSyntax": false,
     "paths": {
-      "@/*": ["./resources/scripts/*"],
-      "@definitions/*": ["./resources/scripts/api/definitions/*"],
-      "@feature/*": ["./resources/scripts/components/server/features/*"],
-      "@blueprint/*": ["./resources/scripts/blueprint/*"]
+      "@/*": [
+        "./resources/scripts/*"
+      ],
+      "@definitions/*": [
+        "./resources/scripts/api/definitions/*"
+      ],
+      "@feature/*": [
+        "./resources/scripts/components/server/features/*"
+      ],
+      "@blueprint/*": [
+        "./resources/scripts/blueprint/*"
+      ]
     },
     "plugins": [
       {
         "name": "typescript-plugin-tw-template"
       }
     ],
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
-  "include": ["./resources/scripts/**/*"],
-  "exclude": ["/node_modules/"]
+  "include": [
+    "./resources/scripts/**/*"
+  ],
+  "exclude": [
+    "/node_modules/"
+  ]
 }
