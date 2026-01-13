@@ -1,4 +1,6 @@
 const path = require('node:path');
+const crypto = require('node:crypto');
+const fs = require('node:fs');
 const webpack = require('webpack');
 const { WebpackAssetsManifest } = require('webpack-assets-manifest');
 const TerserPlugin = require('terser-webpack-plugin');
