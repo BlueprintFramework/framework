@@ -1,3 +1,6 @@
+@include("blueprint.admin.admin")
+@yield('blueprint.lib')
+
 <!DOCTYPE html>
 <html>
     <head>
