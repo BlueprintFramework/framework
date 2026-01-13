@@ -1,6 +1,3 @@
-@include("blueprint.admin.admin")
-@yield('blueprint.lib')
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -153,7 +150,7 @@
                             @foreach (Alert::getMessages() as $type => $messages)
                                 @foreach ($messages as $message)
                                     <div class="alert alert-{{ $type }} alert-dismissable" role="alert">
-                                        {!! $message !!}
+                                        {{ $message }}
                                     </div>
                                 @endforeach
                             @endforeach
@@ -167,9 +164,10 @@
                     <strong><i class="fa fa-fw {{ $appIsGit ? 'fa-git-square' : 'fa-code-fork' }}"></i></strong> {{ $appVersion }}<br />
                     <strong><i class="fa fa-fw fa-clock-o"></i></strong> {{ round(microtime(true) - LARAVEL_START, 3) }}s
                 </div>
-                <a href="https://pterodactyl.io/">Pterodactyl Software</a> &copy; 2015 - {{ date('Y') }}
                 @if(starts_with(Route::currentRouteName(), 'admin.extensions'))
-                    • <a href="https://blueprint.zip/">Blueprint</a> &copy; 2023 - {{ date('Y') }}
+                    Copyright &copy; 2023 - {{ date('Y') }} <a href="https://blueprint.zip/">Blueprint</a>.
+                @else
+                    Copyright &copy; 2015 - {{ date('Y') }} <a href="https://pterodactyl.io/">Pterodactyl Software</a>.
                 @endif
             </footer>
         </div>
