@@ -13,6 +13,7 @@ use Illuminate\Support\ServiceProvider;
 use Pterodactyl\Extensions\Themes\Theme;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
+// Blueprint-related shenanigans imports
 use Pterodactyl\Providers\Blueprint\ExtensionfsConfigProvider;
 use Pterodactyl\Providers\Blueprint\RouteServiceProvider;
 
