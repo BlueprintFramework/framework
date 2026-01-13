@@ -96,7 +96,7 @@ module.exports = {
                 // https://github.com/webpack/css-loader/blob/main/CHANGELOG.md#700-2024-04-04
                 namedExport: false,
                 exportLocalsConvention: 'as-is',
-                localIdentName: isProduction ? '[name]_[hash:base64:8]' : '[path][name]__[local]',
+                localIdentName: '[path][name]__[local]',
                 localIdentContext: path.join(__dirname, 'resources/scripts/components'),
               },
               sourceMap: !isProduction,
