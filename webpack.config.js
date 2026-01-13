@@ -64,8 +64,8 @@ module.exports = {
   entry: ['react-hot-loader/patch', './resources/scripts/index.tsx'],
   output: {
     path: path.join(__dirname, '/public/assets'),
-    filename: isProduction ? 'bundle.[chunkhash:8].js' : 'bundle.[fullhash:8].js',
-    chunkFilename: isProduction ? '[name].[chunkhash:8].js' : '[name].[fullhash:8].js',
+    filename: isProduction ? 'bundle.[chunkhash:8].js' : 'bundle.[hash:8].js',
+    chunkFilename: isProduction ? '[name].[chunkhash:8].js' : '[name].[hash:8].js',
     publicPath: process.env.WEBPACK_PUBLIC_PATH || '/assets/',
     crossOriginLoading: 'anonymous',
   },
@@ -93,9 +93,6 @@ module.exports = {
             options: {
               modules: {
                 auto: true,
-                // https://github.com/webpack/css-loader/blob/main/CHANGELOG.md#700-2024-04-04
-                namedExport: false,
-                exportLocalsConvention: 'as-is',
                 localIdentName: isProduction ? '[name]_[hash:base64:8]' : '[path][name]__[local]',
                 localIdentContext: path.join(__dirname, 'resources/scripts/components'),
               },
