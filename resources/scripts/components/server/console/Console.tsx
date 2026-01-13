@@ -204,7 +204,7 @@ export default () => {
                 </div>
             </div>
             {canSendCommands && (
-                <div className={classNames('relative flex', styles.overflows_container)}>
+                <div className={classNames('relative', styles.overflows_container)}>
                     <input
                         className={classNames('peer', styles.command_input)}
                         type={'text'}
