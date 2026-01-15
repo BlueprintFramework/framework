@@ -135,6 +135,7 @@
             </aside>
             <div class="content-wrapper">
                 <section class="content-header">
+                    @yield('blueprint.introduction')
                     @yield('content-header')
                 </section>
                 <section class="content">
@@ -168,9 +169,9 @@
                     <strong><i class="fa fa-fw fa-clock-o"></i></strong> {{ round(microtime(true) - LARAVEL_START, 3) }}s
                 </div>
                 @if(starts_with(Route::currentRouteName(), 'admin.extensions'))
-                    Copyright &copy; 2023 - {{ date('Y') }} <a href="https://blueprint.zip/">Blueprint</a>.
+                    Copyright &copy; 2023 - {{ date('Y') }} <a href="https://blueprint.zip/">Blueprint Framework</a>, Emma (<a href="https://prpl.wtf/">prpl.wtf</a>) and contributors.
                 @else
-                    Copyright &copy; 2015 - {{ date('Y') }} <a href="https://pterodactyl.io/">Pterodactyl Software</a>.
+                    Copyright &copy; 2015 - {{ date('Y') }} <a href="https://pterodactyl.io/">Pterodactyl Software</a>
                 @endif
             </footer>
         </div>

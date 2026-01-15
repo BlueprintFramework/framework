@@ -5,7 +5,7 @@
     <i class="bi bi-gear-fill"></i>
   </button>
 
-  @if($EXTENSION_WEBSITE != "[website]") 
+  @if($EXTENSION_WEBSITE != "[website]")
     <a href="{{ $EXTENSION_WEBSITE }}" target="_blank">
       <button class="btn btn-gray-alt pull-right" style="padding: 5px 10px">
         <i class="{{ $EXTENSION_WEBICON }}"></i>

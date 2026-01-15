@@ -67,7 +67,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
             <span class="text-bold h4">Blueprint</span>
           </p>
           <span>
-            Powerful, fast and developer-friendly extension framework for Pterodactyl. Utilize extension APIs, inject HTML, modify stylesheets, package extensions and so much more.
+            Pterodactyl's favorite modding community. Develop, collaborate and install extensions with the extension platform that puts you first. Pterodactyl themes, plugin installers, player managers, admin tools and much more. There's a Blueprint extension for that.
           </span>
         </div>
         <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">
