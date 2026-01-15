@@ -33,6 +33,11 @@ class BlueprintSeeder extends Seeder
       'disable_attribution' => [
         'default' => false,
         'type' => 'boolean',
+        'hidden' => true,
+      ],
+      'introduction_dismissed' => [
+        'default' => false,
+        'type' => 'boolean',
         'hidden' => false,
       ],
       'is_developer' => [

@@ -1,3 +1,5 @@
+@include("blueprint.admin.introduction")
+
 @section("blueprint.lib")
   <?php
     use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary as BlueprintExtensionLibrary;

@@ -103,7 +103,7 @@ source scripts/libraries/misc.sh          || missinglibs+="[misc]"
 
 cdhalt() { PRINT FATAL "Attempted navigation into nonexistent directory, halting process."; exit 1; }
 depend() {
-  # Make sure Node.js is version 17 or higher.
+  # Make sure Node.js is version 20 or higher.
   nodeMajor=$(node -v | awk -F. '{print $1}' | sed 's/[^0-9]*//g')
 
   # Check for required (both internal and external) dependencies.
@@ -131,8 +131,8 @@ depend() {
   if [[ $DEPEND_MISSING == true ]]; then
     PRINT FATAL "Some framework dependencies couldn't be found or have issues. This is usually NOT a bug, do not report it as such."
 
-    if [[ $nodeMajor -lt 17 ]]; then
-      PRINT FATAL "Unsupported dependency \"node\" <17.x. (Requires >17.x)"
+    if [[ $nodeMajor -lt 20 ]]; then
+      PRINT FATAL "Unsupported dependency \"node\" <20.x. (Requires >20.x)"
     fi
 
     if ! [ -x "$(command -v unzip)"                        ]; then PRINT FATAL "Missing dependency \"unzip\".";   fi

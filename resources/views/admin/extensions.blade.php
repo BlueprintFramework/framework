@@ -10,7 +10,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
 
 @section('content-header')
   @if($is_installed)
-    @if(($PlaceholderService->version() != $latestBlueprintVersion) && $latestBlueprintVersion != "unknown")
+    @if(($PlaceholderService->version() != $latestBlueprintVersion) && ($PlaceholderService->version() != "rolling") && $latestBlueprintVersion != "unknown")
       <div class="blueprint-statusbar blueprint-statusbar-danger">
         <div style="margin-right: 14px;">
           <i class="bi bi-exclamation-triangle-fill" style="font-size: 24px; color: #f52e98"></i>
@@ -32,7 +32,21 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
       </div>
     @endif
 
-    @if($latestBlueprintVersion == "unknown")
+    @if($PlaceholderService->version() == "rolling")
+      <div class="blueprint-statusbar blueprint-statusbar-warning">
+        <div style="margin-right: 14px;">
+          <i class="bi bi-bug-fill" style="font-size: 24px; color: #f5952e"></i>
+        </div>
+        <div>
+          <span class="text-bold" style="color: #f9a040;">
+          This instance is running a development-preview of Blueprint.
+          </span>
+          You may run into bugs, extension incompatibilities and more. If you run into any issues, please <a href="https://github.com/blueprintframework/framework/issues">let us know</a>.
+        </div>
+      </div>
+    @endif
+
+    @if($latestBlueprintVersion == "unknown" && $PlaceholderService->version() != "rolling")
       <div class="blueprint-statusbar blueprint-statusbar-warning">
         <div style="margin-right: 14px;">
           <i class="bi bi-wifi-off" style="font-size: 24px; color: #f5952e"></i>
@@ -53,7 +67,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
             <span class="text-bold h4">Blueprint</span>
           </p>
           <span>
-            Powerful, fast and developer-friendly extension framework for Pterodactyl. Utilize extension APIs, inject HTML, modify stylesheets, package extensions and so much more.
+            Pterodactyl's favorite modding community. Develop, collaborate and install extensions with the extension platform that puts you first. Pterodactyl themes, plugin installers, player managers, admin tools and much more. There's a Blueprint extension for that.
           </span>
         </div>
         <div class="col-lg-4 col-md-3 col-sm-3 col-xs-12" style="padding-top: 3px; padding-bottom: 3px;">

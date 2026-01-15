@@ -13,8 +13,9 @@ use Pterodactyl\Console\Commands\Schedule\ProcessRunnableCommand;
 use Pterodactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
 use Pterodactyl\Console\Commands\Maintenance\CleanServiceBackupFilesCommand;
 
-use Pterodactyl\BlueprintFramework\GetExtensionSchedules;
+// Import Blueprint schedules, telemetry and library
 use Pterodactyl\Services\Telemetry\RegisterBlueprintTelemetry;
+use Pterodactyl\BlueprintFramework\GetExtensionSchedules;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
 
 class Kernel extends ConsoleKernel
@@ -60,9 +61,10 @@ class Kernel extends ConsoleKernel
             $registerBlueprintTelemetry->register($schedule);
         }
 
-        // Blueprint-related utilities.
+        // Blueprint-related utilities
         $schedule->command('bp:version:cache')->dailyAt(str_pad(rand(0, 23), 2, '0', STR_PAD_LEFT) . ':' . str_pad(rand(0, 59), 2, '0', STR_PAD_LEFT));
 
+        // Blueprint extension schedules
         GetExtensionSchedules::schedules($schedule);
     }
 

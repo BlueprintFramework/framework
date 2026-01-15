@@ -135,6 +135,7 @@
             </aside>
             <div class="content-wrapper">
                 <section class="content-header">
+                    @yield('blueprint.introduction')
                     @yield('content-header')
                 </section>
                 <section class="content">
@@ -153,7 +154,7 @@
                             @foreach (Alert::getMessages() as $type => $messages)
                                 @foreach ($messages as $message)
                                     <div class="alert alert-{{ $type }} alert-dismissable" role="alert">
-                                        {!! $message !!}
+                                        {{ $message }}
                                     </div>
                                 @endforeach
                             @endforeach
@@ -167,9 +168,10 @@
                     <strong><i class="fa fa-fw {{ $appIsGit ? 'fa-git-square' : 'fa-code-fork' }}"></i></strong> {{ $appVersion }}<br />
                     <strong><i class="fa fa-fw fa-clock-o"></i></strong> {{ round(microtime(true) - LARAVEL_START, 3) }}s
                 </div>
-                <a href="https://pterodactyl.io/">Pterodactyl Software</a> &copy; 2015 - {{ date('Y') }}
                 @if(starts_with(Route::currentRouteName(), 'admin.extensions'))
-                    • <a href="https://blueprint.zip/">Blueprint</a> &copy; 2023 - {{ date('Y') }}
+                    Copyright &copy; 2023 - {{ date('Y') }} <a href="https://blueprint.zip/">Blueprint Framework</a>, Emma (<a href="https://prpl.wtf/">prpl.wtf</a>) and contributors.
+                @else
+                    Copyright &copy; 2015 - {{ date('Y') }} <a href="https://pterodactyl.io/">Pterodactyl Software</a>
                 @endif
             </footer>
         </div>
