@@ -44,3 +44,4 @@ wak.toml
 demo/
 .build-cache.json
 .bashatimerc
+.wakatime-project
