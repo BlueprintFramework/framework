@@ -10,7 +10,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
 
 @section('content-header')
   @if($is_installed)
-    @if(($PlaceholderService->version() != $latestBlueprintVersion) && $latestBlueprintVersion != "unknown" && $latestBlueprintVersion != "rolling")
+    @if(($PlaceholderService->version() != $latestBlueprintVersion) && ($PlaceholderService->version() != "rolling") && $latestBlueprintVersion != "unknown")
       <div class="blueprint-statusbar blueprint-statusbar-danger">
         <div style="margin-right: 14px;">
           <i class="bi bi-exclamation-triangle-fill" style="font-size: 24px; color: #f52e98"></i>
@@ -32,7 +32,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
       </div>
     @endif
 
-    @if($latestBlueprintVersion == "rolling")
+    @if($PlaceholderService->version() != "rolling")
       <div class="blueprint-statusbar blueprint-statusbar-warning">
         <div style="margin-right: 14px;">
           <i class="bi bi-bug-fill" style="font-size: 24px; color: #f5952e"></i>
@@ -46,7 +46,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
       </div>
     @endif
 
-    @if($latestBlueprintVersion == "unknown")
+    @if($latestBlueprintVersion == "unknown" && $PlaceholderService->version() != "rolling")
       <div class="blueprint-statusbar blueprint-statusbar-warning">
         <div style="margin-right: 14px;">
           <i class="bi bi-wifi-off" style="font-size: 24px; color: #f5952e"></i>
