@@ -136,6 +136,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
+    fallback: {
+      "path": require.resolve("pathe")
+    },
     alias: {
       '@': path.join(__dirname, '/resources/scripts'),
       '@definitions': path.join(__dirname, '/resources/scripts/api/definitions'),
