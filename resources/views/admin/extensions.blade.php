@@ -32,7 +32,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
       </div>
     @endif
 
-    @if($PlaceholderService->version() != "rolling")
+    @if($PlaceholderService->version() == "rolling")
       <div class="blueprint-statusbar blueprint-statusbar-warning">
         <div style="margin-right: 14px;">
           <i class="bi bi-bug-fill" style="font-size: 24px; color: #f5952e"></i>
