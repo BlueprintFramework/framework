@@ -31,7 +31,7 @@
               </div>
             </div>
             <div class="modal-footer" style="border-radius: 0 0 15px 15px;">
-              <p class="small text-left">By using Blueprint you accept our <a href="https://blueprint.zip/legal/privacy" target="_blank">privacy policy</a>. You can disable anonymized telemetry data in the Blueprint settings menuh.</p>
+              <p class="small text-left">By using Blueprint you accept our <a href="https://blueprint.zip/legal/privacy#self-hosted-instance-telemetry" target="_blank">privacy policy</a> under the "Self-Hosted Instance Telemetry" section. You can disable anonymized telemetry data in the Blueprint settings menu.</p>
               <input type="hidden" name="flags:introduction_dismissed" value="1">
               <input type="hidden" name="_method" value="PATCH">
               {!! csrf_field() !!}
