@@ -20,6 +20,7 @@
         "classnames": "^2.3.1",
         "codemirror": "^5.57.0",
         "copy-to-clipboard": "^3.3.1",
+        "crypto-browserify": "^3.12.1",
         "date-fns": "^2.28.0",
         "debounce": "^1.2.0",
         "deepmerge-ts": "^4.2.1",

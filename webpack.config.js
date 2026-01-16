@@ -137,7 +137,8 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     fallback: {
-      "path": require.resolve("pathe")
+      "path": require.resolve("pathe"),
+      "crypto": require.resolve("crypto-browserify")
     },
     alias: {
       '@': path.join(__dirname, '/resources/scripts'),
