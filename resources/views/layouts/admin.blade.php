@@ -169,9 +169,9 @@
                     <strong><i class="fa fa-fw fa-clock-o"></i></strong> {{ round(microtime(true) - LARAVEL_START, 3) }}s
                 </div>
                 @if(starts_with(Route::currentRouteName(), 'admin.extensions'))
-                    Copyright &copy; 2023 - {{ date('Y') }} <a href="https://blueprint.zip/">Blueprint Framework</a>, Emma (<a href="https://prpl.wtf/">prpl.wtf</a>) and contributors.
+                    Copyright &copy; 2023 - {{ date('Y') }} <a href="https://blueprint.zip/">Blueprint Framework</a>, Emma (<a href="https://prpl.wtf/">prpl.wtf</a>) and contributors. Copyright &copy; 2026 <a href="https://subdisk.com/">Subdisk</a> a brand by <a href="https://aesthetic-dyn.com/">FOCUS AESTHETIC DYNAMICS S.R.L</a>.
                 @else
-                    Copyright &copy; 2015 - {{ date('Y') }} <a href="https://pterodactyl.io/">Pterodactyl Software</a>
+                    Copyright &copy; 2015 - {{ date('Y') }} <a href="https://pterodactyl.io/">Pterodactyl Software</a>. Copyright &copy; 2026 <a href="https://subdisk.com/">Subdisk</a> a brand by <a href="https://aesthetic-dyn.com/">FOCUS AESTHETIC DYNAMICS S.R.L</a>.
                 @endif
             </footer>
         </div>

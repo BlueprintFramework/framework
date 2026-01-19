@@ -9,10 +9,7 @@ export default () => {
     <>
       {!disable_attribution && (
         <>
-          <span className={"mx-2"}>
-            •
-          </span>
-
+          <span className={'mx-2'}>•</span>
           <a
             rel={'noopener nofollow noreferrer'}
             href={'https://blueprint.zip'}
@@ -22,6 +19,16 @@ export default () => {
             Blueprint
           </a>
           &nbsp;&copy; 2023 - {new Date().getFullYear()}
+          <span className={'mx-2'}>•</span>
+          <a
+            rel={'noopener nofollow noreferrer'}
+            href={'https://subdisk.com'}
+            target={'_blank'}
+            className={`no-underline text-neutral-500 hover:text-neutral-300`}
+          >
+            Subdisk
+          </a>
+          &nbsp;&copy; 2026
         </>
       )}
     </>
