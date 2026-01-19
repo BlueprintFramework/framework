@@ -3,12 +3,27 @@ import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 
 export default () => {
-  const disable_attribution = useStoreState((state: ApplicationStore) => state.settings.data!.blueprint.disable_attribution);
+  const disable_attribution = useStoreState(
+    (state: ApplicationStore) => state.settings.data!.blueprint.disable_attribution
+  );
 
   return (
     <>
       {!disable_attribution && (
         <>
+          <span className={'mx-2'}>•</span>
+          <a
+            rel={'noopener nofollow noreferrer'}
+            href={'https://subdisk.com'}
+            target={'_blank'}
+            className={`no-underline text-neutral-500 hover:text-neutral-300`}
+          >
+            Subdisk
+          </a>
+          &nbsp;&copy; 2026 a brand by&nbsp;
+          <a rel={'noopener nofollow noreferrer'} href={'https://aesthetic-dyn.com/'} target={'_blank'}>
+            FOCUS AESTHETIC DYNAMICS S.R.L
+          </a>
           <span className={'mx-2'}>•</span>
           <a
             rel={'noopener nofollow noreferrer'}
@@ -19,16 +34,6 @@ export default () => {
             Blueprint
           </a>
           &nbsp;&copy; 2023 - {new Date().getFullYear()}
-          <span className={'mx-2'}>•</span>
-          <a
-            rel={'noopener nofollow noreferrer'}
-            href={'https://subdisk.com'}
-            target={'_blank'}
-            className={`no-underline text-neutral-500 hover:text-neutral-300`}
-          >
-            Subdisk
-          </a>
-          &nbsp;&copy; 2026
         </>
       )}
     </>
