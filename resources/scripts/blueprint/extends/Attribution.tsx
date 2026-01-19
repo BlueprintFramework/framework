@@ -14,19 +14,6 @@ export default () => {
           <span className={'mx-2'}>•</span>
           <a
             rel={'noopener nofollow noreferrer'}
-            href={'https://subdisk.com'}
-            target={'_blank'}
-            className={`no-underline text-neutral-500 hover:text-neutral-300`}
-          >
-            Subdisk
-          </a>
-          &nbsp;&copy; 2026 a brand by&nbsp;
-          <a rel={'noopener nofollow noreferrer'} href={'https://aesthetic-dyn.com/'} target={'_blank'}>
-            FOCUS AESTHETIC DYNAMICS S.R.L
-          </a>
-          <span className={'mx-2'}>•</span>
-          <a
-            rel={'noopener nofollow noreferrer'}
             href={'https://blueprint.zip'}
             target={'_blank'}
             className={`no-underline text-neutral-500 hover:text-neutral-300`}
@@ -34,6 +21,24 @@ export default () => {
             Blueprint
           </a>
           &nbsp;&copy; 2023 - {new Date().getFullYear()}
+          <span className={'mx-2'}>•</span>
+          <a
+            rel={'noopener nofollow noreferrer'}
+            href={'https://subdisk.com'}
+            target={'_blank'}
+            className={`no-underline text-neutral-500 hover:text-neutral-300`}
+          >
+            Subdisk
+          </a>
+          &nbsp;&copy; 2026 a brand by&nbsp;
+          <a
+            rel={'noopener nofollow noreferrer'}
+            href={'https://aesthetic-dyn.com/'}
+            target={'_blank'}
+            className={`no-underline text-neutral-500 hover:text-neutral-300`}
+          >
+            FOCUS AESTHETIC DYNAMICS S.R.L
+          </a>
         </>
       )}
     </>
