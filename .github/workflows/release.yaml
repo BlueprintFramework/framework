@@ -23,8 +23,8 @@ jobs:
           REF_NAME: ${{ github.ref_name }}
         run: |
           BRANCH=release/"${REF_NAME}"
-          git config --local user.email 'robots@blueprint.zip'
-          git config --local user.name 'Blueprint CI'
+          git config --local user.email 'contact@aesthetic-dyn.com'
+          git config --local user.name 'aesthetic-dyn ci'
           git checkout -b "$BRANCH"
           git push -u origin "$BRANCH"
           sed -i "s/VERSION=\"rolling\"/VERSION=\"${REF_NAME}\"/" blueprint.sh
