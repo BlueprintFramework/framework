@@ -66,7 +66,7 @@ Command() {
           PRINT FATAL "Expected a git branch at argument 3, was empty. Exiting.."
           cleanup 1
         fi
-        if [[ $remote_branch != *.git ]]; then
+        if [[ $remote_repo != *.git ]]; then
           PRINT FATAL "Expected a git repository at argument 2, was invalid. (Did you forget to prepend your argument with .git?) Exiting.."
           cleanup 1
         fi
