@@ -1,6 +1,9 @@
 # Blueprint UI
 
-Blueprint UI allows extensions to use versatile, easy to theme and powerful components that match the look of Pterodactyl's own components. Blueprint's components library can be called using `import { Component(s) } from '@blueprint/ui';`.
+Blueprint UI allows extensions to use versatile, easy to theme and powerful components that match the look of Pterodactyl's own components. Blueprint's components library can be called using
+```tsx
+import { Component(s) } from '@blueprint/ui';
+```
 
 Pterodactyl's own components and the ones offered in Blueprint UI can look nearly identical, with added features on the Blueprint UI counterparts.
 
