@@ -14,7 +14,6 @@
 </p>
 
 
-
 <!-- Introduction -->
 <br/><h2 align="center">🧩 Introduction</h2>
 
@@ -25,12 +24,10 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 [Learn more about **Blueprint**](https://blueprint.zip) or [find your **next extension**](https://blueprint.zip/browse).
 
 
-
 <!-- Showcase -->
 <br/><h2 align="center">📷 Showcase</h2>
 
 ![screenshots](https://github.com/BlueprintFramework/framework/assets/103201875/cb66943e-a60e-44e5-afd4-90475b106244)
-
 
 
 <br/><h2 align="center">💖 Donate</h2>
@@ -50,19 +47,6 @@ Contributors help shape the future of the Blueprint modding framework. To start 
 </a>
 
 
-
-<!-- Stargazers -->
-<br/><h2 align="center">🌟 Stargazers</h2>
-
-<a href="https://github.com/BlueprintFramework/framework/stargazers/">
-  <picture>
-    <source media="(prefers-color-scheme: light)" srcset="http://reporoster.com/stars/BlueprintFramework/framework">
-    <img alt="stargazer-widget" src="http://reporoster.com/stars/dark/BlueprintFramework/framework">
-  </picture>
-</a>
-
-
-
 <!-- Related Links -->
 <br/><h2 align="center">🔗 Related Links</h2>
 
@@ -77,5 +61,6 @@ Contributors help shape the future of the Blueprint modding framework. To start 
   © 2023-2026 Emma (prpl.wtf)
   <br/><br/><img src="https://github.com/user-attachments/assets/e6ff62c3-6d99-4e43-850d-62150706e5dd"/>
 </p>
+
 
 
