@@ -7,17 +7,12 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 
 [Learn more about **Blueprint**](https://blueprint.zip) or [find your **next extension**](https://blueprint.zip/browse).
 
-
-## Showcase
-![screenshots](https://github.com/BlueprintFramework/framework/assets/103201875/cb66943e-a60e-44e5-afd4-90475b106244)
-
-
-## Donate
+## Donate and contribute
 Blueprint is free and open-source software. We play a vital role in the Pterodactyl modding community and empower developers with tools to bring their ideas to life. To keep everything up and running, we rely heavily on [donations](https://hcb.hackclub.com/blueprint/donations). We're also nonprofit!
 
 [**Donate to our nonprofit organization**](https://hcb.hackclub.com/donations/start/blueprint) or [view our open finances](https://hcb.hackclub.com/blueprint).
 
-## Contributors
+### Contributors
 Contributors help shape the future of the Blueprint modding framework. To start contributing you have to [fork this repository](https://github.com/BlueprintFramework/framework/fork) and [open a pull request](https://github.com/BlueprintFramework/framework/compare).
 
 <a href="https://github.com/BlueprintFramework/framework/graphs/contributors">
@@ -30,9 +25,12 @@ Contributors help shape the future of the Blueprint modding framework. To start 
 [**BlueprintFramework/templates**](https://github.com/BlueprintFramework/templates) is a repository with initialization templates for extension development.\
 [**BlueprintFramework/web**](https://github.com/BlueprintFramework/web) is our open-source documentation and landing website.
 
+## Showcase
+![](https://github.com/user-attachments/assets/1cea099b-9af8-4ccc-ac1a-0a896a30f817)
 
 <br/><br/>
 <p align="center">
   © 2023-2026 Emma (prpl.wtf)
   <br/><br/><img src="https://github.com/user-attachments/assets/e6ff62c3-6d99-4e43-850d-62150706e5dd"/>
 </p>
+
