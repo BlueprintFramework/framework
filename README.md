@@ -7,6 +7,8 @@ We aim to introduce new developers to Blueprint with easy to understand guides, 
 
 [Learn more about **Blueprint**](https://blueprint.zip) or [find your **next extension**](https://blueprint.zip/browse).
 
+<br>
+
 ## Donate and contribute
 Blueprint is free and open-source software. We play a vital role in the Pterodactyl modding community and empower developers with tools to bring their ideas to life. To keep everything up and running, we rely heavily on [donations](https://hcb.hackclub.com/blueprint/donations). We're also nonprofit!
 
@@ -19,11 +21,14 @@ Contributors help shape the future of the Blueprint modding framework. To start 
   <img src="https://contrib.rocks/image?repo=BlueprintFramework/framework" />
 </a>
 
-## Related Links
-[**Pterodactyl**](https://pterodactyl.io/) is a free, open-source game server management panel built with PHP, React, and Go.\
-[**BlueprintFramework/docker**](https://github.com/BlueprintFramework/docker) is the image for running Blueprint and Pterodactyl with Docker.\
-[**BlueprintFramework/templates**](https://github.com/BlueprintFramework/templates) is a repository with initialization templates for extension development.\
-[**BlueprintFramework/web**](https://github.com/BlueprintFramework/web) is our open-source documentation and landing website.
+### Related repositories
+The Blueprint modding platform is spread over multiple repositories, each with it's own purpose. If you'd like to contribute, check out the following repositories:
+
+- [**BlueprintFramework/docker**](https://github.com/BlueprintFramework/docker) is the image for running Blueprint and Pterodactyl with Docker.
+- [**BlueprintFramework/templates**](https://github.com/BlueprintFramework/templates) is a repository with initialization templates for extension development.
+- [**BlueprintFramework/web**](https://github.com/BlueprintFramework/web) is our open-source source of documentation, landing website, and API.
+
+<br>
 
 ## Showcase
 ![](https://github.com/user-attachments/assets/1cea099b-9af8-4ccc-ac1a-0a896a30f817)
@@ -33,4 +38,5 @@ Contributors help shape the future of the Blueprint modding framework. To start 
   © 2023-2026 Emma (prpl.wtf)
   <br/><br/><img src="https://github.com/user-attachments/assets/e6ff62c3-6d99-4e43-850d-62150706e5dd"/>
 </p>
+
 
