@@ -39,6 +39,15 @@ RemoveExtension() {
     local author="${conf_info_author//&/\\&}" #(optional)
     local icon="${conf_info_icon//&/\\&}" #(optional)
     local website="${conf_info_website//&/\\&}"; #(optional)
+    local canRunAutonomous="${conf_info_canRunAutonomous//&/\\&}" #(optional, default: true)
+    if [[ -z "$canRunAutonomous" ]]; then canRunAutonomous="true"; fi
+
+    if [[ $script == true && $canRunAutonomous == false ]]; then
+      # just in case the dev has a script that REQUIRES human input.
+      PRINT WARNING "Extension has a custom removal script, but autonomous removal is disabled. Cannot continue with removal. Please remove via CLI."
+      hide_progress
+      return 1
+    fi
 
     local admin_view="$conf_admin_view"
     local admin_controller="$conf_admin_controller"; #(optional)
@@ -88,9 +97,30 @@ RemoveExtension() {
   assignflags
 
   ((PROGRESS_NOW++))
+  if [[ $script == true && -f ".blueprint/extensions/$identifier/private/autonomous_remove.sh" ]]; then
+    PRINT WARNING "Extension has a custom removal script, proceed with caution."
+    hide_progress
+    chmod +x ".blueprint/extensions/$identifier/private/autonomous_remove.sh"
 
-  if [[ -f ".blueprint/extensions/$identifier/private/remove.sh" ]]; then
-    PRINT WARNING "Extension uses a custom removal script, proceed with caution."
+    # Run script while also parsing some useful variables for the uninstall script to use.
+    su "$WEBUSER" -s "$USERSHELL" -c "
+        cd \"$FOLDER\";
+        ENGINE=\"$BLUEPRINT_ENGINE\"         \
+        EXTENSION_IDENTIFIER=\"$identifier\" \
+        EXTENSION_TARGET=\"$target\"         \
+        EXTENSION_VERSION=\"$version\"       \
+        PTERODACTYL_DIRECTORY=\"$FOLDER\"    \
+        BLUEPRINT_VERSION=\"$VERSION\"       \
+        bash .blueprint/extensions/$identifier/private/autonomous_remove.sh
+      "
+
+    echo -e "\e[0m\x1b[0m\033[0m"
+  elif [[ -f ".blueprint/extensions/$identifier/private/remove.sh" ]]; then
+    if [[ $script == true ]]; then
+      PRINT WARNING "No autonomous removal script found, but extension has a custom removal script. Falling back to basic uninstall."
+    else
+      PRINT WARNING "Extension has a custom removal script, proceed with caution."
+    fi
     hide_progress
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
 
@@ -388,6 +418,13 @@ Command() {
   current=0
   extensions="$*"
   total=$(echo "$extensions" | wc -w)
+
+  script=false
+  last_arg="${!#}"
+  if [[ "$last_arg" == "-script" ]]; then
+    script=true
+    extensions="${extensions%" $last_arg"}"
+  fi
 
   local EXTENSIONS_STEPS=22 #Total amount of steps per extension
   local FINISH_STEPS=5 #Total amount of finalization

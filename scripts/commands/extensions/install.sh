@@ -73,6 +73,15 @@ InstallExtension() {
   local author="${conf_info_author//&/\\&}" #(optional)
   local icon="${conf_info_icon//&/\\&}" #(optional)
   local website="${conf_info_website//&/\\&}"; #(optional)
+  local canRunAutonomous="${conf_info_canRunAutonomous//&/\\&}" #(optional, default: true)
+  if [[ -z "$canRunAutonomous" ]]; then canRunAutonomous="true"; fi
+
+  if [[ $script == true && $canRunAutonomous == false ]]; then
+    # just in case the dev has a script that REQUIRES human input.
+    PRINT WARNING "Extension has a custom install script, but autonomous installation is disabled. Cannot continue with installation. Please install via CLI."
+    hide_progress
+    return 1
+  fi
 
   local admin_view="$conf_admin_view"
   local admin_controller="$conf_admin_controller"; #(optional)
@@ -1306,8 +1315,40 @@ InstallExtension() {
   ((PROGRESS_NOW++))
 
   if [[ ( $F_developerIgnoreInstallScript == false ) || ( $dev != true ) ]]; then
-    if [[ -f ".blueprint/extensions/$identifier/private/install.sh" ]]; then
-      PRINT WARNING "Extension uses a custom installation script, proceed with caution."
+    if [[ $script == true && -f ".blueprint/extensions/$identifier/private/autonomous_install.sh" ]]; then
+      PRINT WARNING "Extension has a autonomous installation script, proceed with caution."
+      hide_progress
+      chmod --silent +x ".blueprint/extensions/$identifier/private/autonomous_install.sh" 2>> "$BLUEPRINT__DEBUG"
+
+      # Run script while also parsing some useful variables for the install script to use.
+      if $F_developerEscalateInstallScript; then
+        ENGINE="$BLUEPRINT_ENGINE"         \
+        EXTENSION_IDENTIFIER="$identifier" \
+        EXTENSION_TARGET="$target"         \
+        EXTENSION_VERSION="$version"       \
+        PTERODACTYL_DIRECTORY="$FOLDER"    \
+        BLUEPRINT_VERSION="$VERSION"       \
+        BLUEPRINT_DEVELOPER="$dev"         \
+        bash .blueprint/extensions/"$identifier"/private/autonomous_install.sh
+      else
+        su "$WEBUSER" -s "$USERSHELL" -c "
+          cd \"$FOLDER\";
+          ENGINE=\"$BLUEPRINT_ENGINE\"         \
+          EXTENSION_IDENTIFIER=\"$identifier\" \
+          EXTENSION_TARGET=\"$target\"         \
+          EXTENSION_VERSION=\"$version\"       \
+          PTERODACTYL_DIRECTORY=\"$FOLDER\"    \
+          BLUEPRINT_VERSION=\"$VERSION\"       \
+          BLUEPRINT_DEVELOPER=\"$dev\"         \
+          bash .blueprint/extensions/$identifier/private/autonomous_install.sh
+        "
+      fi
+    elif [[ -f ".blueprint/extensions/$identifier/private/install.sh" ]]; then
+      if [[ $script == true ]]; then
+        PRINT WARNING "No autonomous installation script found, but extension has a custom installation script. Falling back to basic install."
+      else
+        PRINT INFO "Extension has a custom installation script, proceed with caution."
+      fi
       hide_progress
       chmod --silent +x ".blueprint/extensions/$identifier/private/install.sh" 2>> "$BLUEPRINT__DEBUG"
 
@@ -1362,6 +1403,7 @@ Command() {
   if [[ $1 == "" ]]; then PRINT FATAL "Expected at least 1 argument but got 0.";exit 2;fi
   if [[ ( $1 == "./"* ) || ( $1 == "../"* ) || ( $1 == "/"* ) ]]; then PRINT FATAL "Cannot import extensions from external paths.";exit 2;fi
 
+
   if [[ $DeveloperWatch == "" ]]; then
     export DeveloperWatch="false"
 
@@ -1383,8 +1425,14 @@ Command() {
   extensions="$*"
   total=$(echo "$extensions" | wc -w)
 
+  script=false
+  last_arg="${!#}"
+  if [[ "$last_arg" == "-script" ]]; then
+    script=true
+    extensions="${extensions%" $last_arg"}"
+  fi
+
   local EXTENSIONS_STEPS=35 #Total amount of steps per extension
-  local FINISH_STEPS=6 #Total amount of finalization steps
 
   if [[ $DeveloperWatch != "false" ]]; then
     FINISH_STEPS=5
@@ -1395,7 +1443,7 @@ Command() {
 
   for extension in $extensions; do
     (( current++ ))
-    InstallExtension "$extension" "$current" "$total"
+    InstallExtension "$extension" "$current" "$total" "$script"
     export PROGRESS_NOW="$(("$EXTENSIONS_STEPS" * "$current"))"
   done
 
