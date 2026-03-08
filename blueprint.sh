@@ -17,7 +17,7 @@ FOLDER=$(realpath "$(dirname "$0" 2> /dev/null)" 2> /dev/null) || FOLDER="$BLUEP
 OWNERSHIP="www-data:www-data" #;
 WEBUSER="www-data" #;
 USERSHELL="/bin/bash" #;
-SHORTCUT_PATH="/usr/local/bin"
+SHORTCUT_DIR="/usr/local/bin"
 
 # Check if the script is being sourced - and if so - load bash autocompletion.
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
@@ -208,25 +208,25 @@ assignflags() {
   fi
 }
 
-# Adds the "blueprint" command to the /usr/local/bin directory and configures the correct permissions for it.
+# Adds the "blueprint" command to the $SHORTCUT_DIR and configures the correct permissions for it.
 placeshortcut() {
-  if [[ $SHORTCUT_PATH != "" ]]; then
+  if [[ $SHORTCUT_DIR != "" ]]; then
     PRINT INFO "Placing Blueprint command shortcut.."
   
     rm -f scripts/helpers/blueprint.bak
     cp "scripts/helpers/blueprint" "scripts/helpers/blueprint.bak"
     sed -i "s~BLUEPRINT_FOLDER_HERE~$FOLDER~g" "scripts/helpers/blueprint.bak"
   
-    rm -f "$SHORTCUT_PATH/blueprint"
-    mv scripts/helpers/blueprint.bak "$SHORTCUT_PATH/blueprint"
+    rm -f "$SHORTCUT_DIR/blueprint"
+    mv scripts/helpers/blueprint.bak "$SHORTCUT_DIR/blueprint"
   
     {
       chmod 755 \
         "$FOLDER/blueprint.sh" \
-        "$SHORTCUT_PATH/blueprint"
+        "$SHORTCUT_DIR/blueprint"
     } >> "$BLUEPRINT__DEBUG"
   else
-    PRINT DEBUG "Shortcut not placed as \$SHORTCUT_PATH is empty"
+    PRINT DEBUG "Shortcut not placed as \$SHORTCUT_DIR is empty"
   fi
 }
 if ! [ -x "$(command -v blueprint)" ]; then placeshortcut; fi
