@@ -86,7 +86,7 @@ Command() {
 
       # Blueprint default repository
       "")
-        PRINT INFO "No git repository provided, defaulting to '$REPOSITORY' (repo) and '$REPOSITORY_BRANCH' (branch)!"
+        PRINT WARNING "No git repository provided, defaulting to '$REPOSITORY' (repo) and '$REPOSITORY_BRANCH' (branch)!"
         PRINT DEBUG "setting remote_repo to 'https://github.com/$REPOSITORY.git'"
         remote_repo="https://github.com/$REPOSITORY.git"
         remote_branch="$REPOSITORY_BRANCH"
