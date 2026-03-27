@@ -1,7 +1,5 @@
 ![Security policy](https://github.com/user-attachments/assets/b31af317-c071-41ae-8060-ef12f6c741a6)
 
-## Security Policy
-
 ### Supported Versions
 
 Our website has a list of [supported versions](https://blueprint.zip/releases).
