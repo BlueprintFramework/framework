@@ -3,6 +3,9 @@
 Command() {
   if [[ $1 == "" ]]; then PRINT FATAL "Expected 1 argument but got 0.";exit 2;fi
 
+  lock_wait
+  lock_create
+
   # Check if required programs and libraries are installed.
   depend
 
@@ -81,6 +84,8 @@ Command() {
   mkdir -p .blueprint/tmp
 
   echo;
+
+  lock_remove
 
   exit 0
 }

@@ -384,6 +384,9 @@ RemoveExtension() {
 Command() {
   if [[ $1 == "" ]]; then PRINT FATAL "Expected at least 1 argument but got 0.";exit 2;fi
 
+  lock_wait
+  lock_create
+
   # Remove selected extensions
   current=0
   extensions="$*"
@@ -443,6 +446,8 @@ Command() {
     -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
 
     ((PROGRESS_NOW++))
+
+    lock_remove
 
     CorrectPhrasing="have"
     if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi

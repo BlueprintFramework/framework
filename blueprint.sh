@@ -42,7 +42,7 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
       -export) opts="expose" ;;
       -upgrade) opts="remote" ;;
 
-      *) opts="-install -add -remove -query -init -build -export -wipe -version -help -info -debug -upgrade -rerun-install -dist" ;;
+      *) opts="-install -add -remove -query -init -build -export -wipe -version -help -info -debug -upgrade -unlock -rerun-install -dist" ;;
     esac
 
     if [[ ${cur} == * ]]; then
@@ -100,6 +100,7 @@ source scripts/libraries/parse_yaml.sh    || missinglibs+="[parse_yaml]"
 source scripts/libraries/grabenv.sh       || missinglibs+="[grabenv]"
 source scripts/libraries/logFormat.sh     || missinglibs+="[logFormat]"
 source scripts/libraries/misc.sh          || missinglibs+="[misc]"
+source scripts/libraries/lock.sh          || missinglibs+="[lock]"
 
 
 cdhalt() { PRINT FATAL "Attempted navigation into nonexistent directory, halting process."; exit 1; }
@@ -147,8 +148,8 @@ depend() {
     if ! [ -x "$(command -v sed)"                          ]; then PRINT FATAL "Missing dependency \"sed\".";     fi
     if ! [ -x "$(command -v awk)"                          ]; then PRINT FATAL "Missing dependency \"awk\".";     fi
     if ! [ -x "$(command -v tput)"                         ]; then PRINT FATAL "Missing dependency \"tput\".";    fi
-    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)" ]; then PRINT FATAL "Missing dependency \"webpack\"."; fi
-    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"   ]; then PRINT FATAL "Missing dependency \"react\".";   fi
+    if ! [ "$(ls "node_modules/"*"webpack"* 2> /dev/null)" ]; then PRINT FATAL "Missing dependency \"webpack\". Forgot to run 'yarn install'?"; fi
+    if ! [ "$(ls "node_modules/"*"react"* 2> /dev/null)"   ]; then PRINT FATAL "Missing dependency \"react\". Forgot to run 'yarn install'?"; fi
 
     if ! [ -x "$(command -v inotifywait)" ] && [[ "$DeveloperWatch" == true ]]; then
       PRINT FATAL "Developer dependency \"inotify-tools\" is not installed or detected."
@@ -158,6 +159,7 @@ depend() {
     if [[ $missinglibs == *"[grabEnv]"*       ]]; then PRINT FATAL "Missing internal dependency \"internal:grabEnv\".";    fi
     if [[ $missinglibs == *"[logFormat]"*     ]]; then PRINT FATAL "Missing internal dependency \"internal:logFormat\".";  fi
     if [[ $missinglibs == *"[misc]"*          ]]; then PRINT FATAL "Missing internal dependency \"internal:misc\".";       fi
+    if [[ $missinglibs == *"[lock]"*          ]]; then PRINT FATAL "Missing internal dependency \"internal:lock\".";       fi
 
     exit 1
   fi
@@ -469,6 +471,7 @@ case "$cmd" in
   -version|-v) source ./scripts/commands/misc/version.sh ;;
   -rerun-install) source ./scripts/commands/advanced/rerun-install.sh ;;
   -upgrade) source ./scripts/commands/advanced/upgrade.sh ;;
+  -unlock) source ./scripts/commands/advanced/unlock.sh ;;
 esac
 
 shift 2
