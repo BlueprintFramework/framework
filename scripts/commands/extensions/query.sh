@@ -5,6 +5,7 @@ Command() {
 
   lock_wait
   lock_create
+  trap lock_remove SIGINT SIGTERM
 
   # Check if required programs and libraries are installed.
   depend

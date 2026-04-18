@@ -11,6 +11,9 @@ Command() {
     exit 2
   fi
 
+  # wait for lock (but don't create it)
+  lock_wait
+
   PRINT INFO "Setting up development environment.."
   export IgnoreRebuild=true
   export DeveloperWatch=true

@@ -386,6 +386,7 @@ Command() {
 
   lock_wait
   lock_create
+  trap lock_remove SIGINT SIGTERM
 
   # Remove selected extensions
   current=0
