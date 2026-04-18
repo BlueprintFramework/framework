@@ -1,6 +1,11 @@
 #!/bin/bash
 
 Command() {
+  if [ ! -f ".blueprint/lock" ]; then
+    PRINT FATAL "Already unlocked"
+    exit 1
+  fi
+
   lock_remove
   if [ ! -f ".blueprint/lock" ]; then
     PRINT SUCCESS "Lock has been removed"
