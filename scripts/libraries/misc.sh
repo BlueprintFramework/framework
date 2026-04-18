@@ -4,17 +4,6 @@
 # and uses the same license as the rest of the codebase.
 
 
-dbAdd() {
-  echo "* ${1};" >> .blueprint/extensions/blueprint/private/db/database;
-}
-dbValidate() {
-  grep -Fxq "* ${1};" .blueprint/extensions/blueprint/private/db/database > /dev/null;
-}
-dbRemove() {
-  sed -i "s/* ${1};//g" .blueprint/extensions/blueprint/private/db/database > /dev/null;
-}
-
-
 shiftArgs() {
   shift 1
   args=""
@@ -68,32 +57,32 @@ extract_extension() {
   if [[ $file == *".blueprint" ]]; then
     file="${file::-10}"
   fi
-  
+
   # Export the parsed extension name
   export parsed_extension="$file"
-  
+
   # Set full filename with .blueprint extension
   file="${file}.blueprint"
-  
+
   # Check if file exists
   if [[ ! -f "$file" ]]; then
     PRINT FATAL "$file could not be found or detected."
     exit 2
   fi
-  
+
   # Setup tmp directory
   local name="${parsed_extension}"
   local tmp_dir=".blueprint/tmp"
-  
+
   # Clean and recreate tmp directory
   rm -rf "$tmp_dir"
   mkdir -p "$tmp_dir"
-  
+
   # Extract blueprint contents
   cp "$file" "$tmp_dir/$name.zip"
   (cd "$tmp_dir" && unzip -qq "$name.zip")
   rm "$tmp_dir/$name.zip"
-  
+
   # Find conf.yml
   local conf_path
   conf_path=$(find "$tmp_dir" -name "conf.yml" -type f)
@@ -103,7 +92,7 @@ extract_extension() {
     PRINT FATAL "Extension configuration file not found or detected."
     exit 1
   fi
-  
+
   # Move files to tmp root if needed
   local conf_dir
   conf_dir=$(dirname "$conf_path")
@@ -111,6 +100,6 @@ extract_extension() {
     mv "$conf_dir"/* "$tmp_dir/"
     find "$tmp_dir" -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +
   fi
-  
+
   return 0
 }

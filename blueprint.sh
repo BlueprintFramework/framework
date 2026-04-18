@@ -212,14 +212,14 @@ assignflags() {
 placeshortcut() {
   if [[ $SHORTCUT_DIR != "" ]]; then
     PRINT INFO "Placing Blueprint command shortcut.."
-  
+
     rm -f scripts/helpers/blueprint.bak
     cp "scripts/helpers/blueprint" "scripts/helpers/blueprint.bak"
     sed -i "s~BLUEPRINT_FOLDER_HERE~$FOLDER~g" "scripts/helpers/blueprint.bak"
-  
+
     rm -f "$SHORTCUT_DIR/blueprint"
     mv scripts/helpers/blueprint.bak "$SHORTCUT_DIR/blueprint"
-  
+
     {
       chmod 755 \
         "$FOLDER/blueprint.sh" \
@@ -233,7 +233,7 @@ if ! [ -x "$(command -v blueprint)" ]; then placeshortcut; fi
 
 
 if [[ $1 != "-bash" ]]; then
-  if dbValidate "blueprint.setupFinished"; then
+  if [ -f "$FOLDER/.blueprint/extensions/blueprint/private/db/is_installed" ]; then
     PRINT FATAL "Blueprint is already installed, use the 'blueprint' command instead."
     exit 2
   else
@@ -432,7 +432,10 @@ if [[ $1 != "-bash" ]]; then
     ((PROGRESS_NOW++))
 
     # Let the panel know the user has finished installation.
-    dbAdd "blueprint.setupFinished"
+    if [ ! -f "$FOLDER/.blueprint/extensions/blueprint/private/db/is_installed" ]; then
+      touch "$FOLDER/.blueprint/extensions/blueprint/private/db/is_installed"
+    fi
+
     sed -i "s~NOTINSTALLED~INSTALLED~g" "$FOLDER/app/BlueprintFramework/Services/PlaceholderService/BlueprintPlaceholderService.php"
 
     # Finish installation
