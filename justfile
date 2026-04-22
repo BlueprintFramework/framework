@@ -8,7 +8,7 @@ app_url := "http://localhost:3000"
 app_debug := "true"
 USERSHELL := "/bin/bash"
 
-default: setup_dev install_blueprint dev
+default: stop_db stop_wings setup_dev install_blueprint setup_wings dev
 
 blueprintrc:
     #!/usr/bin/env bash
@@ -32,11 +32,15 @@ setup_dev: check-deps blueprintrc
 
     cd {{ pterodactyl_dir }}
 
-    cp -n .env.example .env
+    if [ ! -f ".env" ]; then
+        cp -n .env.example .env
+    fi
 
     composer update
     composer i
-    php artisan key:generate --force -n
+    if ! grep -q "^APP_KEY=base64:" .env; then
+      php artisan key:generate -n
+    fi
 
     yarn install
     just env_replace {{ pterodactyl_dir }}/.env DB_CONNECTION {{ db_connection }}
@@ -53,7 +57,11 @@ setup_dev: check-deps blueprintrc
     php artisan migrate --force -n
 
     php artisan p:user:make --email=dev@dev.com --username=dev --name-first=dev --name-last=dev --password=dev --admin=yes 2>/dev/null || true
-    docker exec blueprint-dev-db mysql -uroot -proot -e "USE panel; UPDATE users SET root_admin = 1 WHERE email = 'dev@dev.com';"
+    if [ ! -f "{{ pterodactyl_dir }}/srv/etc/config.yml" ]; then
+        php artisan p:location:make --short=dev --long=dev -qn  2>/dev/null || true
+        php artisan p:node:make --fqdn=127.0.0.1 --name=dev-node --description=dev-node --locationId=1 --public=1 --scheme=http --proxy=0 --maxMemory=10240 --overallocateMemory=0 --maxDisk=10240 --overallocateDisk=0 --uploadSize=1024 --daemonListeningPort=8080 --daemonSFTPPort=2022 --maintenance=0 -n 2>/dev/null || true
+    fi
+    docker exec blueprint-dev-db mysql -uroot -proot -e "USE panel; UPDATE users SET root_admin = 1 WHERE email = 'dev@dev.com';"  2>/dev/null || true
 
 install_blueprint:
     #!/usr/bin/env bash
@@ -82,6 +90,32 @@ install_blueprint:
     rm -f .blueprint/data/internal/db/installed
 
     bash blueprint.sh -bash -rerun-install
+
+setup_wings: check-deps stop_wings
+    mkdir -p "./{{ pterodactyl_dir }}/srv/tmp/pterodactyl"
+    mkdir -p "./{{ pterodactyl_dir }}/srv/var/lib/pterodactyl"
+    mkdir -p "./{{ pterodactyl_dir }}/srv/var/lib/pterodactyl/volumes"
+    mkdir -p "./{{ pterodactyl_dir }}/srv/etc"
+    -php ./{{ pterodactyl_dir }}/artisan p:node:configuration 1 > {{pterodactyl_dir }}/srv/etc/config.yml
+
+    docker run \
+      -d \
+      --privileged \
+      --name blueprint-dev-wings \
+      --restart unless-stopped \
+      --network host \
+      -v "/var/run/docker.sock:/var/run/docker.sock" \
+      -v "/var/lib/docker/:/var/lib/docker" \
+      -v "./{{ pterodactyl_dir }}/srv/tmp/pterodactyl:/tmp/pterodactyl" \
+      -v "./{{ pterodactyl_dir }}/srv/var/lib/pterodactyl:/var/lib/pterodactyl" \
+      -v "./{{ pterodactyl_dir }}/srv/etc:/etc/pterodactyl/" \
+      ghcr.io/pterodactyl/wings:latest
+      
+
+
+stop_wings: 
+    -@docker stop blueprint-dev-wings
+    -@docker rm blueprint-dev-wings
 
 watch_sync:
     #!/usr/bin/env bash
@@ -113,7 +147,7 @@ watch_sync:
         fi
     done
 
-start_db:
+start_db: 
     #!/usr/bin/env bash
     if [ "$(docker ps -aq -f name=blueprint-dev-db)" ]; then
         docker start blueprint-dev-db
@@ -137,14 +171,12 @@ start_db:
     docker exec blueprint-dev-db mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO '{{ db_username }}'@'%'; FLUSH PRIVILEGES;"
 
 stop_db:
-    docker stop blueprint-dev-db
-    docker rm blueprint-dev-db
+    -@docker stop blueprint-dev-db
+    -@docker rm blueprint-dev-db
 
-dev: blueprintrc start_db
-    # php artisan serve --port=5000
-    # yarn watch
+dev: blueprintrc start_db 
     tmux new-session -s dev \; \
-      send-keys 'cd {{ pterodactyl_dir }} && php artisan serve --port=5000' C-m \; \
+      send-keys 'cd {{ pterodactyl_dir }} && php artisan serve --port=3000' C-m \; \
       split-window -h \; \
       send-keys 'cd {{ pterodactyl_dir }} && yarn watch' C-m \; \
       split-window -v \; \
