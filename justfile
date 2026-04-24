@@ -1,3 +1,4 @@
+
 blueprint_root := "./"
 pterodactyl_dir := "pterodactyl"
 db_connection := "mysql"
@@ -8,7 +9,9 @@ app_url := "http://localhost:3000"
 app_debug := "true"
 USERSHELL := "/bin/bash"
 
-default: stop_db stop_wings setup_dev install_blueprint setup_wings dev
+default: dev
+
+setup: check_dev stop_db stop_wings setup_dev install_blueprint setup_wings dev
 
 blueprintrc:
     #!/usr/bin/env bash
@@ -21,13 +24,17 @@ blueprintrc:
     SHORTCUT_DIR=""
     EOF
 
+check_dev: 
+    #!/usr/bin/env bash
+    if [ -d {{ pterodactyl_dir }} ]; then
+        echo "${RED}Pterodactyl Dir exists, delete it to rerun setup${NC}"
+        exit 1
+    fi
+
 setup_dev: check-deps blueprintrc
     #!/usr/bin/env bash
     set -euo pipefail
-
-    if [ ! -d {{ pterodactyl_dir }} ]; then
-        git clone https://github.com/pterodactyl/panel.git {{ pterodactyl_dir }}
-    fi
+    git clone https://github.com/pterodactyl/panel.git {{ pterodactyl_dir }}
     git -C {{ pterodactyl_dir }} pull || true
 
     cd {{ pterodactyl_dir }}
@@ -54,7 +61,7 @@ setup_dev: check-deps blueprintrc
     just env_replace {{ pterodactyl_dir }}/.env RECAPTCHA_ENABLED false
 
     just start_db
-    php artisan migrate --force -n
+    php artisan migrate --seed --force -n
 
     php artisan p:user:make --email=dev@dev.com --username=dev --name-first=dev --name-last=dev --password=dev --admin=yes 2>/dev/null || true
     if [ ! -f "{{ pterodactyl_dir }}/srv/etc/config.yml" ]; then
@@ -176,7 +183,7 @@ stop_db:
 
 dev: blueprintrc start_db 
     tmux new-session -s dev \; \
-      send-keys 'cd {{ pterodactyl_dir }} && php artisan serve --port=3000' C-m \; \
+      send-keys 'cd {{ pterodactyl_dir }} && php -d memory_limit=1024M artisan serve --host=0.0.0.0 --port=3000' C-m \; \
       split-window -h \; \
       send-keys 'cd {{ pterodactyl_dir }} && yarn watch' C-m \; \
       split-window -v \; \
