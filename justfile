@@ -1,4 +1,3 @@
-
 blueprint_root := "./"
 pterodactyl_dir := "pterodactyl"
 db_connection := "mysql"
@@ -68,7 +67,11 @@ setup_dev: check-deps blueprintrc
         php artisan p:location:make --short=dev --long=dev -qn  2>/dev/null || true
         php artisan p:node:make --fqdn=127.0.0.1 --name=dev-node --description=dev-node --locationId=1 --public=1 --scheme=http --proxy=0 --maxMemory=10240 --overallocateMemory=0 --maxDisk=10240 --overallocateDisk=0 --uploadSize=1024 --daemonListeningPort=8080 --daemonSFTPPort=2022 --maintenance=0 -n 2>/dev/null || true
     fi
+
     docker exec blueprint-dev-db mysql -uroot -proot -e "USE panel; UPDATE users SET root_admin = 1 WHERE email = 'dev@dev.com';"  2>/dev/null || true
+    docker exec blueprint-dev-db mysql -uroot -proot -e "USE panel; INSERT INTO allocations (id, node_id, ip, ip_alias, port, server_id, notes, created_at, updated_at) VALUES (1, 1, '0.0.0.0', NULL, 25565, NULL, NULL, NOW(), NOW());" 2>/dev/null || true
+    docker exec blueprint-dev-db mysql -uroot -proot -e "USE panel; INSERT INTO allocations (id, node_id, ip, ip_alias, port, server_id, notes, created_at, updated_at) VALUES (2, 1, '0.0.0.0', NULL, 25566, NULL, NULL, NOW(), NOW());" 2>/dev/null || true
+    docker exec blueprint-dev-db mysql -uroot -proot -e "USE panel; INSERT INTO allocations (id, node_id, ip, ip_alias, port, server_id, notes, created_at, updated_at) VALUES (3, 1, '0.0.0.0', NULL, 25567, NULL, NULL, NOW(), NOW());" 2>/dev/null || true
 
 install_blueprint:
     #!/usr/bin/env bash
@@ -94,7 +97,6 @@ install_blueprint:
     chmod +x {{ pterodactyl_dir }}/blueprint.sh
 
     cd {{ pterodactyl_dir }}
-    rm -f .blueprint/data/internal/db/installed
 
     bash blueprint.sh -bash -rerun-install
 
