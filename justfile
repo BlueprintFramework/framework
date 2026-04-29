@@ -74,7 +74,12 @@ setup_dev: check-deps blueprintrc
     docker exec blueprint-dev-db mysql -uroot -proot -e "USE panel; INSERT INTO allocations (id, node_id, ip, ip_alias, port, server_id, notes, created_at, updated_at) VALUES (3, 1, '0.0.0.0', NULL, 25567, NULL, NULL, NOW(), NOW());" 2>/dev/null || true
 
     # Fix ownership for current user (relative paths since we're in pterodactyl_dir)
-    sudo chown -R $(id -u):$(id -g) storage bootstrap/cache
+    cd ..
+    sudo chown -R $(id -u):$(id -g) {{ pterodactyl_dir }}
+
+    # Create storage symlink for user-uploaded content
+    cd {{ pterodactyl_dir }}
+    php artisan storage:link 2>/dev/null || true
 
 install_blueprint:
     #!/usr/bin/env bash
@@ -220,11 +225,13 @@ dev: blueprintrc start_db php-image nginx-image
     -@docker rm blueprint-dev-php blueprint-dev-nginx 2>/dev/null || true
     # Generate nginx config if missing
     -@test -f {{ pterodactyl_dir }}/nginx.conf || just nginx-config
+    # Create storage symlink if missing
+    -@cd {{ pterodactyl_dir }} && test -L public/storage || php artisan storage:link 2>/dev/null || true
     # Start development environment in tmux
     tmux new-session -s dev \; \
       send-keys 'docker run --rm --name blueprint-dev-php --network host -u $(id -u):$(id -g) -v "$(pwd)/{{ pterodactyl_dir }}:/var/www/html" -w /var/www/html php:8.3-fpm-pdo' C-m \; \
       split-window -h \; \
-      send-keys 'docker run --rm --name blueprint-dev-nginx --network host -v "$(pwd)/{{ pterodactyl_dir }}/public:/var/www/html/public" -v "$(pwd)/{{ pterodactyl_dir }}/nginx.conf:/etc/nginx/conf.d/default.conf" nginx:latest-user nginx -g "daemon off;"' C-m \; \
+      send-keys 'docker run --rm --name blueprint-dev-nginx --network host -v "$(pwd)/{{ pterodactyl_dir }}:/var/www/html" -v "$(pwd)/{{ pterodactyl_dir }}/nginx.conf:/etc/nginx/conf.d/default.conf" nginx:latest-user nginx -g "daemon off;"' C-m \; \
       split-window -v \; \
       send-keys 'cd {{ pterodactyl_dir }} && yarn watch' C-m \; \
       split-window -v \; \
@@ -238,13 +245,12 @@ nginx-config:
 
     echo "Creating Nginx config at ${CONFIG_FILE}..."
 
-    base64 -d <<< 'c2VydmVyIHsKICAgIGxpc3RlbiA4MCBkZWZhdWx0X3NlcnZlcjsKICAgIHNlcnZlcl9uYW1lIF87CgogICAgcm9vdCAvdmFyL3d3dy9odG1sL3B1YmxpYzsKICAgIGluZGV4IGluZGV4LnBocDsKCiAgICBjbGllbnRfbWF4X2JvZHlfc2l6ZSAxMDBtOwogICAgY2xpZW50X2JvZHlfdGltZW91dCAxMjBzOwoKICAgIGFjY2Vzc19sb2cgL3Zhci9sb2cvbmdpbngvcHRlcm9kYWN0eWwuYWNjZXNzLmxvZzsKICAgIGVycm9yX2xvZyAvdmFyL2xvZy9uZ2lueC9wdGVyb2RhY3R5bC5lcnJvci5sb2cgd2FybjsKCiAgICBsb2NhdGlvbiAvIHsKICAgICAgICB0cnlfZmlsZXMgJHVyaSAkdXJpLyAvaW5kZXgucGhwPyRxdWVyeV9zdHJpbmc7CiAgICB9CgogICAgbG9jYXRpb24gfiBcLnBocCQgewogICAgICAgIGZhc3RjZ2lfcGFzcyAxMjcuMC4wLjE6OTAwMDsKICAgICAgICBmYXN0Y2dpX2luZGV4IGluZGV4LnBocDsKICAgICAgICBmYXN0Y2dpX3BhcmFtIFNDUklQVF9GSUxFTkFNRSAkZG9jdW1lbnRfcm9vdCRmYXN0Y2dpX3NjcmlwdF9uYW1lOwogICAgICAgIGluY2x1ZGUgZmFzdGNnaV9wYXJhbXM7CiAgICAgICAgZmFzdGNnaV9wYXJhbSBQSFBfVkFMVUUgInVwbG9hZF9tYXhfZmlsZXNpemU9MTAwbVxucG9zdF9tYXhfc2l6ZT0xMDBtIjsKICAgIH0KCiAgICBsb2NhdGlvbiB+KiBcLihqcGd8anBlZ3xnaWZ8cG5nfGljb3xjc3N8anN8c3ZnfHdvZmZ8dHRmfGVvdCkkIHsKICAgICAgICBleHBpcmVzIDMwZDsKICAgICAgICBhY2Nlc3NfbG9nIG9mZjsKICAgICAgICBhZGRfaGVhZGVyIENhY2hlLUNvbnRyb2wgInB1YmxpYyI7CiAgICB9CgogICAgbG9jYXRpb24gPSAvZmF2aWNvbi5pY28geyBhY2Nlc3NfbG9nIG9mZjsgbG9nX25vdF9mb3VuZCBvZmY7IH0KICAgIGxvY2F0aW9uID0gL3JvYm90cy50eHQgIHsgYWNjZXNzX2xvZyBvZmY7IGxvZ19ub3RfZm91bmQgb2ZmOyB9CgogICAgbG9jYXRpb24gfiAvXC5lbnZ8L1wuZ2l0fC9cLmJsdWVwcmludCB7CiAgICAgICAgZGVueSBhbGw7CiAgICAgICAgcmV0dXJuIDQwNDsKICAgIH0KfQo=' > "${CONFIG_FILE}"
-
-    if [ $? -eq 0 ]; then
+    if [ -f "nginx.conf.template" ]; then
+        cp nginx.conf.template "${CONFIG_FILE}"
         echo "Nginx config written to ${CONFIG_FILE}"
         ls -l "${CONFIG_FILE}"
     else
-        echo "Failed to create nginx config"
+        echo "Error: nginx.conf.template not found"
         exit 1
     fi
 
