@@ -13,7 +13,10 @@
     </a>
   @endif
 
-  <h1 ext-title>{{ $EXTENSION_NAME }}<tag mg-left blue>{{ $EXTENSION_VERSION }}</tag></h1>
+  <h1 ext-title style="margin-top: 0px !important;">
+    <span>{{ $EXTENSION_NAME }}</span>
+    <tag mg-left blue>{{ $EXTENSION_VERSION }}</tag>
+  </h1>
 @endsection
 
 @section("extension.description")

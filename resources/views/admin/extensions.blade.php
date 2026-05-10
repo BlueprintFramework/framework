@@ -143,12 +143,18 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
       </div>
 
       @foreach($blueprint->extensionsConfigs() as $extension)
-        <?php $extension = $extension['info']; ?>
+        <?php
+          $extension = $extension['info'];
+          $metadataScoped = null;
+          if(isset($metadata[$extension['identifier']])) {
+            $metadataScoped = $metadata[$extension['identifier']];
+          }
+        ?>
         @include("blueprint.admin.entry", [
           'EXTENSION_ID' => $extension['identifier'],
           'EXTENSION_NAME' => $extension['name'],
           'EXTENSION_VERSION' => $extension['version'],
-          'EXTENSION_METADATA' => $metadata[$extension['identifier']],
+          'EXTENSION_METADATA' => $metadataScoped,
           'EXTENSION_ICON' => !empty($extension['icon'])
             ? '/assets/extensions/'.$extension['identifier'].'/icon.'.pathinfo($extension['icon'], PATHINFO_EXTENSION)
             : '/assets/extensions/'.$extension['identifier'].'/icon.jpg'
