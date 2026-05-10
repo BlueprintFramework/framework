@@ -111,7 +111,18 @@ tag[blue] {background-color:#288afb;}
   width: calc( 100% - 15px );
   overflow: clip;
   text-overflow: ellipsis;
-  opacity: .6;
+}
+.extension-btn-update {
+  background-color: #194323;
+  color: #3dd15f !important;
+  border: 1px solid #265f33;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 0 8px;
+  display: inline-flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-left: 5px;
 }
 .extension-btn {
   background-color:#1f2933;
@@ -120,7 +131,6 @@ tag[blue] {background-color:#288afb;}
   height:calc(65px + 14px);
   padding: 0px !important;
   overflow:hidden;
-  vertical-align:center;
   transition:background-color .2s;
   border-radius:8px;
 }
@@ -169,7 +179,7 @@ tag[blue] {background-color:#288afb;}
   margin-left: -7px;
   border-width: 7px;
   border-style: solid;
-  border-color: 
+  border-color:
     transparent
     transparent
     #1f2933

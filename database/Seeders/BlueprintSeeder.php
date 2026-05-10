@@ -45,6 +45,11 @@ class BlueprintSeeder extends Seeder
         'type' => 'boolean',
         'hidden' => false,
       ],
+      'remote_metadata' => [
+        'default' => true,
+        'type' => 'boolean',
+        'hidden' => false,
+      ],
       'show_in_sidebar' => [
         'default' => false,
         'type' => 'boolean',
