@@ -12,6 +12,9 @@
 namespace Pterodactyl\Console\Commands\BlueprintFramework;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Pterodactyl\Models\ExtensionCachedMetadata;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
 
@@ -29,19 +32,54 @@ class MetadataCacheCommand extends Command
 
   public function handle()
   {
-    // figure out which extensions are currently installed
-    $installed_extensions = $this->blueprint->extensions();
+    $now = now();
+    $rows = [];
+    $installedExtensions = $this->blueprint->extensions();
 
     // get version info
     $context = stream_context_create(['http' => ['method' => 'GET', 'header' => 'User-Agent: BlueprintFramework']]);
-    $remote_versions = @file_get_contents(
+    $remoteVersions = @file_get_contents(
       $this->PlaceholderService->api_url() . '/api/extensions/latest',
       false,
       $context
     );
 
-    if($remote_versions) {
-
+    if($remoteVersions) {
+      $remoteVersionsData = json_decode($remoteVersions, true);
     }
+
+    if(! isset($remoteVersionsData)) {
+      $this->error('failed to fetch extension versions');
+      return false;
+    }
+
+    foreach ($installedExtensions as $identifier) {
+      if(! isset($remoteVersionsData[$identifier]) || ! is_scalar($remoteVersionsData[$identifier])) continue;
+      $rows[] = [
+        'identifier' => $identifier,
+        'metadata' =>  json_encode(['latest_version' => (string) $remoteVersionsData[$identifier]]),
+        'fetched_at' => $now,
+      ];
+    }
+
+    if (empty($rows)) {
+      $this->info('no relevant data available, do you have any extensions installed?');
+      return false;
+    }
+
+    $table = (new ExtensionCachedMetadata())->getTable();
+    $temp = $table . '_tmp_' . substr(uniqid(), -8);
+
+    DB::statement("CREATE TABLE {$temp} LIKE {$table}");
+
+    foreach (array_chunk($rows, 500) as $chunk) {
+      DB::table($temp)->insert($chunk);
+    }
+
+    // atomic swap
+    DB::statement("RENAME TABLE {$table} TO {$table}_bak, {$temp} TO {$table}");
+    DB::statement("DROP TABLE {$table}_bak");
+
+    $this->info('updated extension cached metadata');
   }
 }
