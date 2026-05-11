@@ -14,9 +14,10 @@
 
 namespace Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
 use Symfony\Component\Yaml\Yaml;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Pterodactyl\Models\ExtensionCachedMetadata;
 
 class BlueprintBaseLibrary
 {
@@ -292,6 +293,39 @@ class BlueprintBaseLibrary
     $conf = Yaml::parse(file_get_contents(base_path(".blueprint/extensions/$identifier/private/.store/conf.yml")));
     $conf = array_filter($conf, fn($k) => !!$k);
     return $conf;
+  }
+
+  /**
+   * Retrieves the stored metadata for an extension.
+   *
+   * This method checks if the given extension has available metadata and, if so,
+   * returns the metadata. Please note that this metadata may be delayed, and the
+   * format of which may change, so parse wisely.
+   *
+   * Requires the 'remote_metadata' flag to be set to true in Blueprint's settings.
+   *
+   * @param string $identifier Extension identifier to retrieve metadata for
+   *
+   * @return array|null The metadata array for the extension, or null if not available.
+   */
+  public function extensionMetadata(string $identifier): ?array
+  {
+    $metadata = [];
+    if (!$this->extension($identifier)) {
+      return null;
+    }
+    if($this->blueprint->dbGet('blueprint', 'flags:remote_metadata')) {
+      $metadata = ExtensionCachedMetadata::whereIn('identifier', $this->blueprint->extensions())
+        ->get()
+        ->keyBy('identifier')
+        ->map(fn($m) => $m->metadata)
+        ->toArray();
+
+      if(isset($metadata[$identifier])) {
+        return $metadata[$identifier];
+      }
+    }
+    return null;
   }
 
   /**
