@@ -14,8 +14,28 @@
   @endif
 
   <h1 ext-title style="margin-top: 0px !important;">
-    <span>{{ $EXTENSION_NAME }}</span>
-    <tag mg-left blue>{{ $EXTENSION_VERSION }}</tag>
+    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $EXTENSION_NAME }}</span>
+    <tag mg-left>
+      {{ $EXTENSION_VERSION }}
+    </tag>
+
+    <?php
+      $latest = true;
+      $meta = $blueprint->extensionMetadata($EXTENSION_ID);
+      if(isset($meta)) {
+        if(
+          $meta['latest_version'] != $EXTENSION_VERSION
+          && $meta['local_version'] == $EXTENSION_VERSION
+        ) {
+          $latest = false;
+        }
+      }
+    ?>
+    @if(!$latest)
+    <tag mg-left green style="font-weight: 700">
+      <i class="bi bi-caret-up-fill blueprint-extension-title-tag-icon"></i> {{ $meta['latest_version'] }}
+    </tag>
+    @endif
   </h1>
 @endsection
 

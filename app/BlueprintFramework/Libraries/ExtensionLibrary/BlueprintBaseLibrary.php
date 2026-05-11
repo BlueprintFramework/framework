@@ -314,8 +314,8 @@ class BlueprintBaseLibrary
     if (!$this->extension($identifier)) {
       return null;
     }
-    if($this->blueprint->dbGet('blueprint', 'flags:remote_metadata')) {
-      $metadata = ExtensionCachedMetadata::whereIn('identifier', $this->blueprint->extensions())
+    if($this->dbGet('blueprint', 'flags:remote_metadata')) {
+      $metadata = ExtensionCachedMetadata::whereIn('identifier', $this->extensions())
         ->get()
         ->keyBy('identifier')
         ->map(fn($m) => $m->metadata)
