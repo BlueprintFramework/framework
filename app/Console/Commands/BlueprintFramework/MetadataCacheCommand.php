@@ -78,17 +78,11 @@ class MetadataCacheCommand extends Command
     }
 
     $table = (new ExtensionCachedMetadata())->getTable();
-    $temp = $table . '_tmp_' . substr(uniqid(), -8);
 
-    DB::statement("CREATE TABLE {$temp} LIKE {$table}");
-
-    foreach (array_chunk($rows, 500) as $chunk) {
-      DB::table($temp)->insert($chunk);
-    }
-
-    // atomic swap
-    DB::statement("RENAME TABLE {$table} TO {$table}_bak, {$temp} TO {$table}");
-    DB::statement("DROP TABLE {$table}_bak");
+    DB::transaction(function () use ($rows, $table) {
+        DB::table($table)->delete();
+        DB::table($table)->insert($rows);
+    });
 
     $this->info('updated extension cached metadata');
   }
