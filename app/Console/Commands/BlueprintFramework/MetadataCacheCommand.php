@@ -66,7 +66,7 @@ class MetadataCacheCommand extends Command
         'identifier' => $identifier,
         'metadata' =>  json_encode([
           'latest_version' => (string) $remoteVersionsData[$identifier],
-          'local_version' => (string) $local_extension['info']['version'] | '',
+          'local_version' => (string) $local_extension['info']['version'] ?? '',
         ]),
         'fetched_at' => $now,
       ];
