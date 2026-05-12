@@ -477,10 +477,12 @@ esac
 shift 2
 
 # prevent interesting freakout when passing "*" as an argument
-if [[ $* == *"*"* ]]; then
-  PRINT FATAL "\"*\" cannot be used as an argument."
-  exit 2
-fi
+for arg in "$@"; do
+  if [[ "$arg" == "*" ]]; then
+    PRINT FATAL "\"*\" cannot be used as an argument."
+    exit 2
+  fi
+done
 
 Command "$@"
 exit 0
