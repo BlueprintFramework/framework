@@ -12,7 +12,7 @@
 @endsection
 
 @section("blueprint.import")
-  {!! $blueprint->importStylesheet('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css') !!}
+  {!! $blueprint->importStylesheet('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css') !!}
   {!! $blueprint->importStylesheet('/assets/extensions/blueprint/admin.extensions.css') !!}
   {!! $blueprint->importStylesheet('/assets/extensions/blueprint/blueprint.style.css') !!}
 @endsection

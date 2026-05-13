@@ -131,7 +131,7 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
           <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="extension-btn-image2"/>
           <img src="/assets/extensions/blueprint/logo.jpg" alt="logo" class="extension-btn-image"/>
           <p class="extension-btn-text">Blueprint</p>
-          <p class="extension-btn-version">
+          <p class="extension-btn-version" style="opacity: .6;">
             <span style="padding-right:5px">
               <i class="bi bi-gear-fill"></i>
               <b>system</b>
@@ -143,11 +143,18 @@ $is_installed=(($PlaceholderService->installed() != "NOTINSTALLED") && ($Placeho
       </div>
 
       @foreach($blueprint->extensionsConfigs() as $extension)
-        <?php $extension = $extension['info']; ?>
+        <?php
+          $extension = $extension['info'];
+          $metadataScoped = null;
+          if(isset($metadata[$extension['identifier']])) {
+            $metadataScoped = $metadata[$extension['identifier']];
+          }
+        ?>
         @include("blueprint.admin.entry", [
           'EXTENSION_ID' => $extension['identifier'],
           'EXTENSION_NAME' => $extension['name'],
           'EXTENSION_VERSION' => $extension['version'],
+          'EXTENSION_METADATA' => $metadataScoped,
           'EXTENSION_ICON' => !empty($extension['icon'])
             ? '/assets/extensions/'.$extension['identifier'].'/icon.'.pathinfo($extension['icon'], PATHINFO_EXTENSION)
             : '/assets/extensions/'.$extension['identifier'].'/icon.jpg'

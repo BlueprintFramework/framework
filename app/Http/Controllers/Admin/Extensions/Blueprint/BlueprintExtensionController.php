@@ -2,13 +2,13 @@
 
 namespace Pterodactyl\Http\Controllers\Admin\Extensions\Blueprint;
 
-use Pterodactyl\Http\Controllers\Controller;
-use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
-use Pterodactyl\Http\Requests\Admin\AdminFormRequest;
 use Database\Seeders\BlueprintSeeder;
+use Illuminate\Support\Facades\Artisan;
+use Pterodactyl\Http\Controllers\Controller;
+use Pterodactyl\Http\Requests\Admin\AdminFormRequest;
+use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 
-// FIXME: Move form request and remove controller.
 class BlueprintExtensionController extends Controller
 {
 
@@ -26,8 +26,15 @@ class BlueprintExtensionController extends Controller
    */
   public function update(BlueprintAdminFormRequest $request): RedirectResponse
   {
+    $meta_flag = $this->settings->get('blueprint::flags:remote_metadata');
+
     foreach ($request->validated() as $key => $value) {
       $this->settings->set('blueprint::' . $key, $value);
+    }
+
+    // refresh meta if the flag has been altered
+    if($meta_flag != $request->validated()['flags:remote_metadata']) {
+      Artisan::call('bp:meta');
     }
 
     return redirect()->route('admin.extensions');
@@ -41,11 +48,11 @@ class BlueprintAdminFormRequest extends AdminFormRequest
     // Get schema to determine types
     $seeder = app(BlueprintSeeder::class);
     $schema = $seeder->getSchema();
-    
+
     $rules = [];
     foreach ($schema['flags'] as $key => $config) {
       $flagPath = "flags:{$key}";
-      
+
       // Build validation rules based on type
       switch ($config['type']) {
         case 'boolean':
@@ -62,7 +69,7 @@ class BlueprintAdminFormRequest extends AdminFormRequest
           break;
       }
     }
-    
+
     return $rules;
   }
 }
