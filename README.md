@@ -15,7 +15,7 @@ Refer to the [installation guide](https://blueprint.zip/guides/admin/install).
 ## Donate and contribute
 Blueprint is free and open-source software. We play a vital role in the Pterodactyl modding community and empower developers with tools to bring their ideas to life. To keep everything up and running, we rely heavily on [donations](https://hcb.hackclub.com/blueprint/donations). We're also nonprofit!
 
-If you are an organization, [consider becoming a corporate sponsor](https://hcb.hackclub.com/donations/start/blueprint/tiers/392). Blueprint hosts guides and documentation that bring new developers to the hosting industry, giving a new chance for companies to aquire new talent and bring their operations further.
+If you are an organization, [consider becoming a corporate sponsor](https://hcb.hackclub.com/donations/start/blueprint/tiers/5qKhd3). Blueprint hosts guides and documentation that bring new developers to the hosting industry, giving a new chance for companies to aquire new talent and bring their operations further.
 
 [**Donate to our nonprofit organization**](https://hcb.hackclub.com/donations/start/blueprint) or [view our open finances](https://hcb.hackclub.com/blueprint).
 
