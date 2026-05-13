@@ -13,6 +13,7 @@ namespace Pterodactyl\Console\Commands\BlueprintFramework;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Pterodactyl\Models\ExtensionCachedMetadata;
 use Pterodactyl\BlueprintFramework\Services\PlaceholderService\BlueprintPlaceholderService;
 use Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Console\BlueprintConsoleLibrary as BlueprintExtensionLibrary;
@@ -41,12 +42,8 @@ class MetadataCacheCommand extends Command
     $installedExtensions = $this->blueprint->extensions();
 
     // get version info
-    $context = stream_context_create(['http' => ['method' => 'GET', 'header' => 'User-Agent: BlueprintFramework']]);
-    $remoteVersions = @file_get_contents(
-      $this->PlaceholderService->api_url() . '/api/extensions/latest',
-      false,
-      $context
-    );
+    $res = Http::get($this->PlaceholderService->api_url() . '/api/extensions/latest');
+    $remoteVersions = $res->body();
 
     if($remoteVersions) {
       $remoteVersionsData = json_decode($remoteVersions, true);
