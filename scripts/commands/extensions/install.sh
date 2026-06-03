@@ -34,24 +34,7 @@ InstallExtension() {
 
     if [[ ! -f "$FILE" ]]; then PRINT FATAL "$FILE could not be found or detected.";return 2;fi
 
-    ZIP="${n}.zip"
-    cp "$FILE" ".blueprint/tmp/$ZIP"
-    cd ".blueprint/tmp" || cdhalt
-    unzip -o -qq "$ZIP"
-    rm "$ZIP"
-    if [[ ! -f "$n/*" ]]; then
-      cd ".." || cdhalt
-      rm -R "tmp"
-      mkdir -p "tmp"
-      cd "tmp" || cdhalt
-
-      mkdir -p "./$n"
-      cp "../../$FILE" "./$n/$ZIP"
-      cd "$n" || cdhalt
-      unzip -o -qq "$ZIP"
-      rm "$ZIP"
-      cd ".." || cdhalt
-    fi
+    extract_extension
   fi
 
   ((PROGRESS_NOW++))
