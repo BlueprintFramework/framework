@@ -34,7 +34,7 @@ InstallExtension() {
 
     if [[ ! -f "$FILE" ]]; then PRINT FATAL "$FILE could not be found or detected.";return 2;fi
 
-    extract_extension
+    extract_extension "$FILE"
   fi
 
   ((PROGRESS_NOW++))
