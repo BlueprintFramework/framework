@@ -37,7 +37,7 @@ Command() {
      [[ -f ".blueprint/tmp/${n}/$conf_data_directory/update.sh"  ]] ||
      [[ -f ".blueprint/tmp/${n}/$conf_data_directory/remove.sh"  ]]; then
     echo -e \
-    "\x1b[31;1m  Utilizes extension scripts, which can be a safety risk. Extensions with installation scripts can cause conflicts and break other extensions. Learn more at \033[0;2mblueprint.zip/docs/?page=documentation/scripts\x1b[0;31;1m.\033[0m"
+    "\x1b[31;1m  Utilizes extension scripts, which can be a safety risk. Extensions with installation scripts can cause conflicts and break other extensions. Learn more at \033[0;2mblueprint.zip/docs/concepts/scripts\x1b[0;31;1m.\033[0m"
   fi
 
   # Extension APIs
