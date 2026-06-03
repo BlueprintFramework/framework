@@ -94,7 +94,7 @@ RemoveExtension() {
 
   if [[ -f ".blueprint/extensions/$identifier/private/remove.sh" ]]; then
     PRINT WARNING "Extension uses a custom removal script, proceed with caution."
-    hide_progress
+    blueprint_custom_script_confirm "removal"
     chmod +x ".blueprint/extensions/$identifier/private/remove.sh"
 
     # Run script while also parsing some useful variables for the uninstall script to use.
