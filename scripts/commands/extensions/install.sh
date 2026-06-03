@@ -2,10 +2,7 @@
 
 InstallExtension() {
   postexit() {
-    if [[ $1 == "cleartmp" ]]; then
-      rm -r ".blueprint/tmp"
-    fi
-    lock_remove
+    rm -r ".blueprint/tmp"
   }
 
   # The following code does some magic to allow for extensions with a
@@ -13,17 +10,7 @@ InstallExtension() {
   if [[ $1 == "[developer-build]" ]]; then
     dev=true
     n="dev"
-    cp -r ".blueprint/dev" ".blueprint/tmp/dev"
-
-    postexit() {
-      if [[ $1 == "cleartmp" ]]; then
-        rm -r \
-          ".blueprint/tmp/dev" \
-          ".blueprint/tmp" \
-          2> /dev/null
-      fi
-      lock_remove
-    }
+    cp -r ".blueprint/dev" ".blueprint/tmp"
   else
     PRINT INFO "\x1b[34;mInstalling $1...\x1b[0m \x1b[37m($current/$total)\x1b[0m"
     dev=false
@@ -45,7 +32,7 @@ InstallExtension() {
   # Get all strings from the conf.yml file and make them accessible as variables.
   if [[ ! -f ".blueprint/tmp/conf.yml" ]]; then
     # Quit if the extension doesn't have a conf.yml file.
-    postexit cleartmp
+    postexit
     PRINT FATAL "Extension configuration file not found or detected."
     return 1
   fi
@@ -119,7 +106,7 @@ InstallExtension() {
   || [[ ( $requests_routers_client      == "/"* ) || ( $requests_routers_client      == *"/.."* ) || ( $requests_routers_client      == *"../"* ) || ( $requests_routers_client      == *"/../"* ) || ( $requests_routers_client      == *"~"* ) || ( $requests_routers_client      == *"\\"* ) ]] \
   || [[ ( $requests_routers_web         == "/"* ) || ( $requests_routers_web         == *"/.."* ) || ( $requests_routers_web         == *"../"* ) || ( $requests_routers_web         == *"/../"* ) || ( $requests_routers_web         == *"~"* ) || ( $requests_routers_web         == *"\\"* ) ]] \
   || [[ ( $database_migrations          == "/"* ) || ( $database_migrations          == *"/.."* ) || ( $database_migrations          == *"../"* ) || ( $database_migrations          == *"/../"* ) || ( $database_migrations          == *"~"* ) || ( $database_migrations          == *"\\"* ) ]]; then
-    postexit cleartmp
+    postexit
     PRINT FATAL "Config file paths cannot escape the extension bundle."
     return 1
   fi
@@ -134,7 +121,7 @@ InstallExtension() {
   || [[ ( $requests_views == *"/"       ) ]] \
   || [[ ( $requests_app == *"/"         ) ]] \
   || [[ ( $database_migrations == *"/"  ) ]]; then
-    postexit cleartmp
+    postexit
     PRINT FATAL "Directory paths in conf.yml should not end with a slash."
     return 1
   fi
@@ -144,7 +131,7 @@ InstallExtension() {
   # check if extension still has placeholder values
   if [[ ( $name    == "[name]" ) || ( $identifier == "[identifier]" ) || ( $description == "[description]" ) ]] \
   || [[ ( $version == "[ver]"  ) || ( $target     == "[version]"    ) || ( $author      == "[author]"      ) ]]; then
-    postexit cleartmp
+    postexit
     PRINT FATAL "Extension contains placeholder values which need to be replaced."
     return 1
   fi
@@ -156,7 +143,7 @@ InstallExtension() {
     PRINT INFO "Switching to update process as extension has already been installed."
 
     if [[ ! -d ".blueprint/extensions/$identifier/private/.store" ]]; then
-      postexit cleartmp
+      postexit
       PRINT FATAL "Upgrading extension has failed due to missing essential .store files."
       return 1
     fi
@@ -384,12 +371,12 @@ InstallExtension() {
 
   ((PROGRESS_NOW++))
 
-  if [[ $name == "" ]]; then postexit cleartmp;        PRINT FATAL "'info.name' is a required configuration option.";return 1;fi
-  if [[ $identifier == "" ]]; then postexit cleartmp;  PRINT FATAL "'info.identifier' is a required configuration option.";return 1;fi
-  if [[ $description == "" ]]; then postexit cleartmp; PRINT FATAL "'info.description' is a required configuration option.";return 1;fi
-  if [[ $version == "" ]]; then postexit cleartmp;     PRINT FATAL "'info.version' is a required configuration option.";return 1;fi
-  if [[ $target == "" ]]; then postexit cleartmp;      PRINT FATAL "'info.target' is a required configuration option.";return 1;fi
-  if [[ $admin_view == "" ]]; then postexit cleartmp;  PRINT FATAL "'admin.view' is a required configuration option.";return 1;fi
+  if [[ $name == "" ]]; then postexit;        PRINT FATAL "'info.name' is a required configuration option.";return 1;fi
+  if [[ $identifier == "" ]]; then postexit;  PRINT FATAL "'info.identifier' is a required configuration option.";return 1;fi
+  if [[ $description == "" ]]; then postexit; PRINT FATAL "'info.description' is a required configuration option.";return 1;fi
+  if [[ $version == "" ]]; then postexit;     PRINT FATAL "'info.version' is a required configuration option.";return 1;fi
+  if [[ $target == "" ]]; then postexit;      PRINT FATAL "'info.target' is a required configuration option.";return 1;fi
+  if [[ $admin_view == "" ]]; then postexit;  PRINT FATAL "'admin.view' is a required configuration option.";return 1;fi
 
   if [[ $icon == "" ]]; then                           PRINT WARNING "${identifier^} does not come with an icon, consider adding one.";fi
   if [[ $target != "$VERSION" ]]; then                 PRINT WARNING "${identifier^} is built for version $target, but your version is $VERSION.";fi
@@ -408,7 +395,7 @@ InstallExtension() {
   if [[ $TEST_IDENTIFIER == *"[chars]"* ]]; then TEST_IDENTIFIER_MATCHES="true"; PRINT FATAL "Extension identifiers should be lowercase and only contain characters a-z."; fi
 
   if [[ $TEST_IDENTIFIER_MATCHES == "true" ]]; then
-    postexit cleartmp
+    postexit
     return 1
   fi
   unset TEST_IDENTIFIER
@@ -434,7 +421,7 @@ InstallExtension() {
     [[ ( ! -f ".blueprint/tmp/$requests_routers_client"      ) && ( ${requests_routers_client} != ""      ) ]] ||    # file:   requests_routers_client      (optional)
     [[ ( ! -f ".blueprint/tmp/$requests_routers_web"         ) && ( ${requests_routers_web} != ""         ) ]] ||    # file:   requests_routers_web         (optional)
     [[ ( ! -d ".blueprint/tmp/$database_migrations"          ) && ( ${database_migrations} != ""          ) ]];then  # folder: database_migrations          (optional)
-    postexit cleartmp
+    postexit
     PRINT FATAL "Extension configuration points towards one or more files that do not exist."
     return 1
   fi
@@ -521,7 +508,7 @@ InstallExtension() {
     if [[ -f ".blueprint/tmp/$data_console/Console.yml" ]]; then
 
       # Read the Console.yml file with the "parse_yaml" library.
-      eval "$(parse_yaml .blueprint/tmp/"$n"/"$data_console"/Console.yml Console_)"
+      eval "$(parse_yaml .blueprint/tmp/"$data_console"/Console.yml Console_)"
       if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Console.yml OldConsole_)"; fi
 
       # Print warning if console configuration is empty - otherwise go through all options.
@@ -531,7 +518,7 @@ InstallExtension() {
         PRINT INFO "Creating and linking console commands and schedules.."
 
         if [[ "$SYS_ENCODING" != "UTF-8" ]]; then
-          postexit cleartmp
+          postexit
           PRINT FATAL "System locale encoding is not UTF-8, artisan commands cannot be generated."
           return 1
         fi
@@ -585,28 +572,28 @@ InstallExtension() {
             ( ${CONSOLE_ENTRY_PATH} == *"@"* ) ||
             ( ${CONSOLE_ENTRY_PATH} == *"\\"* )
           ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Console entry paths may not escape the console directory."
             return 1
           fi
 
           # Validate file names for console entries.
           if [[ ${CONSOLE_ENTRY_PATH} != *".php" ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Console entry paths may not end with a file extension other than '.php'."
             return 1
           fi
 
           # Validate file path.
           if [[ ! -f ".blueprint/tmp/$data_console/${CONSOLE_ENTRY_PATH}" ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Console configuration points towards one or more files that do not exist."
             return 1
           fi
 
           # Return error if identifier is generated incorrectly.
           if [[ $CONSOLE_ENTRY_IDEN == "" ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Failed to generate extension console entry identifier, halting process."
             return 1
           fi
@@ -614,7 +601,7 @@ InstallExtension() {
           # Return error if console entries are defined incorrectly.
           if [[ $CONSOLE_ENTRY_SIGN == "" ]] \
           || [[ $CONSOLE_ENTRY_DESC == "" ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "One or more extension console entries appear to have undefined fields."
             return 1
           fi
@@ -727,7 +714,7 @@ InstallExtension() {
     if [[ -f ".blueprint/tmp/$dashboard_components/Components.yml" ]]; then
 
       # fetch component config
-      eval "$(parse_yaml .blueprint/tmp/"$n"/"$dashboard_components"/Components.yml Components_)"
+      eval "$(parse_yaml .blueprint/tmp/"$dashboard_components"/Components.yml Components_)"
       if [[ $DUPLICATE == "y" ]]; then eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/Components.yml OldComponents_)"; fi
 
       PLACE_REACT() {
@@ -740,7 +727,7 @@ InstallExtension() {
           ( $1 == *"@"* ) ||
           ( $1 == *"\\"* )
         ]]; then
-          postexit cleartmp
+          postexit
           PRINT FATAL "Component file paths cannot escape the components folder."
           return 1
         fi
@@ -757,7 +744,7 @@ InstallExtension() {
           || [[ ${1} == *".ts"  ]] \
           || [[ ${1} == *".jsx" ]] \
           || [[ ${1} == *".js"  ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Component paths may not end with a file extension."
             return 1
           fi
@@ -767,7 +754,7 @@ InstallExtension() {
           && [[ ! -f ".blueprint/tmp/$dashboard_components/${1}.ts"  ]] \
           && [[ ! -f ".blueprint/tmp/$dashboard_components/${1}.jsx" ]] \
           && [[ ! -f ".blueprint/tmp/$dashboard_components/${1}.js"  ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Components configuration points towards one or more files that do not exist."
             return 1
           fi
@@ -880,7 +867,7 @@ InstallExtension() {
         PRINT INFO "Linking navigation routes.."
 
         if [[ "$SYS_ENCODING" != "UTF-8" ]]; then
-          postexit cleartmp
+          postexit
           PRINT FATAL "System locale encoding is not UTF-8, navigation routes cannot be generated at this time."
           return 1
         fi
@@ -925,7 +912,7 @@ InstallExtension() {
 
           # Return error if type is not defined correctly.
           if [[ ( $COMPONENTS_ROUTE_TYPE != "server" ) && ( $COMPONENTS_ROUTE_TYPE != "account" ) ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Navigation route types can only be either 'server' or 'account'."
             return 1
           fi
@@ -940,7 +927,7 @@ InstallExtension() {
             ( ${COMPONENTS_ROUTE_COMP} == *"@"* ) ||
             ( ${COMPONENTS_ROUTE_COMP} == *"\\"* )
           ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Navigation route component paths may not escape the components directory."
             return 1
           fi
@@ -950,7 +937,7 @@ InstallExtension() {
           || [[ ${COMPONENTS_ROUTE_COMP} == *".ts"  ]] \
           || [[ ${COMPONENTS_ROUTE_COMP} == *".jsx" ]] \
           || [[ ${COMPONENTS_ROUTE_COMP} == *".js"  ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Navigation route component paths may not end with a file extension."
             return 1
           fi
@@ -960,14 +947,14 @@ InstallExtension() {
           && [[ ! -f ".blueprint/tmp/$dashboard_components/${COMPONENTS_ROUTE_COMP}.ts"  ]] \
           && [[ ! -f ".blueprint/tmp/$dashboard_components/${COMPONENTS_ROUTE_COMP}.jsx" ]] \
           && [[ ! -f ".blueprint/tmp/$dashboard_components/${COMPONENTS_ROUTE_COMP}.js"  ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Navigation route configuration points towards one or more components that do not exist."
             return 1
           fi
 
           # Return error if identifier is generated incorrectly.
           if [[ $COMPONENTS_ROUTE_IDEN == "" ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "Failed to generate extension navigation route identifier, halting process."
             return 1
           fi
@@ -976,7 +963,7 @@ InstallExtension() {
           if [[ $COMPONENTS_ROUTE_PATH == "" ]] \
           || [[ $COMPONENTS_ROUTE_TYPE == "" ]] \
           || [[ $COMPONENTS_ROUTE_COMP == "" ]]; then
-            postexit cleartmp
+            postexit
             PRINT FATAL "One or more extension navigation routes appear to have undefined fields."
             return 1
           fi
@@ -1273,7 +1260,7 @@ InstallExtension() {
   rm \
     "$AdminBladeConstructor" \
     "$ConfigExtensionFS"
-  postexit cleartmp
+  postexit
 
   ((PROGRESS_NOW++))
 
@@ -1389,77 +1376,81 @@ Command() {
   for extension in $extensions; do
     (( current++ ))
     InstallExtension "$extension" "$current" "$total"
+    LAST_EXIT_CODE="$?"
     export PROGRESS_NOW="$(("$EXTENSIONS_STEPS" * "$current"))"
   done
 
-  if [[ ( $InstalledExtensions != "" ) || ( $BuiltExtensions != "" ) ]]; then
-    ((PROGRESS_NOW++))
-
-    # Finalize transaction
-    PRINT INFO "Finalizing transaction.."
-
-    if [[ ( $YARN == "y" ) && ( $IgnoreRebuild != "true" ) ]]; then
-      PRINT INFO "Rebuilding panel assets.."
-      hide_progress
-      cd "$FOLDER" || cdhalt
-      rm -rf "$FOLDER/node_modules/.cache"
-      yarn run build:production --progress
-    fi
-
-    ((PROGRESS_NOW++))
-
-    # Link filesystems
-    PRINT INFO "Linking filesystems.."
-    php artisan storage:link &>> "$BLUEPRINT__DEBUG"
-
-    ((PROGRESS_NOW++))
-
-    if [[ $DeveloperWatch == "false" ]]; then
-      # Flush cache.
-      PRINT INFO "Flushing view, config and route cache.."
-      {
-        php artisan view:cache
-        php artisan config:cache
-        php artisan route:clear
-        if [[ $KeepApplicationCache != "true" ]]; then php artisan cache:clear; fi
-        php artisan bp:cache
-        php artisan queue:restart
-      } &>> "$BLUEPRINT__DEBUG"
-
-      ((PROGRESS_NOW++))
-
-      # Make sure all files have correct permissions.
-      PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
-      find "$FOLDER/" \
-      -path "$FOLDER/node_modules" -prune \
-      -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
-    fi
-
-    ((PROGRESS_NOW++))
-
-    # Database migrations
-    if [[ ( $dbmigrations == "true" ) && ( $DOCKER != "y" ) ]]; then
-      PRINT INFO "Running database migrations.."
-      hide_progress
-      php artisan migrate --force
-    fi
-
-    ((PROGRESS_NOW++))
-
-    lock_remove
-
-    if [[ $BuiltExtensions == "" ]]; then
-      CorrectPhrasing="have"
-      if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
-      PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
-    else
-      PRINT SUCCESS "$BuiltExtensions has been built."
-    fi
-
+  # If no extensions succeed installation, exit with the most recent exit code
+  if [[ ( $InstalledExtensions == "" ) && ( $BuiltExtensions == "" ) ]]; then
     hide_progress
-    exit 0
+    lock_remove
+    exit "$LAST_EXIT_CODE"
+  fi
+  # otherwise, if any extensions complete installation, finalize transaction and ignore failed installations
+
+  ((PROGRESS_NOW++))
+
+  # Finalize transaction
+  PRINT INFO "Finalizing transaction.."
+
+  if [[ ( $YARN == "y" ) && ( $IgnoreRebuild != "true" ) ]]; then
+    PRINT INFO "Rebuilding panel assets.."
+    hide_progress
+    cd "$FOLDER" || cdhalt
+    rm -rf "$FOLDER/node_modules/.cache"
+    yarn run build:production --progress
+  fi
+
+  ((PROGRESS_NOW++))
+
+  # Link filesystems
+  PRINT INFO "Linking filesystems.."
+  php artisan storage:link &>> "$BLUEPRINT__DEBUG"
+
+  ((PROGRESS_NOW++))
+
+  if [[ $DeveloperWatch == "false" ]]; then
+    # Flush cache.
+    PRINT INFO "Flushing view, config and route cache.."
+    {
+      php artisan view:cache
+      php artisan config:cache
+      php artisan route:clear
+      if [[ $KeepApplicationCache != "true" ]]; then php artisan cache:clear; fi
+      php artisan bp:cache
+      php artisan queue:restart
+    } &>> "$BLUEPRINT__DEBUG"
+
+    ((PROGRESS_NOW++))
+
+    # Make sure all files have correct permissions.
+    PRINT INFO "Changing Pterodactyl file ownership to '$OWNERSHIP'.."
+    find "$FOLDER/" \
+    -path "$FOLDER/node_modules" -prune \
+    -o -exec chown "$OWNERSHIP" {} + &>> "$BLUEPRINT__DEBUG"
+  fi
+
+  ((PROGRESS_NOW++))
+
+  # Database migrations
+  if [[ ( $dbmigrations == "true" ) && ( $DOCKER != "y" ) ]]; then
+    PRINT INFO "Running database migrations.."
+    hide_progress
+    php artisan migrate --force
+  fi
+
+  ((PROGRESS_NOW++))
+
+  lock_remove
+
+  if [[ $BuiltExtensions == "" ]]; then
+    CorrectPhrasing="have"
+    if [[ $total = 1 ]]; then CorrectPhrasing="has"; fi
+    PRINT SUCCESS "$InstalledExtensions $CorrectPhrasing been installed."
+  else
+    PRINT SUCCESS "$BuiltExtensions has been built."
   fi
 
   hide_progress
-  exit 1
+  exit 0
 }
