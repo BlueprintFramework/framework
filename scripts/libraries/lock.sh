@@ -12,7 +12,7 @@ lock_create() {
     return 1
   fi
   if [ ! -f "$BLUEPRINT__FOLDER/.blueprint/lock" ]; then
-    touch "$BLUEPRINT__FOLDER/.blueprint/lock" &> "$BLUEPRINT__DEBUG"
+    touch "$BLUEPRINT__FOLDER/.blueprint/lock" &>> "$BLUEPRINT__DEBUG"
     if [ -f "$BLUEPRINT__FOLDER/.blueprint/lock" ]; then
       PRINT DEBUG "(lock.sh) lockfile created"
       return 0
@@ -41,7 +41,7 @@ lock_remove() {
     return 1
   fi
 
-  rm "$BLUEPRINT__FOLDER/.blueprint/lock" &> "$BLUEPRINT__DEBUG"
+  rm "$BLUEPRINT__FOLDER/.blueprint/lock" &>> "$BLUEPRINT__DEBUG"
 
   if [ -f "$BLUEPRINT__FOLDER/.blueprint/lock" ]; then
     PRINT DEBUG "(lock.sh) Lockfile unlock attempted, did not succeed"

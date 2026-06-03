@@ -233,7 +233,7 @@ InstallExtension() {
   ((PROGRESS_NOW++))
 
   if [[ $dev == true ]]; then
-    mv ".blueprint/tmp" ".blueprint/tmp/$identifier"
+    # why is this here
     n=$identifier
   fi
 
