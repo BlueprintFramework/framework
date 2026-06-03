@@ -50,7 +50,7 @@ InstallExtension() {
     return 1
   fi
 
-  eval "$(parse_yaml .blueprint/tmp/"${n}"/conf.yml conf_)"
+  eval "$(parse_yaml .blueprint/tmp/conf.yml conf_)"
 
   # Add aliases for config values to make working with them easier.
   local name="${conf_info_name//&/\\&}"
