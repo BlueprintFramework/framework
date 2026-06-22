@@ -22,15 +22,20 @@
     <?php
       $latest = true;
       $meta = $blueprint->extensionMetadata($EXTENSION_ID);
+
       if(isset($meta)) {
+        $diff = str_replace($meta['latest_version'], '', $EXTENSION_VERSION);
+
         if(
           $meta['latest_version'] != $EXTENSION_VERSION
           && $meta['local_version'] == $EXTENSION_VERSION
+          && $diff != "v"
         ) {
           $latest = false;
         }
       }
     ?>
+
     @if(!$latest)
     <tag mg-left green style="font-weight: 700">
       <i class="bi bi-caret-up-fill blueprint-extension-title-tag-icon"></i> {{ $meta['latest_version'] }}

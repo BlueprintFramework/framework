@@ -2,9 +2,12 @@
   @php
     $latest = true;
     if(isset($EXTENSION_METADATA)) {
+      $diff = str_replace($EXTENSION_METADATA['latest_version'], '', $EXTENSION_VERSION);
+
       if(
         $EXTENSION_METADATA['latest_version'] != $EXTENSION_VERSION
         && $EXTENSION_METADATA['local_version'] == $EXTENSION_VERSION
+        && $diff != "v"
       ) {
         $latest = false;
       }
