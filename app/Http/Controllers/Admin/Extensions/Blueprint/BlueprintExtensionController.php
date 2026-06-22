@@ -30,11 +30,10 @@ class BlueprintExtensionController extends Controller
 
     foreach ($request->validated() as $key => $value) {
       $this->settings->set('blueprint::' . $key, $value);
-    }
 
-    // refresh meta if the flag has been altered
-    if($meta_flag != $request->validated()['flags:remote_metadata']) {
-      Artisan::call('bp:meta');
+      if($key == 'flags:remote_metadata' && $value != $meta_flag) {
+        Artisan::call('bp:meta');
+      }
     }
 
     return redirect()->route('admin.extensions');
