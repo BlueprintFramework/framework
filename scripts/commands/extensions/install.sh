@@ -148,7 +148,17 @@ InstallExtension() {
       return 1
     fi
 
-    eval "$(parse_yaml .blueprint/extensions/"${identifier}"/private/.store/conf.yml old_)"
+    while IFS= read -r assignment; do
+      if [[ -z "$assignment" ]]; then
+        continue
+      fi
+
+      if [[ $assignment =~ ^old_[a-zA-Z0-9_]*= ]]; then
+        eval "$assignment"
+      else
+        PRINT WARNING "Ignoring malformed stored extension configuration entry while updating '$identifier'."
+      fi
+    done < <(parse_yaml ".blueprint/extensions/${identifier}/private/.store/conf.yml" old_)
     local DUPLICATE="y"
 
     # run extension update script
