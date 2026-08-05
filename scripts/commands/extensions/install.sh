@@ -1175,7 +1175,8 @@ InstallExtension() {
       -e "s~\[webicon\]~$websiteiconclass~g" \
       "$AdminBladeConstructor"
   fi
-  echo -e "$(<".blueprint/tmp/$admin_view")\n@endsection" >> "$AdminBladeConstructor"
+  cat ".blueprint/tmp/$admin_view" >> "$AdminBladeConstructor"
+  printf '\n@endsection\n' >> "$AdminBladeConstructor"
 
   # Construct admin controller
   if [[ $controller_type == "default" ]]; then sed -i "s~\[id\]~$identifier~g" "$AdminControllerConstructor"; fi
