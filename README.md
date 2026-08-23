@@ -29,14 +29,14 @@ If you are an organization, [consider becoming a corporate sponsor](https://hcb.
   <tr>
     <!-- Senko Digital -->
     <td>
-      <a href="https://senko.digital">
+      <a href="https://aka.bpfw.io/sponsor-senkodigital">
         <picture>
           <source media="(prefers-color-scheme: dark)" srcset="https://s3.blueprint.zip/static/assets/sponsors/senkodigital%20light.png">
           <source media="(prefers-color-scheme: light)" srcset="https://s3.blueprint.zip/static/assets/sponsors/senkodigital%20dark.png">
           <img alt="Senko Digital" src="https://s3.blueprint.zip/static/assets/sponsors/senkodigital%20light.png" height="30" width="215">
         </picture>
       </a>
-      <a href="https://senko.digital"><code>Learn more ➜</code></a>
+      <a href="https://aka.bpfw.io/sponsor-senkodigital"><code>Learn more ➜</code></a>
     </td>
     <td>
       Senko Digital is a premium quality hosting-provider, offering hosting services with free DDoS protection in three locations across Europe. They offer virtual servers (starting as low as €2.29/mo), dedicated servers, game hosting, domain registration (500+ TLDs available) and LIR services. 10% off on all VPS and game hosting plans with a promo code <code>BLUEPRINT10</code>
@@ -45,14 +45,14 @@ If you are an organization, [consider becoming a corporate sponsor](https://hcb.
   <tr>
     <!-- UltraServers -->
     <td>
-      <a href="https://ultraservers.com">
+      <a href="https://aka.bpfw.io/sponsor-ultraservers">
         <picture>
           <source media="(prefers-color-scheme: dark)" srcset="https://s3.blueprint.zip/static/assets/sponsors/ultraservers%20light.png">
           <source media="(prefers-color-scheme: light)" srcset="https://s3.blueprint.zip/static/assets/sponsors/ultraservers%20dark.png">
           <img alt="UltraServers" src="https://s3.blueprint.zip/static/assets/sponsors/ultraservers%20light.png" height="30" width="215">
         </picture>
       </a>
-      <a href="https://senko.digital"><code>Learn more ➜</code></a>
+      <a href="https://aka.bpfw.io/sponsor-ultraservers"><code>Learn more ➜</code></a>
     </td>
     <td>
       UltraServers provides premium Minecraft and Hytale server hosting at just $1/GB. Their servers run exclusively on AMD Ryzen 7950X3D & 9950X, DDR5 RAM and NVMe Drives.
