@@ -40,7 +40,7 @@ export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => 
         <Form {...props} ref={ref}>
             <div css={tw`md:flex w-full bg-white shadow-lg rounded-lg p-6 md:pl-0 mx-1`}>
                 <div css={tw`flex-none select-none mb-6 md:mb-0 self-center`}>
-                    <img src={'/assets/extensions/blueprint/auth.png'} css={tw`block w-48 md:w-64 mx-auto`} />
+                    <img src={'/assets/extensions/blueprint/auth.png'} css={tw`block w-56 md:w-68 md:p-4 mx-auto`} />
                 </div>
                 <div css={tw`flex-1`}>{props.children}</div>
             </div>
