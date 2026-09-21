@@ -12,8 +12,7 @@
         "@heroicons/react": "^1.0.6",
         "@hot-loader/react-dom": "^16.14.0",
         "@preact/signals-react": "^1.2.1",
-        "@tailwindcss/forms": "^0.5.2",
-        "@tailwindcss/line-clamp": "^0.4.0",
+        "@tailwindcss/forms": "^0.5.10",
         "axios": "^1.13.2",
         "boring-avatars": "^1.7.0",
         "chart.js": "^3.8.0",
@@ -46,7 +45,7 @@
         "styled-components": "5.2.1",
         "styled-components-breakpoint": "^3.0.0-preview.20",
         "swr": "^0.2.3",
-        "tailwindcss": "3.0.24",
+        "tailwindcss": "3.4.17",
         "use-fit-text": "^2.4.0",
         "uuid": "^13.0.0",
         "xterm": "^4.19.0",
@@ -95,7 +94,7 @@
         "@types/yup": "^0.29.3",
         "@typescript-eslint/eslint-plugin": "^5",
         "@typescript-eslint/parser": "^5",
-        "autoprefixer": "^10.4.7",
+        "autoprefixer": "^10.4.20",
         "babel-jest": "^28.1.1",
         "babel-loader": "8.2.5",
         "babel-plugin-styled-components": "^2.0.7",
@@ -122,7 +121,7 @@
         "terser-webpack-plugin": "^5.3.14",
         "ts-essentials": "^9.1.2",
         "ts-jest": "^28.0.5",
-        "twin.macro": "^2.8.2",
+        "twin.macro": "^3.4.1",
         "typescript": "~5.1.0",
         "webpack": "^5.103.0",
         "webpack-assets-manifest": "^6.4.0",
@@ -146,7 +145,8 @@
     ],
     "babelMacros": {
         "twin": {
-            "preset": "styled-components"
+            "preset": "styled-components",
+            "config": "./tailwind.config.js"
         },
         "styledComponents": {
             "pure": true,
