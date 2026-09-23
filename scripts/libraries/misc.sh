@@ -103,3 +103,25 @@ extract_extension() {
 
   return 0
 }
+
+
+blueprint_custom_script_confirm() {
+  local phase="$1"
+  local deadline remaining
+
+  if [[ ! -t 0 ]] || [[ -n "${BLUEPRINT_SKIP_SCRIPT_CONFIRM:-}" ]]; then
+    return 0
+  fi
+
+  hide_progress
+
+  deadline=$((SECONDS + 10))
+
+  while [[ $SECONDS -lt $deadline ]]; do
+    remaining=$((deadline - SECONDS))
+    printf "\r\033[2m%s\033[0m \x1b[35;1mInput:\x1b[0m Extension has a custom %s script. Press \x1b[32;1m[ENTER]\x1b[0m to continue or \x1b[31;1m^C\x1b[0m to abort. \x1b[2m(auto-proceeding in %ds)\x1b[0m   " "$(date +"%H:%M:%S")" "$phase" "$remaining"
+    read -r -t 1 && { printf "\r\033[K"; return 0; }
+  done
+
+  printf "\r\033[K"
+}
