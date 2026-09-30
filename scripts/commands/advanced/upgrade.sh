@@ -12,7 +12,7 @@ Command() {
   update_choice=""
 
   # Initial steps count for progress bar
-  export PROGRESS_TOTAL=7
+  export PROGRESS_TOTAL=9
   export PROGRESS_NOW=0
 
   # Make sure the script is in $FOLDER
@@ -23,7 +23,7 @@ Command() {
   export remote_branch
   export fetched_version
 
-  local update_fail
+  local update_fail extension identifier directory backup_directory
 
   if [[ -d '.update' ]]; then
     PRINT WARNING ".update already exists! Replacing it."
@@ -140,6 +140,39 @@ Command() {
 
   ((PROGRESS_NOW++))
 
+  # Back up extension filesystems before replacing .blueprint.
+  PRINT INFO "Backing up extension filesystems.."
+  mkdir -p .update/backup/extensionfs .update/backup/storage
+  for extension in .blueprint/extensions/*; do
+    if [[ ! -d $extension || $extension == .blueprint/extensions/blueprint ]]; then continue; fi
+    identifier="${extension##*/}"
+
+    if [[ -d $extension/fs || -e $extension/private || -L $extension/private ]]; then
+      mkdir -p ".update/backup/extensionfs/$identifier"
+      for directory in fs private; do
+        if [[ -e $extension/$directory || -L $extension/$directory ]] \
+        && ! cp -a "$extension/$directory" ".update/backup/extensionfs/$identifier/"; then
+          PRINT FATAL "Could not back up $extension/$directory. Upgrade cancelled."
+          cleanup 1
+        fi
+      done
+    fi
+  done
+
+  if ! cp -a .blueprint/extensions/blueprint/private/db/installed_extensions \
+    .update/backup/extensionfs/installed_extensions; then
+    PRINT FATAL "Could not back up the installed extensions list. Upgrade cancelled."
+    cleanup 1
+  fi
+  for directory in storage/extensions storage/.extensions; do
+    if [[ -d $directory ]] && ! cp -a "$directory" .update/backup/storage/; then
+      PRINT FATAL "Could not back up $directory. Upgrade cancelled."
+      cleanup 1
+    fi
+  done
+
+  ((PROGRESS_NOW++))
+
   # Delete files
   PRINT INFO "Deleting files.."
   rm -rf .blueprint
@@ -174,8 +207,55 @@ Command() {
   PRINT INFO "Running final install script.."
   chmod +x blueprint.sh
   mv blueprint .blueprint
+  PRINT INFO "Restoring extension filesystems.."
+  for extension in .update/backup/extensionfs/*; do
+    if [[ ! -d $extension/fs ]]; then continue; fi
+    identifier="${extension##*/}"
+    if ! mkdir -p ".blueprint/extensions/$identifier" \
+    || ! cp -a "$extension/fs" ".blueprint/extensions/$identifier/"; then
+      PRINT FATAL "Could not restore ExtensionFS for '$identifier'. Backup retained in .update/backup."
+      hide_progress
+      exit 1
+    fi
+  done
+
+  for directory in storage/extensions storage/.extensions; do
+    if [[ -d .update/backup/$directory ]]; then
+      if ! mkdir -p "$directory" || ! cp -a ".update/backup/$directory/." "$directory/"; then
+        PRINT FATAL "Could not restore $directory. Backup retained in .update/backup."
+        hide_progress
+        exit 1
+      fi
+    fi
+  done
+
+  # Keep private data in storage after .update is removed.
+  backup_directory="storage/.blueprint/extension-backups/$(date +%Y%m%d%H%M%S)-$$"
+  if ! mkdir -p "$backup_directory" \
+  || ! cp -a .update/backup/extensionfs/installed_extensions "$backup_directory/"; then
+    PRINT FATAL "Could not archive extension data. Backup retained in .update/backup."
+    hide_progress
+    exit 1
+  fi
+  for extension in .update/backup/extensionfs/*; do
+    if [[ ! -e $extension/private && ! -L $extension/private ]]; then continue; fi
+    identifier="${extension##*/}"
+    if ! mkdir -p "$backup_directory/$identifier" \
+    || ! cp -a "$extension/private" "$backup_directory/$identifier/"; then
+      PRINT FATAL "Could not archive private data for '$identifier'. Backup retained in .update/backup."
+      hide_progress
+      exit 1
+    fi
+  done
+
+  ((PROGRESS_NOW++))
+
   hide_progress
-  BLUEPRINT_ENVIRONMENT="upgrade2" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh
+  if ! BLUEPRINT_ENVIRONMENT="upgrade2" PROGRESS_NOW="$PROGRESS_NOW" PROGRESS_TOTAL="$PROGRESS_TOTAL" bash blueprint.sh; then
+    PRINT FATAL "Final install failed. Extension data backup retained in .update/backup and $backup_directory."
+    hide_progress
+    exit 1
+  fi
 
   ((PROGRESS_NOW++))
 
@@ -186,6 +266,9 @@ Command() {
     PRINT FATAL "Update failed, please resolve errors above and try again"
     hide_progress
     exit 1
+  fi
+  if [[ -s $backup_directory/installed_extensions ]]; then
+    PRINT WARNING "Extensions must be reinstalled. Private data backup: $FOLDER/$backup_directory"
   fi
   PRINT SUCCESS "Update finished!"
   hide_progress
